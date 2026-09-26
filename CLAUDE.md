@@ -15,9 +15,13 @@ added as it's actually needed.
 - Plain HTML/CSS/JS. No build step, no framework.
 - Website source lives at the **repo root** (`index.html`, `css/`, `js/`,
   `data/`, `assets/`).
-- Served via GitHub Pages. Do not put the site under a folder literally named
-  `docs/` — that name is reserved for planning docs (see below), to avoid
-  colliding with GitHub Pages' own "deploy from `/docs`" option.
+- Served via GitHub Pages, deployed by `.github/workflows/deploy-pages.yml`
+  on every push to `main`. That workflow copies only the site folders
+  (`index.html`, `css/`, `js/`, `data/`, `3x3/`, `2x2/`, `megaminx/`,
+  `assets/` if present) into the published artifact — `docs/`, `log/`, and
+  `CLAUDE.md` are intentionally left out of the deployed site. Do not put
+  the site under a folder literally named `docs/` — that name is reserved
+  for planning docs (see below).
 - Graphics: interactive 3D cube via a twisty-player web component
   (cubing.js / alg.cubing.net's `<twisty-player>`), paired with static 2D
   diagram images for quick scanning without waiting on JS/animation.

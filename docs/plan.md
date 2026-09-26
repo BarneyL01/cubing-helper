@@ -53,15 +53,20 @@ Each case shows:
 
 ## Open questions / TBD
 
-- GitHub Pages deploy source (root of default branch vs. a `gh-pages` branch
-  vs. a Pages-deploy GitHub Action) — decide when the first PR is ready to
-  merge/deploy
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
 - 2x2 and Megaminx method choice — ask when we get there
 - Static 2D diagrams per case are deferred (see `log/` for why) — the
   interactive 3D twisty player is the accurate visual for v1
 - OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
   if/when the user finds a main algorithm they prefer
+
+## Deploy
+
+Live on GitHub Pages, deployed by `.github/workflows/deploy-pages.yml` on
+every push to `main`. One manual one-time step is required in the GitHub
+UI (no API access to do this from here): **Settings → Pages → Build and
+deployment → Source: "GitHub Actions"**. Until that's set, the workflow
+will run but Pages won't actually serve the result.
 
 ## v1 status
 
