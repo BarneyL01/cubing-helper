@@ -58,3 +58,15 @@ Each case shows:
   merge/deploy
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
 - 2x2 and Megaminx method choice — ask when we get there
+- Static 2D diagrams per case are deferred (see `log/` for why) — the
+  interactive 3D twisty player is the accurate visual for v1
+- OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
+  if/when the user finds a main algorithm they prefer
+
+## v1 status
+
+Built: `index.html`, shared `css/style.css`, `js/algs.js` (WCA-notation
+algorithm helpers) + `js/render-cases.js` (renders a case list into cards
+with an embedded `<twisty-player>`), `data/oll.js` + `data/pll.js` (decoded
+algorithm data), the CFOP OLL/PLL pages, and placeholder pages for Roux,
+Beginner's, 2x2, and Megaminx.

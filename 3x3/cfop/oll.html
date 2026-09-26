@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2-look OLL — Cubing Helper</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <span class="brand">Cubing Helper</span>
+      <a href="../../index.html">Home</a>
+      <a href="index.html">3x3 · CFOP</a>
+      <a href="../roux/index.html">3x3 · Roux</a>
+      <a href="../beginners/index.html">3x3 · Beginner's</a>
+      <a href="../../2x2/index.html">2x2</a>
+      <a href="../../megaminx/index.html">Megaminx</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>2-look OLL</h1>
+    <p class="subtitle">
+      Orient the last layer's corners first, then its edges. Each card shows
+      the case, the standard algorithm, and your mnemonic word breakdown.
+      Drag or use the controls under each cube to replay the algorithm.
+    </p>
+
+    <div id="oll-cases" class="case-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    Personal reference tool — see <code>docs/mnemonics.md</code> in the repo for how the mnemonic letters decode to moves.
+  </footer>
+
+  <script type="module">
+    import { ollCases } from '../../data/oll.js';
+    import { renderCases } from '../../js/render-cases.js';
+    renderCases('oll-cases', ollCases);
+  </script>
+</body>
+</html>

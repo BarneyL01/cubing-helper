@@ -66,14 +66,11 @@ exactly, which is strong confirmation the table is correct:
 - **H-perm**, "NU-N-U2-NU-N", decodes to `M2 U M2 U2 M2 U M2` — the standard
   M-slice H-perm, exactly.
 - **Z-perm**, "KU-NU-NU-KU2-NV", decodes to
-  `M' U M2 U M2 U M' U2 M2 U'` — consistent with the table above, but this
-  is the one case that wasn't independently cross-verified against a second
-  known-good source. **Flagged for the user to double-check** against their
-  own solve before we treat it as final.
+  `M' U M2 U M2 U M' U2 M2 U'` — consistent with the table above. Confirmed
+  correct by the user (2026-09-26).
 
 ## Still open
 
-- Confirm the Z-perm decode above.
 - No letters for L, D, B, E, S, X, Y, Z, W turns have shown up yet — ask the
   user for these if/when Roux or another method needs them (Roux leans
   heavily on M-slice and rotations, so more letters are likely).
