@@ -178,8 +178,8 @@ h1 {
   padding: 0.5rem 0.65rem;
   border-radius: 6px;
   font-size: 0.95rem;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .case-mnemonic strong {
