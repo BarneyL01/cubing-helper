@@ -40,6 +40,10 @@ notes (OLL: Antisune, Sune, H1, L^, Pi1, T1, U^, Uv. PLL: Y-perm, T-perm, Ua,
 Ub, H, Z). Nav includes placeholder ("coming soon") pages for Roux,
 Beginner's Method, 2x2, and Megaminx, to be filled in later.
 
+Beginner's Method now also has its last-layer steps (match cross colours,
+match corners, orient corners) — see `data/beginners-last-layer.js`. Its
+white cross / white corners / second-layer steps are still placeholder.
+
 ## The mnemonic cipher
 
 The user encodes algorithms as words built from a personal letter-substitution

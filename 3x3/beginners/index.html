@@ -6,6 +6,7 @@
   <title>3x3 Beginner's Method — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css" />
+  <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -23,11 +24,24 @@
   <main>
     <h1>3x3 — Beginner's Method</h1>
     <p class="subtitle">Layer-by-layer, minimal algorithm memorisation.</p>
-    <div class="coming-soon">Not built yet — see <code>docs/plan.md</code> for the roadmap.</div>
+
+    <div class="coming-soon">
+      White cross, white corners, and second-layer edges aren't recorded yet — see <code>docs/plan.md</code> for the roadmap.
+    </div>
+
+    <h2 class="section-heading">Last layer</h2>
+    <p class="subtitle">Assumes the top (yellow) cross is already made. These three steps finish the cube.</p>
+    <div id="beginners-ll-cases" class="case-grid"></div>
   </main>
 
   <footer class="site-footer">
     Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
   </footer>
+
+  <script type="module">
+    import { beginnerLastLayerCases } from '../../data/beginners-last-layer.js';
+    import { renderCases } from '../../js/render-cases.js';
+    renderCases('beginners-ll-cases', beginnerLastLayerCases);
+  </script>
 </body>
 </html>

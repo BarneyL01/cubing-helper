@@ -22,7 +22,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/cfop/oll.html` — 2-look OLL cases
 - `3x3/cfop/pll.html` — 2-look PLL cases
 - `3x3/roux/index.html` — placeholder ("coming soon")
-- `3x3/beginners/index.html` — placeholder
+- `3x3/beginners/index.html` — last layer done (match cross colours, match
+  corners, orient corners); cross/corners/second-layer still placeholder
 - `2x2/index.html` — placeholder
 - `megaminx/index.html` — placeholder
 - shared: `css/style.css`, `js/twisty-embed.js`, `data/` (per-page algorithm
@@ -45,9 +46,11 @@ Each case shows:
 
 - **v1** — CFOP 2-look OLL/PLL (the content in the user's notes); placeholder
   pages for everything else
+- **v1.1** — Beginner's Method last layer (match cross colours, match
+  corners, orient corners) — done
 - **v2** — Full CFOP (F2L, full 57 OLL / 21 PLL) — TBD if wanted
 - **v3** — Roux method
-- **v4** — Beginner's (layer-by-layer) method
+- **v4** — Beginner's Method: white cross, white corners, second-layer edges
 - **v5** — 2x2 (method TBD — Ortega/CLL vs. beginner LBL)
 - **v6** — Megaminx (likely beginner LBL + 2-look OLL/PLL equivalents)
 
@@ -59,6 +62,9 @@ Each case shows:
   interactive 3D twisty player is the accurate visual for v1
 - OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
   if/when the user finds a main algorithm they prefer
+- Beginner's Method "Match cross colours" algorithm was flagged by the user
+  as possibly incomplete when they wrote it down — worth confirming against
+  an actual solve
 
 ## Deploy
 
