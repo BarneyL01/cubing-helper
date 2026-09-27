@@ -1,6 +1,57 @@
-// Beginner's method — last layer steps (after the top cross already exists).
-// Unlike the CFOP OLL/PLL data, these came from the user's own raw WCA
-// notation notes rather than the mnemonic cipher — see log/ for the decode.
+// Beginner's method — last layer.
+//
+// Yellow cross: NOT from the user's notes — standard beginner's step,
+// filled in on request (2026-09-27), checked with js/cube-sim.js. The same
+// algorithm is repeated; each shape leads to the next (dot → L → line →
+// cross), so each card's picture comes from the whole chain.
+const YELLOW_CROSS = "F R U R' U' F'";
+const yellowCrossChunks = [
+  { word: 'F', moves: 'F' },
+  { word: 'Sassy', moves: "R U R' U'" },
+  { word: 'G', moves: "F'" },
+];
+const yellowCrossNote = "Standard beginner's method — not from your notes. Same algorithm as the U case in 2x2 Ortega / Roux CMLL.";
+
+export const beginnerYellowCrossCases = [
+  {
+    id: 'yc-line',
+    anchor: 'yc-line',
+    name: 'Line',
+    orientation: 'Hold the line left-to-right.',
+    alg: YELLOW_CROSS,
+    stickering: 'eo',
+    mnemonicChunks: yellowCrossChunks,
+    then: { text: 'cross done', href: '#match-cross' },
+    note: yellowCrossNote,
+  },
+  {
+    id: 'yc-l',
+    anchor: 'yc-l',
+    name: 'L shape',
+    orientation: 'Hold the L at the back-left (the two yellow edges at the back and left).',
+    alg: `${YELLOW_CROSS} ${YELLOW_CROSS}`,
+    displayAlg: YELLOW_CROSS,
+    stickering: 'eo',
+    mnemonicChunks: yellowCrossChunks,
+    then: { text: 'Line', href: '#yc-line' },
+    note: yellowCrossNote,
+  },
+  {
+    id: 'yc-dot',
+    anchor: 'yc-dot',
+    name: 'Dot (no yellow edges up)',
+    orientation: 'Any way round. You get an L — turn the top until it sits at the back-left.',
+    alg: `${YELLOW_CROSS} U2 ${YELLOW_CROSS} ${YELLOW_CROSS}`,
+    displayAlg: YELLOW_CROSS,
+    stickering: 'eo',
+    mnemonicChunks: yellowCrossChunks,
+    then: { text: 'L shape', href: '#yc-l' },
+    note: yellowCrossNote,
+  },
+];
+
+// The rest came from the user's own raw WCA notation notes rather than the
+// mnemonic cipher — see log/ for the decode.
 export const beginnerLastLayerCases = [
   {
     id: 'match-cross-colours',

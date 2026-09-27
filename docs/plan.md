@@ -26,8 +26,8 @@ Megaminx. Hosted free on GitHub Pages.
   "3x3 · F2L"; has a "Find a case" search/filter panel
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
   OLL); block building and most of LSE still placeholder
-- `3x3/beginners/index.html` — last layer done (match cross colours, match
-  corners, orient corners); cross/corners/second-layer still placeholder
+- `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
+  the user's notes; 5–7 from their notes)
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)
@@ -59,7 +59,8 @@ Each case shows:
 - **v2** — Full CFOP: F2L map — done (2026-09-27); full 57 OLL / 21 PLL —
   TBD if wanted
 - **v3** — Roux: CMLL — done; block building and full LSE still to come
-- **v4** — Beginner's Method: white cross, white corners, second-layer edges
+- **v4** — Beginner's Method: white cross, white corners, second layer,
+  yellow cross — done (standard method, 2026-09-27)
 - **v5** — 2x2: Ortega (OLL + PBL) — done
 - **v6** — Megaminx: Gray star / align star / Gray corners — done (last
   layer only so far); still needs a 3D preview and earlier steps

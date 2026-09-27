@@ -30,6 +30,13 @@ const pieceType = (p) => p.filter((v) => v !== 0).length; // 3 corner, 2 edge, 1
 // edge orientation is judged.
 function fill(sticker, top, stickering, pieceColours) {
   if (stickering === 'full') return COLOURS[sticker.colour];
+  if (stickering === 'cross' || stickering === 'layer1') {
+    // Beginner's first steps: only the white (bottom) pieces and centres
+    // matter — 'cross' shows just the white edges.
+    const type = pieceType(sticker.p);
+    const wanted = type === 1 || (pieceColours.includes('D') && (stickering === 'layer1' || type === 2));
+    return wanted ? COLOURS[sticker.colour] : NOT_TOP;
+  }
   if (stickering === 'f2l') {
     // Last-layer pieces don't matter yet: grey them, keep the top centre.
     const lastLayerPiece = pieceColours.includes('U') && pieceType(sticker.p) !== 1;

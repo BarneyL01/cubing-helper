@@ -23,15 +23,36 @@
 
   <main>
     <h1>3x3 — Beginner's Method</h1>
-    <p class="subtitle">Layer-by-layer, minimal algorithm memorisation.</p>
+    <p class="subtitle">
+      Layer by layer, in seven steps. Hold the cube with yellow on top the
+      whole time — the white cross ends up on the bottom.
+    </p>
+    <div class="source-note">
+      <p>
+        Steps 1–4 are the standard beginner's method, filled in for you — not
+        from your notes (each card says so). Steps 5–7 are from your notes.
+        Every algorithm is checked with the cube simulator.
+      </p>
+    </div>
     <div class="view-toggle" id="view-toggle"></div>
 
-    <div class="coming-soon">
-      White cross, white corners, and second-layer edges aren't recorded yet — see <code>docs/plan.md</code> for the roadmap.
-    </div>
+    <h2 class="section-heading">Step 1 — White cross</h2>
+    <div id="beginners-cross-cases" class="case-grid"></div>
 
-    <h2 class="section-heading">Last layer</h2>
-    <p class="subtitle">Assumes the top (yellow) cross is already made. These three steps finish the cube.</p>
+    <h2 class="section-heading">Step 2 — White corners</h2>
+    <p class="subtitle">Find a white corner in the top layer and look at which way its white sticker faces.</p>
+    <div id="beginners-corner-cases" class="case-grid"></div>
+
+    <h2 class="section-heading">Step 3 — Second layer edges</h2>
+    <p class="subtitle">Find a top-layer edge with no yellow on it.</p>
+    <div id="beginners-edge-cases" class="case-grid"></div>
+
+    <h2 class="section-heading">Step 4 — Yellow cross</h2>
+    <p class="subtitle">One algorithm, repeated: dot → L → line → cross. Only the edges matter here.</p>
+    <div id="beginners-yc-cases" class="case-grid"></div>
+
+    <h2 class="section-heading" id="match-cross">Steps 5–7 — Finish the last layer</h2>
+    <p class="subtitle">Match the cross to the sides, place the corners, then twist them.</p>
     <div id="beginners-ll-cases" class="case-grid"></div>
   </main>
 
@@ -40,10 +61,15 @@
   </footer>
 
   <script type="module">
-    import { beginnerLastLayerCases } from '../../data/beginners-last-layer.js';
+    import { beginnerYellowCrossCases, beginnerLastLayerCases } from '../../data/beginners-last-layer.js';
+    import { beginnerCrossCases, beginnerCornerCases, beginnerSecondLayerCases } from '../../data/beginners-first-layers.js';
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
     mountViewToggle(document.getElementById('view-toggle'));
+    renderCases('beginners-cross-cases', beginnerCrossCases);
+    renderCases('beginners-corner-cases', beginnerCornerCases);
+    renderCases('beginners-edge-cases', beginnerSecondLayerCases);
+    renderCases('beginners-yc-cases', beginnerYellowCrossCases);
     renderCases('beginners-ll-cases', beginnerLastLayerCases);
   </script>
 </body>

@@ -33,7 +33,7 @@ added as it's actually needed.
   so it's only loaded when someone picks 3D, and the page falls back to
   pictures if it fails. The site makes no requests to outside servers.
   Per-case data fields: `stickering` ('full' default, 'oll', 'cmll', 'eo',
-  'f2l'), `diagramViews` (`['U']` default, `['U', 'D']` for both layers,
+  'f2l', 'cross', 'layer1'), `diagramViews` (`['U']` default, `['U', 'D']` for both layers,
   `['cube']` for the top/front/right view), `hold` (a whole-cube rotation
   for cases you reach already holding the cube turned — otherwise worked
   out automatically for algorithms containing y/d etc.), `noViewer` (no
@@ -66,9 +66,11 @@ built ahead of being asked for. As of 2026-09-27:
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below); one LSE recognition case. Block building and the rest of LSE are
   placeholder. `data/roux.js`.
-- **3x3 Beginner's Method** — last layer only (match cross colours, match
-  corners, orient corners). White cross / corners / second-layer are
-  placeholder. `data/beginners-last-layer.js`.
+- **3x3 Beginner's Method** — all 7 steps. Steps 1–4 (white cross, white
+  corners, second layer, yellow cross) are the **standard method filled in
+  on request, not from the user's notes** — each card says so; swap in the
+  user's own version if they send one. Steps 5–7 are from their notes.
+  `data/beginners-first-layers.js`, `data/beginners-last-layer.js`.
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
