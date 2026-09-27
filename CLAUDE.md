@@ -58,7 +58,11 @@ built ahead of being asked for. As of 2026-09-27:
   transcription of the dogschasingsquirrels chart
   (https://dogschasingsquirrels.files.wordpress.com/2014/06/f2l.jpg); keep
   that credit on the page and in the data file. No mnemonic words for F2L
-  (they weren't in the user's notes).
+  (they weren't in the user's notes). It has its own top-menu link
+  ("3x3 · F2L") rather than living under CFOP, and a "Find a case" panel:
+  filters (pieces' location, white sticker direction, edge state, pair)
+  computed from the simulated case by `js/f2l-features.js`, chart
+  category, and free text (`js/f2l-finder.js`).
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below); one LSE recognition case. Block building and the rest of LSE are
   placeholder. `data/roux.js`.

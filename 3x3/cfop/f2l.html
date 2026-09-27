@@ -13,6 +13,7 @@
       <span class="brand">Cubing Helper</span>
       <a href="../../index.html">Home</a>
       <a href="index.html">3x3 · CFOP</a>
+      <a href="f2l.html" class="active">3x3 · F2L</a>
       <a href="../roux/index.html">3x3 · Roux</a>
       <a href="../beginners/index.html">3x3 · Beginner's</a>
       <a href="../../2x2/index.html">2x2</a>
@@ -24,8 +25,8 @@
     <h1>F2L map</h1>
     <p class="subtitle">
       Every F2L case (front-right slot), with the moves that take it to a
-      simpler case, until the slot is solved. Follow the "Then →" links, or
-      use the map to see the whole chain at once.
+      simpler case, until the slot is solved. Search by what you see, follow the "Then →" links, or
+      use the <a href="#map-heading">map</a> at the bottom to see every chain at once.
     </p>
 
     <div class="source-note">
@@ -42,13 +43,16 @@
       </p>
     </div>
 
-    <h2 class="section-heading">Map</h2>
-    <p class="subtitle">Each case's moves take you to the case it's listed under. Indented = one more step away from solved.</p>
-    <div id="f2l-map" class="f2l-map"></div>
+    <h2 class="section-heading">Find a case</h2>
+    <div class="finder" id="f2l-finder"></div>
 
     <h2 class="section-heading">Cases</h2>
     <div class="view-toggle" id="view-toggle"></div>
     <div id="f2l-cases"></div>
+
+    <h2 class="section-heading" id="map-heading">Map</h2>
+    <p class="subtitle">Each case's moves take you to the case it's listed under. Indented = one more step away from solved.</p>
+    <div id="f2l-map" class="f2l-map"></div>
   </main>
 
   <footer class="site-footer">
@@ -59,6 +63,9 @@
     import { f2lNodes, f2lNode, f2lFullAlg, f2lIncoming, F2L_GROUPS, F2L_SOURCE } from '../../data/f2l.js';
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
+    import { mountF2lFinder } from '../../js/f2l-finder.js';
+    import { f2lFeatures, f2lFeatureWords } from '../../js/f2l-features.js';
+    import { caseState } from '../../js/cube-sim.js';
 
     document.getElementById('source-image').href = F2L_SOURCE.image;
     document.getElementById('source-site').href = F2L_SOURCE.site;
@@ -104,6 +111,7 @@
     // Cards, grouped the same way.
     mountViewToggle(document.getElementById('view-toggle'));
     const cases = document.getElementById('f2l-cases');
+    const groups = [];
     for (const [group, title] of Object.entries(F2L_GROUPS)) {
       const h3 = document.createElement('h3');
       h3.className = 'section-heading';
@@ -126,12 +134,30 @@
           hold: n.hold,
           stickering: 'f2l',
           diagramViews: ['cube'],
-          then: { text: label(n.next), href: n.next === '37' ? '#f2l-map' : `#f2l-${n.next}` },
+          then: { text: label(n.next), href: n.next === '37' ? '#map-heading' : `#f2l-${n.next}` },
           extraAlgs: full !== step ? [{ label: 'Whole solution from here', alg: full }] : [],
           note: n.note,
         };
       }));
+      groups.push({ heading: h3, grid });
     }
+
+    // Finder: features come from simulating each numbered case.
+    const norm = (s) => s.toLowerCase().replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim();
+    const items = f2lNodes.filter((n) => !n.solved).map((n) => {
+      const isCase = /^\d+$/.test(n.id);
+      const full = f2lFullAlg(n.id);
+      const features = isCase ? f2lFeatures(caseState(full)) : {};
+      return {
+        id: n.id,
+        isCase,
+        features,
+        category: n.desc || '',
+        text: norm(`case ${n.id} ${n.desc || ''} ${isCase ? f2lFeatureWords(features) : ''} ${n.step} ${full}`),
+        el: document.getElementById(`f2l-${n.id}`),
+      };
+    });
+    mountF2lFinder(document.getElementById('f2l-finder'), items, groups);
   </script>
 </body>
 </html>

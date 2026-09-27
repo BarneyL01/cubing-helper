@@ -22,7 +22,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/cfop/oll.html` — 2-look OLL cases
 - `3x3/cfop/pll.html` — 2-look PLL cases
 - `3x3/cfop/f2l.html` — F2L map (all 41 cases), transcribed from the
-  dogschasingsquirrels chart — credited on the page
+  dogschasingsquirrels chart — credited on the page. In the top menu as
+  "3x3 · F2L"; has a "Find a case" search/filter panel
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
   OLL); block building and most of LSE still placeholder
 - `3x3/beginners/index.html` — last layer done (match cross colours, match
