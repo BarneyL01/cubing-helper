@@ -24,7 +24,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/roux/index.html` — placeholder ("coming soon")
 - `3x3/beginners/index.html` — last layer done (match cross colours, match
   corners, orient corners); cross/corners/second-layer still placeholder
-- `2x2/index.html` — placeholder
+- `2x2/index.html` — Ortega: OLL and PBL done (2 of 7 OLL cases pending
+  decode — see Open questions)
 - `megaminx/index.html` — placeholder
 - shared: `css/style.css`, `js/twisty-embed.js`, `data/` (per-page algorithm
   data as JS/JSON), `assets/` (static diagram images)
@@ -51,7 +52,7 @@ Each case shows:
 - **v2** — Full CFOP (F2L, full 57 OLL / 21 PLL) — TBD if wanted
 - **v3** — Roux method
 - **v4** — Beginner's Method: white cross, white corners, second-layer edges
-- **v5** — 2x2 (method TBD — Ortega/CLL vs. beginner LBL)
+- **v5** — 2x2: Ortega (OLL + PBL) — done, 2 OLL cases pending decode
 - **v6** — Megaminx (likely beginner LBL + 2-look OLL/PLL equivalents)
 
 ## Open questions / TBD
@@ -65,14 +66,17 @@ Each case shows:
 - Beginner's Method "Match cross colours" algorithm was flagged by the user
   as possibly incomplete when they wrote it down — worth confirming against
   an actual solve
+- 2x2 Ortega "T CMLL" and "L CMLL" cases use mnemonic words ("Sledge",
+  "Fipgar", "Urvop") that were never given a letter-code — asked the user;
+  not recorded until we hear back
 
 ## Deploy
 
-Live on GitHub Pages, deployed by `.github/workflows/deploy-pages.yml` on
-every push to `main`. One manual one-time step is required in the GitHub
-UI (no API access to do this from here): **Settings → Pages → Build and
-deployment → Source: "GitHub Actions"**. Until that's set, the workflow
-will run but Pages won't actually serve the result.
+Live at https://barneyl01.github.io/cubing-helper/, deployed by
+`.github/workflows/deploy-pages.yml` on every push to `main` (it
+auto-configured the Pages source on its first run — no manual settings step
+turned out to be needed). Feature-branch work gets merged to `main`
+automatically once verified locally — see CLAUDE.md's "Branch workflow".
 
 ## v1 status
 

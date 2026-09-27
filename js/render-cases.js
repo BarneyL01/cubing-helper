@@ -43,7 +43,10 @@ export function renderCases(containerId, cases) {
     }
 
     const algBlock = el('div', 'case-alg');
-    algBlock.appendChild(el('code', null, c.alg || 'Algorithm not recorded yet — see alternative below.'));
+    const algFallback = c.altAlg
+      ? 'Algorithm not recorded yet — see alternative below.'
+      : 'Algorithm not recorded yet.';
+    algBlock.appendChild(el('code', null, c.alg || algFallback));
     card.appendChild(algBlock);
 
     if (c.mnemonicChunks && c.mnemonicChunks.length) {

@@ -74,3 +74,10 @@ exactly, which is strong confirmation the table is correct:
 - No letters for L, D, B, E, S, X, Y, Z, W turns have shown up yet — ask the
   user for these if/when Roux or another method needs them (Roux leans
   heavily on M-slice and rotations, so more letters are likely).
+- Two new named chunks appeared in the 2x2 Ortega notes with no letter-code
+  given at all (unlike every word above, which came with its letters up
+  front): **Sledge** (used in "Sassy Sledge" for 2x2's T CMLL case) and
+  **Fipgar** / **Urvop** (used in "Fipgar Urvop" for L CMLL). Nothing in the
+  existing letter table spells them, so they can't be decoded from this
+  cipher alone — asked the user for the letter-code or the raw algorithm
+  (2026-09-27, see `log/`).
