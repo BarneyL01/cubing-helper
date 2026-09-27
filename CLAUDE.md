@@ -62,3 +62,21 @@ standard WCA notation and the user's mnemonic word breakdown.
   introduces new cipher letters, and add a dated entry to `log/`.
 - Check `docs/plan.md` for current site structure and roadmap before
   restructuring pages/nav.
+
+## Branch workflow
+
+Develop on the feature branch (currently `claude/intelligent-galileo-z6cd7r`),
+verify locally (see "Verification" below), then **merge to `main` and let it
+deploy automatically** — the user has given standing permission for this, so
+it does not need to be asked for each time. Only pause to ask if something
+about a specific change feels like it should get a human look first (e.g. an
+algorithm you can't verify, a structural change to the site).
+
+## Verification
+
+Before merging to `main`, check new/changed pages with a local static server
+(`python3 -m http.server` from the repo root) plus a headless-Chromium
+check (screenshots + console error capture) — this has caught real bugs
+before (e.g. a flexbox overflow clipping long algorithms). `cdn.cubing.net`
+is blocked from this sandbox's network, so the `<twisty-player>` 3D preview
+itself can't be visually verified here — everything else on the page can.
