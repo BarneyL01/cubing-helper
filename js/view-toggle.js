@@ -1,9 +1,9 @@
 // Switches every case card between the built-in pictures (default) and the
-// cubing.js 3D player. The 3D script is hosted by the cubing.js project at
-// cdn.cubing.net, so it's only fetched once someone picks 3D — the default
-// view has no outside dependency.
+// cubing.js 3D player. The player is self-hosted in js/vendor/cubing/ (see
+// its README for version and licence); it's ~1 MB, so it's only loaded once
+// someone picks 3D.
 const STORAGE_KEY = 'cubing-helper:view';
-const TWISTY_URL = 'https://cdn.cubing.net/v0/js/cubing/twisty';
+const TWISTY_URL = new URL('./vendor/cubing/twisty.js', import.meta.url).href;
 
 let twistyLoad = null;
 
@@ -48,7 +48,7 @@ export function mountViewToggle(slot) {
       .catch(() => {
         twistyLoad = null;
         apply('image');
-        status.textContent = "3D view couldn't load (it comes from cdn.cubing.net) — showing pictures.";
+        status.textContent = "3D view couldn't load — showing pictures.";
       });
   }
 

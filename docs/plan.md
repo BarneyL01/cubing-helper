@@ -21,6 +21,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `index.html` — landing page, links out to each puzzle/method
 - `3x3/cfop/oll.html` — 2-look OLL cases
 - `3x3/cfop/pll.html` — 2-look PLL cases
+- `3x3/cfop/f2l.html` — F2L map (all 41 cases), transcribed from the
+  dogschasingsquirrels chart — credited on the page
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
   OLL); block building and most of LSE still placeholder
 - `3x3/beginners/index.html` — last layer done (match cross colours, match
@@ -53,7 +55,8 @@ Each case shows:
   pages for everything else
 - **v1.1** — Beginner's Method last layer (match cross colours, match
   corners, orient corners) — done
-- **v2** — Full CFOP (F2L, full 57 OLL / 21 PLL) — TBD if wanted
+- **v2** — Full CFOP: F2L map — done (2026-09-27); full 57 OLL / 21 PLL —
+  TBD if wanted
 - **v3** — Roux: CMLL — done; block building and full LSE still to come
 - **v4** — Beginner's Method: white cross, white corners, second-layer edges
 - **v5** — 2x2: Ortega (OLL + PBL) — done
@@ -67,14 +70,13 @@ Each case shows:
   when we get there; last layer is settled/recorded
 - OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
   if/when the user finds a main algorithm they prefer
-- The 3D view depends on `cdn.cubing.net` (third-party). Could be
-  self-hosted by vendoring cubing.js into the repo if that dependency
-  becomes a problem — not done, not asked for yet
 - Megaminx has no picture or 3D preview: the simulator only does cubes, and
-  cubing.js's twisty-player doesn't
-  use plain cube (R/U/F) notation for a megaminx, and this session's
-  network can't reach `cdn.cubing.net` to check what it does use — figure
-  out the right notation and wire it up when that's confirmed
+  cubing.js's twisty-player uses its own megaminx notation, not plain cube
+  R/U/F. Now that cubing.js is self-hosted (it includes megaminx) this can
+  be tested locally — figure out the notation mapping if a megaminx
+  preview is wanted
+- F2L map in 3D mode loads up to 48 players on one page; they only draw
+  when scrolled into view, but it may be slow on older phones
 - Roux LSE "4-edge recognition" terminology ("2o/2", "4c") is recorded as
   the user described it, but wasn't independently cross-checked the way
   the OLL/PLL/CMLL algorithms were — flag if any of it reads wrong. Its

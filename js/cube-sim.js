@@ -85,10 +85,29 @@ export function applyAlg(stickers, alg) {
   return state;
 }
 
+const ROTATIONS = ['', 'x', 'x2', "x'", 'z', "z'"].flatMap((a) =>
+  ['', 'y', 'y2', "y'"].map((b) => `${a} ${b}`.trim()),
+);
+
+const centresHome = (stickers) =>
+  stickers.every((s) => s.p.filter((v) => v !== 0).length !== 1 || s.colour === faceOf(s.n));
+
+// How the cube is held when a case starts. Algorithms that turn the whole
+// cube (x/y/z or wide moves like d) end with the cube held differently, so
+// the start is found by trying every hold until the centres come out in
+// their normal places. Slice-only algorithms (e.g. Roux's M U2 M) keep the
+// default hold, since for them the corners — not the centres — set the hold.
+export function startHold(alg) {
+  if (!/(^|\s)([xyz]|[rludfb]|\w+w)/.test(alg)) return '';
+  const inverse = invertAlg(alg);
+  return ROTATIONS.find((r) => centresHome(applyAlg(applyAlg(solvedCube(), r), inverse))) ?? '';
+}
+
 // The position a case starts from: the algorithm's inverse applied to a
-// solved cube, so running the algorithm itself solves it.
-export function caseState(alg) {
-  return applyAlg(solvedCube(), invertAlg(alg));
+// solved cube, so running the algorithm itself solves it. `hold` is a
+// whole-cube rotation for cases you reach already holding the cube turned.
+export function caseState(alg, hold = startHold(alg)) {
+  return applyAlg(applyAlg(solvedCube(), hold), invertAlg(alg));
 }
 
 export function isSolved(stickers) {

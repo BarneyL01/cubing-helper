@@ -213,6 +213,78 @@ h1 {
   display: none;
 }
 
+.case-then {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.case-card:target {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.source-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.source-note p {
+  margin: 0.25rem 0;
+}
+
+.f2l-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.f2l-map section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
+.f2l-map h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.f2l-map ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--border);
+}
+
+.f2l-map > section > ul {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.f2l-map li {
+  margin: 0.2rem 0;
+  font-size: 0.88rem;
+}
+
+.f2l-map li code {
+  background: var(--code-bg);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.f2l-map .f2l-desc {
+  color: var(--text-muted);
+}
+
 .view-toggle {
   display: flex;
   flex-wrap: wrap;

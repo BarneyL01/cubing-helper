@@ -27,11 +27,16 @@ added as it's actually needed.
   `js/cube-diagram.js` draws the resulting layer(s) as SVG, so a picture
   can never disagree with its algorithm and needs no outside service. A
   "Pictures / 3D" toggle (`js/view-toggle.js`, choice kept in
-  localStorage) switches to cubing.js's `<twisty-player>`, which is hosted
-  by the cubing.js project at `cdn.cubing.net` — it's only fetched when
-  someone picks 3D, and the page falls back to pictures if it can't load.
-  Per-case data fields: `stickering` ('full' default, 'oll', 'cmll', 'eo'),
-  `diagramViews` (e.g. `['U', 'D']` for both layers), `noViewer` (no
+  localStorage) switches to cubing.js's `<twisty-player>`, **self-hosted**
+  in `js/vendor/cubing/` (unmodified esbuild bundle of cubing.js v0.63.7 +
+  three.js; licence notices and rebuild steps in its README). It's ~1 MB,
+  so it's only loaded when someone picks 3D, and the page falls back to
+  pictures if it fails. The site makes no requests to outside servers.
+  Per-case data fields: `stickering` ('full' default, 'oll', 'cmll', 'eo',
+  'f2l'), `diagramViews` (`['U']` default, `['U', 'D']` for both layers,
+  `['cube']` for the top/front/right view), `hold` (a whole-cube rotation
+  for cases you reach already holding the cube turned — otherwise worked
+  out automatically for algorithms containing y/d etc.), `noViewer` (no
   picture or 3D, for procedural steps or unsupported puzzles).
 
 ## Repo layout
@@ -47,7 +52,13 @@ Grows one struggle-case at a time as the user sends notes — nothing here was
 built ahead of being asked for. As of 2026-09-27:
 
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
-  original notes. `data/oll.js`, `data/pll.js`.
+  original notes. `data/oll.js`, `data/pll.js`. Plus an **F2L map**
+  (`data/f2l.js`, `3x3/cfop/f2l.html`): all 41 cases + 7 in-between steps,
+  each step leading to another case. **Not our original work** — it's a
+  transcription of the dogschasingsquirrels chart
+  (https://dogschasingsquirrels.files.wordpress.com/2014/06/f2l.jpg); keep
+  that credit on the page and in the data file. No mnemonic words for F2L
+  (they weren't in the user's notes).
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below); one LSE recognition case. Block building and the rest of LSE are
   placeholder. `data/roux.js`.
@@ -99,10 +110,11 @@ algorithm you can't verify, a structural change to the site).
 Before merging to `main`, check new/changed pages with a local static server
 (`python3 -m http.server` from the repo root) plus a headless-Chromium
 check (screenshots + console error capture) — this has caught real bugs
-before (e.g. a flexbox overflow clipping long algorithms). `cdn.cubing.net`
-is blocked from this sandbox's network, so the `<twisty-player>` 3D preview
-itself can't be visually verified here — everything else on the page can,
-including the pictures. `js/cube-sim.js` also works as an algorithm
+before (e.g. a flexbox overflow clipping long algorithms). The 3D view can
+be checked too now it's self-hosted: launch Chromium with
+`--use-gl=swiftshader --enable-unsafe-swiftshader`, click the 3D button,
+and scroll each player into view before screenshotting (players only draw
+when visible). `js/cube-sim.js` also works as an algorithm
 checker under Node (copy `js/` + `data/` somewhere with a
 `{"type":"module"}` package.json): e.g. every CFOP OLL case must leave the
 first two layers solved, every PLL case must also leave the top oriented.

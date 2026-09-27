@@ -28,8 +28,13 @@ const pieceType = (p) => p.filter((v) => v !== 0).length; // 3 corner, 2 edge, 1
 // out, since corner-only steps don't care about them; 'eo' (Roux LSE) greys
 // out corners and shows which stickers are a top/bottom colour, which is how
 // edge orientation is judged.
-function fill(sticker, top, stickering) {
+function fill(sticker, top, stickering, pieceColours) {
   if (stickering === 'full') return COLOURS[sticker.colour];
+  if (stickering === 'f2l') {
+    // Last-layer pieces don't matter yet: grey them, keep the top centre.
+    const lastLayerPiece = pieceColours.includes('U') && pieceType(sticker.p) !== 1;
+    return lastLayerPiece ? NOT_TOP : COLOURS[sticker.colour];
+  }
   if (stickering === 'eo') {
     if (pieceType(sticker.p) === 3) return IGNORED;
     return sticker.colour === 'U' || sticker.colour === 'D' ? COLOURS[sticker.colour] : NOT_TOP;
@@ -75,7 +80,7 @@ function layerSvg(state, viewKey, size, stickering) {
       w = STRIP;
     }
     rects.push(
-      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering)}" stroke="${STROKE}" stroke-width="0.4"/>`,
+      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering, [])}" stroke="${STROKE}" stroke-width="0.4"/>`,
     );
   }
 
@@ -84,15 +89,65 @@ function layerSvg(state, viewKey, size, stickering) {
   return `<svg viewBox="${-pad} ${-pad} ${box} ${box}" role="img" aria-label="${view.label} layer of the case">${rects.join('')}</svg>`;
 }
 
+// Three faces (top, front, right) in an oblique projection, like a photo of
+// the cube from the front-right-top — used for F2L, where the pieces that
+// matter can be down in the slot, out of sight of a top-only view.
+function cubeSvg(state, stickering) {
+  const S = 10;
+  const DEPTH = 0.5; // how far back faces are sheared up-and-right
+  const pieceColours = new Map();
+  for (const s of state) {
+    const key = s.p.join(',');
+    pieceColours.set(key, [...(pieceColours.get(key) ?? []), s.colour]);
+  }
+  // Each face maps its (u, v) grid, 0..3 in each direction, to the screen.
+  const faces = [
+    {
+      normal: [0, 1, 0], // top: u = left→right, v = back→front
+      cell: (p) => [p[0] + 1, p[2] + 1],
+      point: (u, v) => [u * S + (3 - v) * S * DEPTH, -(3 - v) * S * DEPTH],
+    },
+    {
+      normal: [0, 0, 1], // front: u = left→right, v = top→bottom
+      cell: (p) => [p[0] + 1, 1 - p[1]],
+      point: (u, v) => [u * S, v * S],
+    },
+    {
+      normal: [1, 0, 0], // right: u = front→back, v = top→bottom
+      cell: (p) => [1 - p[2], 1 - p[1]],
+      point: (u, v) => [3 * S + u * S * DEPTH, v * S - u * S * DEPTH],
+    },
+  ];
+  const polys = [];
+  for (const face of faces) {
+    for (const s of state) {
+      if (!same(s.n, face.normal)) continue;
+      const [u, v] = face.cell(s.p);
+      const inset = 0.06;
+      const corners = [
+        [u + inset, v + inset],
+        [u + 1 - inset, v + inset],
+        [u + 1 - inset, v + 1 - inset],
+        [u + inset, v + 1 - inset],
+      ].map(([a, b]) => face.point(a, b).map((n) => n.toFixed(2)).join(','));
+      const colour = fill(s, 'U', stickering, pieceColours.get(s.p.join(',')));
+      polys.push(`<polygon points="${corners.join(' ')}" fill="${colour}" stroke="${STROKE}" stroke-width="0.4" stroke-linejoin="round"/>`);
+    }
+  }
+  const lift = 3 * S * DEPTH;
+  return `<svg viewBox="-1 ${-lift - 1} ${3 * S + lift + 2} ${3 * S + lift + 2}" role="img" aria-label="Top, front and right faces of the case">${polys.join('')}</svg>`;
+}
+
 // A picture of the position the algorithm solves, computed by applying the
 // algorithm's inverse to a solved cube — so it can't disagree with the
 // algorithm text.
-export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'] } = {}) {
-  const state = caseState(alg);
+export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'], hold } = {}) {
+  const state = caseState(alg, hold);
   const wrapper = document.createElement('div');
   wrapper.className = 'case-diagram';
   wrapper.innerHTML = views
     .map((v) => {
+      if (v === 'cube') return `<figure>${cubeSvg(state, stickering)}</figure>`;
       const caption = views.length > 1 ? `<figcaption>${VIEWS[v].label}</figcaption>` : '';
       return `<figure>${layerSvg(state, v, size, stickering)}${caption}</figure>`;
     })
