@@ -27,17 +27,25 @@ export const ortegaOllCases = [
   {
     id: 't-cmll',
     name: 'T CMLL',
-    alg: null,
-    mnemonicChunks: [{ word: 'Sassy', moves: "R U R' U'" }],
-    note:
-      'Your note said "Sassy Sledge" — "Sassy" decodes fine (R U R\' U\'), but "Sledge" hasn\'t been given a letter-code yet, so this isn\'t recorded. Not the same length as CFOP\'s T1, so probably a different (shorter) algorithm, not a straight reuse.',
+    puzzle: '2x2x2',
+    alg: "R U R' U' R' F R F'",
+    mnemonicChunks: [
+      { word: 'Sassy', moves: "R U R' U'" },
+      { word: 'Sledge', moves: "R' F R F'" },
+    ],
+    note: 'A shorter, orientation-only algorithm — not the same as CFOP\'s T1 (which also has to preserve edges).',
   },
   {
     id: 'l-cmll',
     name: 'L CMLL',
-    alg: null,
+    puzzle: '2x2x2',
+    alg: "F R' F' R U R U' R'",
+    mnemonicChunks: [
+      { word: 'Fipgar', moves: "F R' F' R" },
+      { word: 'Urvop', moves: "U R U' R'" },
+    ],
     note:
-      'Your note said "Fipgar Urvop" — neither word has a letter-code yet, so this isn\'t recorded.',
+      'Fipgar and Urvop decode as "F" + Pager (PGR = R\' F\' R) and "U" + RVP (R U\' R\'), per your hint that both were already in the table. Flag if that\'s not what you meant.',
   },
   {
     id: 'pi',

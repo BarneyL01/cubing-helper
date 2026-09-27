@@ -24,8 +24,7 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/roux/index.html` — placeholder ("coming soon")
 - `3x3/beginners/index.html` — last layer done (match cross colours, match
   corners, orient corners); cross/corners/second-layer still placeholder
-- `2x2/index.html` — Ortega: OLL and PBL done (2 of 7 OLL cases pending
-  decode — see Open questions)
+- `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — placeholder
 - shared: `css/style.css`, `js/twisty-embed.js`, `data/` (per-page algorithm
   data as JS/JSON), `assets/` (static diagram images)
@@ -52,13 +51,13 @@ Each case shows:
 - **v2** — Full CFOP (F2L, full 57 OLL / 21 PLL) — TBD if wanted
 - **v3** — Roux method
 - **v4** — Beginner's Method: white cross, white corners, second-layer edges
-- **v5** — 2x2: Ortega (OLL + PBL) — done, 2 OLL cases pending decode
+- **v5** — 2x2: Ortega (OLL + PBL) — done
 - **v6** — Megaminx (likely beginner LBL + 2-look OLL/PLL equivalents)
 
 ## Open questions / TBD
 
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
-- 2x2 and Megaminx method choice — ask when we get there
+- Megaminx method choice — ask when we get there (2x2 is settled: Ortega)
 - Static 2D diagrams per case are deferred (see `log/` for why) — the
   interactive 3D twisty player is the accurate visual for v1
 - OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
@@ -66,9 +65,10 @@ Each case shows:
 - Beginner's Method "Match cross colours" algorithm was flagged by the user
   as possibly incomplete when they wrote it down — worth confirming against
   an actual solve
-- 2x2 Ortega "T CMLL" and "L CMLL" cases use mnemonic words ("Sledge",
-  "Fipgar", "Urvop") that were never given a letter-code — asked the user;
-  not recorded until we hear back
+- 2x2 Ortega "L CMLL" ("Fipgar Urvop") was decoded by inference (Fipgar =
+  "F" + Pager, Urvop = "U" + RVP) rather than a letter-code the user gave
+  directly — worth a quick confirmation (T CMLL's "Sledge" was confirmed
+  directly, no concern there)
 
 ## Deploy
 

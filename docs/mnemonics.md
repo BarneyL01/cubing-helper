@@ -39,6 +39,9 @@ algorithm to the site.
 | Privilege | PVG | R' U' F' |
 | Pager | PGR | R' F' R |
 | Pure | PUR | R' U R |
+| Sledge | PFRG | R' F R F' |
+| Fipgar | F + PGR | F R' F' R |
+| Urvop | U + RVP | U R U' R' |
 
 ## How this was decoded
 
@@ -68,16 +71,17 @@ exactly, which is strong confirmation the table is correct:
 - **Z-perm**, "KU-NU-NU-KU2-NV", decodes to
   `M' U M2 U M2 U M' U2 M2 U'` — consistent with the table above. Confirmed
   correct by the user (2026-09-26).
+- **Sledge** (2x2 Ortega's T CMLL = "Sassy Sledge") — the user gave this one
+  directly: `R' F R F'`, letter-code `PFRG`. Matches the cipher exactly.
+- **Fipgar** and **Urvop** (2x2 Ortega's L CMLL = "Fipgar Urvop") — the user
+  didn't spell these out letter-by-letter, but said both were "already in
+  the table". Read as compressed pronunciations of an added letter plus an
+  existing chunk: Fipgar = "F" + Pager (`PGR` = `R' F' R`) → `F R' F' R`;
+  Urvop = "U" + RVP (`R U' R'`) → `U R U' R'`. Not confirmed as explicitly
+  as Sledge was — flag if this reading is wrong.
 
 ## Still open
 
 - No letters for L, D, B, E, S, X, Y, Z, W turns have shown up yet — ask the
   user for these if/when Roux or another method needs them (Roux leans
   heavily on M-slice and rotations, so more letters are likely).
-- Two new named chunks appeared in the 2x2 Ortega notes with no letter-code
-  given at all (unlike every word above, which came with its letters up
-  front): **Sledge** (used in "Sassy Sledge" for 2x2's T CMLL case) and
-  **Fipgar** / **Urvop** (used in "Fipgar Urvop" for L CMLL). Nothing in the
-  existing letter table spells them, so they can't be decoded from this
-  cipher alone — asked the user for the letter-code or the raw algorithm
-  (2026-09-27, see `log/`).
