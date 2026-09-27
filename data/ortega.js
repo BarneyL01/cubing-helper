@@ -14,12 +14,14 @@ export const ortegaPblCases = [
     id: 'two-bars-front',
     name: 'Two bars, both facing front',
     puzzle: '2x2x2',
+    diagramViews: ['U', 'D'],
     alg: "R2 U' B2 U2 R2 U' R2",
   },
   {
     id: 'no-bars',
     name: 'Top & bottom, no bar',
     puzzle: '2x2x2',
+    diagramViews: ['U', 'D'],
     alg: "R2 F2 R2",
   },
   {
@@ -27,6 +29,7 @@ export const ortegaPblCases = [
     name: 'One bar, other side has none',
     orientation: 'Put the bar on top, facing you.',
     puzzle: '2x2x2',
+    diagramViews: ['U', 'D'],
     alg: "R U' R F2 R' U R'",
   },
   {
@@ -34,6 +37,7 @@ export const ortegaPblCases = [
     name: 'One side solved, other has a bar',
     orientation: 'T-perm — same algorithm as CFOP 2-look PLL.',
     puzzle: '2x2x2',
+    diagramViews: ['U', 'D'],
     alg: "R U R' U' R' F R2 U' R' U' R U R' F'",
   },
   {
@@ -41,6 +45,7 @@ export const ortegaPblCases = [
     name: 'One side solved, other has no bar',
     orientation: 'Y-perm — same algorithm as CFOP 2-look PLL.',
     puzzle: '2x2x2',
+    diagramViews: ['U', 'D'],
     alg: "F R U' R' U' R U R' F' R U R' U' R' F R F'",
   },
 ];

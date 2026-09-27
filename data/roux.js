@@ -12,6 +12,8 @@ export const rouxLseCases = [
   {
     id: 'lse-4c',
     name: 'LSE — 4-edge recognition (2 opposite already oriented)',
+    stickering: 'eo',
+    diagramViews: ['U', 'D'],
     orientation:
       'With 2 opposite edges already oriented (your "2o/2"): set them left/right, then M or M\' + U2 and reverse.',
     alg: "M U2 M",

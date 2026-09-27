@@ -12,6 +12,7 @@ export const cornerOrientationCases = [
   {
     id: 'sune',
     name: 'Sune',
+    stickering: 'cmll',
     alg: "R U R' U R U2 R'",
     mnemonicChunks: [
       { word: 'Ugly', moves: "R U R' U" },
@@ -21,6 +22,7 @@ export const cornerOrientationCases = [
   {
     id: 'antisune',
     name: 'Antisune',
+    stickering: 'cmll',
     alg: "R U2 R' U' R U' R'",
     mnemonicChunks: [
       { word: 'Loopy', moves: "R U2 R'" },
@@ -31,6 +33,7 @@ export const cornerOrientationCases = [
   {
     id: 'h',
     name: 'H',
+    stickering: 'cmll',
     orientation: 'H is up/down.',
     alg: "U R U R' U R U' R' U R U2 R'",
     mnemonicChunks: [
@@ -51,6 +54,7 @@ export const cornerOrientationCases = [
   {
     id: 't',
     name: 'T',
+    stickering: 'cmll',
     alg: "R U R' U' R' F R F'",
     mnemonicChunks: [
       { word: 'Sassy', moves: "R U R' U'" },
@@ -61,6 +65,7 @@ export const cornerOrientationCases = [
   {
     id: 'l',
     name: 'L',
+    stickering: 'cmll',
     alg: "F R' F' R U R U' R'",
     mnemonicChunks: [
       { word: 'Fipgar', moves: "F R' F' R" },
@@ -71,6 +76,7 @@ export const cornerOrientationCases = [
   {
     id: 'u',
     name: 'U',
+    stickering: 'cmll',
     alg: "F R U R' U' F'",
     mnemonicChunks: [
       { word: 'F', moves: 'F' },
@@ -82,6 +88,7 @@ export const cornerOrientationCases = [
   {
     id: 'pi',
     name: 'Pi',
+    stickering: 'cmll',
     alg: "F R U R' U' R U R' U' F'",
     mnemonicChunks: [
       { word: 'F', moves: 'F' },

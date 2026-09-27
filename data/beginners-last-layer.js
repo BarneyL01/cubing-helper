@@ -10,7 +10,7 @@ export const beginnerLastLayerCases = [
     alg: "R U R' U R U2 R' U",
     story: 'Your memory: "Match Cross = RU algo."',
     note:
-      "Flagged by you as possibly incomplete when you wrote it down. Both of your notes (\"RUR'URU UR'U\" and \"(RUR') URU - UR'U\") decode to this same sequence, but double-check it actually matches the cross to the side colours on your own cube before relying on it.",
+      "You flagged this as possibly incomplete. Checked with a cube simulation: it swaps exactly the front and left top edges and leaves the first two layers alone (it twists corners, which the next two steps fix). That's the standard beginner edge swap, so it looks complete.",
   },
   {
     id: 'match-corners',
@@ -25,5 +25,8 @@ export const beginnerLastLayerCases = [
     orientation:
       "Put the unsolved corner on the bottom, then repeat the 4-move sequence until it's oriented. Turn U (top layer only) to bring the next unsolved corner around and repeat.",
     alg: "R U R' U'",
+    // Repeated a varying number of times per corner, so a picture of one
+    // application would show a position you never actually see.
+    noViewer: true,
   },
 ];

@@ -4,6 +4,7 @@ export const ollCases = [
   {
     id: 'antisune',
     name: 'Antisune',
+    stickering: 'oll',
     orientation: 'Yellow square in the top-right corner.',
     alg: "R U2 R' U' R U' R'",
     mnemonicChunks: [
@@ -17,6 +18,7 @@ export const ollCases = [
   {
     id: 'sune',
     name: 'Sune',
+    stickering: 'oll',
     orientation: 'Yellow square in the bottom-left corner, facing you.',
     alg: "R U R' U R U2 R'",
     mnemonicChunks: [
@@ -29,6 +31,7 @@ export const ollCases = [
   {
     id: 'h1',
     name: 'H1',
+    stickering: 'oll',
     orientation: 'H shape, facing up-down.',
     alg: "F R U R' U' R U R' U' R U R' U' F'",
     mnemonicChunks: [
@@ -42,6 +45,7 @@ export const ollCases = [
   {
     id: 'l-up-left',
     name: 'L^',
+    stickering: 'oll',
     orientation: 'L shape, yellow facing up-and-left (mirror of the down-and-right version).',
     alg: "R U2 R' U' R U R' U' R U R' U' R U' R'",
     mnemonicChunks: [
@@ -57,6 +61,7 @@ export const ollCases = [
   {
     id: 'pi1',
     name: 'Pi1',
+    stickering: 'oll',
     orientation: 'Pi shape (no orientation note recorded yet — check against your own recognition).',
     alg: "R U2 R2 U' R2 U' R2 U2 R",
     mnemonicChunks: [
@@ -71,6 +76,7 @@ export const ollCases = [
   {
     id: 't1',
     name: 'T1',
+    stickering: 'oll',
     orientation: 'T shape, facing bottom.',
     alg: "F R U R' U' R U' R' U' R U R' F'",
     mnemonicChunks: [
@@ -85,6 +91,7 @@ export const ollCases = [
   {
     id: 'u-up',
     name: 'U^',
+    stickering: 'oll',
     orientation: 'U shape, facing up.',
     alg: "F R U' R' U R U R' U R U' R' F'",
     mnemonicChunks: [
@@ -100,6 +107,7 @@ export const ollCases = [
   {
     id: 'u-down',
     name: 'Uv',
+    stickering: 'oll',
     orientation: 'U shape, facing down.',
     alg: null,
     note: "Primary algorithm wasn't captured in the original notes — use the alternative below until a main one is added.",

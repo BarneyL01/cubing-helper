@@ -1,4 +1,5 @@
 import { invertAlg } from './algs.js';
+import { caseDiagram } from './cube-diagram.js';
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -16,8 +17,8 @@ function mnemonicBreakdown(chunks) {
 }
 
 // Renders a list of algorithm "cases" (OLL/PLL/etc.) into a container element,
-// each with an interactive 3D twisty-player preview built from the algorithm
-// itself (so the preview can't drift out of sync with the algorithm text).
+// each with a picture and a 3D player, both built from the algorithm itself
+// (so neither can drift out of sync with the algorithm text).
 export function renderCases(containerId, cases) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -32,6 +33,15 @@ export function renderCases(containerId, cases) {
 
     const viewerAlg = !c.noViewer && (c.alg || c.altAlg);
     if (viewerAlg) {
+      const visual = el('div', 'case-visual');
+      visual.appendChild(
+        caseDiagram(viewerAlg, {
+          size: c.puzzle === '2x2x2' ? 2 : 3,
+          stickering: c.stickering,
+          views: c.diagramViews,
+        }),
+      );
+      // Stays an inert element until the 3D toggle loads the cubing.js script.
       const viewer = document.createElement('twisty-player');
       viewer.setAttribute('puzzle', c.puzzle || '3x3x3');
       viewer.setAttribute('alg', viewerAlg);
@@ -39,7 +49,8 @@ export function renderCases(containerId, cases) {
       viewer.setAttribute('background', 'none');
       viewer.setAttribute('control-panel', 'bottom-row');
       viewer.className = 'case-viewer';
-      card.appendChild(viewer);
+      visual.appendChild(viewer);
+      card.appendChild(visual);
     }
 
     const algBlock = el('div', 'case-alg');

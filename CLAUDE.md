@@ -22,9 +22,17 @@ added as it's actually needed.
   `CLAUDE.md` are intentionally left out of the deployed site. Do not put
   the site under a folder literally named `docs/` — that name is reserved
   for planning docs (see below).
-- Graphics: interactive 3D cube via a twisty-player web component
-  (cubing.js / alg.cubing.net's `<twisty-player>`), paired with static 2D
-  diagram images for quick scanning without waiting on JS/animation.
+- Graphics: **pictures by default**, drawn by our own code —
+  `js/cube-sim.js` applies each algorithm's inverse to a solved cube and
+  `js/cube-diagram.js` draws the resulting layer(s) as SVG, so a picture
+  can never disagree with its algorithm and needs no outside service. A
+  "Pictures / 3D" toggle (`js/view-toggle.js`, choice kept in
+  localStorage) switches to cubing.js's `<twisty-player>`, which is hosted
+  by the cubing.js project at `cdn.cubing.net` — it's only fetched when
+  someone picks 3D, and the page falls back to pictures if it can't load.
+  Per-case data fields: `stickering` ('full' default, 'oll', 'cmll', 'eo'),
+  `diagramViews` (e.g. `['U', 'D']` for both layers), `noViewer` (no
+  picture or 3D, for procedural steps or unsupported puzzles).
 
 ## Repo layout
 
@@ -93,4 +101,9 @@ Before merging to `main`, check new/changed pages with a local static server
 check (screenshots + console error capture) — this has caught real bugs
 before (e.g. a flexbox overflow clipping long algorithms). `cdn.cubing.net`
 is blocked from this sandbox's network, so the `<twisty-player>` 3D preview
-itself can't be visually verified here — everything else on the page can.
+itself can't be visually verified here — everything else on the page can,
+including the pictures. `js/cube-sim.js` also works as an algorithm
+checker under Node (copy `js/` + `data/` somewhere with a
+`{"type":"module"}` package.json): e.g. every CFOP OLL case must leave the
+first two layers solved, every PLL case must also leave the top oriented.
+Run that kind of check when adding algorithms.
