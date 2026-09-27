@@ -33,16 +33,30 @@ added as it's actually needed.
 - `log/` — dated progress-log entries (one file per session/milestone)
 - `CLAUDE.md` — this file
 
-## Content scope (v1)
+## Content scope (current)
 
-3x3 CFOP only: the specific 2-look OLL and PLL cases from the user's original
-notes (OLL: Antisune, Sune, H1, L^, Pi1, T1, U^, Uv. PLL: Y-perm, T-perm, Ua,
-Ub, H, Z). Nav includes placeholder ("coming soon") pages for Roux,
-Beginner's Method, 2x2, and Megaminx, to be filled in later.
+Grows one struggle-case at a time as the user sends notes — nothing here was
+built ahead of being asked for. As of 2026-09-27:
 
-Beginner's Method now also has its last-layer steps (match cross colours,
-match corners, orient corners) — see `data/beginners-last-layer.js`. Its
-white cross / white corners / second-layer steps are still placeholder.
+- **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
+  original notes. `data/oll.js`, `data/pll.js`.
+- **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
+  below); one LSE recognition case. Block building and the rest of LSE are
+  placeholder. `data/roux.js`.
+- **3x3 Beginner's Method** — last layer only (match cross colours, match
+  corners, orient corners). White cross / corners / second-layer are
+  placeholder. `data/beginners-last-layer.js`.
+- **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
+  cases. `data/ortega.js`.
+- **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
+  Earlier steps are placeholder, and there's no interactive 3D preview yet
+  (see `docs/plan.md`'s Open questions). `data/megaminx.js`.
+
+`data/corner-orientation.js` holds the 7 last-layer corner-orientation
+cases (Sune, Antisune, H, T, L, U, Pi) shared by 2x2 Ortega's OLL step and
+Roux's CMLL — they're the same cases and algorithms on both. CFOP's 3x3 OLL
+cases are genuinely different algorithms (they also have to preserve edge
+positions) and stay separate in `data/oll.js`.
 
 ## The mnemonic cipher
 

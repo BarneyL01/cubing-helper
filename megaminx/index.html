@@ -22,12 +22,34 @@
 
   <main>
     <h1>Megaminx</h1>
-    <p class="subtitle">Method not decided yet — likely beginner layer-by-layer plus 2-look OLL/PLL equivalents.</p>
-    <div class="coming-soon">Not built yet — see <code>docs/plan.md</code> for the roadmap.</div>
+    <p class="subtitle">Last-layer notes so far — no interactive 3D preview yet (see note below).</p>
+    <div class="coming-soon">
+      No interactive cube preview on this page: cubing.js's twisty-player
+      doesn't use plain R/U/F cube notation for a megaminx, and that
+      couldn't be verified from this session's network. Text and algorithms
+      only, for now.
+    </div>
+
+    <h2 class="section-heading">Gray star (edge orientation)</h2>
+    <div id="megaminx-star-cases" class="case-grid"></div>
+
+    <h2 class="section-heading">Align star pieces</h2>
+    <div id="megaminx-align-cases" class="case-grid"></div>
+
+    <h2 class="section-heading">Gray corners</h2>
+    <div id="megaminx-corner-cases" class="case-grid"></div>
   </main>
 
   <footer class="site-footer">
     Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
   </footer>
+
+  <script type="module">
+    import { megaminxGrayStarCases, megaminxAlignStarCases, megaminxGrayCornerCases } from '../data/megaminx.js';
+    import { renderCases } from '../js/render-cases.js';
+    renderCases('megaminx-star-cases', megaminxGrayStarCases);
+    renderCases('megaminx-align-cases', megaminxAlignStarCases);
+    renderCases('megaminx-corner-cases', megaminxGrayCornerCases);
+  </script>
 </body>
 </html>

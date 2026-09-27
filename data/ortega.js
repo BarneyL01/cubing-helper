@@ -1,88 +1,13 @@
 // 2x2 Ortega method: solve one side (intuitive, not recorded here), then
 // orient the other side's corners (OLL), then permute both layers (PBL).
-export const ortegaOllCases = [
-  {
-    id: 'sune',
-    name: 'Sune',
-    orientation: 'Same case as CFOP 2-look OLL — same algorithm, reused here.',
-    puzzle: '2x2x2',
-    alg: "R U R' U R U2 R'",
-    mnemonicChunks: [
-      { word: 'Ugly', moves: "R U R' U" },
-      { word: 'Loopy', moves: "R U2 R'" },
-    ],
-  },
-  {
-    id: 'antisune',
-    name: 'Antisune',
-    orientation: 'Same case as CFOP 2-look OLL — same algorithm, reused here.',
-    puzzle: '2x2x2',
-    alg: "R U2 R' U' R U' R'",
-    mnemonicChunks: [
-      { word: 'Loopy', moves: "R U2 R'" },
-      { word: 'V', moves: "U'" },
-      { word: 'RVP', moves: "R U' R'" },
-    ],
-  },
-  {
-    id: 't-cmll',
-    name: 'T CMLL',
-    puzzle: '2x2x2',
-    alg: "R U R' U' R' F R F'",
-    mnemonicChunks: [
-      { word: 'Sassy', moves: "R U R' U'" },
-      { word: 'Sledge', moves: "R' F R F'" },
-    ],
-    note: 'A shorter, orientation-only algorithm — not the same as CFOP\'s T1 (which also has to preserve edges).',
-  },
-  {
-    id: 'l-cmll',
-    name: 'L CMLL',
-    puzzle: '2x2x2',
-    alg: "F R' F' R U R U' R'",
-    mnemonicChunks: [
-      { word: 'Fipgar', moves: "F R' F' R" },
-      { word: 'Urvop', moves: "U R U' R'" },
-    ],
-    note:
-      'Fipgar and Urvop decode as "F" + Pager (PGR = R\' F\' R) and "U" + RVP (R U\' R\'), per your hint that both were already in the table. Flag if that\'s not what you meant.',
-  },
-  {
-    id: 'pi',
-    name: 'Pi',
-    puzzle: '2x2x2',
-    alg: "F R U R' U' R U R' U' F'",
-    mnemonicChunks: [
-      { word: 'F', moves: 'F' },
-      { word: 'Sassy×2', moves: "(R U R' U')×2" },
-      { word: 'G', moves: "F'" },
-    ],
-  },
-  {
-    id: 'u',
-    name: 'U',
-    puzzle: '2x2x2',
-    alg: "F R U R' U' F'",
-    mnemonicChunks: [
-      { word: 'F', moves: 'F' },
-      { word: 'Sassy', moves: "R U R' U'" },
-      { word: 'G', moves: "F'" },
-    ],
-  },
-  {
-    id: 'h',
-    name: 'H',
-    orientation: 'H is up/down.',
-    puzzle: '2x2x2',
-    alg: "F R U R' U' R U R' U' R U R' U' F'",
-    mnemonicChunks: [
-      { word: 'F', moves: 'F' },
-      { word: 'Sassy×3', moves: "(R U R' U')×3" },
-      { word: 'G', moves: "F'" },
-    ],
-    note: 'Same algorithm as CFOP 2-look OLL\'s H1.',
-  },
-];
+import { cornerOrientationCases } from './corner-orientation.js';
+
+// Ortega's OLL step is exactly the shared 7 corner-orientation cases,
+// rendered on a 2x2 puzzle instead of the default 3x3.
+export const ortegaOllCases = cornerOrientationCases.map((c) => ({
+  ...c,
+  puzzle: '2x2x2',
+}));
 
 export const ortegaPblCases = [
   {

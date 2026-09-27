@@ -30,7 +30,7 @@ export function renderCases(containerId, cases) {
     if (c.orientation) header.appendChild(el('p', 'case-orientation', c.orientation));
     card.appendChild(header);
 
-    const viewerAlg = c.alg || c.altAlg;
+    const viewerAlg = !c.noViewer && (c.alg || c.altAlg);
     if (viewerAlg) {
       const viewer = document.createElement('twisty-player');
       viewer.setAttribute('puzzle', c.puzzle || '3x3x3');

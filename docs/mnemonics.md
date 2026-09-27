@@ -74,11 +74,12 @@ exactly, which is strong confirmation the table is correct:
 - **Sledge** (2x2 Ortega's T CMLL = "Sassy Sledge") — the user gave this one
   directly: `R' F R F'`, letter-code `PFRG`. Matches the cipher exactly.
 - **Fipgar** and **Urvop** (2x2 Ortega's L CMLL = "Fipgar Urvop") — the user
-  didn't spell these out letter-by-letter, but said both were "already in
-  the table". Read as compressed pronunciations of an added letter plus an
-  existing chunk: Fipgar = "F" + Pager (`PGR` = `R' F' R`) → `F R' F' R`;
-  Urvop = "U" + RVP (`R U' R'`) → `U R U' R'`. Not confirmed as explicitly
-  as Sledge was — flag if this reading is wrong.
+  didn't spell these out letter-by-letter at first, but said both were
+  "already in the table". Read as compressed pronunciations of an added
+  letter plus an existing chunk: Fipgar = "F" + Pager (`PGR` = `R' F' R`) →
+  `F R' F' R`; Urvop = "U" + RVP (`R U' R'`) → `U R U' R'`. **Independently
+  confirmed** when the Roux CMLL notes spelled the same case out letter by
+  letter as "F-P-G-R-U-R-V-P", matching exactly (2026-09-27).
 
 ## Still open
 

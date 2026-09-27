@@ -21,13 +21,16 @@ Megaminx. Hosted free on GitHub Pages.
 - `index.html` — landing page, links out to each puzzle/method
 - `3x3/cfop/oll.html` — 2-look OLL cases
 - `3x3/cfop/pll.html` — 2-look PLL cases
-- `3x3/roux/index.html` — placeholder ("coming soon")
+- `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
+  OLL); block building and most of LSE still placeholder
 - `3x3/beginners/index.html` — last layer done (match cross colours, match
   corners, orient corners); cross/corners/second-layer still placeholder
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
-- `megaminx/index.html` — placeholder
-- shared: `css/style.css`, `js/twisty-embed.js`, `data/` (per-page algorithm
-  data as JS/JSON), `assets/` (static diagram images)
+- `megaminx/index.html` — Gray star, align star, and Gray corner notes
+  recorded; no interactive 3D preview (see Open questions)
+- shared: `css/style.css`, `js/algs.js`, `js/render-cases.js`, `data/`
+  (per-page algorithm data as ES modules — `data/corner-orientation.js`
+  holds the 7 corner-orientation cases shared by Ortega and Roux CMLL)
 
 ## Per-algorithm content
 
@@ -49,26 +52,32 @@ Each case shows:
 - **v1.1** — Beginner's Method last layer (match cross colours, match
   corners, orient corners) — done
 - **v2** — Full CFOP (F2L, full 57 OLL / 21 PLL) — TBD if wanted
-- **v3** — Roux method
+- **v3** — Roux: CMLL — done; block building and full LSE still to come
 - **v4** — Beginner's Method: white cross, white corners, second-layer edges
 - **v5** — 2x2: Ortega (OLL + PBL) — done
-- **v6** — Megaminx (likely beginner LBL + 2-look OLL/PLL equivalents)
+- **v6** — Megaminx: Gray star / align star / Gray corners — done (last
+  layer only so far); still needs a 3D preview and earlier steps
 
 ## Open questions / TBD
 
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
-- Megaminx method choice — ask when we get there (2x2 is settled: Ortega)
+- Megaminx method choice for the earlier steps (first layer, etc.) — ask
+  when we get there; last layer is settled/recorded
 - Static 2D diagrams per case are deferred (see `log/` for why) — the
-  interactive 3D twisty player is the accurate visual for v1
+  interactive 3D twisty player is the accurate visual for the cases that
+  have one
 - OLL "Uv" case has no primary algorithm recorded (only the alt) — add one
   if/when the user finds a main algorithm they prefer
 - Beginner's Method "Match cross colours" algorithm was flagged by the user
   as possibly incomplete when they wrote it down — worth confirming against
   an actual solve
-- 2x2 Ortega "L CMLL" ("Fipgar Urvop") was decoded by inference (Fipgar =
-  "F" + Pager, Urvop = "U" + RVP) rather than a letter-code the user gave
-  directly — worth a quick confirmation (T CMLL's "Sledge" was confirmed
-  directly, no concern there)
+- Megaminx has no interactive 3D preview: cubing.js's twisty-player doesn't
+  use plain cube (R/U/F) notation for a megaminx, and this session's
+  network can't reach `cdn.cubing.net` to check what it does use — figure
+  out the right notation and wire it up when that's confirmed
+- Roux LSE "4-edge recognition" terminology ("2o/2", "4c") is recorded as
+  the user described it, but wasn't independently cross-checked the way
+  the OLL/PLL/CMLL algorithms were — flag if any of it reads wrong
 
 ## Deploy
 
