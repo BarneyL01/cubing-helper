@@ -28,6 +28,8 @@ Megaminx. Hosted free on GitHub Pages.
   OLL); block building and most of LSE still placeholder
 - `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
   the user's notes; 5–7 from their notes)
+- `3x3/bld/index.html` — blindfolded: M2 edges + Old Pochmann corners,
+  letter nets, setup tables (from the user's notes; in the top menu)
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)

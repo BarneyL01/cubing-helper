@@ -71,6 +71,14 @@ built ahead of being asked for. As of 2026-09-27:
   on request, not from the user's notes** — each card says so; swap in the
   user's own version if they send one. Steps 5–7 are from their notes.
   `data/beginners-first-layers.js`, `data/beginners-last-layer.js`.
+- **3x3 Blindfolded** — M2 edges + Old Pochmann corners, Speffz letters,
+  from the user's notes: setup moves for every letter, parity, corner swap.
+  `data/bld.js`, `3x3/bld/index.html`, letter nets from `js/bld-net.js`.
+  Verified by simulating 500 full blind solves (memo from the scramble →
+  execute every setup/alg) — all solve. One fix to the user's notes: edge
+  B's setup is `R' U R U'` (notes said `R' U R' U'`, which targets V);
+  flagged on the page. Edges must be done before corners (each corner swap
+  also swaps UL/UB). Re-run that simulation if any setup changes.
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
