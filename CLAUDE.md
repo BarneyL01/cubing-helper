@@ -49,7 +49,7 @@ added as it's actually needed.
 ## Content scope (current)
 
 Grows one struggle-case at a time as the user sends notes — nothing here was
-built ahead of being asked for. As of 2026-09-27:
+built ahead of being asked for. As of 2026-09-29:
 
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
   original notes. `data/oll.js`, `data/pll.js`. Plus an **F2L map**
@@ -66,11 +66,18 @@ built ahead of being asked for. As of 2026-09-27:
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below); one LSE recognition case. Block building and the rest of LSE are
   placeholder. `data/roux.js`.
-- **3x3 Beginner's Method** — all 7 steps. Steps 1–4 (white cross, white
-  corners, second layer, yellow cross) are the **standard method filled in
-  on request, not from the user's notes** — each card says so; swap in the
-  user's own version if they send one. Steps 5–7 are from their notes.
-  `data/beginners-first-layers.js`, `data/beginners-last-layer.js`.
+- **3x3 Beginner's Method** — all 7 steps, one data file
+  (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
+  source, goal, numbered "how", and cases). The page builds a numbered
+  section per step, a sticky step bar (1–7, highlights the current step)
+  and previous/next links at the foot of each step. Steps 1–4 (white cross,
+  white corners, middle edges, yellow cross) are the **standard method
+  filled in on request, not from the user's notes** — each step's tag says
+  so; swap in the user's own version if they send one. Steps 5–7 are from
+  their notes. Step 7 is done with yellow on the **bottom**, turning the
+  bottom layer between corners (Sassy with yellow on top breaks the cube —
+  checked by simulation). The step 5–7 "how" instructions were checked over
+  thousands of random last-layer states; re-run that if they change.
 - **3x3 Blindfolded** — M2 edges + Old Pochmann corners, Speffz letters,
   from the user's notes: setup moves for every letter, parity, corner swap.
   `data/bld.js`, `3x3/bld/index.html`, letter nets from `js/bld-net.js`.

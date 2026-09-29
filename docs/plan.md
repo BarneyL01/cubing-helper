@@ -27,7 +27,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
   OLL); block building and most of LSE still placeholder
 - `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
-  the user's notes; 5–7 from their notes)
+  the user's notes; 5–7 from their notes), one numbered section per step
+  with a goal and "how", a sticky 1–7 step bar, and previous/next links
 - `3x3/bld/index.html` — blindfolded: M2 edges + Old Pochmann corners,
   letter nets, setup tables (from the user's notes; in the top menu)
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded

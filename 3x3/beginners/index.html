@@ -23,38 +23,22 @@
   </header>
 
   <main>
-    <h1>3x3 — Beginner's Method</h1>
+    <h1 id="top">3x3 — Beginner's Method</h1>
     <p class="subtitle">
-      Layer by layer, in seven steps. Hold the cube with yellow on top the
-      whole time — the white cross ends up on the bottom.
+      Layer by layer, in seven steps. Yellow on top, white cross on the
+      bottom — until step 7, which turns the cube over.
     </p>
     <div class="source-note">
       <p>
         Steps 1–4 are the standard beginner's method, filled in for you — not
-        from your notes (each card says so). Steps 5–7 are from your notes.
-        Every algorithm is checked with the cube simulator.
+        from your notes. Steps 5–7 are from your notes. Every algorithm and
+        instruction is checked with the cube simulator.
       </p>
     </div>
+
+    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
     <div class="view-toggle" id="view-toggle"></div>
-
-    <h2 class="section-heading">Step 1 — White cross</h2>
-    <div id="beginners-cross-cases" class="case-grid"></div>
-
-    <h2 class="section-heading">Step 2 — White corners</h2>
-    <p class="subtitle">Find a white corner in the top layer and look at which way its white sticker faces.</p>
-    <div id="beginners-corner-cases" class="case-grid"></div>
-
-    <h2 class="section-heading">Step 3 — Second layer edges</h2>
-    <p class="subtitle">Find a top-layer edge with no yellow on it.</p>
-    <div id="beginners-edge-cases" class="case-grid"></div>
-
-    <h2 class="section-heading">Step 4 — Yellow cross</h2>
-    <p class="subtitle">One algorithm, repeated: dot → L → line → cross. Only the edges matter here.</p>
-    <div id="beginners-yc-cases" class="case-grid"></div>
-
-    <h2 class="section-heading" id="match-cross">Steps 5–7 — Finish the last layer</h2>
-    <p class="subtitle">Match the cross to the sides, place the corners, then twist them.</p>
-    <div id="beginners-ll-cases" class="case-grid"></div>
+    <div id="steps"></div>
   </main>
 
   <footer class="site-footer">
@@ -62,16 +46,100 @@
   </footer>
 
   <script type="module">
-    import { beginnerYellowCrossCases, beginnerLastLayerCases } from '../../data/beginners-last-layer.js';
-    import { beginnerCrossCases, beginnerCornerCases, beginnerSecondLayerCases } from '../../data/beginners-first-layers.js';
+    import { beginnerSteps } from '../../data/beginners.js';
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
+
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    const link = (href, cls, text) => {
+      const a = el('a', cls, text);
+      a.href = href;
+      return a;
+    };
+    const SOURCE = { standard: 'Standard method', yours: 'Your notes' };
+
+    const bar = document.getElementById('step-bar');
+    const steps = document.getElementById('steps');
+    const barLinks = [];
+
+    beginnerSteps.forEach((step, i) => {
+      const n = i + 1;
+      const pill = link(`#${step.id}`, 'step-pill');
+      pill.append(el('span', 'step-pill-num', String(n)), el('span', 'step-pill-title', step.short));
+      pill.title = `Step ${n}: ${step.title}`;
+      bar.appendChild(pill);
+      barLinks.push(pill);
+
+      const section = el('section', 'step');
+      section.id = step.id;
+      const head = el('div', 'step-head');
+      head.append(el('span', 'step-num', String(n)), el('h2', null, step.title), el('span', `step-source ${step.source}`, SOURCE[step.source]));
+      section.appendChild(head);
+
+      const goal = el('p', 'step-goal');
+      goal.append(el('strong', null, 'Goal: '), step.goal);
+      section.appendChild(goal);
+      const how = el('ol', 'step-how');
+      step.how.forEach((line) => how.appendChild(el('li', null, line)));
+      section.appendChild(how);
+
+      const grid = el('div', 'case-grid');
+      grid.id = `${step.id}-cases`;
+      section.appendChild(grid);
+
+      const foot = el('nav', 'step-foot');
+      const prev = beginnerSteps[i - 1];
+      const next = beginnerSteps[i + 1];
+      foot.appendChild(prev ? link(`#${prev.id}`, 'step-prev', `← Step ${n - 1}: ${prev.title}`) : el('span'));
+      foot.appendChild(link('#top', 'step-up', 'All steps ↑'));
+      foot.appendChild(next ? link(`#${next.id}`, 'step-next', `Step ${n + 1}: ${next.title} →`) : el('span', 'step-done', 'Solved ✓'));
+      section.appendChild(foot);
+
+      steps.appendChild(section);
+      renderCases(grid.id, step.cases);
+    });
+
     mountViewToggle(document.getElementById('view-toggle'));
-    renderCases('beginners-cross-cases', beginnerCrossCases);
-    renderCases('beginners-corner-cases', beginnerCornerCases);
-    renderCases('beginners-edge-cases', beginnerSecondLayerCases);
-    renderCases('beginners-yc-cases', beginnerYellowCrossCases);
-    renderCases('beginners-ll-cases', beginnerLastLayerCases);
+
+    // The step bar sticks under the site header (which only sticks on wider
+    // screens); jump targets land below both.
+    const header = document.querySelector('.site-header');
+    function measure() {
+      const headerH = getComputedStyle(header).position === 'sticky' ? header.offsetHeight : 0;
+      document.documentElement.style.setProperty('--header-h', `${headerH}px`);
+      document.documentElement.style.setProperty('--step-offset', `${headerH + bar.offsetHeight + 8}px`);
+    }
+    measure();
+    addEventListener('resize', measure);
+
+    // Highlight the step currently being read.
+    const sections = beginnerSteps.map((s) => document.getElementById(s.id));
+    function markActive() {
+      const offset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--step-offset')) + 1;
+      let active = -1;
+      sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= offset) active = i; });
+      // At the very bottom the last steps can't scroll up to the bar: prefer
+      // the step just jumped to, else the last one on screen.
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) {
+        const visible = sections.map((s, i) => (s.getBoundingClientRect().top < innerHeight ? i : -1)).filter((i) => i > active);
+        const jumped = sections.findIndex((s) => `#${s.id}` === location.hash);
+        active = visible.includes(jumped) ? jumped : Math.max(active, ...visible);
+      }
+      barLinks.forEach((a, i) => a.classList.toggle('active', i === active));
+      // On narrow screens the bar scrolls sideways — keep the active pill in view.
+      if (active >= 0 && bar.scrollWidth > bar.clientWidth) {
+        const a = barLinks[active];
+        bar.scrollLeft = a.offsetLeft - (bar.clientWidth - a.offsetWidth) / 2;
+      }
+    }
+    addEventListener('scroll', markActive, { passive: true });
+    addEventListener('hashchange', markActive);
+    markActive();
   </script>
 </body>
 </html>
