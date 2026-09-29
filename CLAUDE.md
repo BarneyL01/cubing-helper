@@ -86,6 +86,14 @@ built ahead of being asked for. As of 2026-09-29:
   B's setup is `R' U R U'` (notes said `R' U R' U'`, which targets V);
   flagged on the page. Edges must be done before corners (each corner swap
   also swaps UL/UB). Re-run that simulation if any setup changes.
+  A **Practice** tab (`3x3/bld/practice.html`, tabs shared with the
+  reference page) generates a random-move scramble (or takes the user's own,
+  face turns only), draws it as a colour net (WCA white-top or yellow-top
+  colours), and shows the edge/corner memo in letter pairs plus the moves
+  for every letter — worked out by `js/bld-memo.js` from `data/bld.js`.
+  Cycle breaks start at the first unsolved piece in letter order. Checked:
+  running every listed move solves 2,000 random scrambles; re-run if the
+  memo code or any setup changes.
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).

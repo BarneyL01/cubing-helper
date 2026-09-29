@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3x3 Blindfolded Practice — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <span class="brand">Cubing Helper</span>
+      <a href="../../index.html">Home</a>
+      <a href="../cfop/index.html">3x3 · CFOP</a>
+      <a href="../cfop/f2l.html">3x3 · F2L</a>
+      <a href="../roux/index.html">3x3 · Roux</a>
+      <a href="../beginners/index.html">3x3 · Beginner's</a>
+      <a href="index.html" class="active">3x3 · Blind</a>
+      <a href="../../2x2/index.html">2x2</a>
+      <a href="../../megaminx/index.html">Megaminx</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>3x3 — Blindfolded</h1>
+    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+
+    <nav class="tabs" aria-label="Blindfolded pages">
+      <a href="index.html">Reference</a>
+      <a href="practice.html" class="active" aria-current="page">Practice</a>
+    </nav>
+
+    <p class="subtitle">
+      A scramble with the memo already worked out — practise memorising the
+      letters and doing the moves. Scramble with the colours as shown in the
+      picture.
+    </p>
+
+    <section class="practice-panel">
+      <div class="practice-scramble">
+        <code id="scramble"></code>
+        <div class="practice-actions">
+          <button type="button" id="new-scramble" class="btn primary">New scramble</button>
+          <button type="button" id="own-toggle" class="btn" aria-expanded="false" aria-controls="own-form">Use my own scramble</button>
+        </div>
+        <form id="own-form" class="practice-own" hidden>
+          <label for="own-input">Scramble (face turns only: R L U D F B, with ' or 2)</label>
+          <div class="practice-own-row">
+            <input id="own-input" type="text" autocomplete="off" spellcheck="false" placeholder="R U R' U' …" />
+            <button type="submit" class="btn primary">Use</button>
+          </div>
+          <p id="own-error" class="practice-error" hidden></p>
+        </form>
+      </div>
+      <figure class="practice-net">
+        <div id="net"></div>
+        <figcaption>
+          <label for="scheme">Hold</label>
+          <select id="scheme">
+            <option value="wca">White top, green front (WCA)</option>
+            <option value="yellow">Yellow top, green front</option>
+          </select>
+        </figcaption>
+      </figure>
+    </section>
+
+    <div class="practice-memo-head">
+      <h2 class="section-heading">Memo</h2>
+      <button type="button" id="hide-letters" class="btn" aria-pressed="false">Hide letters</button>
+    </div>
+    <div class="practice-memo" id="memo">
+      <div class="memo-block">
+        <h3>Edges — M2 <span id="edge-count" class="memo-count"></span></h3>
+        <p id="edge-letters" class="memo-letters"></p>
+        <p id="parity" class="memo-parity"></p>
+      </div>
+      <div class="memo-block">
+        <h3>Corners — Old Pochmann <span id="corner-count" class="memo-count"></span></h3>
+        <p id="corner-letters" class="memo-letters"></p>
+      </div>
+    </div>
+    <p class="memo-legend">
+      <span class="memo-letter cycle-break">A</span> underlined = new cycle: the buffer piece came home
+      early (or a piece is flipped/twisted in place), so start from this piece.
+    </p>
+
+    <details class="practice-moves">
+      <summary>Moves for each letter</summary>
+      <p class="subtitle">Edges, then parity if needed, then corners. <strong>swap</strong> = <code id="swap-alg"></code></p>
+      <div class="table-wrap"><table class="bld-table" id="edge-moves"></table></div>
+      <div class="table-wrap"><table class="bld-table" id="corner-moves"></table></div>
+    </details>
+  </main>
+
+  <footer class="site-footer">
+    Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
+  </footer>
+
+  <script type="module">
+    import { bldPlan, randomScramble } from '../../js/bld-memo.js';
+    import { colourNet } from '../../js/bld-net.js';
+    import { BLD_PARITY, BLD_CORNER_SWAP } from '../../data/bld.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+
+    // Colours of each home face for the way the cube is held.
+    const SCHEMES = {
+      wca: { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' },
+      yellow: { U: '#ffd500', D: '#ffffff', F: '#009b48', B: '#0046ad', R: '#ff5800', L: '#b71234' },
+    };
+    const SCHEME_KEY = 'cubing-helper:bld-scheme';
+    let scheme = 'wca';
+    try { if (SCHEMES[localStorage.getItem(SCHEME_KEY)]) scheme = localStorage.getItem(SCHEME_KEY); } catch {}
+    $('scheme').value = scheme;
+
+    $('swap-alg').textContent = BLD_CORNER_SWAP;
+    let plan;
+
+    function lettersInto(target, targets) {
+      target.replaceChildren();
+      if (!targets.length) {
+        target.appendChild(el('span', 'memo-none', 'Nothing to do — already solved.'));
+        return;
+      }
+      for (let i = 0; i < targets.length; i += 2) {
+        const pair = el('span', 'memo-pair');
+        for (const t of targets.slice(i, i + 2)) {
+          const letter = el('span', `memo-letter${t.cycleBreak ? ' cycle-break' : ''}`, t.letter);
+          if (t.cycleBreak) letter.title = 'New cycle';
+          pair.appendChild(letter);
+        }
+        target.appendChild(pair);
+      }
+    }
+
+    function movesCell(t) {
+      const td = el('td');
+      if (t.special) {
+        td.append(el('code', null, t.special));
+        return td;
+      }
+      if (t.setup) td.append(el('code', null, t.setup), ' ');
+      td.append(el('strong', null, t.core));
+      if (t.undo) td.append(' ', el('code', null, t.undo));
+      return td;
+    }
+
+    function movesTable(id, title, targets, kind, parityRow) {
+      const table = $(id);
+      table.replaceChildren();
+      table.createCaption().textContent = title;
+      const head = table.createTHead().insertRow();
+      ['#', 'Letter', 'Piece', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      targets.forEach((t, i) => {
+        const tr = body.insertRow();
+        tr.appendChild(el('td', 'bld-muted', String(i + 1)));
+        const letterCell = el('th', 'bld-letter');
+        const a = el('a', null, t.doLetter);
+        a.href = `index.html#${kind}-${t.doLetter}`;
+        letterCell.appendChild(a);
+        if (t.doLetter !== t.letter) letterCell.appendChild(el('div', 'bld-note bld-swapped', `memo ${t.letter}, 2nd target`));
+        tr.appendChild(letterCell);
+        tr.appendChild(el('td', 'bld-piece', t.piece));
+        tr.appendChild(movesCell(t));
+      });
+      if (parityRow) {
+        const tr = body.insertRow();
+        tr.appendChild(el('td'));
+        tr.appendChild(el('th', 'bld-letter', 'Parity'));
+        tr.appendChild(el('td', 'bld-muted', 'odd edges'));
+        const td = el('td');
+        td.append(el('code', null, BLD_PARITY[0]));
+        tr.appendChild(td);
+      }
+    }
+
+    function drawNet() {
+      $('net').innerHTML = colourNet(plan.state, SCHEMES[scheme]);
+    }
+
+    function show(scramble) {
+      plan = bldPlan(scramble);
+      $('scramble').textContent = scramble || '(solved cube)';
+      drawNet();
+      lettersInto($('edge-letters'), plan.edges);
+      lettersInto($('corner-letters'), plan.corners);
+      $('edge-count').textContent = `${plan.edges.length} targets`;
+      $('corner-count').textContent = `${plan.corners.length} targets`;
+      $('parity').textContent = plan.parity
+        ? 'Odd number of edge targets → parity algorithm after the edges.'
+        : 'Even number of edge targets → no parity.';
+      $('parity').classList.toggle('has-parity', plan.parity);
+      movesTable('edge-moves', 'Edges', plan.edges, 'edge', plan.parity);
+      movesTable('corner-moves', 'Corners', plan.corners, 'corner', false);
+      const url = new URL(location.href);
+      url.searchParams.set('scramble', scramble);
+      history.replaceState(null, '', url);
+    }
+
+    $('new-scramble').addEventListener('click', () => show(randomScramble()));
+    $('scheme').addEventListener('change', () => {
+      scheme = $('scheme').value;
+      try { localStorage.setItem(SCHEME_KEY, scheme); } catch {}
+      drawNet();
+    });
+    $('hide-letters').addEventListener('click', () => {
+      const hidden = $('memo').classList.toggle('letters-hidden');
+      $('hide-letters').setAttribute('aria-pressed', String(hidden));
+      $('hide-letters').textContent = hidden ? 'Show letters' : 'Hide letters';
+      document.querySelector('.practice-moves').hidden = hidden;
+    });
+    $('own-toggle').addEventListener('click', () => {
+      const open = $('own-form').hidden;
+      $('own-form').hidden = !open;
+      $('own-toggle').setAttribute('aria-expanded', String(open));
+      if (open) $('own-input').focus();
+    });
+    $('own-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Face turns only: slice moves, wide moves and rotations would move the
+      // centres, and the memo assumes they stay put.
+      const moves = $('own-input').value.replace(/[’‘`´]/g, "'").trim().split(/\s+/).filter(Boolean);
+      const bad = moves.filter((m) => !/^[RLUDFB](2'?|'2?)?$/.test(m));
+      $('own-error').hidden = !bad.length && moves.length > 0;
+      if (!moves.length) { $('own-error').textContent = 'Type a scramble first.'; return; }
+      if (bad.length) { $('own-error').textContent = `Not a face turn: ${bad.join(' ')}`; return; }
+      show(moves.join(' '));
+    });
+
+    const given = new URL(location.href).searchParams.get('scramble');
+    let start = randomScramble();
+    if (given !== null && /^([RLUDFB](2'?|'2?)?\s*)*$/.test(given.trim())) start = given.trim().split(/\s+/).filter(Boolean).join(' ');
+    show(start);
+  </script>
+</body>
+</html>

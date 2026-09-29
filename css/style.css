@@ -834,3 +834,252 @@ text.net-marked {
   color: var(--text-muted);
 }
 
+
+/* Tabs between pages of one section (Blind: Reference / Practice) */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1rem 0 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs a {
+  padding: 0.45rem 1rem;
+  margin-bottom: -1px;
+  border: 1px solid transparent;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.tabs a:hover {
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.tabs a.active {
+  background: var(--surface);
+  border-color: var(--border);
+  border-bottom-color: var(--surface);
+  color: var(--accent);
+}
+
+.btn {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* Blindfolded practice */
+.practice-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+  gap: 1rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.practice-scramble,
+.practice-net,
+.memo-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin: 0;
+}
+
+#scramble {
+  display: block;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  word-spacing: 0.2em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.practice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.practice-own {
+  margin-top: 0.9rem;
+  font-size: 0.9rem;
+}
+
+.practice-own label {
+  color: var(--text-muted);
+}
+
+.practice-own-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.practice-own input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.practice-error {
+  color: #c0392b;
+  margin: 0.4rem 0 0;
+}
+
+.practice-net figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.practice-net select {
+  font: inherit;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.net-sticker {
+  stroke: #1f2937;
+  stroke-width: 0.4;
+}
+
+.practice-memo-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.practice-memo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.memo-block h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.memo-count {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.memo-letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.memo-pair {
+  display: inline-flex;
+  gap: 0.1rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 8px;
+  background: var(--code-bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.memo-letter.cycle-break {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent);
+}
+
+.memo-legend {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.memo-legend .memo-letter {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.letters-hidden .memo-letter {
+  color: transparent;
+  text-decoration-color: transparent;
+}
+
+.memo-none {
+  color: var(--text-muted);
+}
+
+.memo-parity {
+  margin: 0.75rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.memo-parity.has-parity {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.practice-moves {
+  margin-top: 1.5rem;
+}
+
+.practice-moves summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.bld-swapped {
+  white-space: nowrap;
+}
+
+.bld-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding: 0 0 0.4rem;
+}
+
+@media (max-width: 700px) {
+  .practice-panel {
+    grid-template-columns: 1fr;
+  }
+}
