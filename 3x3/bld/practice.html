@@ -43,7 +43,9 @@
         <div class="practice-actions">
           <button type="button" id="new-scramble" class="btn primary">New scramble</button>
           <button type="button" id="own-toggle" class="btn" aria-expanded="false" aria-controls="own-form">Use my own scramble</button>
+          <button type="button" id="previous-scramble" class="btn" hidden>← Previous scramble</button>
         </div>
+        <p class="practice-kept">Kept until you press New scramble — safe to visit other pages and come back.</p>
         <form id="own-form" class="practice-own" hidden>
           <label for="own-input">Scramble (face turns only: R L U D F B, with ' or 2)</label>
           <div class="practice-own-row">
@@ -122,6 +124,16 @@
 
     $('swap-alg').textContent = BLD_CORNER_SWAP;
     let plan;
+
+    // The scramble you're on (and the one before, plus whether the letters
+    // are hidden) survives leaving the page: only "New scramble" or your own
+    // scramble replaces it.
+    const SAVED_KEY = 'cubing-helper:bld-practice';
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(SAVED_KEY)) || {}; } catch {}
+    const save = () => { try { localStorage.setItem(SAVED_KEY, JSON.stringify(saved)); } catch {} };
+    const FACE_TURNS = /^([RLUDFB](2'?|'2?)?\s*)*$/;
+    const clean = (scramble) => scramble.trim().split(/\s+/).filter(Boolean).join(' ');
 
     function lettersInto(target, targets) {
       target.replaceChildren();
@@ -203,19 +215,43 @@
       const url = new URL(location.href);
       url.searchParams.set('scramble', scramble);
       history.replaceState(null, '', url);
+      saved.scramble = scramble;
+      save();
+      $('previous-scramble').hidden = typeof saved.previous !== 'string';
     }
 
-    $('new-scramble').addEventListener('click', () => show(randomScramble()));
+    // Replaces the current scramble, keeping it as "previous" so one
+    // accidental click can be undone.
+    function replaceWith(scramble) {
+      if (scramble === saved.scramble) return;
+      saved.previous = saved.scramble;
+      show(scramble);
+    }
+
+    function setHidden(hidden) {
+      $('memo').classList.toggle('letters-hidden', hidden);
+      $('hide-letters').setAttribute('aria-pressed', String(hidden));
+      $('hide-letters').textContent = hidden ? 'Show letters' : 'Hide letters';
+      document.querySelector('.practice-moves').hidden = hidden;
+      saved.hidden = hidden;
+      save();
+    }
+
+    $('new-scramble').addEventListener('click', () => replaceWith(randomScramble()));
+    $('previous-scramble').addEventListener('click', () => {
+      const back = saved.previous;
+      saved.previous = saved.scramble;
+      show(back);
+    });
     $('scheme').addEventListener('change', () => {
       scheme = $('scheme').value;
       try { localStorage.setItem(SCHEME_KEY, scheme); } catch {}
       drawNet();
     });
-    $('hide-letters').addEventListener('click', () => {
-      const hidden = $('memo').classList.toggle('letters-hidden');
-      $('hide-letters').setAttribute('aria-pressed', String(hidden));
-      $('hide-letters').textContent = hidden ? 'Show letters' : 'Hide letters';
-      document.querySelector('.practice-moves').hidden = hidden;
+    $('hide-letters').addEventListener('click', () => setHidden(!$('memo').classList.contains('letters-hidden')));
+    document.querySelector('.practice-moves').addEventListener('toggle', (e) => {
+      saved.movesOpen = e.target.open;
+      save();
     });
     $('own-toggle').addEventListener('click', () => {
       const open = $('own-form').hidden;
@@ -232,13 +268,22 @@
       $('own-error').hidden = !bad.length && moves.length > 0;
       if (!moves.length) { $('own-error').textContent = 'Type a scramble first.'; return; }
       if (bad.length) { $('own-error').textContent = `Not a face turn: ${bad.join(' ')}`; return; }
-      show(moves.join(' '));
+      replaceWith(moves.join(' '));
     });
 
+    // A scramble in the link wins (and becomes the current one); otherwise
+    // carry on with the saved one; only a first visit gets a fresh scramble.
     const given = new URL(location.href).searchParams.get('scramble');
-    let start = randomScramble();
-    if (given !== null && /^([RLUDFB](2'?|'2?)?\s*)*$/.test(given.trim())) start = given.trim().split(/\s+/).filter(Boolean).join(' ');
-    show(start);
+    if (given !== null && FACE_TURNS.test(given.trim()) && clean(given) !== saved.scramble) {
+      if (typeof saved.scramble === 'string') saved.previous = saved.scramble;
+      show(clean(given));
+    } else if (typeof saved.scramble === 'string' && FACE_TURNS.test(saved.scramble)) {
+      show(saved.scramble);
+    } else {
+      show(randomScramble());
+    }
+    if (saved.movesOpen) document.querySelector('.practice-moves').open = true;
+    setHidden(Boolean(saved.hidden));
   </script>
 </body>
 </html>

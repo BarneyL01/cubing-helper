@@ -1083,3 +1083,9 @@ text.net-marked {
     grid-template-columns: 1fr;
   }
 }
+
+.practice-kept {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}

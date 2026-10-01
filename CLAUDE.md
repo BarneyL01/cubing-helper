@@ -91,6 +91,11 @@ built ahead of being asked for. As of 2026-09-29:
   face turns only), draws it as a colour net (WCA white-top or yellow-top
   colours), and shows the edge/corner memo in letter pairs plus the moves
   for every letter — worked out by `js/bld-memo.js` from `data/bld.js`.
+  The current scramble (plus the previous one, hidden-letters and open
+  moves list) is saved in localStorage (`cubing-helper:bld-practice`), so
+  leaving the page never loses it — only "New scramble" / own scramble
+  replaces it, and "← Previous scramble" undoes that once. A `?scramble=`
+  link still wins.
   Cycle breaks start at the first unsolved piece in letter order. Checked:
   running every listed move solves 2,000 random scrambles; re-run if the
   memo code or any setup changes.
