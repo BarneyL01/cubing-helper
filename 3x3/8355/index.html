@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3x3 8355 Method — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <span class="brand">Cubing Helper</span>
+      <a href="../../index.html">Home</a>
+      <a href="../cfop/index.html">3x3 · CFOP</a>
+      <a href="../cfop/f2l.html">3x3 · F2L</a>
+      <a href="../roux/index.html">3x3 · Roux</a>
+      <a href="../beginners/index.html">3x3 · Beginner's</a>
+      <a href="index.html" class="active">3x3 · 8355</a>
+      <a href="../bld/index.html">3x3 · Blind</a>
+      <a href="../../2x2/index.html">2x2</a>
+      <a href="../../megaminx/index.html">Megaminx</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1 id="top">3x3 — 8355 Method</h1>
+    <p class="subtitle">
+      A beginner method that gets by on one algorithm: Sassy
+      (<code>R U R' U'</code>). Layer by layer, but the middle edges go in
+      through a "keyhole" before the last layer is touched.
+    </p>
+    <div class="source-note">
+      <p>
+        Not from your own notes: rewritten from the
+        <a href="https://www.speedsolving.com/wiki/index.php/8355_Method">Speedsolving.com Wiki page</a>
+        (see also the
+        <a href="https://www.speedsolving.com/threads/8355-method-easy-way-to-solve-cube.10158/">forum thread</a>),
+        using your name for <code>R U R' U'</code>. Every algorithm, both
+        worked examples and the last-corners steps were checked with the cube
+        simulator. Where the wiki needed an addition, the step says so.
+      </p>
+    </div>
+
+    <dl class="facts" id="facts"></dl>
+
+    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
+    <div class="view-toggle" id="view-toggle"></div>
+    <div id="steps"></div>
+  </main>
+
+  <footer class="site-footer">
+    Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
+  </footer>
+
+  <script type="module">
+    import { facts, steps8355, exampleSolve, lastFiveExample, cornerShortcuts, fasterTips } from '../../data/method-8355.js';
+    import { mountSteps } from '../../js/steps-page.js';
+
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+
+    const dl = document.getElementById('facts');
+    for (const [k, v] of facts) {
+      const row = el('div', 'fact');
+      row.append(el('dt', null, k), el('dd', null, v));
+      dl.appendChild(row);
+    }
+
+    // A two-column table of "label → moves" rows.
+    function movesTable(caption, headings, rows, codeCols) {
+      const wrap = el('div', 'table-wrap');
+      const table = el('table', 'bld-table');
+      table.createCaption().textContent = caption;
+      const head = table.createTHead().insertRow();
+      headings.forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      for (const row of rows) {
+        const tr = body.insertRow();
+        row.forEach((cell, i) => {
+          const td = el('td');
+          td.appendChild(codeCols.includes(i) ? el('code', null, cell) : document.createTextNode(cell));
+          tr.appendChild(td);
+        });
+      }
+      wrap.appendChild(table);
+      return wrap;
+    }
+
+    function scrambleLine(label, scramble) {
+      const p = el('p', 'step-note');
+      p.append(`${label}: `, el('code', null, scramble));
+      return p;
+    }
+
+    const exampleStep = {
+      id: 'example',
+      title: 'Example solve',
+      short: 'Example',
+      extra: true,
+      mark: '▶',
+      source: 'wiki',
+      intro: 'A complete solve from the wiki, then the last five corners on their own. WCA notation; (…)×n repeats the group n times; lowercase d is a wide turn.',
+      custom(section) {
+        section.append(
+          scrambleLine('Scramble', exampleSolve.scramble),
+          movesTable('Complete solve', ['Stage', 'Moves'], exampleSolve.rows, [1]),
+          el('p', 'step-note', 'The wiki does the last two edges in two parts, as here; the cards in step 4 swap them in one go.'),
+          scrambleLine('Last five corners — scramble', lastFiveExample.scramble),
+          movesTable('Last five corners', ['Stage', 'Moves'], lastFiveExample.rows, [1]),
+          el('p', 'step-note', 'The wiki stops after the last Sassy; the cube is only solved once the bottom layer is turned back (checked in the simulator).'),
+        );
+      },
+    };
+
+    const fasterStep = {
+      id: 'faster',
+      title: 'Getting faster',
+      short: 'Faster',
+      extra: true,
+      mark: '»',
+      source: 'wiki',
+      intro: 'Ways the wiki suggests to cut the move count once the method is familiar.',
+      custom(section) {
+        section.appendChild(movesTable('Shorter ways to place a corner (step 2)', ['White sticker faces', 'Sassy way', 'Shorter way'], cornerShortcuts, [1, 2]));
+        const ul = el('ul', 'faster-tips');
+        for (const tip of fasterTips) {
+          const li = el('li', null, tip.text);
+          if (tip.href) {
+            li.append(' See the ');
+            const a = el('a', null, tip.link);
+            a.href = tip.href;
+            li.append(a, '.');
+          }
+          ul.appendChild(li);
+        }
+        section.appendChild(ul);
+      },
+    };
+
+    mountSteps({
+      steps: [...steps8355, exampleStep, fasterStep],
+      sources: { wiki: 'Speedsolving wiki' },
+    });
+  </script>
+</body>
+</html>

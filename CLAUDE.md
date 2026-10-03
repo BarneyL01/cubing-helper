@@ -49,7 +49,7 @@ added as it's actually needed.
 ## Content scope (current)
 
 Grows one struggle-case at a time as the user sends notes — nothing here was
-built ahead of being asked for. As of 2026-09-29:
+built ahead of being asked for. As of 2026-10-03:
 
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
   original notes. `data/oll.js`, `data/pll.js`. Plus an **F2L map**
@@ -66,11 +66,29 @@ built ahead of being asked for. As of 2026-09-29:
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below); one LSE recognition case. Block building and the rest of LSE are
   placeholder. `data/roux.js`.
+- **3x3 8355 Method** — Reheart Sheu's beginner method, from the
+  Speedsolving wiki text the user pasted (2026-10-03), **not from the
+  user's own notes** (the page says so and credits the wiki). `data/
+  method-8355.js`, `3x3/8355/index.html`, own top-menu link "3x3 · 8355".
+  Same layout as the Beginner's page (shared `js/steps-page.js`): 5 steps
+  (cross, 3 corners, 3 middle edges with a keyhole, remaining edges, last 5
+  corners) plus an "Example solve" and a "Getting faster" section. Every
+  algorithm, both wiki examples and the last-5-corners procedure were
+  checked by simulation (log/2026-10-03-8355-method.md); where the wiki's
+  text needed a fix the step has an "Added here, not on the wiki" note
+  (turn the bottom layer so an unsolved corner is under the buffer before
+  each Sassy; the final two twisted corners; the trailing U2 on the last-two-
+  edges swaps; the final D in the wiki's last-corners example). Step 4
+  part A ("cycle through the empty slot") is the wiki's intuitive step and
+  is only checked against the example solve. Re-run the checks if anything
+  in the data file changes.
 - **3x3 Beginner's Method** — all 7 steps, one data file
   (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
-  source, goal, numbered "how", and cases). The page builds a numbered
-  section per step, a sticky step bar (1–7, highlights the current step)
-  and previous/next links at the foot of each step. Steps 1–4 (white cross,
+  source, goal, numbered "how", and cases). `js/steps-page.js` builds a
+  numbered section per step, a sticky step bar (highlights the current
+  step) and previous/next links at the foot of each step — the 8355 page
+  uses the same module (steps can also have `notes`, `intro`, `extra`
+  sections and a `custom` renderer). Steps 1–4 (white cross,
   white corners, middle edges, yellow cross) are the **standard method
   filled in on request, not from the user's notes** — each step's tag says
   so; swap in the user's own version if they send one. Steps 5–7 are from
@@ -118,6 +136,14 @@ cipher (e.g. "Sassy" = RUPV = `R U R' U'`). **Always decode/encode through
 `docs/mnemonics.md`** — never invent new letter meanings without confirming
 with the user. Every algorithm shown on the site should display both the
 standard WCA notation and the user's mnemonic word breakdown.
+
+## Terminology
+
+The user calls `R U R' U'` **Sassy**. Always write Sassy — never the name
+other sources use for it — including when rewriting pasted text from the
+wiki or anywhere else (user request, 2026-10-03). Method names that contain
+that other word are written with Sassy too (e.g. the 8355 variant "Sassy
+Method").
 
 ## Working conventions
 

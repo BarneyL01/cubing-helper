@@ -29,6 +29,9 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
   the user's notes; 5–7 from their notes), one numbered section per step
   with a goal and "how", a sticky 1–7 step bar, and previous/next links
+- `3x3/8355/index.html` — 8355 method (Reheart Sheu; from the wiki text the
+  user pasted, not their notes): 5 steps + example solve + "getting faster",
+  in the top menu as "3x3 · 8355"
 - `3x3/bld/index.html` — blindfolded: M2 edges + Old Pochmann corners,
   letter nets, setup tables (from the user's notes; in the top menu)
 - `3x3/bld/practice.html` — "Practice" tab: scramble + colour net, memo
@@ -66,6 +69,8 @@ Each case shows:
 - **v3** — Roux: CMLL — done; block building and full LSE still to come
 - **v4** — Beginner's Method: white cross, white corners, second layer,
   yellow cross — done (standard method, 2026-09-27)
+- **v4.1** — 8355 method: all steps, examples and shortcuts — done
+  (2026-10-03, from the wiki)
 - **v5** — 2x2: Ortega (OLL + PBL) — done
 - **v6** — Megaminx: Gray star / align star / Gray corners — done (last
   layer only so far); still needs a 3D preview and earlier steps
