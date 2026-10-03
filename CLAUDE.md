@@ -123,6 +123,10 @@ standard WCA notation and the user's mnemonic word breakdown.
 
 - Standard WCA move notation for all algorithms; mnemonic word shown
   alongside, never instead of.
+- Method cards (home page, CFOP page; `.method-card`) are clickable all
+  over, not just the "Open →" link: the card's link stretches over the card
+  via CSS, so any new card only needs a link inside it. Cards with no link
+  (e.g. "Coming soon") stay inert.
 - Keep pages static and fast — this is a lookup tool used mid-solve or while
   practicing, not a heavy app.
 - When adding a new algorithm/case, update `docs/mnemonics.md` if it
