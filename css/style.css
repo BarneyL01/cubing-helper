@@ -1294,3 +1294,22 @@ text.net-marked {
 .case-solution > * {
   margin-top: 0.5rem;
 }
+
+/* Libby's notation line under each algorithm (2-look OLL / PLL) */
+.case-libby {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.case-libby code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.libby-key {
+  margin: 0.75rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}

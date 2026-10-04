@@ -29,6 +29,12 @@
       Permute the last layer's corners first, then its edges. Each card shows
       the case, the standard algorithm, and your mnemonic word breakdown.
     </p>
+    <p class="libby-key">
+      <strong>Libby's:</strong> each card also shows the algorithm as digits —
+      R = 1, U = 2, R' = 3, U' = 4, so Sassy is <code>1234</code>. A half turn
+      is two digits (R2 = <code>11</code>, U2 = <code>22</code>); every other
+      move stays as written. Spaces follow your mnemonic words.
+    </p>
     <div class="view-toggle" id="view-toggle"></div>
 
     <h2 class="section-heading">Corners</h2>
@@ -47,8 +53,8 @@
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
     mountViewToggle(document.getElementById('view-toggle'));
-    renderCases('pll-corner-cases', pllCornerCases);
-    renderCases('pll-edge-cases', pllEdgeCases);
+    renderCases('pll-corner-cases', pllCornerCases, { libby: true });
+    renderCases('pll-edge-cases', pllEdgeCases, { libby: true });
   </script>
 </body>
 </html>

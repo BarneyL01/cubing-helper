@@ -81,6 +81,30 @@ exactly, which is strong confirmation the table is correct:
   confirmed** when the Roux CMLL notes spelled the same case out letter by
   letter as "F-P-G-R-U-R-V-P", matching exactly (2026-09-27).
 
+## Libby's notation (digits for R and U moves)
+
+A second, shorter way the user writes algorithms, shown as a "Libby's:" line on
+the 2-look OLL and PLL cards (`js/libby.js`):
+
+| Move | R | U | R' | U' |
+|---|---|---|---|---|
+| Digit | 1 | 2 | 3 | 4 |
+
+So Sassy (R U R' U') is `1234`. Any other move stays as written (F, F', M2, …).
+A half turn is two quarter turns (R2 = `11`, U2 = `22`) — the user's own T-perm
+example writes R' F R2 as `3F11`. Spaces follow the mnemonic words, with two
+rules that reproduce the user's two examples exactly:
+
+- a double turn stays with the word it grew from (Prefer ends in R and Jolly
+  starts with R → `3F11` then `434`);
+- a lone non-R/U move (the G in "Prefer G") joins the group before it, if that
+  group has more than one move.
+
+Examples (given by the user, 2026-10-04):
+`Y-perm  F 1434 123F' 1234 3F1F'` and `T-perm  1234 3F11 434 123F'`. The user's
+T-perm example had `414` for the third group; the algorithm needs `434`
+(U' R' U'), so `414` looks like a typo and the site uses `434`.
+
 ## Still open
 
 - No letters for L, D, B, E, S, X, Y, Z, W turns have shown up yet — ask the

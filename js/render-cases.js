@@ -2,6 +2,7 @@ import { invertAlg } from './algs.js';
 import { caseDiagram } from './cube-diagram.js';
 import { startHold } from './cube-sim.js';
 import { buildFilmstrip } from './alg-filmstrip.js';
+import { libbyNotation } from './libby.js';
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -18,10 +19,20 @@ function mnemonicBreakdown(chunks) {
   return chunks.map((c) => `${c.word} (${c.moves})`).join('  +  ');
 }
 
+// The "Libby's:" line: the algorithm in Libby's notation (R=1 U=2 R'=3 U'=4),
+// grouped like the mnemonic words. See js/libby.js.
+function libbyLine(alg, chunks) {
+  const line = el('p', 'case-libby');
+  line.appendChild(el('strong', null, "Libby's: "));
+  line.appendChild(el('code', null, libbyNotation(alg, chunks)));
+  return line;
+}
+
 // Renders a list of algorithm "cases" (OLL/PLL/etc.) into a container element,
 // each with a picture and a 3D player, both built from the algorithm itself
 // (so neither can drift out of sync with the algorithm text).
-export function renderCases(containerId, cases) {
+// options.libby: also show every algorithm in Libby's notation.
+export function renderCases(containerId, cases, options = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
@@ -89,6 +100,7 @@ export function renderCases(containerId, cases) {
     // sequence than the one the card is about (F2L: one step of a chain).
     algBlock.appendChild(el('code', null, c.displayAlg || c.alg || algFallback));
     solution.appendChild(algBlock);
+    if (options.libby && c.alg) solution.appendChild(libbyLine(c.alg, c.mnemonicChunks));
     if (c.hideAlg) card.appendChild(solution);
 
     if (c.then) {
@@ -125,6 +137,7 @@ export function renderCases(containerId, cases) {
       const alt = el('div', 'case-alt');
       alt.appendChild(el('p', 'case-alt-label', 'Alternative'));
       alt.appendChild(el('code', null, c.altAlg));
+      if (options.libby) alt.appendChild(libbyLine(c.altAlg, c.altMnemonicChunks));
       if (c.altMnemonicChunks && c.altMnemonicChunks.length) {
         alt.appendChild(el('strong', null, mnemonicLine(c.altMnemonicChunks)));
         alt.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(c.altMnemonicChunks)));

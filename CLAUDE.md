@@ -157,6 +157,16 @@ cipher (e.g. "Sassy" = RUPV = `R U R' U'`). **Always decode/encode through
 with the user. Every algorithm shown on the site should display both the
 standard WCA notation and the user's mnemonic word breakdown.
 
+## Libby's notation
+
+2-look OLL and PLL cards (and any alternative algorithm on them) also show a
+**"Libby's:"** line: R=1, U=2, R'=3, U'=4 (Sassy = `1234`), R2 = `11`, U2 =
+`22`, every other move as written, spaces following the mnemonic words
+(`js/libby.js`; rules and the user's examples in `docs/mnemonics.md`). It's
+switched on per page with `renderCases(id, cases, { libby: true })` — only the
+two 2-look pages use it so far. The line is computed from the algorithm and its
+mnemonic chunks, so a new case there gets it automatically.
+
 ## Terminology
 
 The user calls `R U R' U'` **Sassy**. Always write Sassy — never the name
