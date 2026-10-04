@@ -1,6 +1,7 @@
 import { invertAlg } from './algs.js';
 import { caseDiagram } from './cube-diagram.js';
 import { startHold } from './cube-sim.js';
+import { buildFilmstrip } from './alg-filmstrip.js';
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -33,6 +34,20 @@ export function renderCases(containerId, cases) {
     if (c.orientation) header.appendChild(el('p', 'case-orientation', c.orientation));
     card.appendChild(header);
 
+    // Exercises: the scramble to apply, with the solution kept behind a button.
+    if (c.setup) {
+      const setup = el('p', 'case-setup', 'Setup scramble: ');
+      setup.appendChild(el('code', null, c.setup));
+      card.appendChild(setup);
+    }
+
+    // filmstrip: a step-by-step row of pictures instead of the single picture
+    // (set noViewer too); such a card spans the whole row.
+    if (c.filmstrip) {
+      card.classList.add('wide');
+      card.appendChild(buildFilmstrip(c.filmstrip));
+    }
+
     const viewerAlg = !c.noViewer && (c.alg || c.altAlg);
     if (viewerAlg) {
       const hold = c.hold ?? startHold(viewerAlg);
@@ -59,6 +74,13 @@ export function renderCases(containerId, cases) {
       card.appendChild(visual);
     }
 
+    // hideAlg: the algorithm, extra algorithms and mnemonic go in a closed <details>.
+    let solution = card;
+    if (c.hideAlg) {
+      solution = el('details', 'case-solution');
+      solution.appendChild(el('summary', null, 'Show the solution'));
+    }
+
     const algBlock = el('div', 'case-alg');
     const algFallback = c.altAlg
       ? 'Algorithm not recorded yet — see alternative below.'
@@ -66,7 +88,8 @@ export function renderCases(containerId, cases) {
     // displayAlg: shown instead of alg when the picture is built from a longer
     // sequence than the one the card is about (F2L: one step of a chain).
     algBlock.appendChild(el('code', null, c.displayAlg || c.alg || algFallback));
-    card.appendChild(algBlock);
+    solution.appendChild(algBlock);
+    if (c.hideAlg) card.appendChild(solution);
 
     if (c.then) {
       const then = el('p', 'case-then', 'Then → ');
@@ -80,14 +103,14 @@ export function renderCases(containerId, cases) {
       const block = el('div', 'case-alt');
       block.appendChild(el('p', 'case-alt-label', extra.label));
       block.appendChild(el('code', null, extra.alg));
-      card.appendChild(block);
+      solution.appendChild(block);
     }
 
     if (c.mnemonicChunks && c.mnemonicChunks.length) {
       const mnem = el('div', 'case-mnemonic');
       mnem.appendChild(el('strong', null, mnemonicLine(c.mnemonicChunks)));
       mnem.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(c.mnemonicChunks)));
-      card.appendChild(mnem);
+      solution.appendChild(mnem);
     }
 
     if (c.description) {

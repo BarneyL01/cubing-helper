@@ -36,6 +36,8 @@ Megaminx. Hosted free on GitHub Pages.
   letter nets, setup tables (from the user's notes; in the top menu)
 - `3x3/bld/practice.html` — "Practice" tab: scramble + colour net, memo
   letters worked out, moves for each letter (hideable letters for recall)
+- `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
+  variants, building one, 7 exercises (from notes the user pasted)
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)

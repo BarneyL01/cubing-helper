@@ -27,9 +27,11 @@ const pieceType = (p) => p.filter((v) => v !== 0).length; // 3 corner, 2 edge, 1
 // sticker is the top colour; 'cmll' is 'oll' for corners with edges greyed
 // out, since corner-only steps don't care about them; 'eo' (Roux LSE) greys
 // out corners and shows which stickers are a top/bottom colour, which is how
-// edge orientation is judged.
+// edge orientation is judged; 'edges' shows real colours on edges and
+// centres and greys the corners, for steps that are only about edges.
 function fill(sticker, top, stickering, pieceColours) {
   if (stickering === 'full') return COLOURS[sticker.colour];
+  if (stickering === 'edges') return pieceType(sticker.p) === 3 ? IGNORED : COLOURS[sticker.colour];
   if (stickering === 'cross' || stickering === 'layer1') {
     // Beginner's first steps: only the white (bottom) pieces and centres
     // matter — 'cross' shows just the white edges.
@@ -50,12 +52,33 @@ function fill(sticker, top, stickering, pieceColours) {
   return sticker.colour === top ? COLOURS[top] : NOT_TOP;
 }
 
-function layerSvg(state, viewKey, size, stickering) {
+// Pieces are named by the colours they belong to (e.g. 'FR' = the green and
+// orange edge). `marks` is [{ piece: 'FR', colour: '#e11d9b' }, ...]; a marked
+// piece is drawn last with a thick outline in that colour, wherever it is.
+const pieceKeyOf = (state) => {
+  const colours = new Map();
+  for (const s of state) {
+    const key = s.p.join(',');
+    colours.set(key, [...(colours.get(key) ?? []), s.colour]);
+  }
+  return colours;
+};
+const markOf = (marks, colours, p) => {
+  if (!marks || !marks.length) return null;
+  const name = [...(colours.get(p.join(',')) ?? [])].sort().join('');
+  const hit = marks.find((m) => [...m.piece].sort().join('') === name);
+  return hit ? hit.colour : null;
+};
+const OUTLINE = 1.1;
+
+function layerSvg(state, viewKey, size, stickering, marks) {
   const view = VIEWS[viewKey];
   const top = viewKey;
   const toCell = size === 3 ? (v) => v + 1 : (v) => (v + 1) / 2;
   const span = size * CELL;
   const rects = [];
+  const marked = [];
+  const colours = pieceKeyOf(state);
 
   for (const s of state) {
     if (dot(s.p, view.normal) !== 1) continue;
@@ -86,20 +109,21 @@ function layerSvg(state, viewKey, size, stickering) {
       y = row * CELL + 0.5;
       w = STRIP;
     }
-    rects.push(
-      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering, [])}" stroke="${STROKE}" stroke-width="0.4"/>`,
+    const outline = markOf(marks, colours, s.p);
+    (outline ? marked : rects).push(
+      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering, [])}" stroke="${outline || STROKE}" stroke-width="${outline ? OUTLINE : 0.4}"/>`,
     );
   }
 
   const pad = GAP + STRIP + 0.5;
   const box = span + pad * 2;
-  return `<svg viewBox="${-pad} ${-pad} ${box} ${box}" role="img" aria-label="${view.label} layer of the case">${rects.join('')}</svg>`;
+  return `<svg viewBox="${-pad} ${-pad} ${box} ${box}" role="img" aria-label="${view.label} layer of the case">${rects.join('')}${marked.join('')}</svg>`;
 }
 
 // Three faces (top, front, right) in an oblique projection, like a photo of
 // the cube from the front-right-top — used for F2L, where the pieces that
 // matter can be down in the slot, out of sight of a top-only view.
-function cubeSvg(state, stickering) {
+function cubeSvg(state, stickering, marks) {
   const S = 10;
   const DEPTH = 0.5; // how far back faces are sheared up-and-right
   const pieceColours = new Map();
@@ -126,6 +150,7 @@ function cubeSvg(state, stickering) {
     },
   ];
   const polys = [];
+  const markedPolys = [];
   for (const face of faces) {
     for (const s of state) {
       if (!same(s.n, face.normal)) continue;
@@ -138,25 +163,28 @@ function cubeSvg(state, stickering) {
         [u + inset, v + 1 - inset],
       ].map(([a, b]) => face.point(a, b).map((n) => n.toFixed(2)).join(','));
       const colour = fill(s, 'U', stickering, pieceColours.get(s.p.join(',')));
-      polys.push(`<polygon points="${corners.join(' ')}" fill="${colour}" stroke="${STROKE}" stroke-width="0.4" stroke-linejoin="round"/>`);
+      const outline = markOf(marks, pieceColours, s.p);
+      (outline ? markedPolys : polys).push(
+        `<polygon points="${corners.join(' ')}" fill="${colour}" stroke="${outline || STROKE}" stroke-width="${outline ? OUTLINE : 0.4}" stroke-linejoin="round"/>`,
+      );
     }
   }
   const lift = 3 * S * DEPTH;
-  return `<svg viewBox="-1 ${-lift - 1} ${3 * S + lift + 2} ${3 * S + lift + 2}" role="img" aria-label="Top, front and right faces of the case">${polys.join('')}</svg>`;
+  return `<svg viewBox="-1 ${-lift - 1} ${3 * S + lift + 2} ${3 * S + lift + 2}" role="img" aria-label="Top, front and right faces of the case">${polys.join('')}${markedPolys.join('')}</svg>`;
 }
 
 // A picture of the position the algorithm solves, computed by applying the
 // algorithm's inverse to a solved cube — so it can't disagree with the
 // algorithm text.
-export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'], hold } = {}) {
+export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'], hold, marks } = {}) {
   const state = caseState(alg, hold);
   const wrapper = document.createElement('div');
   wrapper.className = 'case-diagram';
   wrapper.innerHTML = views
     .map((v) => {
-      if (v === 'cube') return `<figure>${cubeSvg(state, stickering)}</figure>`;
+      if (v === 'cube') return `<figure>${cubeSvg(state, stickering, marks)}</figure>`;
       const caption = views.length > 1 ? `<figcaption>${VIEWS[v].label}</figcaption>` : '';
-      return `<figure>${layerSvg(state, v, size, stickering)}${caption}</figure>`;
+      return `<figure>${layerSvg(state, v, size, stickering, marks)}${caption}</figure>`;
     })
     .join('');
   return wrapper;

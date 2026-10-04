@@ -171,38 +171,85 @@ export const steps8355 = [
     source: 'wiki',
     goal: 'Every edge solved. Only five corners are left.',
     how: [
-      { title: 'Part A — three top edges.', text: 'Hold the empty middle slot at the front-right, with the unsolved bottom corner under it.' },
-      "Using R (or F'), lift the edge from the empty slot into the top layer, in its correct place beside the top edges already solved. The top edges only have to be right relative to each other until the end.",
-      "Turn the top layer to put an unsolved top edge over the slot, then undo the lift (R' or F). That edge is now in the slot, ready to be lifted next.",
-      'Repeat until three top edges are solved relative to each other.',
+      {
+        title: 'The picture to keep in mind.',
+        text: 'Five edges are still loose: the four in the top layer and the one in the empty middle slot. Treat the top layer as a ring. The ring edges only have to be in the right order relative to each other — turning the top layer never changes that order, so you line the ring up with the side centres at the very end.',
+      },
+      {
+        title: 'The one move: a cycle.',
+        text: "R lifts the edge in the slot up to the top right. Turn the top layer. R' drops whichever edge has arrived at the top right down into the slot. So each cycle puts the slot's edge into the ring and takes one ring edge down into the slot. How far you turn the top layer (U, U' or U2) decides where the lifted edge lands and which edge is dropped. F' U F does the same from the front. Card 1 shows one cycle move by move.",
+      },
+      {
+        title: 'Part A — three top edges.',
+        text: 'Hold the empty slot at the front-right. Look at the edge in the slot and work out where in the ring it belongs, beside the top edges that are already right. Choose the cycle (R or F\', and the turn) that lands it there. Repeat until three ring edges are in the right order relative to each other.',
+      },
       {
         title: 'Part B — the last two edges.',
-        text: 'The edge in the middle slot and the last top edge are swapped. Look at the yellow sticker of the edge in the middle slot: facing front → card 2; facing right → card 3. Turn the top layer first so the unsolved top edge is where that card shows it (front for card 2, right for card 3), then do the algorithm.',
+        text: "Now the edge in the slot belongs in the ring and the ring's leftover edge belongs in the slot: they have traded places. Do the cycle twice, with a turn of the top layer between (cards 2 and 3). Look at the yellow sticker of the edge in the slot: facing front → card 2; facing right → card 3. Turn the top layer first so the unsolved top edge is where the first picture shows it (front for card 2, right for card 3).",
       },
       'Turn the top layer to line it up with the side centres.',
     ],
     notes: [
-      "Part A is an intuitive step on the wiki, so it is described the way the wiki describes it; the example solve below uses R U' R' and L' U L for it, and that is all I have checked it against. Part B is the wiki's swap with the trailing U2 added: without it the algorithm also moves two other top edges. Checked in the simulator: with the yellow-sticker rule above, cards 2 and 3 solve the last two edges in every arrangement.",
+      "Checked in the simulator: the cycle on its own (R or F' with a turn of the top layer, plus free top-layer turns) solves every one of the 1,920 possible arrangements of these five edges, in at most 5 cycles — most take 2 or 3. I haven't found a simple rule that always picks the best cycle for part A (the wiki calls it intuitive); if a cycle makes things worse, undo it with its reverse and try the other turn. Part B is exact: the wiki's two swap algorithms R U R' U R U R' and F' U' F U' F' U' F are cards 2 and 3 without the final turn, and with it they solved all 32 arrangements tried.",
     ],
     cases: [
       {
-        anchor: 'slot-cycle',
-        name: '1 · Cycle through the empty slot',
+        anchor: 'one-cycle',
+        name: '1 · One cycle, move by move',
         orientation:
-          'R lifts the edge from the empty slot up to the right; turn the top layer (U, U\' or U2) to bring an unsolved top edge over the slot; R\' drops it in. The F\' version does the same from the front.',
-        alg: "R U' R'",
-        extraAlgs: [{ label: "Using F' instead", alg: "F' U F" }],
-        mnemonicChunks: [{ word: 'RVP', moves: "R U' R'" }],
+          'The first cycle of card 2, drawn after each move. The pictures show the top view and the cube from the front-right; only edges are coloured.',
+        alg: "R U R'",
+        displayAlg: "R U R'",
+        extraAlgs: [
+          { label: "Other turns of the top layer", alg: "R U' R'    R U2 R'" },
+          { label: 'From the front instead', alg: "F' U F    F' U' F    F' U2 F" },
+        ],
+        mnemonicChunks: [
+          { word: 'R', moves: 'R' },
+          { word: 'U', moves: 'U' },
+          { word: 'P', moves: "R'" },
+        ],
         noViewer: true,
+        filmstrip: {
+          alg: "R U R' U R U R' U2",
+          marks: [
+            { piece: 'FR', colour: 'pink' },
+            { piece: 'FU', colour: 'blue' },
+          ],
+          legend: [
+            { colour: 'pink', text: 'the green/orange edge, which belongs in the middle slot' },
+            { colour: 'blue', text: 'the yellow/green edge, which belongs at the top front' },
+          ],
+          frames: [
+            {
+              after: '',
+              caption:
+                'The yellow/green edge (blue) is stuck in the slot. The green/orange edge (pink) is up at the top front.',
+            },
+            {
+              after: 'R',
+              caption:
+                "R lifts the slot's edge up to the top right (blue). It also drags the bottom-right edge up into the slot and sends the old top-right edge down to the back-right — R' puts both back.",
+            },
+            {
+              after: 'U',
+              caption:
+                'U turns the top layer a quarter turn clockwise. The blue edge goes round to the top front, where it belongs. The edge that has arrived at the top right (yellow/blue) is the one that will be dropped.',
+            },
+            {
+              after: "R'",
+              caption:
+                "R' drops the yellow/blue edge into the slot and puts the other two edges back. One cycle done: the blue edge is in its place.",
+            },
+          ],
+        },
       },
       {
         anchor: 'swap-plain',
-        name: '2 · Last two edges: plain swap',
+        name: '2 · Last two edges: yellow faces front',
         orientation:
-          'Yellow sticker of the slot edge faces front. Swaps the top-front edge with the slot edge. Turn the top layer first so the unsolved top edge is at the front.',
+          'The yellow sticker of the slot edge faces front. Turn the top layer so the unsolved top edge is at the front. Then: cycle, turn, cycle, and line the top layer up.',
         alg: "R U R' U R U R' U2",
-        stickering: 'f2l',
-        diagramViews: ['cube'],
         mnemonicChunks: [
           { word: 'Ugly', moves: "R U R' U" },
           { word: 'R', moves: 'R' },
@@ -210,15 +257,51 @@ export const steps8355 = [
           { word: 'P', moves: "R'" },
           { word: 'U2', moves: 'U2' },
         ],
+        noViewer: true,
+        filmstrip: {
+          alg: "R U R' U R U R' U2",
+          marks: [
+            { piece: 'FR', colour: 'pink' },
+            { piece: 'FU', colour: 'blue' },
+          ],
+          legend: [
+            { colour: 'pink', text: 'the green/orange edge, which belongs in the middle slot' },
+            { colour: 'blue', text: 'the yellow/green edge, which belongs at the top front' },
+          ],
+          frames: [
+            {
+              after: '',
+              caption:
+                'The two edges have traded places: the green/orange edge (pink) is at the top front, the yellow/green edge (blue) is in the slot with its yellow sticker facing front. The other three top edges are right relative to each other.',
+            },
+            {
+              after: "R U R'",
+              caption:
+                'First cycle. The yellow/green edge (blue) is back at the top front, and the top-right edge is right too. The slot now holds the yellow/blue edge, and the green/orange edge (pink) has been carried round to the top left. Three edges are still out of place.',
+            },
+            {
+              after: 'U',
+              caption: "A quarter turn of the top layer (U). It only changes where the second cycle's lift lands.",
+            },
+            {
+              after: "R U R'",
+              caption:
+                'Second cycle. The green/orange edge (pink) has dropped into the slot, and the four top edges are in the right order relative to each other — the top layer is just turned.',
+            },
+            {
+              after: 'U2',
+              caption: 'Half a turn of the top layer lines it up with the side centres: every edge is solved.',
+            },
+          ],
+          every: { summary: 'Show every single move' },
+        },
       },
       {
         anchor: 'swap-flipped',
-        name: '3 · Last two edges: flipped swap',
+        name: '3 · Last two edges: yellow faces right',
         orientation:
-          'Yellow sticker of the slot edge faces right. Swaps the top-right edge with the slot edge and flips both. Turn the top layer first so the unsolved top edge is at the right.',
+          "The yellow sticker of the slot edge faces right. Turn the top layer so the unsolved top edge is at the right. Then the same thing from the front: cycle, turn, cycle, and line the top layer up.",
         alg: "F' U' F U' F' U' F U2",
-        stickering: 'f2l',
-        diagramViews: ['cube'],
         mnemonicChunks: [
           { word: 'G', moves: "F'" },
           { word: 'V', moves: "U'" },
@@ -229,6 +312,44 @@ export const steps8355 = [
           { word: 'F', moves: 'F' },
           { word: 'U2', moves: 'U2' },
         ],
+        noViewer: true,
+        filmstrip: {
+          alg: "F' U' F U' F' U' F U2",
+          marks: [
+            { piece: 'FR', colour: 'pink' },
+            { piece: 'RU', colour: 'blue' },
+          ],
+          legend: [
+            { colour: 'pink', text: 'the green/orange edge, which belongs in the middle slot' },
+            { colour: 'blue', text: 'the yellow/orange edge, which belongs at the top right' },
+          ],
+          frames: [
+            {
+              after: '',
+              caption:
+                'The two edges have traded places: the green/orange edge (pink) is at the top right, the yellow/orange edge (blue) is in the slot with its yellow sticker facing right. The other three top edges are right relative to each other.',
+            },
+            {
+              after: "F' U' F",
+              caption:
+                'First cycle. The yellow/orange edge (blue) is back at the top right. The slot now holds the yellow/red edge, and the green/orange edge (pink) has been carried round to the top back. Three edges are still out of place.',
+            },
+            {
+              after: "U'",
+              caption: "A quarter turn of the top layer the other way (U'). It only changes where the second cycle's lift lands.",
+            },
+            {
+              after: "F' U' F",
+              caption:
+                'Second cycle. The green/orange edge (pink) has dropped into the slot, and the four top edges are in the right order relative to each other — the top layer is just turned.',
+            },
+            {
+              after: 'U2',
+              caption: 'Half a turn of the top layer lines it up with the side centres: every edge is solved.',
+            },
+          ],
+          every: { summary: 'Show every single move' },
+        },
       },
     ],
   },

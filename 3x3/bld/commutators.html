@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3x3 Blindfolded Commutators — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <span class="brand">Cubing Helper</span>
+      <a href="../../index.html">Home</a>
+      <a href="../cfop/index.html">3x3 · CFOP</a>
+      <a href="../cfop/f2l.html">3x3 · F2L</a>
+      <a href="../roux/index.html">3x3 · Roux</a>
+      <a href="../beginners/index.html">3x3 · Beginner's</a>
+      <a href="../8355/index.html">3x3 · 8355</a>
+      <a href="index.html" class="active">3x3 · Blind</a>
+      <a href="../../2x2/index.html">2x2</a>
+      <a href="../../megaminx/index.html">Megaminx</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>3x3 — Blindfolded</h1>
+    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+
+    <nav class="tabs" aria-label="Blindfolded pages">
+      <a href="index.html">Reference</a>
+      <a href="practice.html">Practice</a>
+      <a href="commutators.html" class="active" aria-current="page">Commutators</a>
+    </nav>
+
+    <h2 class="section-heading" style="margin-top:1.5rem">How a commutator works</h2>
+    <div class="source-note">
+      <p>
+        From the notes you pasted. They started part-way through, so the first
+        paragraph and the picture strip are written here. The cycles, the
+        table and all seven exercises were checked in the cube simulator; one
+        explanation (exercise 7) is corrected, and says so. Your letter code
+        has no D letter yet, so these have no mnemonic words.
+      </p>
+    </div>
+    <div id="comm-intro"></div>
+
+    <h2 class="section-heading" id="variants"></h2>
+    <p class="subtitle" id="variants-lead"></p>
+    <div class="table-wrap"><table class="bld-table" id="variants-table"></table></div>
+    <p id="variants-after"></p>
+    <ol class="film" id="variants-pictures"></ol>
+
+    <h2 class="section-heading" id="build"></h2>
+    <ol class="step-how" id="build-steps"></ol>
+
+    <h2 class="section-heading" id="exercises"></h2>
+    <p class="subtitle" id="exercises-lead"></p>
+    <div class="view-toggle" id="view-toggle"></div>
+    <div id="exercise-cards" class="case-grid"></div>
+    <h3 class="section-heading" id="notes-heading"></h3>
+    <ul id="exercise-notes" class="faster-tips"></ul>
+    <p class="step-note" id="exercise-correction"></p>
+
+    <h2 class="section-heading" id="practice"></h2>
+    <ul id="practice-items" class="faster-tips"></ul>
+    <p class="step-note" id="practice-blind"></p>
+  </main>
+
+  <footer class="site-footer">
+    Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
+  </footer>
+
+  <script type="module">
+    import { intro, variantsTable, buildSteps, exercises, practice } from '../../data/commutators.js';
+    import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { renderCases } from '../../js/render-cases.js';
+    import { mountViewToggle } from '../../js/view-toggle.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    mountViewToggle($('view-toggle'));
+
+    // --- how a commutator works
+    const introBox = $('comm-intro');
+    intro.paragraphs.forEach((t) => introBox.appendChild(el('p', null, t)));
+    introBox.appendChild(buildFilmstrip(intro.filmstrip));
+    introBox.appendChild(el('p', null, intro.netEffect));
+    introBox.appendChild(el('p', null, intro.why));
+
+    // --- the four variants: table + one picture each (what the commutator does to a solved cube)
+    $('variants').textContent = variantsTable.heading;
+    $('variants-lead').textContent = variantsTable.lead;
+    const table = $('variants-table');
+    const head = table.createTHead().insertRow();
+    ['Commutator', 'Moves', 'Cycle'].forEach((h) => head.appendChild(el('th', null, h)));
+    const body = table.createTBody();
+    for (const [name, moves, cycle] of variantsTable.rows) {
+      const tr = body.insertRow();
+      tr.appendChild(el('td', null, name));
+      const mv = el('td'); mv.appendChild(el('code', null, moves)); tr.appendChild(mv);
+      tr.appendChild(el('td', null, cycle));
+    }
+    $('variants-after').textContent = variantsTable.after;
+    const pictures = $('variants-pictures');
+    for (const [name, moves, cycle, caption] of variantsTable.rows) {
+      const strip = buildFilmstrip({
+        alg: moves,
+        fromSolved: true,
+        stickering: 'full',
+        views: ['U', 'D'],
+        frames: [{ after: moves, label: name, caption: caption || `On a solved cube: ${cycle}` }],
+      });
+      pictures.appendChild(strip.querySelector('.film-frame'));
+    }
+
+    // --- building one yourself
+    $('build').textContent = buildSteps.heading;
+    for (const s of buildSteps.steps) {
+      const li = el('li');
+      li.append(el('strong', null, `${s.title} `), s.text);
+      $('build-steps').appendChild(li);
+    }
+
+    // --- exercises
+    $('exercises').textContent = exercises.heading;
+    $('exercises-lead').textContent = exercises.lead;
+    renderCases('exercise-cards', exercises.cards.map((c) => ({
+      anchor: `exercise-${c.n}`,
+      name: `${c.n} · ${c.skill}`,
+      setup: c.setup,
+      // The picture is what the solution solves, i.e. the setup scramble applied to a solved cube.
+      alg: c.solutionMoves || c.solution,
+      displayAlg: c.solution,
+      hideAlg: true,
+      stickering: 'full',
+      diagramViews: ['U', 'D'],
+      mnemonicChunks: c.mnemonicChunks,
+    })));
+    $('notes-heading').textContent = exercises.notes.heading;
+    exercises.notes.items.forEach((t) => $('exercise-notes').appendChild(el('li', null, t)));
+    $('exercise-correction').textContent = exercises.notes.correction;
+
+    // --- practice
+    $('practice').textContent = practice.heading;
+    practice.items.forEach((t) => $('practice-items').appendChild(el('li', null, t)));
+    $('practice-blind').textContent = practice.blind;
+  </script>
+</body>
+</html>

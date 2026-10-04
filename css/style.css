@@ -1178,3 +1178,119 @@ text.net-marked {
 .faster-tips li {
   margin: 0.3rem 0;
 }
+
+/* Step-by-step picture strips (js/alg-filmstrip.js) */
+.case-card.wide {
+  grid-column: 1 / -1;
+}
+
+.filmstrip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.film {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.film-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem;
+}
+
+.film-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.film-diagram {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.film-diagram figure {
+  margin: 0;
+  text-align: center;
+}
+
+.film-diagram svg {
+  display: block;
+  width: 105px;
+  max-width: 100%;
+  height: auto;
+}
+
+.film-diagram figcaption {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.film-caption {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.film-legend {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.film-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 3px solid;
+  border-radius: 3px;
+  vertical-align: -0.15rem;
+  background: transparent;
+}
+
+.film-every {
+  margin-top: 0.25rem;
+}
+
+.film-every summary {
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.film-every .film {
+  margin-top: 0.6rem;
+}
+
+/* Exercise cards: setup scramble and a hidden solution */
+.case-setup {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.case-setup code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.case-solution summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.case-solution > * {
+  margin-top: 0.5rem;
+}

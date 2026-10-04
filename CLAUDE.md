@@ -37,7 +37,13 @@ added as it's actually needed.
   `['cube']` for the top/front/right view), `hold` (a whole-cube rotation
   for cases you reach already holding the cube turned — otherwise worked
   out automatically for algorithms containing y/d etc.), `noViewer` (no
-  picture or 3D, for procedural steps or unsupported puzzles).
+  picture or 3D, for procedural steps or unsupported puzzles), `filmstrip`
+  (a card spans the whole row and shows a position after each stage of an
+  algorithm — `js/alg-filmstrip.js`; set `noViewer` too; frames come from the
+  simulator, with `marks` outlining chosen pieces by their colours, and
+  `fromSolved` for "what this does to a solved cube"), `setup` (an exercise's
+  setup scramble) and `hideAlg` (solution behind a button). Stickering
+  `'edges'` colours edges and centres and greys corners.
 
 ## Repo layout
 
@@ -79,9 +85,14 @@ built ahead of being asked for. As of 2026-10-03:
   (turn the bottom layer so an unsolved corner is under the buffer before
   each Sassy; the final two twisted corners; the trailing U2 on the last-two-
   edges swaps; the final D in the wiki's last-corners example). Step 4
-  part A ("cycle through the empty slot") is the wiki's intuitive step and
-  is only checked against the example solve. Re-run the checks if anything
-  in the data file changes.
+  (remaining edges) is taught as one move, the **cycle** (`R U^k R'` /
+  `F' U^k F`: lift the slot edge, turn the top, drop another edge), with
+  step-by-step picture strips: the wiki's two "swap" algorithms are just the
+  cycle done twice. Checked: the cycle alone solves all 1,920 arrangements of
+  the five loose edges in at most 5 cycles; I have **not** found a simple
+  rule that always picks the best cycle for part A (the wiki calls it
+  intuitive), and the page says so. Re-run the checks if anything in the data
+  file changes.
 - **3x3 Beginner's Method** — all 7 steps, one data file
   (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
   source, goal, numbered "how", and cases). `js/steps-page.js` builds a
@@ -117,6 +128,15 @@ built ahead of being asked for. As of 2026-10-03:
   Cycle breaks start at the first unsolved piece in letter order. Checked:
   running every listed move solves 2,000 random scrambles; re-run if the
   memo code or any setup changes.
+  A **Commutators** tab (`3x3/bld/commutators.html`, `data/commutators.js`)
+  explains commutators (insertion + interchange), the effect of changing the
+  interchange turn, how to build one, and seven set-up-then-solve exercises
+  (setup scramble and picture shown, solution behind a button). From notes
+  the user pasted 2026-10-04 (the paste began mid-explanation, so the opening
+  paragraph and the picture strip are ours). Every table row, cycle and
+  exercise was checked by simulation; one explanation in the paste was wrong
+  (`(R' D' R D)×2` twists four corners, not one) and is corrected on the page.
+  No mnemonics for most of it: the cipher has no D letter.
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
