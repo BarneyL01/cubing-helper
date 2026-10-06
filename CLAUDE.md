@@ -43,7 +43,10 @@ added as it's actually needed.
   simulator, with `marks` outlining chosen pieces by their colours, and
   `fromSolved` for "what this does to a solved cube"), `setup` (an exercise's
   setup scramble) and `hideAlg` (solution behind a button). Stickering
-  `'edges'` colours edges and centres and greys corners.
+  `'edges'` colours edges and centres and greys corners. A case's `then` link
+  (F2L map) can also carry `thenDiagram: { alg, hold }`: a small picture of the
+  position it leads to, shown under the "Then →" link (it stays visible in 3D
+  mode; the F2L page uses the next case's own full algorithm).
 
 ## Repo layout
 
@@ -58,7 +61,8 @@ Grows one struggle-case at a time as the user sends notes — nothing here was
 built ahead of being asked for. As of 2026-10-03:
 
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
-  original notes. `data/oll.js`, `data/pll.js`. Plus an **F2L map**
+  original notes. `data/oll.js`, `data/pll.js` (both reachable straight
+  from the home page since 2026-10-06, as well as via the CFOP page). Plus an **F2L map**
   (`data/f2l.js`, `3x3/cfop/f2l.html`): all 41 cases + 7 in-between steps,
   each step leading to another case. **Not our original work** — it's a
   transcription of the dogschasingsquirrels chart
@@ -70,8 +74,25 @@ built ahead of being asked for. As of 2026-10-03:
   computed from the simulated case by `js/f2l-features.js`, chart
   category, and free text (`js/f2l-finder.js`).
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
-  below); one LSE recognition case. Block building and the rest of LSE are
-  placeholder. `data/roux.js`.
+  below). **LSE built out on request 2026-10-06, not from the user's
+  notes** (the page says so; structure follows the Speedsolving wiki's
+  Roux/L7E/EO pages and athefre's DFDB, which I could not open — the egress
+  proxy blocks speedsolving.com — so the algorithms and tables are our own,
+  found and checked by simulation): 4a EO (11 cards, one per family up to
+  turning U), 4b UL/UR (30-row table by where the left/right pieces are), 4c
+  M slice (11 cards + solved = 12 cases), and a DFDB section (the edges in
+  DF and DB, with the centres lined up, identify the 4c case; plus which slots
+  to read before the lining-up M turn, and a sticker-match version). The page
+  uses `js/steps-page.js` (step bar). Block building is placeholder. The
+  user's one recorded LSE card (`M U2 M`) is kept in a "Your recorded LSE note"
+  section, with `M U2 M'` (their text read literally) beside it — neither is
+  an EO algorithm; asked the user which they meant. `data/roux.js`.
+  **Key rule: every LSE sequence returns the top corners to line up with the
+  blocks (net zero quarter U turns).** Searching on edges alone ignores the
+  corners and gives algorithms that leave the corners a quarter/half turn
+  out. The whole chain (align centres → 4a → 4b → align centres → 4c) solves
+  all 46,080 legal LSE positions; the checker is in the log entry — re-run it
+  if anything in `data/roux.js` changes.
 - **3x3 8355 Method** — Reheart Sheu's beginner method, from the
   Speedsolving wiki text the user pasted (2026-10-03), **not from the
   user's own notes** (the page says so and credits the wiki). `data/

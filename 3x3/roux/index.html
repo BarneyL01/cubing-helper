@@ -24,22 +24,23 @@
   </header>
 
   <main>
-    <h1>3x3 — Roux</h1>
-    <p class="subtitle">Left/right blocks (intuitive), then CMLL, then LSE.</p>
+    <h1 id="top">3x3 — Roux</h1>
+    <p class="subtitle">Left/right blocks (intuitive), then CMLL, then LSE: orient the edges, place UL and UR, solve the M slice.</p>
+    <div class="source-note">
+      <p>
+        The CMLL cases are from your notes. The LSE steps (4a, 4b, 4c and
+        DFDB) are <strong>not from your notes</strong>: the structure follows
+        the community descriptions linked at the bottom, and every algorithm
+        and table was found or checked with the cube simulator. Your own
+        recorded LSE card is kept at the end, with a question about it.
+      </p>
+    </div>
+
+    <dl class="facts" id="facts"></dl>
+
+    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
     <div class="view-toggle" id="view-toggle"></div>
-
-    <div class="coming-soon">Block building isn't recorded here — it's intuitive, not algorithmic.</div>
-
-    <h2 class="section-heading">CMLL</h2>
-    <p class="subtitle">
-      Simplified (2-look-style): these 7 cases orient the corners. Same
-      cases and algorithms as 2x2 Ortega's OLL step.
-    </p>
-    <div id="roux-cmll-cases" class="case-grid"></div>
-
-    <h2 class="section-heading">LSE — Last Six Edges</h2>
-    <p class="subtitle">Only one recognition case recorded so far.</p>
-    <div id="roux-lse-cases" class="case-grid"></div>
+    <div id="steps"></div>
   </main>
 
   <footer class="site-footer">
@@ -47,12 +48,165 @@
   </footer>
 
   <script type="module">
-    import { rouxCmllCases, rouxLseCases } from '../../data/roux.js';
-    import { renderCases } from '../../js/render-cases.js';
-    import { mountViewToggle } from '../../js/view-toggle.js';
-    mountViewToggle(document.getElementById('view-toggle'));
-    renderCases('roux-cmll-cases', rouxCmllCases);
-    renderCases('roux-lse-cases', rouxLseCases);
+    import {
+      rouxCmllCases, lseFacts, lseOverview, eoCases, eoSteps, ulUrSteps,
+      mSliceCases, mSliceSteps, dfdb, rouxLseCases, yourNote,
+    } from '../../data/roux.js';
+    import { mountSteps } from '../../js/steps-page.js';
+
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+
+    const dl = document.getElementById('facts');
+    for (const [k, v] of lseFacts) {
+      const row = el('div', 'fact');
+      row.append(el('dt', null, k), el('dd', null, v));
+      dl.appendChild(row);
+    }
+
+    // A table; columns listed in codeCols are shown as monospace moves.
+    function table(caption, headings, rows, codeCols = []) {
+      const wrap = el('div', 'table-wrap');
+      const t = el('table', 'bld-table');
+      if (caption) t.createCaption().textContent = caption;
+      const head = t.createTHead().insertRow();
+      headings.forEach((h) => head.appendChild(el('th', null, h)));
+      const body = t.createTBody();
+      for (const row of rows) {
+        const tr = body.insertRow();
+        row.forEach((cell, i) => {
+          const td = el('td');
+          td.appendChild(codeCols.includes(i) ? el('code', null, cell || '—') : document.createTextNode(cell));
+          tr.appendChild(td);
+        });
+      }
+      wrap.appendChild(t);
+      return wrap;
+    }
+
+    const edgeName = { UF: 'UF edge', UB: 'UB edge', DF: 'DF edge', DB: 'DB edge' };
+
+    const steps = [
+      {
+        id: 'blocks',
+        title: 'Blocks',
+        short: 'Blocks',
+        intro: "Build the left block, then the right block (each 1×2×3, with the M slice and the top layer left alone). It's intuitive, so it isn't recorded here.",
+      },
+      {
+        id: 'cmll',
+        title: 'CMLL',
+        short: 'CMLL',
+        source: 'yours',
+        goal: 'Solve the four top corners. Simplified (2-look-style): these 7 cases only orient the corners; they are the same cases and algorithms as 2x2 Ortega\'s OLL step.',
+        cases: rouxCmllCases,
+      },
+      {
+        id: 'lse-4a',
+        title: 'LSE 4a — orient the edges',
+        short: '4a EO',
+        source: 'added',
+        goal: eoSteps.goal,
+        how: eoSteps.how,
+        notes: [lseOverview.intro, ...lseOverview.pieces, ...eoSteps.notes],
+        cases: eoCases.map((c) => ({
+          name: c.name,
+          orientation: c.note,
+          stickering: 'eo',
+          diagramViews: ['U', 'D'],
+          alg: c.alg,
+        })),
+      },
+      {
+        id: 'lse-4b',
+        title: 'LSE 4b — place UL and UR',
+        short: '4b UL/UR',
+        source: 'added',
+        goal: ulUrSteps.goal,
+        how: ulUrSteps.how,
+        notes: ulUrSteps.notes,
+        custom(section) {
+          for (const g of ulUrSteps.groups) {
+            section.appendChild(table(g.heading, ulUrSteps.columns, g.rows, [2]));
+          }
+        },
+      },
+      {
+        id: 'lse-4c',
+        title: 'LSE 4c — solve the M slice',
+        short: '4c M slice',
+        source: 'added',
+        goal: mSliceSteps.goal,
+        how: mSliceSteps.how,
+        notes: mSliceSteps.notes,
+        cases: mSliceCases
+          .filter((c) => c.alg)
+          .map((c) => ({
+            name: c.name,
+            orientation: `DFDB: ${edgeName[c.df]} in DF, ${edgeName[c.db]} in DB. ${c.moves}.`,
+            stickering: 'edges',
+            diagramViews: ['U', 'D'],
+            alg: c.alg,
+          })),
+      },
+      {
+        id: 'dfdb',
+        title: 'DFDB — recognising 4c',
+        short: 'DFDB',
+        extra: true,
+        mark: '◎',
+        source: 'added',
+        intro: dfdb.intro,
+        how: dfdb.rule,
+        notes: [dfdb.caveat],
+        custom(section) {
+          section.appendChild(
+            table(
+              dfdb.table.heading,
+              dfdb.table.columns,
+              mSliceCases.map((c) => [edgeName[c.df], edgeName[c.db], c.name, c.alg]),
+              [3],
+            ),
+          );
+          section.appendChild(el('h3', 'step-sub', dfdb.beforeTurn.heading));
+          section.appendChild(el('p', 'step-note', dfdb.beforeTurn.lead));
+          section.appendChild(table('', dfdb.beforeTurn.columns, dfdb.beforeTurn.rows, [1]));
+          section.appendChild(el('p', 'step-note', dfdb.beforeTurn.after));
+          section.appendChild(el('h3', 'step-sub', dfdb.stickers.heading));
+          section.appendChild(el('p', 'step-note', dfdb.stickers.lead));
+          section.appendChild(table('', dfdb.stickers.columns, dfdb.stickers.rows));
+          section.appendChild(el('h3', 'step-sub', 'Sources'));
+          const list = el('ul', 'step-note');
+          for (const [text, href] of dfdb.sources) {
+            const li = el('li');
+            const a = el('a', null, text);
+            a.href = href;
+            li.appendChild(a);
+            list.appendChild(li);
+          }
+          section.appendChild(list);
+        },
+      },
+      {
+        id: 'your-note',
+        title: 'Your recorded LSE note',
+        short: 'Your note',
+        extra: true,
+        mark: '?',
+        source: 'yours',
+        intro: yourNote.intro,
+        cases: [...rouxLseCases, ...yourNote.extra],
+      },
+    ];
+
+    mountSteps({
+      steps,
+      sources: { yours: 'Your notes', added: 'Added on request' },
+    });
   </script>
 </body>
 </html>

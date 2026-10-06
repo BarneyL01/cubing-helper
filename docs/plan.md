@@ -25,7 +25,8 @@ Megaminx. Hosted free on GitHub Pages.
   dogschasingsquirrels chart — credited on the page. In the top menu as
   "3x3 · F2L"; has a "Find a case" search/filter panel
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
-  OLL); block building and most of LSE still placeholder
+  OLL); LSE built out 2026-10-06 (4a EO, 4b UL/UR, 4c M slice, DFDB —
+  added on request, verified by simulation); block building still placeholder
 - `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
   the user's notes; 5–7 from their notes), one numbered section per step
   with a goal and "how", a sticky 1–7 step bar, and previous/next links
@@ -68,7 +69,7 @@ Each case shows:
   corners, orient corners) — done
 - **v2** — Full CFOP: F2L map — done (2026-09-27); full 57 OLL / 21 PLL —
   TBD if wanted
-- **v3** — Roux: CMLL — done; block building and full LSE still to come
+- **v3** — Roux: CMLL — done; LSE (4a/4b/4c + DFDB) — done (2026-10-06); block building still to come
 - **v4** — Beginner's Method: white cross, white corners, second layer,
   yellow cross — done (standard method, 2026-09-27)
 - **v4.1** — 8355 method: all steps, examples and shortcuts — done
@@ -91,11 +92,16 @@ Each case shows:
   preview is wanted
 - F2L map in 3D mode loads up to 48 players on one page; they only draw
   when scrolled into view, but it may be slow on older phones
-- Roux LSE "4-edge recognition" terminology ("2o/2", "4c") is recorded as
-  the user described it, but wasn't independently cross-checked the way
-  the OLL/PLL/CMLL algorithms were — flag if any of it reads wrong. Its
-  picture is exact for `M U2 M` from solved, but may not match how the
-  user actually recognises that case
+- Roux LSE: the user's one recorded card (`M U2 M` / `M' U2 M'`, "2o/2",
+  "4c") is kept on the Roux page in "Your recorded LSE note". Checked: it is
+  not an orientation algorithm (every edge stays oriented), and the user's
+  wording ("M or M' + U2 and reverse") reads as `M U2 M'`, which differs from
+  the recorded `M U2 M`. Asked the user which they meant; nothing was changed
+  on the card itself.
+- Roux LSE 4a/4b/4c/DFDB are our own derivation (the Speedsolving wiki and
+  athefre's DFDB pages could not be opened from the build environment), so
+  the algorithms are search results, not the community's standard sets, and
+  the DFDB tables are our equivalent, not athefre's sticker-pair convention.
 
 ## Deploy
 

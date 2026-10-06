@@ -137,6 +137,9 @@
           stickering: 'f2l',
           diagramViews: ['cube'],
           then: { text: label(n.next), href: n.next === '37' ? '#map-heading' : `#f2l-${n.next}` },
+          // The picture of the case this step turns into: the same picture that
+          // case's own card shows (solved slot for 37).
+          thenDiagram: { alg: n.next === '37' ? '' : f2lFullAlg(n.next), hold: f2lNode(n.next).hold },
           extraAlgs: full !== step ? [{ label: 'Whole solution from here', alg: full }] : [],
           note: n.note,
         };

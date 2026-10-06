@@ -1313,3 +1313,46 @@ text.net-marked {
   font-size: 0.88rem;
   color: var(--text-muted);
 }
+
+/* "Then →" on an F2L card: a picture of the case it turns into */
+.case-next {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.4rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.case-next:hover {
+  text-decoration: none;
+  border-color: var(--accent);
+}
+
+.case-next-diagram {
+  display: flex;
+  justify-content: center;
+}
+
+.case-next-diagram figure {
+  margin: 0;
+}
+
+.case-next-diagram svg {
+  display: block;
+  width: 96px;
+  height: auto;
+}
+
+/* Sub-headings and tables inside a numbered step (Roux LSE, DFDB). */
+.step-sub {
+  margin: 1.25rem 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.step .table-wrap {
+  margin: 0.75rem 0;
+}

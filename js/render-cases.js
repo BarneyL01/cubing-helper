@@ -109,6 +109,24 @@ export function renderCases(containerId, cases, options = {}) {
       link.href = c.then.href;
       then.appendChild(link);
       card.appendChild(then);
+      // thenDiagram: { alg, hold } — the picture of the case it turns into,
+      // drawn like that case's own card. Always shown (the 3D player only
+      // plays this card's own algorithm), and a link to that case.
+      if (c.thenDiagram) {
+        const next = el('a', 'case-next');
+        next.href = c.then.href;
+        next.title = `Go to ${c.then.text}`;
+        const picture = caseDiagram(c.thenDiagram.alg, {
+          size: c.puzzle === '2x2x2' ? 2 : 3,
+          stickering: c.stickering,
+          views: c.diagramViews,
+          hold: c.thenDiagram.hold,
+        });
+        picture.className = 'case-next-diagram';
+        next.appendChild(picture);
+        next.appendChild(el('span', 'case-next-label', c.then.text));
+        card.appendChild(next);
+      }
     }
 
     for (const extra of c.extraAlgs || []) {
