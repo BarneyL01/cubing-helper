@@ -75,18 +75,28 @@ built ahead of being asked for. As of 2026-10-03:
   category, and free text (`js/f2l-finder.js`).
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
   below). **LSE built out on request 2026-10-06, not from the user's
-  notes** (the page says so; structure follows the Speedsolving wiki's
-  Roux/L7E/EO pages and athefre's DFDB, which I could not open — the egress
-  proxy blocks speedsolving.com — so the algorithms and tables are our own,
-  found and checked by simulation): 4a EO (11 cards, one per family up to
+  notes** (the page says so). Algorithms and tables are our own, found and
+  checked by simulation, then compared with Scheopner's LSE page
+  (scheopner.com/cube/lse.php) and athefre's DFDB page
+  (sites.google.com/site/athefre/roux/dfdb-recognition), which are reachable;
+  speedsolving.com is still blocked from the build environment. The comparison:
+  the EO cards carry Scheopner's names/notation ((top/bottom) bad counts, a =
+  adjacent, o = opposite; his 9 non-mirror cases = our 11 cards with two mirror
+  pairs shown both ways) and his V + D-Line algorithm is identical to ours; his
+  two 3-cycle and H algorithms match our cards; his "Dots" (`M' E2 M E2`) is
+  our `U2 M' U2 M2 U2 M' U2` case (checked). Our DFDB is an equivalent we
+  built, not athefre's wording (his page has no case table): 4a EO (11 cards, one per family up to
   turning U), 4b UL/UR (30-row table by where the left/right pieces are), 4c
   M slice (11 cards + solved = 12 cases), and a DFDB section (the edges in
   DF and DB, with the centres lined up, identify the 4c case; plus which slots
   to read before the lining-up M turn, and a sticker-match version). The page
   uses `js/steps-page.js` (step bar). Block building is placeholder. The
   user's one recorded LSE card (`M U2 M`) is kept in a "Your recorded LSE note"
-  section, with `M U2 M'` (their text read literally) beside it — neither is
-  an EO algorithm; asked the user which they meant. `data/roux.js`.
+  section. Their "2o/2" is the (U+D)-Line EO case, and `M U2 M` / `M' U2 M'`
+  read as the first three moves of its two mirror-image algorithms (ours
+  `M U2 M U2 M' U M' U'`, Scheopner's `M' U2 M' U2 M U M`); the page shows the
+  whole algorithm beside the card and asks the user to confirm that reading —
+  it is a reading, not something they wrote. `data/roux.js`.
   **Key rule: every LSE sequence returns the top corners to line up with the
   blocks (net zero quarter U turns).** Searching on edges alone ignores the
   corners and gives algorithms that leave the corners a quarter/half turn

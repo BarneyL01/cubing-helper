@@ -93,15 +93,15 @@ Each case shows:
 - F2L map in 3D mode loads up to 48 players on one page; they only draw
   when scrolled into view, but it may be slow on older phones
 - Roux LSE: the user's one recorded card (`M U2 M` / `M' U2 M'`, "2o/2",
-  "4c") is kept on the Roux page in "Your recorded LSE note". Checked: it is
-  not an orientation algorithm (every edge stays oriented), and the user's
-  wording ("M or M' + U2 and reverse") reads as `M U2 M'`, which differs from
-  the recorded `M U2 M`. Asked the user which they meant; nothing was changed
-  on the card itself.
-- Roux LSE 4a/4b/4c/DFDB are our own derivation (the Speedsolving wiki and
-  athefre's DFDB pages could not be opened from the build environment), so
-  the algorithms are search results, not the community's standard sets, and
-  the DFDB tables are our equivalent, not athefre's sticker-pair convention.
+  "4c") is kept as recorded on the Roux page. Their "2o/2" is the (U+D)-Line
+  EO case (Scheopner's notation), and the card reads as the first three moves
+  of its algorithm (`M U2 M` + `U2 M' U M'`, mirror `M' U2 M' U2 M U M`),
+  matching their wording "M or M' + U2 and reverse". This is our reading;
+  asked the user to confirm. On its own the card changes no edge orientation.
+- Roux LSE 4a/4b/4c/DFDB are our own derivation, checked by simulation and
+  compared with Scheopner's page and athefre's DFDB overview (speedsolving.com
+  is still blocked). Our DFDB table is an equivalent, not athefre's convention;
+  the EO names are Scheopner's.
 
 ## Deploy
 

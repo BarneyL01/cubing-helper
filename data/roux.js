@@ -47,17 +47,17 @@ export const lseOverview = {
 // is the case seen with the centres lined up (the U centre on top).
 // Positions are listed in the order UF UB UL UR DF DB; x = bad edge.
 export const eoCases = [
-  { pattern: '.xxx.x', alg: "M U M' U'", name: 'Arrow — 3 bad on top, DB bad', note: 'Top layer: UB, UL and UR are bad; UF is good. DB is bad.' },
-  { pattern: 'x.xxx.', alg: "M' U M U'", name: 'Arrow — 3 bad on top, DF bad', note: 'Top layer: UF, UL and UR are bad; UB is good. DF is bad.' },
-  { pattern: '.xx.xx', alg: "M2 U' M' U M'", name: '2 bad on top (neighbours) + DF and DB bad', note: 'UB and UL are bad, and both bottom edges are bad.' },
-  { pattern: '...xx.', alg: "M U' M U2 M' U' M'", name: '1 bad on top + DF bad', note: 'UR is bad and DF is bad.' },
-  { pattern: '..x..x', alg: "M' U' M U2 M U' M'", name: '1 bad on top + DB bad', note: 'UL is bad and DB is bad.' },
-  { pattern: '.x.x..', alg: "M' U' M U2 M' U' M", name: '2 bad on top (neighbours), bottom good', note: 'UB and UR are bad; both bottom edges are good.' },
-  { pattern: '....xx', alg: "M U M U' M' U M' U'", name: 'Only DF and DB bad', note: 'The whole top layer is good; both bottom edges are bad.' },
-  { pattern: 'xxxx..', alg: "M U2 M U2 M U M U'", name: 'All 4 top edges bad', note: 'UF, UB, UL and UR are bad; both bottom edges are good.' },
-  { pattern: '..xxxx', alg: "M U2 M U2 M' U M' U'", name: '2 bad on top (UL, UR) + DF and DB bad', note: 'UL and UR are bad, and so are both bottom edges.' },
-  { pattern: 'xx....', alg: "M U M' U' M U M' U'", name: '2 bad on top (UF, UB), bottom good', note: 'UF and UB are bad; UL and UR are good.' },
-  { pattern: 'xxxxxx', alg: "M U M U M' U M U2 M U' M", name: 'All 6 edges bad', note: 'The rarest and the longest case.' },
+  { pattern: '.xxx.x', alg: "M U M' U'", name: 'F Arrow (3/1) — 3 bad on top, DB bad', note: 'Top layer: UB, UL and UR are bad; UF is good. DB is bad.' },
+  { pattern: 'x.xxx.', alg: "M' U M U'", name: 'F Arrow (3/1) — 3 bad on top, DF bad', note: 'Top layer: UF, UL and UR are bad; UB is good. DF is bad.' },
+  { pattern: '.xx.xx', alg: "M2 U' M' U M'", name: 'V + D-Line (2a/2) — 2 bad on top (neighbours) + DF and DB bad', note: 'UB and UL are bad, and both bottom edges are bad.' },
+  { pattern: '...xx.', alg: "M U' M U2 M' U' M'", name: '1+1 (1/1) — 1 bad on top + DF bad', note: 'UR is bad and DF is bad.' },
+  { pattern: '..x..x', alg: "M' U' M U2 M U' M'", name: '1+1 (1/1) — 1 bad on top + DB bad', note: 'UL is bad and DB is bad.' },
+  { pattern: '.x.x..', alg: "M' U' M U2 M' U' M", name: 'V (2a/0) — 2 bad on top (neighbours), bottom good', note: 'UB and UR are bad; both bottom edges are good.' },
+  { pattern: '....xx', alg: "M U M U' M' U M' U'", name: 'D-Line (0/2) — only DF and DB bad', note: 'The whole top layer is good; both bottom edges are bad.' },
+  { pattern: 'xxxx..', alg: "M U2 M U2 M U M U'", name: 'Cross (4/0) — all 4 top edges bad', note: 'UF, UB, UL and UR are bad; both bottom edges are good.' },
+  { pattern: '..xxxx', alg: "M U2 M U2 M' U M' U'", name: '(U+D)-Line (2o/2) — 2 bad on top (UL, UR) + DF and DB bad', note: 'UL and UR are bad, and so are both bottom edges.' },
+  { pattern: 'xx....', alg: "M U M' U' M U M' U'", name: 'U-Line (2o/0) — 2 bad on top (UF, UB), bottom good', note: 'UF and UB are bad; UL and UR are good.' },
+  { pattern: 'xxxxxx', alg: "M U M U M' U M U2 M U' M", name: '6 Flip (4/2) — all 6 edges bad', note: 'The rarest and the longest case.' },
 ];
 
 export const eoSteps = {
@@ -69,7 +69,8 @@ export const eoSteps = {
     { title: 'Turn U until the picture matches.', text: 'U turns carry the bad top-layer edges around, so any rotation of a pattern is the same case. Turn U until the top layer looks like the card, do its algorithm, then turn U back the same number of turns the other way. (Every algorithm here turns U a net zero times, so the top corners are still lined up with the blocks afterwards.) The cards below list one case from each family.' },
   ],
   notes: [
-    'The algorithms were found by search (shortest M/U sequence for each family that ends with every edge oriented, the centres lined up and the top corners back where they started) — they are not from a guide, and other short ones exist. Arrow is the well-known case: M U M\' is the usual arrow algorithm, and M U M\' U\' here is the same with the corners put back.',
+    'Names and the (top/bad) counts are the ones on Scheopner\'s LSE page: the numbers are bad edges in the top layer / bottom layer, a = the two top ones are adjacent, o = opposite. The 11 cards are his 9 non-mirror cases with the two mirror pairs (arrow, 1+1) shown both ways.',
+    'The algorithms were found by search: the shortest M/U sequence for each family that ends with every edge oriented, the centres lined up and the top corners back where they started. Checked against Scheopner\'s page: his V + D-Line algorithm (M2 U\' M\' U M\') is the same as ours; his others are shorter, because they turn U a net quarter or half turn (his F Arrow is M\' U M\', ours M\' U M U\'), which leaves the top corners out of line with the blocks.',
     'All 32 bad-edge patterns were checked: each, turned by U to the card that matches it, solved by the card, then turned back, ends with every edge oriented, the centres lined up and the top corners lined up with the blocks.',
   ],
 };
@@ -175,14 +176,14 @@ export const mSliceSteps = {
   ],
   notes: [
     'Only 12 cases: checked in the simulator, after 4a and 4b the four M-slice edges cannot be in just any arrangement. Once the centres are lined up, the edges in DF and DB fix where the other two are. In all 48 positions that 4b can leave (12 for each turn of the centres), the lining-up turn followed by the matching card solves the cube.',
-    'Algorithms were found by search (shortest M/U2 sequence for each case), not taken from a guide; other algorithms exist for the same cases, including ones that start with M2.',
+    'Algorithms were found by search (shortest M/U2 sequence for each case). Checked against Scheopner\'s page, which lists four unsolved kinds: his two 3-cycle algorithms (U2 M\' U2 M and M\' U2 M U2) are two of the cards above, move for move; his H (M2 U2 M2 U2) does the same thing as ours (U2 M2 U2 M2); his "Dots" (M\' E2 M E2) leaves the edges where they are and turns the centres half way, which is the same case as our last card (it needs E2, which is not an M/U move). The other cards are the same kinds in the other positions.',
   ],
 };
 
 // DFDB: which two edges to look at, and where they are before the centres are lined up.
 export const dfdb = {
   intro:
-    "DFDB is a way to recognise the 4c case from only two edges: the one in DF and the one in DB. U turns never touch those two slots, so during 4b they only move when you turn M, and you can follow them — and know the 4c case before 4b is even finished.",
+    "DFDB is a way to recognise the 4c case from two edges, tracked while doing 4b. athefre's page describes it as tracking the DF and DB stickers (or the UF and UB ones) through 4b, then aligning the U layer after 4b from where they ended up, looking at the up/down stickers of the M-slice edges. U turns never touch DF and DB, so during 4b they only move when you turn M, which is what makes them easy to follow.",
   rule: [
     'First, how far are the centres off? Look at where the top-colour centre is: on top (aligned), at the front (M needed), on the bottom (M2) or at the back (M\' needed).',
     'Second, with the centres lined up, which two edges are in DF and DB? Name an edge by the slot it belongs in (the UF edge is the yellow–green one, the UB edge the yellow–blue one, the DF edge the white–green one, the DB edge the white–blue one).',
@@ -223,13 +224,14 @@ export const dfdb = {
     ],
   },
   sources: [
-    ['Roux method, Speedsolving wiki', 'https://speedsolving.com/wiki/index.php?title=Roux'],
-    ['Last Six Edges (L7E), Speedsolving wiki', 'https://www.speedsolving.com/wiki/index.php?title=L7E'],
-    ["Edge orientation (EO), Speedsolving wiki", 'https://www.speedsolving.com/wiki/index.php?title=EO'],
-    ['athefre\'s Roux pages (DFDB is credited to athefre in the results I found)', 'https://sites.google.com/site/athefre'],
+    ['athefre — DFDB recognition (opened)', 'https://sites.google.com/site/athefre/roux/dfdb-recognition'],
+    ['Scheopner — Roux: Last Six Edges (opened; names, 4c and EO algorithms compared)', 'https://www.scheopner.com/cube/lse.php'],
+    ['Roux method, Speedsolving wiki (not opened from here)', 'https://speedsolving.com/wiki/index.php?title=Roux'],
+    ['Last Six Edges (L7E), Speedsolving wiki (not opened from here)', 'https://www.speedsolving.com/wiki/index.php?title=L7E'],
+    ['Edge orientation (EO), Speedsolving wiki (not opened from here)', 'https://www.speedsolving.com/wiki/index.php?title=EO'],
   ],
   caveat:
-    "The community's DFDB follows one fixed pair of stickers and a centre comparison. I could not open those pages from here, so the tables below are my own equivalent, built and checked with the simulator — compare them with athefre's version before relying on the exact wording.",
+    "What is checked: this version (the edges in DF and DB, once the centres are lined up) identifies the 4c case in every one of the 48 positions. The wording is mine. athefre's page gives the idea but no case table, and Scheopner's page predicts the case a different way (by finding the UF edge's matching edge and comparing its front sticker with the front centre), so none of this is copied from either.",
 };
 
 // The one LSE card from the user's own notes, kept as written.
@@ -249,16 +251,16 @@ export const rouxLseCases = [
 
 export const yourNote = {
   intro:
-    "Kept exactly as you recorded it. Checked in the simulator: neither M U2 M nor M' U2 M' changes any edge's orientation, so they are not a 4a (orientation) algorithm. All four swap UL and UR (and turn the top corners half a turn); M U2 M and M' U2 M' also turn the centres half way. So they are not orientation algorithms. Your text says \"M or M' + U2 and reverse\", which reads as M U2 M' — that is a different sequence from M U2 M, and it also leaves every edge oriented. I could not tell which you meant, so both are on the page.",
+    "Kept exactly as you recorded it. Your \"2o/2\" is the (U+D)-Line orientation case in the notation on Scheopner's page: 2 bad edges in the top layer, opposite each other, and both bottom edges bad. On its own, M U2 M changes no edge's orientation, so it cannot be a whole algorithm. But it is the first three moves of the algorithm for that case: M U2 M, then U2 M' U M' (and U' to line the corners up) — and Scheopner's version for the same case is the mirror image, M' U2 M' U2 M U M. That fits your wording \"M or M' + U2 and reverse\": the first half is M U2 M or M' U2 M' depending on the direction, and the second half turns M the other way. So I read your card as the opening of that algorithm. This is a reading, not something you wrote. Please confirm or correct it.",
   extra: [
     {
-      id: 'lse-4c-text',
-      name: "Your text read literally: M U2 M'",
+      id: 'lse-4c-full',
+      name: 'The whole (U+D)-Line algorithm — your card is its first three moves',
       stickering: 'eo',
       diagramViews: ['U', 'D'],
-      orientation: 'M, then U2, then M reversed (M\').',
-      alg: "M U2 M'",
-      altAlg: "M' U2 M",
+      orientation: 'UL and UR bad, DF and DB bad (UF and UB good). Your M U2 M, then U2 M\' U M\', then U\' to line the corners up. Mirror image (M\' first): Scheopner\'s M\' U2 M\' U2 M U M, which leaves the top corners a quarter turn out.',
+      alg: "M U2 M U2 M' U M' U'",
+      altAlg: "M' U2 M' U2 M U M",
     },
   ],
 };

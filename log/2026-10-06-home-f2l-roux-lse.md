@@ -47,3 +47,25 @@ corners half a turn and turn the centres half way. The user's wording
 ("M or M' + U2 and reverse") reads as `M U2 M'`, which is a different
 sequence. Kept the card as recorded and added `M U2 M'` beside it; asked the
 user which they meant.
+
+## Follow-up: comparison with outside sources (network access enabled)
+- Reachable: scheopner.com and sites.google.com (athefre). Still blocked:
+  speedsolving.com and www.speedsolving.com. Neither opened page gives a full
+  DFDB case table; athefre's says DFDB tracks the DF and DB stickers (or UF
+  and UB) through 4b and aligns the U layer from them.
+- Scheopner (summarised, not copied): 9 non-mirror EO cases with names and
+  (top/bottom) counts; 4 unsolved 4c cases; 4b recipe (put one of UL/UR piece
+  on the bottom with M2, then `M' U2 M'` or `M' U2 M`, then align and M2).
+- Matches found by simulation: his V + D-Line algorithm (`M2 U' M' U M'`) is
+  identical to our card; his 3-cycles `U2 M' U2 M`, `M' U2 M U2` are two of our
+  cards; his H (`M2 U2 M2 U2`) has the same effect as our `U2 M2 U2 M2`; his
+  "Dots" (`M' E2 M E2`) = our `U2 M' U2 M2 U2 M' U2` case after the M2 that
+  lines the centres up. His EO algorithms other than V + D-Line are shorter
+  because they leave the top corners out of line (net U turns), ours do not.
+- The EO cards now carry his names. 11 cards = his 9 + the two mirror pairs.
+- The user's "2o/2" label is his (U+D)-Line (2 opposite bad on top, both
+  bottom bad). Our card for it: `M U2 M U2 M' U M' U'`; his: `M' U2 M' U2 M U M`.
+  Both start with the user's recorded `M U2 M` / `M' U2 M'`, so the recorded
+  card reads as the opening of that algorithm. The page's "Your recorded LSE
+  note" now says this and asks for confirmation (replaces the `M U2 M'`
+  literal-reading card with the whole-algorithm card).
