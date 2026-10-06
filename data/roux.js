@@ -226,7 +226,7 @@ export const dfdb = {
     ['Roux method, Speedsolving wiki', 'https://speedsolving.com/wiki/index.php?title=Roux'],
     ['Last Six Edges (L7E), Speedsolving wiki', 'https://www.speedsolving.com/wiki/index.php?title=L7E'],
     ["Edge orientation (EO), Speedsolving wiki", 'https://www.speedsolving.com/wiki/index.php?title=EO'],
-    ['athefre\'s Roux pages (DFDB is credited to athefre in the results I found)', 'https://sites.google.com/site/athefre'],
+    ['athefre\'s Roux pages (DFDB is credited to athefre in the results I found)', 'https://sites.google.com/site/athefre/roux/dfdb-recognition'],
   ],
   caveat:
     "The community's DFDB follows one fixed pair of stickers and a centre comparison. I could not open those pages from here, so the tables below are my own equivalent, built and checked with the simulator — compare them with athefre's version before relying on the exact wording.",
