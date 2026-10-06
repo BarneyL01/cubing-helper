@@ -48,6 +48,42 @@ added as it's actually needed.
   position it leads to, shown under the "Then →" link (it stays visible in 3D
   mode; the F2L page uses the next case's own full algorithm).
 
+- **Page chrome and phone layout** (redesign, 2026-10-06; the owner approved a
+  mockup and answered the open questions — see `log/2026-10-06-mobile-redesign.md`).
+  Phone (390 px, cube in hand) is the primary target.
+  - Every page has only `<header class="site-header" id="site-header">` with a
+    plain Home link inside (the no-JS fallback) and loads `js/site-chrome.js`
+    in `<head>`. That module builds the one-line sticky header, a grouped menu
+    (**one `MENU` list at the top of `js/site-chrome.js` — add new pages there**),
+    breadcrumbs (group › parent › page, from the same list), and moves every
+    `.source-note` on the page into a collapsed "About this page" at the bottom.
+    Menu: full-screen panel on screens under 1280 px (Esc/Close, focus kept
+    inside, scroll locked); inline grouped nav from 1280 px up. Pages have no
+    footer any more.
+  - Case cards (`js/render-cases.js`): picture/3D left, name + step label +
+    mnemonic word right, algorithm full width at 19 px, **Libby's line
+    directly under the algorithm, never inside a collapsed section**, then a
+    collapsed "Breakdown and notes" (mnemonic breakdown, alternative
+    algorithm, story, notes). A case with only `altAlg` (no `alg`) shows that
+    as its main algorithm. Exercises (`hideAlg`) keep everything inside their
+    hidden solution. Every card gets an id (`anchor`, else `<container>-<n>`).
+  - Picture index: pages with `<div id="picture-index">` call
+    `renderPictureIndex(slotId, [{ title, container }])` after `renderCases`:
+    thumbnails copied from the cards' own pictures (text list for Megaminx,
+    which has none), each linking to its card; cards get "↑ Index". On OLL,
+    PLL, 2x2 and Megaminx.
+  - `mountViewToggle(slot, { view: false })` also mounts **Keep screen on**
+    (Screen Wake Lock): off by default, last choice kept in localStorage
+    `cubing-helper:keep-awake`, re-requested when the tab returns, hidden when
+    the API is missing, shows off if the browser refuses.
+  - Badges: only "Partial" / "Coming soon"; no "Ready". Partial uses
+    `--partial` (#8a6408, white text; light colour in dark mode). Tappable
+    controls are at least 44 px tall.
+  - Home (`index.html`) is grouped by puzzle with one `.row-card` per method
+    (icon, title, one-line description, chevron) and quick links (CFOP: OLL,
+    PLL, F2L map; Blindfolded: Practice, Commutators). `.method-card` (whole
+    card clickable via its stretched link) is only used on the CFOP hub now.
+
 ## Repo layout
 
 - `/` — site source (HTML/CSS/JS/data/assets)
@@ -210,10 +246,11 @@ Method").
 
 - Standard WCA move notation for all algorithms; mnemonic word shown
   alongside, never instead of.
-- Method cards (home page, CFOP page; `.method-card`) are clickable all
-  over, not just the "Open →" link: the card's link stretches over the card
-  via CSS, so any new card only needs a link inside it. Cards with no link
-  (e.g. "Coming soon") stay inert.
+- Method cards on the CFOP hub (`.method-card`) are clickable all over, not
+  just the "Open →" link: the card's link stretches over the card via CSS, so
+  any new card only needs a link inside it. Cards with no link (e.g. "Coming
+  soon") stay inert. Home rows (`.row-card`) are clickable all over through
+  their `.row-main` link.
 - Keep pages static and fast — this is a lookup tool used mid-solve or while
   practicing, not a heavy app.
 - When adding a new algorithm/case, update `docs/mnemonics.md` if it

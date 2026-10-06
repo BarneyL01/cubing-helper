@@ -103,6 +103,15 @@ Each case shows:
   is still blocked). Our DFDB table is an equivalent, not athefre's convention;
   the EO names are Scheopner's.
 
+## Mobile redesign (2026-10-06)
+
+Done from the approved mockup: shared `js/site-chrome.js` (header, grouped menu,
+breadcrumbs, "About this page"), home grouped by puzzle, new case-card layout
+with Libby's line always visible, picture index on OLL/PLL/2x2/Megaminx, Keep
+screen on, Partial badge colour, 44 px targets. Decisions and deviations are in
+`log/2026-10-06-mobile-redesign.md`. Add new pages to `MENU` in
+`js/site-chrome.js`.
+
 ## Deploy
 
 Live at https://barneyl01.github.io/cubing-helper/, deployed by

@@ -7,93 +7,86 @@
   <meta name="description" content="A quick-reference cheat sheet for solving the Rubik's cube, 2x2, and Megaminx." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/site-chrome.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <span class="brand">Cubing Helper</span>
-      <a href="index.html" class="active">Home</a>
-      <a href="3x3/cfop/index.html">3x3 · CFOP</a>
-      <a href="3x3/cfop/f2l.html">3x3 · F2L</a>
-      <a href="3x3/roux/index.html">3x3 · Roux</a>
-      <a href="3x3/beginners/index.html">3x3 · Beginner's</a>
-      <a href="3x3/8355/index.html">3x3 · 8355</a>
-      <a href="3x3/bld/index.html">3x3 · Blind</a>
-      <a href="2x2/index.html">2x2</a>
-      <a href="megaminx/index.html">Megaminx</a>
-    </nav>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="index.html">Cubing Helper</a>
   </header>
 
   <main>
-    <h1>Cubing Helper</h1>
-    <p class="subtitle">A quick-reference sheet for the algorithms you keep forgetting — pick a puzzle and method below.</p>
+    <h1 class="sr-only">Cubing Helper</h1>
+    <p class="subtitle">The algorithms you keep forgetting, one tap away. Pick a puzzle and method.</p>
 
-    <div class="method-grid">
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — CFOP</h3>
-        <p>2-look OLL and PLL, with your personal mnemonics.</p>
-        <a href="3x3/cfop/index.html">Open →</a>
+    <section aria-labelledby="puzzle-3x3">
+      <h2 class="puzzle-label" id="puzzle-3x3">3x3</h2>
+      <div class="row-list">
+        <div class="row-card">
+          <a class="row-main" href="3x3/cfop/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="9" height="9" rx="2"/><rect x="15.5" y="4" width="9" height="9" rx="2"/><rect x="27" y="4" width="9" height="9" rx="2"/><rect x="4" y="15.5" width="9" height="9" rx="2"/><rect x="15.5" y="15.5" width="9" height="9" rx="2"/><rect x="27" y="15.5" width="9" height="9" rx="2"/><rect x="4" y="27" width="9" height="9" rx="2"/><rect x="15.5" y="27" width="9" height="9" rx="2"/><rect x="27" y="27" width="9" height="9" rx="2"/></g></svg>
+            <span class="row-text"><span class="row-title">CFOP</span><span class="row-desc">2-look OLL and PLL, F2L map, your mnemonics.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+          <div class="row-quick"><a class="quick-link" href="3x3/cfop/oll.html">2-look OLL</a><a class="quick-link" href="3x3/cfop/pll.html">2-look PLL</a><a class="quick-link" href="3x3/cfop/f2l.html">F2L map</a></div>
+        </div>
+        <div class="row-card">
+          <a class="row-main" href="3x3/roux/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="9" height="9" rx="2"/><rect x="15.5" y="4" width="9" height="9" rx="2"/><rect x="27" y="4" width="9" height="9" rx="2"/><rect x="4" y="15.5" width="9" height="9" rx="2"/><rect x="15.5" y="15.5" width="9" height="9" rx="2"/><rect x="27" y="15.5" width="9" height="9" rx="2"/><rect x="4" y="27" width="9" height="9" rx="2"/><rect x="15.5" y="27" width="9" height="9" rx="2"/><rect x="27" y="27" width="9" height="9" rx="2"/></g></svg>
+            <span class="row-text"><span class="row-title">Roux <span class="menu-badge">Partial</span></span><span class="row-desc">CMLL, last six edges with DFDB. Blocks not recorded.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
+        <div class="row-card">
+          <a class="row-main" href="3x3/beginners/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="9" height="9" rx="2"/><rect x="15.5" y="4" width="9" height="9" rx="2"/><rect x="27" y="4" width="9" height="9" rx="2"/><rect x="4" y="15.5" width="9" height="9" rx="2"/><rect x="15.5" y="15.5" width="9" height="9" rx="2"/><rect x="27" y="15.5" width="9" height="9" rx="2"/><rect x="4" y="27" width="9" height="9" rx="2"/><rect x="15.5" y="27" width="9" height="9" rx="2"/><rect x="27" y="27" width="9" height="9" rx="2"/></g></svg>
+            <span class="row-text"><span class="row-title">Beginner's Method</span><span class="row-desc">All seven steps, white cross to last corner.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
+        <div class="row-card">
+          <a class="row-main" href="3x3/8355/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="9" height="9" rx="2"/><rect x="15.5" y="4" width="9" height="9" rx="2"/><rect x="27" y="4" width="9" height="9" rx="2"/><rect x="4" y="15.5" width="9" height="9" rx="2"/><rect x="15.5" y="15.5" width="9" height="9" rx="2"/><rect x="27" y="15.5" width="9" height="9" rx="2"/><rect x="4" y="27" width="9" height="9" rx="2"/><rect x="15.5" y="27" width="9" height="9" rx="2"/><rect x="27" y="27" width="9" height="9" rx="2"/></g></svg>
+            <span class="row-text"><span class="row-title">8355 Method</span><span class="row-desc">A beginner method built on Sassy, with a keyhole.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
+        <div class="row-card">
+          <a class="row-main" href="3x3/bld/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="9" height="9" rx="2"/><rect x="15.5" y="4" width="9" height="9" rx="2"/><rect x="27" y="4" width="9" height="9" rx="2"/><rect x="4" y="15.5" width="9" height="9" rx="2"/><rect x="15.5" y="15.5" width="9" height="9" rx="2"/><rect x="27" y="15.5" width="9" height="9" rx="2"/><rect x="4" y="27" width="9" height="9" rx="2"/><rect x="15.5" y="27" width="9" height="9" rx="2"/><rect x="27" y="27" width="9" height="9" rx="2"/></g></svg>
+            <span class="row-text"><span class="row-title">Blindfolded</span><span class="row-desc">M2 edges, Old Pochmann corners, setup moves.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+          <div class="row-quick"><a class="quick-link" href="3x3/bld/practice.html">Practice</a><a class="quick-link" href="3x3/bld/commutators.html">Commutators</a></div>
+        </div>
       </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — 2-look OLL</h3>
-        <p>Orient the last layer in two steps: 8 cases, with your mnemonics and Libby's notation.</p>
-        <a href="3x3/cfop/oll.html">Open →</a>
+    </section>
+
+    <section aria-labelledby="puzzle-2x2">
+      <h2 class="puzzle-label" id="puzzle-2x2">2x2</h2>
+      <div class="row-list">
+        <div class="row-card">
+          <a class="row-main" href="2x2/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><rect x="6" y="6" width="13" height="13" rx="3"/><rect x="21" y="6" width="13" height="13" rx="3"/><rect x="6" y="21" width="13" height="13" rx="3"/><rect x="21" y="21" width="13" height="13" rx="3"/></g></svg>
+            <span class="row-text"><span class="row-title">Ortega</span><span class="row-desc">All 7 OLL cases, plus PBL.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
       </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — 2-look PLL</h3>
-        <p>Permute the corners, then the edges: Y, T, Ua, Ub, H and Z.</p>
-        <a href="3x3/cfop/pll.html">Open →</a>
+    </section>
+
+    <section aria-labelledby="puzzle-megaminx">
+      <h2 class="puzzle-label" id="puzzle-megaminx">Megaminx</h2>
+      <div class="row-list">
+        <div class="row-card">
+          <a class="row-main" href="megaminx/index.html">
+            <svg class="row-icon" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 35.2,15 29.4,33 10.6,33 4.8,15" fill="currentColor"/></svg>
+            <span class="row-text"><span class="row-title">Last layer <span class="menu-badge">Partial</span></span><span class="row-desc">Star, star alignment and corners. No 3D yet.</span></span>
+            <span class="row-chevron" aria-hidden="true">›</span>
+          </a>
+        </div>
       </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — F2L map</h3>
-        <p>All 41 F2L cases, searchable, each leading to a simpler case.</p>
-        <a href="3x3/cfop/f2l.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge partial">Partial</span>
-        <h3>3x3 — Roux</h3>
-        <p>CMLL, then the last six edges in three steps (orient, UL/UR, M slice) with DFDB recognition. Block building is not recorded.</p>
-        <a href="3x3/roux/index.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — Beginner's Method</h3>
-        <p>All seven steps, from the white cross to the last corner.</p>
-        <a href="3x3/beginners/index.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — 8355 Method</h3>
-        <p>A beginner method built on Sassy: corners and middle edges first, with a keyhole.</p>
-        <a href="3x3/8355/index.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>3x3 — Blindfolded</h3>
-        <p>M2 edges and Old Pochmann corners, with setup moves for every letter — plus practice scrambles with the memo worked out, and a guide to commutators.</p>
-        <a href="3x3/bld/index.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge ready">Ready</span>
-        <h3>2x2 — Ortega</h3>
-        <p>All 7 OLL cases, plus PBL.</p>
-        <a href="2x2/index.html">Open →</a>
-      </div>
-      <div class="method-card">
-        <span class="badge partial">Partial</span>
-        <h3>Megaminx</h3>
-        <p>Last-layer notes recorded; no 3D preview yet.</p>
-        <a href="megaminx/index.html">Open →</a>
-      </div>
-    </div>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    Personal reference tool — see <code>docs/plan.md</code> in the repo for the roadmap.
-  </footer>
 </body>
 </html>

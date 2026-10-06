@@ -110,7 +110,7 @@ export const ollCases = [
     stickering: 'oll',
     orientation: 'U shape, facing down.',
     alg: null,
-    note: "Primary algorithm wasn't captured in the original notes — use the alternative below until a main one is added.",
+    note: "Primary algorithm wasn't captured in the original notes — the alternative is shown until a main one is added.",
     altAlg: "R U R' U R U2 R2 U' R U' R' U2 R",
     altMnemonicChunks: [
       { word: 'Ugly', moves: "R U R' U" },

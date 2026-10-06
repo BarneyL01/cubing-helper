@@ -31,19 +31,39 @@ function libbyLine(alg, chunks) {
 // Renders a list of algorithm "cases" (OLL/PLL/etc.) into a container element,
 // each with a picture and a 3D player, both built from the algorithm itself
 // (so neither can drift out of sync with the algorithm text).
+//
+// Card layout: picture (or 3D player) on the left; name, step label and
+// mnemonic word on the right; the algorithm full width, with Libby's line
+// always directly under it; then a collapsed "Breakdown and notes" holding the
+// mnemonic breakdown, the alternative algorithm, story and notes.
 // options.libby: also show every algorithm in Libby's notation.
 export function renderCases(containerId, cases, options = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
+  // Pages with a picture index get a "↑ Index" link on every card.
+  const hasIndex = !!document.getElementById('picture-index');
 
-  for (const c of cases) {
+  cases.forEach((c, i) => {
     const card = el('article', 'case-card');
-    if (c.anchor) card.id = c.anchor;
+    // A case with only an alternative recorded (no main algorithm) shows that
+    // one as its algorithm, not tucked away in the collapsed notes.
+    const promoted = !c.alg && !!c.altAlg;
+    const primary = c.alg || c.altAlg;
+    const primaryChunks = c.alg ? c.mnemonicChunks : c.altMnemonicChunks;
+    // Every card gets an id so the picture index (and anyone) can link to it.
+    card.id = c.anchor || `${containerId}-${i + 1}`;
 
     const header = el('div', 'case-header');
     header.appendChild(el('h3', null, c.name));
     if (c.orientation) header.appendChild(el('p', 'case-orientation', c.orientation));
-    card.appendChild(header);
+    // Exercises (hideAlg) keep the mnemonic with the hidden solution.
+    if (!c.hideAlg && primaryChunks && primaryChunks.length) {
+      header.appendChild(el('p', 'case-mnemonic-line', mnemonicLine(primaryChunks)));
+    }
+
+    const top = el('div', 'case-top');
+    top.appendChild(header);
+    card.appendChild(top);
 
     // Exercises: the scramble to apply, with the solution kept behind a button.
     if (c.setup) {
@@ -63,14 +83,13 @@ export function renderCases(containerId, cases, options = {}) {
     if (viewerAlg) {
       const hold = c.hold ?? startHold(viewerAlg);
       const visual = el('div', 'case-visual');
-      visual.appendChild(
-        caseDiagram(viewerAlg, {
-          size: c.puzzle === '2x2x2' ? 2 : 3,
-          stickering: c.stickering,
-          views: c.diagramViews,
-          hold,
-        }),
-      );
+      const diagram = caseDiagram(viewerAlg, {
+        size: c.puzzle === '2x2x2' ? 2 : 3,
+        stickering: c.stickering,
+        views: c.diagramViews,
+        hold,
+      });
+      visual.appendChild(diagram);
       // Stays an inert element until the 3D toggle loads the cubing.js script.
       const viewer = document.createElement('twisty-player');
       viewer.setAttribute('puzzle', c.puzzle || '3x3x3');
@@ -82,7 +101,11 @@ export function renderCases(containerId, cases, options = {}) {
       viewer.setAttribute('control-panel', 'bottom-row');
       viewer.className = 'case-viewer';
       visual.appendChild(viewer);
-      card.appendChild(visual);
+      top.prepend(visual);
+      // Two pictures side by side (top + bottom) need the whole width.
+      if (diagram.querySelectorAll('figure').length > 1) top.classList.add('stack');
+    } else {
+      top.classList.add('no-visual');
     }
 
     // hideAlg: the algorithm, extra algorithms and mnemonic go in a closed <details>.
@@ -92,15 +115,19 @@ export function renderCases(containerId, cases, options = {}) {
       solution.appendChild(el('summary', null, 'Show the solution'));
     }
 
+    // Everything secondary goes in a collapsed "Breakdown and notes" (hideAlg
+    // cards keep it all inside their solution, as before).
+    const more = c.hideAlg ? card : el('details', 'case-more');
+    if (!c.hideAlg) more.appendChild(el('summary', null, 'Breakdown and notes'));
+
     const algBlock = el('div', 'case-alg');
-    const algFallback = c.altAlg
-      ? 'Algorithm not recorded yet — see alternative below.'
-      : 'Algorithm not recorded yet.';
+    const algFallback = 'Algorithm not recorded yet.';
     // displayAlg: shown instead of alg when the picture is built from a longer
     // sequence than the one the card is about (F2L: one step of a chain).
-    algBlock.appendChild(el('code', null, c.displayAlg || c.alg || algFallback));
+    algBlock.appendChild(el('code', null, c.displayAlg || primary || algFallback));
     solution.appendChild(algBlock);
-    if (options.libby && c.alg) solution.appendChild(libbyLine(c.alg, c.mnemonicChunks));
+    if (options.libby && primary) solution.appendChild(libbyLine(primary, primaryChunks));
+    if (promoted && c.note) solution.appendChild(el('p', 'case-note', c.note));
     if (c.hideAlg) card.appendChild(solution);
 
     if (c.then) {
@@ -136,11 +163,15 @@ export function renderCases(containerId, cases, options = {}) {
       solution.appendChild(block);
     }
 
-    if (c.mnemonicChunks && c.mnemonicChunks.length) {
-      const mnem = el('div', 'case-mnemonic');
-      mnem.appendChild(el('strong', null, mnemonicLine(c.mnemonicChunks)));
-      mnem.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(c.mnemonicChunks)));
-      solution.appendChild(mnem);
+    if (primaryChunks && primaryChunks.length) {
+      if (c.hideAlg) {
+        const mnem = el('div', 'case-mnemonic');
+        mnem.appendChild(el('strong', null, mnemonicLine(primaryChunks)));
+        mnem.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(primaryChunks)));
+        solution.appendChild(mnem);
+      } else {
+        more.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(primaryChunks)));
+      }
     }
 
     if (c.description) {
@@ -151,7 +182,9 @@ export function renderCases(containerId, cases, options = {}) {
       card.appendChild(el('p', 'case-turns-into', `On solve turns into: ${c.turnsInto}`));
     }
 
-    if (c.altAlg) {
+    if (promoted) {
+      if (c.altNote) more.appendChild(el('p', 'case-alt-note', c.altNote));
+    } else if (c.altAlg) {
       const alt = el('div', 'case-alt');
       alt.appendChild(el('p', 'case-alt-label', 'Alternative'));
       alt.appendChild(el('code', null, c.altAlg));
@@ -161,12 +194,52 @@ export function renderCases(containerId, cases, options = {}) {
         alt.appendChild(el('p', 'case-breakdown', mnemonicBreakdown(c.altMnemonicChunks)));
       }
       if (c.altNote) alt.appendChild(el('p', 'case-alt-note', c.altNote));
-      card.appendChild(alt);
+      more.appendChild(alt);
     }
 
-    if (c.story) card.appendChild(el('p', 'case-story', c.story));
-    if (c.note) card.appendChild(el('p', 'case-note', c.note));
+    if (c.story) more.appendChild(el('p', 'case-story', c.story));
+    if (c.note && !promoted) more.appendChild(el('p', 'case-note', c.note));
+
+    if (!c.hideAlg && more.children.length > 1) card.appendChild(more);
+
+    if (hasIndex) {
+      const back = el('a', 'case-index-link', '↑ Index');
+      back.href = '#picture-index';
+      card.appendChild(back);
+    }
 
     container.appendChild(card);
+  });
+}
+
+// A grid of small pictures at the top of a case page, each linking to its
+// card. The thumbnails are copies of the cards' own pictures, so they can't
+// disagree with them. groups: [{ title, container: <id of a case grid> }].
+// Call after renderCases for every group.
+export function renderPictureIndex(slotId, groups) {
+  const slot = document.getElementById(slotId);
+  if (!slot) return;
+  slot.classList.add('picture-index');
+  for (const group of groups) {
+    const cards = [...document.querySelectorAll(`#${group.container} > .case-card`)];
+    if (!cards.length) continue;
+    if (group.title) slot.appendChild(el('h2', 'index-heading', group.title));
+    // Cases with no picture (Megaminx) get a plain list of names instead.
+    const pictured = cards.every((card) => card.querySelector('.case-diagram svg'));
+    const grid = el('div', pictured ? 'index-grid' : 'index-list');
+    for (const card of cards) {
+      const item = el('a', pictured ? 'index-item' : 'index-link');
+      item.href = `#${card.id}`;
+      const full = card.querySelector('h3').textContent;
+      if (pictured) {
+        item.appendChild(card.querySelector('.case-diagram svg').cloneNode(true));
+        // "Y-perm — Diagonals" → "Y-perm"
+        item.appendChild(el('span', null, full.split(' — ')[0]));
+      } else {
+        item.textContent = full;
+      }
+      grid.appendChild(item);
+    }
+    slot.appendChild(grid);
   }
 }
