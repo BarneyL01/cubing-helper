@@ -43,3 +43,15 @@ first block solved.
 
 Nothing on the site changed. Not merged to `main` — waiting for the user to
 review the plan and the scope change.
+
+## Follow-up the same day: two answers from the user
+
+- **Default block: blue–white on the left.** Solving hold: yellow top, red
+  front, blue left (`rho = "y'"` after the `z2` turn-over; checked in the
+  prototype). The plan's hold text, block table, colour option and checks are
+  updated.
+- **Show solutions one move longer too.** The plan now runs the search again
+  at N + 1, collects up to 200 raw solutions and drops disguised shortest
+  ones (a removable move, or two same-axis moves equal to one move such as
+  `R M'` = `r`), then shows up to 3. Prototype: slowest search with this
+  added was 11 ms (first block) and 8 ms (second block) over 300 scrambles.

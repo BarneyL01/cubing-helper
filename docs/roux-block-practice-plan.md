@@ -22,7 +22,7 @@ The page has two modes, picked with a two-button switch at the top:
 
 | Mode | You get | You do | You can then reveal |
 |---|---|---|---|
-| **First block** | A random scramble and a picture of the scrambled cube | Plan and build the left block (1×2×3) | The shortest length, up to 3 shortest solutions, and when each part of the block (DL edge, front pair, back pair) is finished in each solution |
+| **First block** | A random scramble and a picture of the scrambled cube | Plan and build the left block (1×2×3) | The shortest length, up to 3 shortest solutions, up to 3 solutions one move longer, and when each part of the block (DL edge, front pair, back pair) is finished in each solution |
 | **Second block** | The same scramble plus a first-block solution (the shortest one, or your own) and a picture of the cube after it | Build the right block using only R, r, U, M | The same as above for the right block |
 
 Both modes also have a **Check my solution** box: type the moves you did, and
@@ -38,17 +38,25 @@ Open questions.
 
 - Scrambles are standard WCA random-move scrambles, applied with **white on
   top, green in front** (the way people scramble).
-- The solver and pictures use the site's usual hold: **yellow on top, green in
-  front** (`js/cube-diagram.js` `COLOURS`). That is the scrambling hold turned
-  over sideways with `z2`, which puts **red on the left, orange on the right**.
-- In simulator terms: the scrambled cube in the solving hold is
-  `applyAlg(solvedCube(), 'z2 ' + scramble + ' z2')`. (The simulator's `U`
-  colour is yellow, so `z2` first puts white on top, the scramble is done, then
-  `z2` turns it back.) The prototype checked that this leaves every centre in
-  its home place.
-- The page tells the user: "Scramble with white on top and green in front, then
-  turn the cube over sideways so yellow is on top and green is still in front
-  (red on the left)."
+- **Default block: blue–white on the left** (user decision, 2026-10-16). The
+  solving hold is **yellow on top, red in front, blue on the left, green on
+  the right** (white on the bottom).
+- In simulator terms (the simulator's `U` colour is yellow, `F` green, `L`
+  red, as in `js/cube-diagram.js` `COLOURS`): the site's usual picture hold is
+  the scrambling hold turned over with `z2`; the default solving hold is that
+  turned by `y'` more. Call the extra turn `rho`; the default is `rho = "y'"`
+  (checked in the prototype: after `y'` the centres are U yellow, F red,
+  L blue, D white).
+- The cube as the user holds it is
+  `T = applyAlg(solvedCube(), 'z2 ' + scramble + ' z2 ' + rho)`.
+- The solver is given `invertAlg(rho) + ' z2 ' + scramble + ' z2 ' + rho`
+  (here `"y z2 <scramble> z2 y'"`). That position has every centre in its home
+  place, so the solver always works with one fixed piece list (DL, FL, …) and
+  its moves are already in the user's hold. Section 3 uses the same trick for
+  the other colour options; the prototype checked it on all 24 holds.
+- The page tells the user: "Scramble with white on top and green in front.
+  Then turn the cube so yellow is on top, red is in front and blue is on the
+  left."
 
 ### The blocks
 
@@ -58,8 +66,8 @@ FL → its F sticker).
 
 | Block | Pieces | Moves the solver may use | Groups shown in the solution notes |
 |---|---|---|---|
-| First block (left, red–white) | DL, FL, BL edges; DFL, DBL corners | U D L R F B M r (each with `'` and `2`) — 24 moves | "DL edge" = DL; "front pair" = DFL + FL; "back pair" = DBL + BL |
-| Second block (right, orange–white) | DR, FR, BR edges; DFR, DBR corners | U R M r (each with `'` and `2`) — 12 moves | "DR edge" = DR; "front pair" = DFR + FR; "back pair" = DBR + BR |
+| First block (left; blue–white by default) | DL, FL, BL edges; DFL, DBL corners | U D L R F B M r (each with `'` and `2`) — 24 moves | "DL edge" = DL; "front pair" = DFL + FL; "back pair" = DBL + BL |
+| Second block (right; green–white by default) | DR, FR, BR edges; DFR, DBR corners | U R M r (each with `'` and `2`) — 12 moves | "DR edge" = DR; "front pair" = DFR + FR; "back pair" = DBR + BR |
 
 Notes:
 
@@ -90,7 +98,7 @@ A select box, **Block colour**, with three choices:
 
 | Choice | Holds tried | What is shown |
 |---|---|---|
-| Red–white on the left (default) | 1 (the hold above) | As described in section 1 |
+| Blue–white on the left (default) | 1 (`rho = "y'"`, section 2) | As described in section 1 |
 | White or yellow on the bottom | 8 | The hold with the shortest solution is used for the reveal; a table lists every hold tried with its shortest length |
 | Any colour | 24 | As above, with all 24 holds |
 
@@ -98,10 +106,10 @@ How to do the other holds (checked by the prototype on all 24 holds):
 
 - `ROTATIONS` in `js/cube-sim.js` (currently not exported) lists the 24 whole-
   cube rotations. Export it.
-- For a rotation `rho`, the cube as the user sees it is
+- For a rotation `rho` (the default is `"y'"`), the cube as the user sees it is
   `T = applyAlg(solvedCube(), 'z2 ' + scramble + ' z2 ' + rho)`.
 - Give the solver `invertAlg(rho) + ' z2 ' + scramble + ' z2 ' + rho` instead
-  of the default string. That position has every centre in its home place, so
+  of a plain scramble. That position has every centre in its home place, so
   the solver's fixed piece list (DL, FL, …) means "the block whose colours are
   on the left and bottom centres of `T`". Its solution moves are already in the
   user's hold — no move relabelling is needed.
@@ -117,7 +125,7 @@ The hold table (sorted shortest first, ties in `ROTATIONS` order):
 
 | Block (left–bottom) | Hold | Shortest |
 |---|---|---|
-| e.g. Red–white | Yellow top, green front | 7 |
+| e.g. Blue–white | Yellow top, red front | 7 |
 
 ## 4. Files
 
@@ -204,8 +212,26 @@ about 0.4–0.5 s. Build them once, after the page has drawn (see 6.6).
 
 Iterative deepening (IDA*): for depth = lower bound, lower bound + 1, …, do a
 depth-first search that stops a branch when `moves so far + lower bound >
-depth`. At the first depth that has any solution, collect up to **3**
-solutions and stop.
+depth`. A branch also stops as soon as the block is solved (so no solution
+ever passes through "solved" and carries on). At the first depth N that has
+any solution, collect up to **3** solutions. Then run the same search once
+more at depth **N + 1** (user decision, 2026-10-16: show solutions one move
+longer too) and collect up to **200** raw solutions.
+
+One-move-longer solutions: many raw ones are a shortest solution in disguise.
+Drop a raw N + 1 solution if either is true, then keep the first 3 that are
+left:
+
+- Deleting any one of its moves still solves the block (e.g. an extra U at the
+  start that touches no block piece).
+- Two moves next to each other on the same axis do the same as one allowed
+  move (e.g. `R M'` = `r`). Check with the simulator: apply the pair and each
+  single allowed move to a solved cube and compare every sticker.
+
+Prototype numbers for this filter (300 scrambles, keeping only the first 50
+raw solutions): fewer than 3 were left in 12 of 300 cases, which is why the
+plan collects 200. If none are left, the page says "No different solution one
+move longer."
 
 Rules that stop the search producing the same solution in different orders:
 
@@ -216,9 +242,11 @@ Rules that stop the search producing the same solution in different orders:
   move, only allow it if its face index is **higher** than the previous one.
   (This also stops `R M` and `M R` both appearing.)
 
-Measured with the 4-piece tables (and only the same-face rule): first block
-average 0.2 ms per scramble, slowest 2 ms over 200 scrambles; second block
-average 0.4 ms, slowest 3 ms, at most 10,482 search nodes over 300 scrambles.
+Measured with the 4-piece tables. Shortest only: first block average 0.2 ms
+per scramble, slowest 2 ms over 200 scrambles; second block average 0.4 ms,
+slowest 3 ms. Shortest plus one move longer (both ordering rules, blue–white
+hold, 300 scrambles): slowest 11 ms first block, 8 ms second block, at most
+12,210 search nodes.
 Hard limits for safety: stop at depth 12 (first block) and 18 (second block)
 and report "no solution found" (it should never happen — longest are 9 and 14).
 
@@ -236,12 +264,13 @@ export function prepare(block);            // → solver
 // `setup` is the whole move string that produces the position, in the
 // solver's frame, e.g. invertAlg(rho) + ' z2 ' + scramble + ' z2 ' + rho
 // (+ ' ' + firstBlockSolution for the second block).
-solver.solve(setup, { max: 3 });           // → { length, solutions: ['F D R' ...] }
+solver.solve(setup, { max: 3 });           // → { length, solutions: ['F D R' ...],
+                                           //     longer: [...] }  (N + 1, filtered, up to 3)
 solver.unsolvedPieces(setup);              // → ['FL', 'DBL'] (empty = block solved)
 solver.notes(setup, solution);             // → [{ group: 'DL edge', afterMove: 2 }, ...]
 
 export function holdsFor(choice);          // 'fixed' | 'dual' | 'any' → list of rotations
-export function holdText(scramble, rho);   // → 'Hold yellow on top, green in front: red–white block on the left.'
+export function holdText(scramble, rho);   // → 'Hold yellow on top, red in front: blue–white block on the left.'
 export function parseMoves(text, allowed); // → { moves: 'R U r', bad: ['x'] }
 ```
 
@@ -303,6 +332,8 @@ the second block**. A **Change** link switches back to first-block mode.
   - "Shortest: N moves."
   - Up to 3 solutions, each as a `<code>` line, with its notes underneath:
     "DL edge after move 2 · front pair after move 5 · back pair after move 7".
+  - A sub-heading "One move longer (N + 1 moves)" with up to 3 of those, shown
+    the same way (or "No different solution one move longer.").
   - For "dual" / "any" colours: the hold table (section 3), the used hold
     highlighted.
 - **Check my solution**: text input + **Check** button. Results:
@@ -353,9 +384,10 @@ LSE checker: copy `js/` + `data/` + the file into a folder with
 
 | # | Check | Pass when |
 |---|---|---|
-| 1 | Hold | `z2 <scramble> z2` leaves all six centres home, for 100 scrambles |
+| 1 | Hold | `y z2 <scramble> z2 y'` leaves all six centres home, for 100 scrambles; `y'` alone gives centres U yellow, F red, L blue, D white |
 | 2 | First block, default hold | 1,000 random scrambles: every returned solution leaves `unsolvedPieces` empty; every solution's length equals the reported shortest; solutions use only the 24 allowed moves |
 | 3 | First block is really shortest | For 200 of those scrambles, the length equals the distance in a **full** 5-piece breadth-first table built in the checker (≈2–3 s in Node; this is the only place the full table is built) |
+| 4a | One move longer | For 200 scrambles, both blocks: every `longer` solution has length N + 1, solves the block, passes both filter rules, and no shorter part of it from the start solves the block |
 | 4 | Second block | For the same 1,000 scrambles, after the first solution: every second-block solution leaves both blocks solved, uses only U R M r, and the length matches the full 5-piece second-block table for 200 of them |
 | 5 | All holds | For 240 scrambles (10 per rotation): the solution from the rotated setup string, done on `T`, solves the block whose colours are the left and bottom centres of `T` |
 | 6 | Longest cases | The full tables' maximum depths are 9 (first block) and 14 (second block) |
@@ -401,8 +433,8 @@ Do these in order; each step should leave the site working.
 | Question | Default in this plan |
 |---|---|
 | Timer or 15 s inspection countdown? | None |
-| Which colour option should be the default? | Red–white on the left |
+| Which colour option should be the default? | **Answered 2026-10-16:** blue–white on the left |
 | Should the first-block solver also be offered with a smaller move set (e.g. no D, B, L), closer to how people build it? | No — one move set, U D L R F B M r |
-| Show solutions one move longer than shortest (often easier to find)? | No — shortest only, up to 3 |
+| Show solutions one move longer than shortest (often easier to find)? | **Answered 2026-10-16:** yes, up to 3, filtered (section 5.4) |
 | Mnemonic words for generated solutions? | None |
 | A step-by-step picture strip for a solution (`js/alg-filmstrip.js` would need a "start from this position" option)? | Not in this version |

@@ -89,10 +89,11 @@ Each case shows:
 
 ## Open questions / TBD
 
-- Roux block practice: timer/inspection countdown, default block colour,
-  smaller first-block move set, near-shortest solutions, mnemonics for
-  generated solutions, step-by-step picture strip — defaults are listed in
-  `docs/roux-block-practice-plan.md` section 10; ask the user before building
+- Roux block practice: answered 2026-10-16 — default block blue–white on the
+  left; show solutions one move longer as well as the shortest. Still open:
+  timer/inspection countdown, smaller first-block move set, mnemonics for
+  generated solutions, step-by-step picture strip — defaults in
+  `docs/roux-block-practice-plan.md` section 10
 
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
 - Megaminx method choice for the earlier steps (first layer, etc.) — ask
