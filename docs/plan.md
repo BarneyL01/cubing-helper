@@ -2,8 +2,8 @@
 
 ## Goal
 
-A quick-reference / cheat-sheet site (not a timer, not a trainer) for
-recalling how to solve the Rubik's cube family: 3x3 (multiple methods), 2x2,
+A quick-reference and practice site for recalling how to solve, and
+practising, the Rubik's cube family: 3x3 (multiple methods), 2x2,
 Megaminx. Hosted free on GitHub Pages.
 
 ## Decisions made (2026-09-26)
@@ -15,6 +15,7 @@ Megaminx. Hosted free on GitHub Pages.
 | V1 scope | 3x3 CFOP: just the OLL/PLL cases in the user's notes |
 | Other methods (Roux, Beginner's, 2x2, Megaminx) | Placeholder pages/nav now, content later |
 | Mnemonics | Custom letter-substitution cipher, decoded in `docs/mnemonics.md` |
+| Practice tools (2026-10-16) | Allowed: the site can have practice pages (drills, scrambles, hidden answers, checks) as well as reference pages. No timers, statistics or session history unless asked for |
 
 ## Site structure (v1)
 
@@ -37,6 +38,9 @@ Megaminx. Hosted free on GitHub Pages.
   letter nets, setup tables (from the user's notes; in the top menu)
 - `3x3/bld/practice.html` — "Practice" tab: scramble + colour net, memo
   letters worked out, moves for each letter (hideable letters for recall)
+- `3x3/roux/practice.html` — **planned, not built**: "Block practice" tab
+  (first block and second block drills with an in-browser shortest-solution
+  search). Spec: `docs/roux-block-practice-plan.md`
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
@@ -70,6 +74,11 @@ Each case shows:
 - **v2** — Full CFOP: F2L map — done (2026-09-27); full 57 OLL / 21 PLL —
   TBD if wanted
 - **v3** — Roux: CMLL — done; LSE (4a/4b/4c + DFDB) — done (2026-10-06); block building still to come
+- **v3.1** — Roux block practice (first + second block drills) — planned
+  2026-10-16, spec in `docs/roux-block-practice-plan.md`. Other training ideas
+  from the same review (case scrambles and recognition quizzes for CMLL/LSE,
+  a 4b table drill, a DFDB drill, a full LSE walkthrough, weak-case focus,
+  quick-look mode, colour-neutral option) are not planned yet
 - **v4** — Beginner's Method: white cross, white corners, second layer,
   yellow cross — done (standard method, 2026-09-27)
 - **v4.1** — 8355 method: all steps, examples and shortcuts — done
@@ -79,6 +88,11 @@ Each case shows:
   layer only so far); still needs a 3D preview and earlier steps
 
 ## Open questions / TBD
+
+- Roux block practice: timer/inspection countdown, default block colour,
+  smaller first-block move set, near-shortest solutions, mnemonics for
+  generated solutions, step-by-step picture strip — defaults are listed in
+  `docs/roux-block-practice-plan.md` section 10; ask the user before building
 
 - Whether to build full OLL/PLL beyond the "struggle cases" — wait and see
 - Megaminx method choice for the earlier steps (first layer, etc.) — ask

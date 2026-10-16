@@ -2,13 +2,20 @@
 
 A personal quick-reference website for remembering how to solve twisty puzzles —
 starting with the 3x3 (CFOP, Roux, beginner's method), later adding 2x2 and
-Megaminx. This is a cheat-sheet / reference tool, not a timer or trainer.
+Megaminx. It is a reference tool **and a practice tool**: reference pages for
+looking things up, plus practice pages that help the user train a step
+(scrambles, set-up positions, hidden answers, checks). Practice tools have
+been allowed since 2026-10-16 (user decision); the first one was the
+Blindfolded Practice tab. Timers, statistics and session history are still
+not built unless asked for.
 
 ## Purpose
 
-Built to stop forgetting 2-look OLL/PLL (and eventually full algorithm sets).
-Optimize for fast lookup, not completeness for its own sake — content gets
-added as it's actually needed.
+Built to stop forgetting 2-look OLL/PLL (and eventually full algorithm sets),
+and to practise the steps that need training rather than memory (e.g. Roux
+block building). Optimize for fast lookup on reference pages and for quick,
+repeatable drills on practice pages, not completeness for its own sake —
+content and drills get added as they're actually needed.
 
 ## Hosting & stack
 
@@ -126,7 +133,11 @@ built ahead of being asked for. As of 2026-10-03:
   M slice (11 cards + solved = 12 cases), and a DFDB section (the edges in
   DF and DB, with the centres lined up, identify the 4c case; plus which slots
   to read before the lining-up M turn, and a sticker-match version). The page
-  uses `js/steps-page.js` (step bar). Block building is placeholder. The
+  uses `js/steps-page.js` (step bar). Block building is placeholder.
+  **Block practice is planned, not built:** `docs/roux-block-practice-plan.md`
+  is the full spec (first block + second block drills on
+  `3x3/roux/practice.html`, an in-browser shortest-solution search in
+  `js/block-solver.js`). The
   user's one recorded LSE card (`M U2 M`) is kept in a "Your recorded LSE note"
   section. Their "2o/2" is the (U+D)-Line EO case, and `M U2 M` / `M' U2 M'`
   read as the first three moves of its two mirror-image algorithms (ours
@@ -251,8 +262,16 @@ Method").
   any new card only needs a link inside it. Cards with no link (e.g. "Coming
   soon") stay inert. Home rows (`.row-card`) are clickable all over through
   their `.row-main` link.
-- Keep pages static and fast — this is a lookup tool used mid-solve or while
-  practicing, not a heavy app.
+- Keep pages static and fast — these are lookup and practice tools used
+  mid-solve or while practicing, not a heavy app. Practice pages compute what
+  they need in the browser (e.g. a solver's tables built on page load) rather
+  than loading precomputed files or outside services.
+- Practice pages: one page per drill area, reached by a tab next to the
+  reference page (like `3x3/bld/practice.html`) and a `children` entry in
+  `MENU`. The current item is kept in localStorage (`cubing-helper:<page>`),
+  answers are hidden until a button is pressed, and anything generated (a
+  scramble, a solver's solution) is checked by simulation in a Node checker
+  kept in `log/`.
 - When adding a new algorithm/case, update `docs/mnemonics.md` if it
   introduces new cipher letters, and add a dated entry to `log/`.
 - Check `docs/plan.md` for current site structure and roadmap before
