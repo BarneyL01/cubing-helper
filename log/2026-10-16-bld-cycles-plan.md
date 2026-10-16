@@ -53,3 +53,6 @@ So the plans teach: memorise edges as if UF and UR were swapped, solve the
 edges, then finish the corners with a D/L/B setup + the algorithm. Not yet
 proven on whole scrambles — the edge plan's check E5 must do that (500 odd
 scrambles) before anything is built on it.
+
+The user approved both plans ("Sounds good"): tab names "Corner cycles" /
+"Edge cycles" and edge buffer UF confirmed. Docs merged to `main`.

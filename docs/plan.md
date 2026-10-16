@@ -98,10 +98,9 @@ Each case shows:
 
 ## Open questions / TBD
 
-- BLD cycle tabs: answered 2026-10-16 — edges get their own tab; corner
-  buffer UFR. Still open: tab names "Corner cycles" / "Edge cycles" (the user
-  had agreed to "Cycles & setups" for one tab), edge buffer UF, a 3-style option
-  on the Practice tab — see section 8 of each plan
+- BLD cycle tabs: answered 2026-10-16 — edges get their own tab; buffers UFR
+  (corners) and UF (edges); tabs "Corner cycles" / "Edge cycles". Still open:
+  a 3-style option on the Practice tab (default: not in this version)
 
 - Roux block practice: answered 2026-10-16 — default block blue–white on the
   left; show solutions one move longer as well as the shortest. Still open:

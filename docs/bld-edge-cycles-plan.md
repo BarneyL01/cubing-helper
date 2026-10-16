@@ -242,6 +242,6 @@ and Practice tabs; don't use wide moves (r, u, …) in generated commutators
 
 | Question | Default |
 |---|---|
-| Buffer | UF (DF is the M2 buffer the user already uses; UF is the usual 3-style one and pairs with UFR for parity) |
-| Tab names | "Corner cycles" and "Edge cycles" |
+| Buffer | **Answered 2026-10-16:** UF |
+| Tab names | **Answered 2026-10-16:** "Corner cycles" and "Edge cycles" |
 | A buffer UF/UFR 3-style option on the Practice tab (random scrambles shown as commutator pairs)? | Not in this version |

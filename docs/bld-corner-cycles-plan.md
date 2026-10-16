@@ -317,5 +317,5 @@ home links).
 |---|---|
 | Edges too? | **Answered 2026-10-16:** yes, as a separate tab — `docs/bld-edge-cycles-plan.md` |
 | Add a "buffer C, commutators" option to the Practice tab so random scrambles show 3-style corner pairs? | Not in this version |
-| Tab name | User agreed to "Cycles & setups"; with two tabs this plan uses "Corner cycles" and "Edge cycles" — confirm |
+| Tab name | **Answered 2026-10-16:** "Corner cycles" and "Edge cycles" |
 | Buffer | **Answered 2026-10-16:** UFR |
