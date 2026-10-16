@@ -21,6 +21,8 @@
       <a href="index.html">Reference</a>
       <a href="practice.html">Practice</a>
       <a href="commutators.html" class="active" aria-current="page">Commutators</a>
+      <a href="corner-cycles.html">Corner cycles</a>
+      <a href="edge-cycles.html">Edge cycles</a>
     </nav>
 
     <h2 class="section-heading" style="margin-top:1.5rem">How a commutator works</h2>
@@ -70,6 +72,11 @@
       if (text !== undefined) n.textContent = text;
       return n;
     };
+    const link = ({ text, href }) => {
+      const a = el('a', null, text);
+      a.href = href;
+      return a;
+    };
     mountViewToggle($('view-toggle'));
 
     // --- how a commutator works
@@ -110,6 +117,7 @@
     for (const s of buildSteps.steps) {
       const li = el('li');
       li.append(el('strong', null, `${s.title} `), s.text);
+      if (s.link) li.append(' ', link(s.link));
       $('build-steps').appendChild(li);
     }
 
@@ -129,13 +137,19 @@
       mnemonicChunks: c.mnemonicChunks,
     })));
     $('notes-heading').textContent = exercises.notes.heading;
-    exercises.notes.items.forEach((t) => $('exercise-notes').appendChild(el('li', null, t)));
+    // A note is a string, or { text, link } when it points to another tab.
+    exercises.notes.items.forEach((t) => {
+      const li = el('li', null, typeof t === 'string' ? t : t.text);
+      if (t.link) li.append(' ', link(t.link));
+      $('exercise-notes').appendChild(li);
+    });
     $('exercise-correction').textContent = exercises.notes.correction;
 
     // --- practice
     $('practice').textContent = practice.heading;
     practice.items.forEach((t) => $('practice-items').appendChild(el('li', null, t)));
-    $('practice-blind').textContent = practice.blind;
+    $('practice-blind').textContent = practice.blind.text;
+    $('practice-blind').append(' ', link(practice.blind.link));
   </script>
 </body>
 </html>

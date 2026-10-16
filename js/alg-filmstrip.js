@@ -22,7 +22,8 @@ const tokens = (alg) => alg.trim().split(/\s+/).filter(Boolean);
 // spec: {
 //   alg      – the whole algorithm (it must solve the case being shown)
 //   stickering, views – as for caseDiagram (default: edges only, top + cube)
-//   marks    – [{ piece: 'FR', colour: 'pink' | 'blue' }, ...] pieces named by their colours
+//   marks    – [{ piece: 'FR', colour: 'pink' | 'blue' | '#hex' }, ...] pieces named by their colours
+//   palette  – colours by home face, as for caseDiagram (default: yellow top)
 //   legend   – [{ colour: 'pink', text: '…' }, ...]
 //   frames   – [{ after: "R U R'", label?, caption? }, ...]; `after` is the chunk of
 //              moves done since the previous frame ('' for the starting frame)
@@ -31,7 +32,7 @@ const tokens = (alg) => alg.trim().split(/\s+/).filter(Boolean);
 //   every    – optional { summary } to add a collapsed "every single move" strip
 // }
 export function buildFilmstrip(spec) {
-  const { alg, stickering = 'edges', views = ['U', 'cube'], marks = [], legend = [], frames, every, fromSolved = false } = spec;
+  const { alg, stickering = 'edges', views = ['U', 'cube'], marks = [], legend = [], frames, every, fromSolved = false, palette } = spec;
   const all = tokens(alg);
   const outlines = marks.map((m) => ({ piece: m.piece, colour: OUTLINES[m.colour] || m.colour }));
 
@@ -41,7 +42,7 @@ export function buildFilmstrip(spec) {
     // The position the remaining moves solve = the position reached after the moves so far.
     // From a solved cube, the position after the first n moves is solved by their inverse.
     const shown = fromSolved ? invertAlg(all.slice(0, done).join(' ')) : all.slice(done).join(' ');
-    const diagram = caseDiagram(shown, { stickering, views, marks: outlines });
+    const diagram = caseDiagram(shown, { stickering, views, marks: outlines, palette });
     // The Pictures / 3D toggle hides `.case-diagram`; a step-by-step strip
     // has no 3D equivalent, so it keeps its own class and always shows.
     diagram.className = 'film-diagram';

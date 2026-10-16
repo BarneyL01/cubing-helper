@@ -1,6 +1,6 @@
 # Blindfolded "Edge cycles" tab — build plan
 
-Status: **planned, not built** (written 2026-10-16). The fifth Blindfolded
+Status: **built 2026-10-16, except the odd-count full-solve method (section 2.4, checks E5 and E9 for odd scrambles, exercise 8): open, see below.** The fifth Blindfolded
 tab, the edges version of the Corner cycles tab. **Build the Corner cycles tab
 first** (`docs/bld-corner-cycles-plan.md`): this tab reuses its helpers
 (`expandBrackets`, `cancelMoves`, the generator script, the memo function, the
@@ -245,3 +245,19 @@ and Practice tabs; don't use wide moves (r, u, …) in generated commutators
 | Buffer | **Answered 2026-10-16:** UF |
 | Tab names | **Answered 2026-10-16:** "Corner cycles" and "Edge cycles" |
 | A buffer UF/UFR 3-style option on the Practice tab (random scrambles shown as commutator pairs)? | Not in this version |
+
+---
+
+## Built (2026-10-16): what changed from this plan
+
+- Built: pairs (440: 318 direct, 122 with one setup move), flips (11 rows),
+  the parity swap (C↔B, I↔M, read off the parity algorithm and checked), the
+  page, two worked examples (one with a break), 8 exercises, the lookup.
+  Exercises are numbered 1 to 8 on the page; the odd-count exercise is left out.
+- **Not built: 2.4 (odd-count full solve), check E5, exercise 8.** The method
+  "memorise as if UF and UR had swapped places" was tested with the tables on
+  1,000 random scrambles. Even scrambles: all 507 solved. Odd scrambles: 1 of
+  493 solved. After the edge steps the misplaced edges are many, not a UF/UR
+  swap. The plan says to stop and ask in this case, so the page says the part is
+  not finished and does not teach it. See `log/2026-10-16-bld-edge-cycles.md`.
+- Check E9 is therefore reported for even scrambles only.

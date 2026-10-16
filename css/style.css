@@ -835,6 +835,9 @@ text.net-marked {
   gap: 0.25rem;
   margin: 1rem 0 0.5rem;
   border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
 }
 
 .tabs a {
@@ -1926,4 +1929,82 @@ html.menu-open {
 
 .puzzle-label {
   scroll-margin-top: calc(var(--header-h, 56px) + 0.5rem);
+}
+
+/* Blindfolded cycles tabs (corner-cycles.html, edge-cycles.html) */
+.scramble-text {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.bld-example {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.bld-example > * {
+  min-width: 0;
+}
+
+.bld-cheapest {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.lookup-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0.75rem 0;
+}
+
+.lookup-row label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.lookup-row select {
+  min-height: 44px;
+  min-width: 6rem;
+  font: inherit;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pair-result h3 {
+  margin: 0.5rem 0;
+}
+
+.pair-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0.5rem 0;
+}
+
+.pair-facts dt {
+  color: var(--text-muted);
+}
+
+.pair-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 720px) {
+  .bld-example {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.bld-example-net {
+  width: 100%;
+  max-width: 24rem;
 }

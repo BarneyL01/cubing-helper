@@ -215,14 +215,16 @@ built ahead of being asked for. As of 2026-10-03:
   exercise was checked by simulation; one explanation in the paste was wrong
   (`(R' D' R D)×2` twists four corners, not one) and is corrected on the page.
   No mnemonics for most of it: the cipher has no D letter.
-  **Two more tabs are planned, not built:** "Corner cycles"
-  (`docs/bld-corner-cycles-plan.md`: choosing which corners to cycle from a
-  scramble, buffer UFR; cycle breaks, twisted corners, parity; choosing setup
-  moves; a generated lookup of all 378 letter pairs; 8 fixed exercises) and
-  "Edge cycles" (`docs/bld-edge-cycles-plan.md`: the same for edges, buffer
-  UF, 440 pairs, flips, 9 exercises, and the full-solve parity method). Build
-  corners first; the edges tab reuses its code. Both use the parity algorithm
-  `R U R' F' R U R' U' R' F R2 U' R' U'` (swaps UF↔UR and UFR↔UBR).
+  **Two more tabs are built (2026-10-16):** "Corner cycles"
+  (`3x3/bld/corner-cycles.html`, buffer UFR: 378 pairs, twists, odd count,
+  setup moves, lookup, 8 exercises) and "Edge cycles" (`3x3/bld/edge-cycles.html`,
+  buffer UF: 440 pairs, flips, 8 exercises). Their tables are generated and
+  checked by `log/2026-10-16-bld-cycles-generate.mjs` (`--write` rewrites the
+  GENERATED blocks in `data/corner-cycles.js` and `data/edge-cycles.js`). **Open:**
+  the edge tab's full-solve method for an odd number of letters did not solve
+  the random scrambles (1 of 493); it is not on the page, and the owner has to
+  pick the method. Parity algorithm: `R U R' F' R U R' U' R' F R2 U' R' U'`
+  (swaps UFR↔UBR and UF↔UR).
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).

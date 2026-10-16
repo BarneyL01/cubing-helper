@@ -1,6 +1,6 @@
 # Blindfolded "Corner cycles" tab — build plan
 
-Status: **planned, not built** (written 2026-10-16; updated the same day when
+Status: **built 2026-10-16** (written 2026-10-16; updated the same day when
 the user asked for an edges tab as well — see `docs/bld-edge-cycles-plan.md`).
 A fourth tab on the Blindfolded pages, extending the Commutators tab; the edges
 tab is the fifth. **Build this one first**: the edges tab reuses its helpers,
@@ -319,3 +319,27 @@ home links).
 | Add a "buffer C, commutators" option to the Practice tab so random scrambles show 3-style corner pairs? | Not in this version |
 | Tab name | **Answered 2026-10-16:** "Corner cycles" and "Edge cycles" |
 | Buffer | **Answered 2026-10-16:** UFR |
+
+---
+
+## Built (2026-10-16): what changed from this plan
+
+Built as specified, except these choices (each is also in the log entry
+`log/2026-10-16-bld-corner-cycles.md`):
+
+- **Generated data:** the tables and the examples/exercises are written into
+  the GENERATED block of `data/corner-cycles.js` by the generator (`--write`),
+  not printed for pasting. The prose stays in the page HTML.
+- **Break chain (2.2):** the chain runs until it reaches a letter on the same
+  corner (the Practice tab's rule), so a break does not always end on the break
+  letter itself. Every pair solves the cube in simulation (check 8, 2,000
+  scrambles, 1,005 odd).
+- **Twist direction:** "clockwise" means seen from outside the corner: the U/D
+  sticker moves on to the next face clockwise. Twist rows are used at the end,
+  after the pairs and the parity step.
+- **Colours:** the page uses a white-top, green-front palette. `caseDiagram`
+  takes a `palette` option and a new `'corners'` stickering was added.
+- **Tab bar:** scrolls sideways; the current tab is brought into view on load.
+- **Numbers:** 864 corner 3-cycle commutators; 378 pairs (198 direct, 138 with
+  one setup move, 36 with two, 6 with three); 14 twist rows; 21 parity setups
+  (at most 3 moves). These match the prototype.

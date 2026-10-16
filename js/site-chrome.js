@@ -33,6 +33,8 @@ const MENU = [
         children: [
           { label: 'Practice', path: '3x3/bld/practice.html' },
           { label: 'Commutators', path: '3x3/bld/commutators.html' },
+          { label: 'Corner cycles', path: '3x3/bld/corner-cycles.html' },
+          { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],
       },
     ],
@@ -248,7 +250,17 @@ function trackHeaderHeight() {
   addEventListener('resize', set);
 }
 
+// The tab bar of a section (five Blindfolded tabs) scrolls sideways on a phone;
+// bring the current tab into view without scrolling the page.
+function showActiveTab() {
+  const tabs = document.querySelector('nav.tabs');
+  const active = tabs?.querySelector('.active');
+  if (!tabs || !active || tabs.scrollWidth <= tabs.clientWidth) return;
+  tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
+}
+
 mountHeader();
 trackHeaderHeight();
 mountBreadcrumbs();
 mountAbout();
+showActiveTab();

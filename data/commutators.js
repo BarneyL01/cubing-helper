@@ -89,6 +89,7 @@ export const buildSteps = {
     {
       title: 'Step 5:',
       text: 'If no clean insertion exists, use a setup move (a conjugate) to bring one piece into a better position, then undo it at the end.',
+      link: { text: 'More on choosing setup moves: Corner cycles tab', href: 'corner-cycles.html' },
     },
   ],
 };
@@ -131,8 +132,8 @@ export const exercises = {
     items: [
       '1 to 3 teach you to pick the interchange turn (D, D\', D2) for the target position.',
       "4 is [U: [R U R', D]]. It cycles UBR → DFR → DFL. The U setup moves the UBR piece into UFR first.",
-      '5 cycles UF → DF → UB. This works with U2 because U2 swaps the only two U-layer slots that M\' disturbs.',
-      "6 is [D: [M', U2]]. It cycles UF → DL → UB. The D setup brings DL into DF.",
+      { text: '5 cycles UF → DF → UB. This works with U2 because U2 swaps the only two U-layer slots that M\' disturbs.', link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
+      { text: "6 is [D: [M', U2]]. It cycles UF → DL → UB. The D setup brings DL into DF.", link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
       "7 uses (R' D' R D)×2 as the insertion. That sequence twists four corners (UFR, DFR, DBL, DBR), but only one of them, UFR, is in the U layer — and U is the interchange here. So the commutator leaves two U-layer corners twisted in opposite directions. This handles twisted corners in blindfold.",
     ],
     correction:
@@ -147,6 +148,8 @@ export const practice = {
     'Reverse drill: on a solved cube, do any commutator you make up. That is your scramble. Now solve it by finding the inverse yourself.',
     "You can watch any sequence before trying it on your cube: the Pictures / 3D toggle on this page plays each exercise's solution, and an online viewer such as alg.cubing.net will play anything you type.",
   ],
-  blind:
-    "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — UFR for corners — that you build with the five steps above.",
+  blind: {
+    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — UFR for corners — that you build with the five steps above.",
+    link: { text: 'Corner cycles and Edge cycles tabs: which pairs to cycle', href: 'corner-cycles.html' },
+  },
 };

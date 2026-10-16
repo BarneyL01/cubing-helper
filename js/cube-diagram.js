@@ -2,6 +2,8 @@ import { caseState } from './cube-sim.js';
 
 // Yellow on top, green in front (the usual CFOP hold).
 const COLOURS = { U: '#ffd500', D: '#ffffff', F: '#009b48', B: '#0046ad', R: '#ff5800', L: '#b71234' };
+// White top, green front (the Blindfolded pages' hold, as on the Practice tab).
+export const WHITE_TOP = { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' };
 const NOT_TOP = '#6b7280';
 const IGNORED = '#d1d5db';
 const STROKE = '#1f2937';
@@ -28,10 +30,12 @@ const pieceType = (p) => p.filter((v) => v !== 0).length; // 3 corner, 2 edge, 1
 // out, since corner-only steps don't care about them; 'eo' (Roux LSE) greys
 // out corners and shows which stickers are a top/bottom colour, which is how
 // edge orientation is judged; 'edges' shows real colours on edges and
-// centres and greys the corners, for steps that are only about edges.
-function fill(sticker, top, stickering, pieceColours) {
-  if (stickering === 'full') return COLOURS[sticker.colour];
-  if (stickering === 'edges') return pieceType(sticker.p) === 3 ? IGNORED : COLOURS[sticker.colour];
+// centres and greys the corners, for steps that are only about edges;
+// 'corners' is the mirror of that (corner-only steps).
+function fill(sticker, top, stickering, pieceColours, palette = COLOURS) {
+  if (stickering === 'full') return palette[sticker.colour];
+  if (stickering === 'edges') return pieceType(sticker.p) === 3 ? IGNORED : palette[sticker.colour];
+  if (stickering === 'corners') return pieceType(sticker.p) === 2 ? IGNORED : palette[sticker.colour];
   if (stickering === 'cross' || stickering === 'layer1') {
     // Beginner's first steps: only the white (bottom) pieces and centres
     // matter — 'cross' shows just the white edges.
@@ -42,14 +46,14 @@ function fill(sticker, top, stickering, pieceColours) {
   if (stickering === 'f2l') {
     // Last-layer pieces don't matter yet: grey them, keep the top centre.
     const lastLayerPiece = pieceColours.includes('U') && pieceType(sticker.p) !== 1;
-    return lastLayerPiece ? NOT_TOP : COLOURS[sticker.colour];
+    return lastLayerPiece ? NOT_TOP : palette[sticker.colour];
   }
   if (stickering === 'eo') {
     if (pieceType(sticker.p) === 3) return IGNORED;
     return sticker.colour === 'U' || sticker.colour === 'D' ? COLOURS[sticker.colour] : NOT_TOP;
   }
   if (stickering === 'cmll' && pieceType(sticker.p) === 2) return IGNORED;
-  return sticker.colour === top ? COLOURS[top] : NOT_TOP;
+  return sticker.colour === top ? palette[top] : NOT_TOP;
 }
 
 // Pieces are named by the colours they belong to (e.g. 'FR' = the green and
@@ -71,7 +75,7 @@ const markOf = (marks, colours, p) => {
 };
 const OUTLINE = 1.1;
 
-function layerSvg(state, viewKey, size, stickering, marks) {
+function layerSvg(state, viewKey, size, stickering, marks, palette) {
   const view = VIEWS[viewKey];
   const top = viewKey;
   const toCell = size === 3 ? (v) => v + 1 : (v) => (v + 1) / 2;
@@ -111,7 +115,7 @@ function layerSvg(state, viewKey, size, stickering, marks) {
     }
     const outline = markOf(marks, colours, s.p);
     (outline ? marked : rects).push(
-      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering, [])}" stroke="${outline || STROKE}" stroke-width="${outline ? OUTLINE : 0.4}"/>`,
+      `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill(s, top, stickering, [], palette)}" stroke="${outline || STROKE}" stroke-width="${outline ? OUTLINE : 0.4}"/>`,
     );
   }
 
@@ -123,7 +127,7 @@ function layerSvg(state, viewKey, size, stickering, marks) {
 // Three faces (top, front, right) in an oblique projection, like a photo of
 // the cube from the front-right-top — used for F2L, where the pieces that
 // matter can be down in the slot, out of sight of a top-only view.
-function cubeSvg(state, stickering, marks) {
+function cubeSvg(state, stickering, marks, palette) {
   const S = 10;
   const DEPTH = 0.5; // how far back faces are sheared up-and-right
   const pieceColours = new Map();
@@ -162,7 +166,7 @@ function cubeSvg(state, stickering, marks) {
         [u + 1 - inset, v + 1 - inset],
         [u + inset, v + 1 - inset],
       ].map(([a, b]) => face.point(a, b).map((n) => n.toFixed(2)).join(','));
-      const colour = fill(s, 'U', stickering, pieceColours.get(s.p.join(',')));
+      const colour = fill(s, 'U', stickering, pieceColours.get(s.p.join(',')), palette);
       const outline = markOf(marks, pieceColours, s.p);
       (outline ? markedPolys : polys).push(
         `<polygon points="${corners.join(' ')}" fill="${colour}" stroke="${outline || STROKE}" stroke-width="${outline ? OUTLINE : 0.4}" stroke-linejoin="round"/>`,
@@ -176,15 +180,16 @@ function cubeSvg(state, stickering, marks) {
 // A picture of the position the algorithm solves, computed by applying the
 // algorithm's inverse to a solved cube — so it can't disagree with the
 // algorithm text.
-export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'], hold, marks } = {}) {
+// palette: colours by home face (default yellow top; WHITE_TOP for the Blindfolded pages).
+export function caseDiagram(alg, { size = 3, stickering = 'full', views = ['U'], hold, marks, palette = COLOURS } = {}) {
   const state = caseState(alg, hold);
   const wrapper = document.createElement('div');
   wrapper.className = 'case-diagram';
   wrapper.innerHTML = views
     .map((v) => {
-      if (v === 'cube') return `<figure>${cubeSvg(state, stickering, marks)}</figure>`;
+      if (v === 'cube') return `<figure>${cubeSvg(state, stickering, marks, palette)}</figure>`;
       const caption = views.length > 1 ? `<figcaption>${VIEWS[v].label}</figcaption>` : '';
-      return `<figure>${layerSvg(state, v, size, stickering, marks)}${caption}</figure>`;
+      return `<figure>${layerSvg(state, v, size, stickering, marks, palette)}${caption}</figure>`;
     })
     .join('');
   return wrapper;

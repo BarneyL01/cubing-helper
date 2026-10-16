@@ -43,12 +43,13 @@ Megaminx. Hosted free on GitHub Pages.
   search). Spec: `docs/roux-block-practice-plan.md`
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
-- `3x3/bld/corner-cycles.html` — **planned, not built**: "Corner cycles" tab
+- `3x3/bld/corner-cycles.html` — "Corner cycles" tab, built 2026-10-16
   (choosing which corners to cycle, buffer UFR; setup moves; lookup of all
-  letter pairs; fixed exercises). Spec: `docs/bld-corner-cycles-plan.md`
-- `3x3/bld/edge-cycles.html` — **planned, not built**: "Edge cycles" tab (the
-  same for edges, buffer UF; flips; full-solve parity). Spec:
-  `docs/bld-edge-cycles-plan.md`
+  378 letter pairs; 8 fixed exercises). Spec: `docs/bld-corner-cycles-plan.md`;
+  generator and checks: `log/2026-10-16-bld-cycles-generate.mjs`
+- `3x3/bld/edge-cycles.html` — "Edge cycles" tab, built 2026-10-16 except the
+  odd-count full-solve method (open; see the log entry). Same approach for
+  edges, buffer UF; 440 pairs; flips. Spec: `docs/bld-edge-cycles-plan.md`
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)
@@ -86,8 +87,9 @@ Each case shows:
   a 4b table drill, a DFDB drill, a full LSE walkthrough, weak-case focus,
   quick-look mode, colour-neutral option) are not planned yet
 - **v7.1** — Blindfolded "Corner cycles" and "Edge cycles" tabs (extend
-  Commutators) — planned 2026-10-16, specs in `docs/bld-corner-cycles-plan.md`
-  and `docs/bld-edge-cycles-plan.md` (corners first)
+  Commutators) — corner tab done 2026-10-16; edge tab done except the odd-count
+  full-solve method, which failed its checks and is waiting for a decision
+  (`log/2026-10-16-bld-edge-cycles.md`)
 - **v4** — Beginner's Method: white cross, white corners, second layer,
   yellow cross — done (standard method, 2026-09-27)
 - **v4.1** — 8355 method: all steps, examples and shortcuts — done
@@ -101,6 +103,9 @@ Each case shows:
 - BLD cycle tabs: answered 2026-10-16 — edges get their own tab; buffers UFR
   (corners) and UF (edges); tabs "Corner cycles" / "Edge cycles". Still open:
   a 3-style option on the Practice tab (default: not in this version)
+- BLD edge tab, odd number of edge letters: the memo-as-if-UF/UR-swapped method
+  in `docs/bld-edge-cycles-plan.md` 2.4 solved 1 of 493 random odd scrambles.
+  Which method should the page teach? (see `log/2026-10-16-bld-edge-cycles.md`)
 
 - Roux block practice: answered 2026-10-16 — default block blue–white on the
   left; show solutions one move longer as well as the shortest. Still open:
