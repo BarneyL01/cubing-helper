@@ -43,9 +43,12 @@ Megaminx. Hosted free on GitHub Pages.
   search). Spec: `docs/roux-block-practice-plan.md`
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
-- `3x3/bld/cycles.html` — **planned, not built**: "Cycles & setups" tab
+- `3x3/bld/corner-cycles.html` — **planned, not built**: "Corner cycles" tab
   (choosing which corners to cycle, buffer UFR; setup moves; lookup of all
-  letter pairs; fixed exercises). Spec: `docs/bld-cycles-plan.md`
+  letter pairs; fixed exercises). Spec: `docs/bld-corner-cycles-plan.md`
+- `3x3/bld/edge-cycles.html` — **planned, not built**: "Edge cycles" tab (the
+  same for edges, buffer UF; flips; full-solve parity). Spec:
+  `docs/bld-edge-cycles-plan.md`
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)
@@ -82,8 +85,9 @@ Each case shows:
   from the same review (case scrambles and recognition quizzes for CMLL/LSE,
   a 4b table drill, a DFDB drill, a full LSE walkthrough, weak-case focus,
   quick-look mode, colour-neutral option) are not planned yet
-- **v7.1** — Blindfolded "Cycles & setups" tab (extends Commutators) —
-  planned 2026-10-16, spec in `docs/bld-cycles-plan.md`
+- **v7.1** — Blindfolded "Corner cycles" and "Edge cycles" tabs (extend
+  Commutators) — planned 2026-10-16, specs in `docs/bld-corner-cycles-plan.md`
+  and `docs/bld-edge-cycles-plan.md` (corners first)
 - **v4** — Beginner's Method: white cross, white corners, second layer,
   yellow cross — done (standard method, 2026-09-27)
 - **v4.1** — 8355 method: all steps, examples and shortcuts — done
@@ -94,8 +98,10 @@ Each case shows:
 
 ## Open questions / TBD
 
-- BLD "Cycles & setups": edges too? A buffer-C option on the Practice tab?
-  Tab name; buffer UFR — defaults in `docs/bld-cycles-plan.md` section 8
+- BLD cycle tabs: answered 2026-10-16 — edges get their own tab; corner
+  buffer UFR. Still open: tab names "Corner cycles" / "Edge cycles" (the user
+  had agreed to "Cycles & setups" for one tab), edge buffer UF, a 3-style option
+  on the Practice tab — see section 8 of each plan
 
 - Roux block practice: answered 2026-10-16 — default block blue–white on the
   left; show solutions one move longer as well as the shortest. Still open:

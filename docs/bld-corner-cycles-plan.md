@@ -1,7 +1,10 @@
-# Blindfolded "Cycles & setups" tab — build plan
+# Blindfolded "Corner cycles" tab — build plan
 
-Status: **planned, not built** (written 2026-10-16). A fourth tab on the
-Blindfolded pages, extending the Commutators tab. Written so a different agent
+Status: **planned, not built** (written 2026-10-16; updated the same day when
+the user asked for an edges tab as well — see `docs/bld-edge-cycles-plan.md`).
+A fourth tab on the Blindfolded pages, extending the Commutators tab; the edges
+tab is the fifth. **Build this one first**: the edges tab reuses its helpers,
+generator and page layout. Written so a different agent
 can build it. Read `CLAUDE.md` first (stack, page chrome, verification, branch
 workflow, the "Practice pages" convention), then this file.
 
@@ -22,9 +25,11 @@ put the script's numbers on the page, not these.
 
 ## 1. What the user gets
 
-Page `3x3/bld/cycles.html`, tab label **Cycles & setups**, title "3x3
-Blindfolded — Choosing cycles and setup moves". Tabs become: Reference /
-Practice / Commutators / Cycles & setups.
+Page `3x3/bld/corner-cycles.html`, tab label **Corner cycles**, title "3x3
+Blindfolded — Choosing corner cycles and setup moves". Tabs become: Reference /
+Practice / Commutators / Corner cycles / Edge cycles. (The user agreed to the
+name "Cycles & setups" before the edges tab was asked for; two tabs need two
+names, so they are "Corner cycles" and "Edge cycles" — see Open questions.)
 
 Corners only. Buffer **UFR**, Speffz letters (the buffer's stickers are **C**
 (U face), **J** (F face), **M** (R face)). UFR is the buffer the Commutators
@@ -39,7 +44,7 @@ Sections, in this order:
 | 1 | From a scramble to cycles | Follow the buffer to get the corner letters, pair them up; each pair is one 3-cycle C → first letter → second letter, done with one commutator |
 | 2 | When the cycle closes early | Cycle breaks: choosing which unsolved corner to start the next cycle from, and how that choice changes the moves needed |
 | 3 | Twisted corners | Corners in the right place but twisted: left out of the cycles and fixed at the end with a twist commutator |
-| 4 | An odd number of letters | Parity: the last letter is done with a setup move and one swap algorithm |
+| 4 | An odd number of letters | Parity: the last letter is done with a setup move and one swap algorithm, shared with the edges |
 | 5 | Choosing a setup move | What to do when a pair has no direct commutator: a step-by-step procedure, the share of pairs that need 0/1/2/3 setup moves, and examples of each |
 | 6 | Look up a pair | Pick two letters; the page shows a commutator for that pair, with its setup |
 | 7 | Exercises | 8 set-up-then-solve exercises (setup scramble and picture shown, solution hidden behind a button) |
@@ -97,16 +102,24 @@ hand without adding it to the checker.
 
 ### 2.4 An odd number of letters
 
-- With an odd number of corner letters, the last letter has no partner.
-  Do it as a swap: setup move(s) that bring the target to **UBR** (keeping the
-  buffer still), then `R U R' U' R' F R2 U' R' U' R U R' F'`, then undo the
-  setup.
-- Prototype check: that algorithm swaps **UFR ↔ UBR** and **UL ↔ UR** and
-  nothing else. Say plainly that the UL/UR edges get swapped too: in a full
-  blindfolded solve that is fixed with the edges; on this corners-only page
-  the exercise for it ends with UL and UR swapped, and its solution says so.
-- The checker generates the setup for every possible last letter (21 rows,
-  shortest setup that keeps UFR still) and checks each.
+- With an odd number of corner letters, the last letter has no partner (and
+  the edges then have an odd number too — they always match).
+- Parity algorithm (shared with the Edge cycles tab):
+  `R U R' F' R U R' U' R' F R2 U' R' U'`. Prototype check: it swaps
+  **UFR ↔ UBR** and **UF ↔ UR** and nothing else — the corner buffer with
+  UBR and the edge buffer with UR.
+- In a full solve, the edges are memorised with UF and UR swapped, and the
+  corners finish exactly as below. The Edge cycles tab explains this and its
+  checker proves it; this page links there.
+- On this corners-only page: setup move(s) that bring the last target to
+  **UBR**, the algorithm, then undo the setup. The setup must leave UFR, UF and
+  UR where they are (otherwise the swap lands on the wrong pieces): use
+  **D, L and B moves only**. The prototype found one of at most 3 moves for
+  every corner sticker (e.g. O → `B`, K → `D B`, T → `D L B'`). Say plainly
+  that UF and UR get swapped too; exercise 7 ends with them swapped, and its
+  solution says so.
+- The checker generates that setup for every possible last letter (21 rows,
+  shortest D/L/B setup) and checks each.
 
 ### 2.5 Choosing a setup move
 
@@ -148,7 +161,7 @@ letters on the same corner as the first letter disabled in the second). Shows:
 - How many setup moves it uses and its length.
 - A picture of the position it solves (corners coloured, edges grey —
   see 4.2).
-- Saved choice in localStorage `cubing-helper:bld-cycles` (`{ first, second }`).
+- Saved choice in localStorage `cubing-helper:bld-corner-cycles` (`{ first, second }`).
 
 ### 2.7 Exercises (fixed list)
 
@@ -165,7 +178,7 @@ scrambles with the generator so each one has exactly this structure):
 | 4 | Cycle closes early | 2 letters, then a cycle break (4 more letters) |
 | 5 | Buffer already home | Buffer solved at the start, so the first letter is a break |
 | 6 | Twisted pair | One pair + two corners twisted in place |
-| 7 | Odd letters | 3 letters: one pair + the parity swap (ends with UL/UR swapped, said in the solution) |
+| 7 | Odd letters | 3 letters: one pair + the parity swap (ends with UF/UR swapped, said in the solution) |
 | 8 | A full corner memo | Corners from a real random scramble: 8–10 letters, at least one break |
 
 Each hidden solution shows: the letters (with break letters underlined, the
@@ -176,18 +189,18 @@ commutator in bracket notation and plain moves, and any twist/parity step.
 
 | File | New / changed | What goes in it |
 |---|---|---|
-| `3x3/bld/cycles.html` | New | The page; page script inline, like the other BLD pages |
+| `3x3/bld/corner-cycles.html` | New | The page; page script inline, like the other BLD pages |
 | `data/corner-cycles.js` | New | Section text, worked examples, exercises, and the generated tables: `cornerComms` (378 rows: `{ first, second, setupMoves, notation, moves, length }`), `cornerTwists` (14 rows), `paritySetups` (21 rows). Header comment says the tables are generated and checked by the log script and must not be edited by hand |
 | `js/bld-memo.js` | Changed | Export a new `cornerCycles(state, { buffer = 'C' })` → `{ letters: [{ letter, cycleBreak }], pairs, twisted: [{ piece, direction }], parity }`. It reuses the existing `memo` logic but leaves in-place twisted corners out (they go in `twisted`). `bldPlan` and the Practice tab must not change behaviour |
 | `js/cube-diagram.js` | Changed | Add stickering `'corners'`: corners and centres in colour, edges grey (the mirror of the existing `'edges'`) |
 | `js/algs.js` | Changed | Add `expandBrackets(text)` (`[A: B]` → `A B A'`, `[A, B]` → `A B A' B'`, nesting allowed, `(…)×n` repeats) and `cancelMoves(alg)` (merges same-face neighbours: `U U` → `U2`, `U U'` → removed, repeated until nothing changes) |
-| `3x3/bld/index.html`, `practice.html`, `commutators.html` | Changed | Add the fourth tab link |
-| `data/commutators.js` | Changed | In "Building one yourself", step 5 (the setup-move step): add a link "More on choosing setup moves: Cycles & setups tab". In `practice.blind`: add a link to the new tab |
-| `js/site-chrome.js` | Changed | Blindfolded `children`: add `{ label: 'Cycles & setups', path: '3x3/bld/cycles.html' }` |
-| `index.html` | Changed | Blindfolded row quick links: add "Cycles & setups" |
-| `css/style.css` | Changed | Only what's new (pair-lookup selects, tables); 44 px tap targets |
-| `log/<date>-bld-cycles-generate.mjs` | New | Generator + checker (section 6) |
-| `log/<date>-bld-cycles.md` | New | Log entry with the script's output numbers |
+| `3x3/bld/index.html`, `practice.html`, `commutators.html` | Changed | Add the fourth tab link (and the fifth, Edge cycles, once that page exists) |
+| `data/commutators.js` | Changed | In "Building one yourself", step 5 (the setup-move step): add a link "More on choosing setup moves: Corner cycles tab". In `practice.blind`: add a link to the new tab |
+| `js/site-chrome.js` | Changed | Blindfolded `children`: add `{ label: 'Corner cycles', path: '3x3/bld/corner-cycles.html' }` |
+| `index.html` | Changed | Blindfolded row quick links: add "Corner cycles" |
+| `css/style.css` | Changed | Only what's new (pair-lookup selects, tables); 44 px tap targets. **The tab bar must scroll sideways**: `.tabs` currently has no wrapping or scrolling, and five tabs do not fit at 390 px. Give it `overflow-x: auto`, no wrapping, and scroll the active tab into view on load. Check all BLD tabs at 390 px |
+| `log/<date>-bld-cycles-generate.mjs` | New | Generator + checker (section 6). Write it so the piece type (corners/edges), buffer, move list and table names are parameters — the edges tab adds its tables with the same script |
+| `log/<date>-bld-corner-cycles.md` | New | Log entry with the script's output numbers |
 | `CLAUDE.md`, `docs/plan.md` | Changed | Replace the "planned" notes with what was built |
 
 ## 4. Page details
@@ -223,7 +236,7 @@ one frame per commutator (`after` = that commutator's moves), `stickering:
 
 ## 5. Things not to do
 
-- No edges on this page (see Open questions).
+- No edges on this page — they have their own tab (`docs/bld-edge-cycles-plan.md`).
 - No generated/random exercises: the list is fixed (user decision).
 - Do not change how the Practice tab memos (buffer E) or anything on the
   Reference tab.
@@ -273,9 +286,9 @@ The prototype took 22 s using `applyAlg` for every candidate. Do this instead:
 | 1 | All 378 pairs present; each row's `moves` = `cancelMoves(expandBrackets(notation))`; applying `moves` to a solved cube moves exactly the three corners and nothing else, as C → first → second |
 | 2 | The setup-count table on the page matches the counts in `cornerComms` |
 | 3 | Each of the 14 twist rows twists exactly UFR and that corner, in the stated directions, and nothing else |
-| 4 | Each of the 21 parity setups keeps UFR still, brings the target to UBR, and setup + swap + undo leaves exactly that corner swapped with the buffer plus UL/UR swapped |
-| 5 | `R U R' U' R' F R2 U' R' U' R U R' F'` swaps UFR ↔ UBR and UL ↔ UR only |
-| 6 | Every exercise: the setup is the inverse of the solution; the solution solves the corners (and everything else, except exercise 7's UL/UR swap); `cornerCycles` on the set-up position gives exactly the letters, breaks, twists and parity the solution shows; the structure matches the table in 2.7 |
+| 4 | Each of the 21 parity setups leaves UFR, UF and UR in place, brings the target to UBR, and setup + swap + undo leaves exactly that corner swapped with the buffer plus UF/UR swapped |
+| 5 | `R U R' F' R U R' U' R' F R2 U' R' U'` swaps UFR ↔ UBR and UF ↔ UR only |
+| 6 | Every exercise: the setup is the inverse of the solution; the solution solves the corners (and everything else, except exercise 7's UF/UR swap); `cornerCycles` on the set-up position gives exactly the letters, breaks, twists and parity the solution shows; the structure matches the table in 2.7 |
 | 7 | Worked examples: same as 6; the break-letter table in 2.2 matches a recount over every possible break letter |
 | 8 | 2,000 random scrambles: `cornerCycles` letters + the lookup table + twists + parity solve every scramble's corners (corners only; edges are ignored) |
 | 9 | `bldPlan` output for 500 random scrambles is unchanged from before the edit (compare with the old function's output) |
@@ -302,7 +315,7 @@ home links).
 
 | Question | Default |
 |---|---|
-| Edges too (3-style edges, buffer UF or DF)? | Corners only for now |
+| Edges too? | **Answered 2026-10-16:** yes, as a separate tab — `docs/bld-edge-cycles-plan.md` |
 | Add a "buffer C, commutators" option to the Practice tab so random scrambles show 3-style corner pairs? | Not in this version |
-| Tab name | "Cycles & setups" |
-| Buffer | UFR (as the Commutators tab says) |
+| Tab name | User agreed to "Cycles & setups"; with two tabs this plan uses "Corner cycles" and "Edge cycles" — confirm |
+| Buffer | **Answered 2026-10-16:** UFR |
