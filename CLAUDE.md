@@ -215,6 +215,11 @@ built ahead of being asked for. As of 2026-10-03:
   exercise was checked by simulation; one explanation in the paste was wrong
   (`(R' D' R D)×2` twists four corners, not one) and is corrected on the page.
   No mnemonics for most of it: the cipher has no D letter.
+  **A fourth tab, "Cycles & setups", is planned, not built:**
+  `docs/bld-cycles-plan.md` is the full spec (choosing which corners to cycle
+  from a scramble, buffer UFR; cycle breaks, twisted corners, parity; how to
+  choose setup moves; a generated lookup of all 378 letter pairs; 8 fixed
+  exercises).
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
@@ -265,7 +270,9 @@ Method").
 - Keep pages static and fast — these are lookup and practice tools used
   mid-solve or while practicing, not a heavy app. Practice pages compute what
   they need in the browser (e.g. a solver's tables built on page load) rather
-  than loading precomputed files or outside services.
+  than loading large precomputed tables or outside services. Algorithm lists
+  in `data/` are fine even when a script generated them (keep the script and
+  its checks in `log/`).
 - Practice pages: one page per drill area, reached by a tab next to the
   reference page (like `3x3/bld/practice.html`) and a `children` entry in
   `MENU`. The current item is kept in localStorage (`cubing-helper:<page>`),
