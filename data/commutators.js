@@ -149,7 +149,7 @@ export const practice = {
     "You can watch any sequence before trying it on your cube: the Pictures / 3D toggle on this page plays each exercise's solution, and an online viewer such as alg.cubing.net will play anything you type.",
   ],
   blind: {
-    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — UFR for corners — that you build with the five steps above.",
+    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — UBL for corners, as on the Reference tab — that you build with the five steps above.",
     link: { text: 'Corner cycles and Edge cycles tabs: which pairs to cycle', href: 'corner-cycles.html' },
   },
 };

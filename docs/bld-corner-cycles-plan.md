@@ -343,3 +343,12 @@ Built as specified, except these choices (each is also in the log entry
 - **Numbers:** 864 corner 3-cycle commutators; 378 pairs (198 direct, 138 with
   one setup move, 36 with two, 6 with three); 14 twist rows; 21 parity setups
   (at most 3 moves). These match the prototype.
+
+## Changed 2026-10-20: buffer UBL
+
+At the owner's request the corner tab now uses the **UBL** buffer (stickers A, E,
+R), the same as Old Pochmann on the Reference and Practice tabs. The counts and
+structure above are unchanged. Parity uses the Old Pochmann corner swap
+(`R U' R' U' R U R' F' R U R' U' R' F R`): it swaps UBL and DFR (A ↔ P) and the UL
+and UB edges; setups are D, F, R moves (at most 2 moves). See
+`log/2026-10-20-bld-corner-ubl.md`.

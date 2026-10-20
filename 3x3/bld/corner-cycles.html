@@ -32,8 +32,8 @@
     <div class="source-note">
       <p>
         Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>UFR</strong> (letters C, J, M), not the UBL buffer the Reference and Practice tabs
-        use for Old Pochmann. Every commutator, setup, twist and exercise on this page is generated
+        <strong>UBL</strong> (letters A, E, R), the same corner buffer the Reference and Practice
+        tabs use for Old Pochmann. Every commutator, setup, twist and exercise on this page is generated
         and checked by <code>log/2026-10-16-bld-cycles-generate.mjs</code>.
       </p>
     </div>
@@ -41,14 +41,14 @@
     <!-- 1 -->
     <h2 class="section-heading" id="from-scramble">1. From a scramble to cycles</h2>
     <ol class="step-how">
-      <li><strong>Find the buffer's letters.</strong> UFR is the buffer. Its stickers are <strong>C</strong> (U face), <strong>J</strong> (F face) and <strong>M</strong> (R face). The Speffz letters below show where each sticker is.</li>
-      <li><strong>Follow the buffer.</strong> The sticker in the buffer's C spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
+      <li><strong>Find the buffer's letters.</strong> UBL is the buffer, as on the Reference tab. Its stickers are <strong>A</strong> (U face), <strong>E</strong> (L face) and <strong>R</strong> (B face). The Speffz letters below show where each sticker is.</li>
+      <li><strong>Follow the buffer.</strong> The sticker in the buffer's A spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
       <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Solving the pair is the commutator for its two letters in the table (section 6).</li>
       <li><strong>An odd number of letters</strong> leaves one letter over: section 4.</li>
     </ol>
     <figure class="practice-net bld-example-net">
       <div id="letters-net"></div>
-      <figcaption>Speffz corner letters. Buffer stickers C, J, M are outlined.</figcaption>
+      <figcaption>Speffz corner letters. Buffer stickers A, E, R are outlined.</figcaption>
     </figure>
 
     <h3 class="section-heading" id="worked-1">Worked example</h3>
@@ -108,16 +108,16 @@
     <!-- 4 -->
     <h2 class="section-heading" id="odd">4. An odd number of letters</h2>
     <p>
-      The parity algorithm <code>R U R' F' R U R' U' R' F R2 U' R' U'</code> swaps the buffer's
-      corner UFR with UBR, and swaps the edges UF and UR. With an odd number of corner letters, the
-      last letter Z is done like this:
+      The corner swap from the Reference tab, <code>R U' R' U' R U R' F' R U R' U' R' F R</code>,
+      swaps the buffer's corner UBL with DFR and swaps the edges UL and UB. With an odd number of
+      corner letters, the last letter Z is done like this:
     </p>
     <ol class="step-how">
-      <li>Turn the cube with a <strong>D, L or B</strong> setup that brings Z's sticker to <strong>B</strong> (the U sticker of UBR). The setup leaves UFR, UF and UR where they are.</li>
-      <li>Do the parity algorithm.</li>
-      <li>Undo the setup. Z's sticker and the buffer sticker C have swapped places, so the cube has the last corner home.</li>
+      <li>Turn the cube with a <strong>D, F or R</strong> setup that brings Z's sticker to <strong>P</strong> (the F-side sticker of DFR). The setup leaves UBL, UL and UB where they are.</li>
+      <li>Do the swap algorithm.</li>
+      <li>Undo the setup. Z's sticker and the buffer sticker A have swapped places, so the cube has the last corner home.</li>
     </ol>
-    <p class="step-note">The edges end with UF and UR swapped by this algorithm. The Edge cycles tab covers the edge side.</p>
+    <p class="step-note">The edges UL and UB end swapped by this algorithm. The Edge cycles tab explains what is and is not covered on the edge side.</p>
     <div class="table-wrap"><table class="bld-table" id="parity-table"></table></div>
 
     <!-- 5 -->
@@ -138,7 +138,7 @@
 
     <!-- 6 -->
     <h2 class="section-heading" id="lookup">6. Look up a pair</h2>
-    <p class="subtitle">Pick the first and second letter. C, J and M (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
+    <p class="subtitle">Pick the first and second letter. A, E and R (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
     <div class="lookup-row">
       <label>First letter <select id="pair-first"></select></label>
       <label>Second letter <select id="pair-second"></select></label>
@@ -169,7 +169,7 @@
       if (text !== undefined) n.textContent = text;
       return n;
     };
-    const BUFFER = ['C', 'J', 'M'];
+    const BUFFER = ['A', 'E', 'R'];
     const PIECE = Object.fromEntries(bldCorners.map((r) => [r.letter, r.piece]));
     const sameCorner = (a, b) => [...PIECE[a]].sort().join() === [...PIECE[b]].sort().join();
     const PAIR_COLOURS = ['#e11d9b', '#0ea5e9', '#7c3aed'];
@@ -247,7 +247,7 @@
     {
       const table = $('twist-table');
       const head = table.createTHead().insertRow();
-      ['Corner twisted', 'Buffer UFR turns', 'Corner turns', 'Algorithm', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Corner twisted', 'Buffer UBL turns', 'Corner turns', 'Algorithm', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
       for (const r of [...cornerTwists].sort((a, b) => a.corner.localeCompare(b.corner) || a.buffer.localeCompare(b.buffer))) {
         const tr = body.insertRow();
@@ -265,7 +265,7 @@
     {
       const table = $('parity-table');
       const head = table.createTHead().insertRow();
-      ['Last letter', 'Setup (D, L, B)', 'Full algorithm'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Last letter', 'Setup (D, F, R)', 'Full algorithm'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
       for (const r of cornerParity) {
         const tr = body.insertRow();
@@ -320,7 +320,7 @@
       }
       if ([...second.options].some((o) => o.value === keep)) second.value = keep;
     };
-    first.value = LETTERS.includes(saved.first) ? saved.first : 'A';
+    first.value = LETTERS.includes(saved.first) ? saved.first : LETTERS[0];
     fillSecond();
     if (saved.second && [...second.options].some((o) => o.value === saved.second)) second.value = saved.second;
     function showPair() {
@@ -370,7 +370,7 @@
         } else if (s.kind === 'corner parity') {
           li.append(`Parity, last letter ${s.letter}: `);
           li.appendChild(el('code', null, s.notation));
-          li.append(' (the UF and UR edges end swapped)');
+          li.append(' (the UL and UB edges end swapped)');
         } else {
           li.append(`Twist ${s.corner} (buffer ${s.buffer}, corner ${s.twisted}): `);
           li.appendChild(el('code', null, s.notation));

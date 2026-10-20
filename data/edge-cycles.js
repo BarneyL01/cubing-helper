@@ -457,121 +457,110 @@ export const edgeFlips = [
   {"edge":"DB","setup":"B2","setupMoves":1,"notation":"[B2: M' U M' U M' U2 M U M U M U2]","moves":"B2 M' U M' U M' U2 M U M U M U2 B2","length":14},
 ];
 
-export const edgeParitySwap = [
-  [
-    "C",
-    "B"
-  ],
-  [
-    "I",
-    "M"
-  ]
-];
-
 export const edgeExamples = {
   "example1": {
-    "scramble": "S' U' R2 U S U' R2 U R' U' S' U F' U' S U F R U L' U' M2 U L U' M2",
+    "scramble": "R L S2 L' U' L S2 L' U R' F2 U' M U F2 U' M' U R' F R S2 R' F' R S2",
     "steps": [
       {
         "kind": "edge pair",
-        "first": "L",
-        "second": "W",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[M2, U L' U']",
-        "moves": "M2 U L' U' M2 U L U'",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "P",
+        "first": "G",
         "second": "M",
-        "setup": "R'",
-        "setupMoves": 1,
-        "notation": "[R': [F', U' S' U]]",
-        "moves": "R' F' U' S' U F U' S U R",
-        "length": 10
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[S2, R' F R]",
+        "moves": "S2 R' F R S2 R' F' R",
+        "length": 8
       },
       {
         "kind": "edge pair",
-        "first": "V",
-        "second": "G",
+        "first": "E",
+        "second": "U",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[U' R2 U, S']",
-        "moves": "U' R2 U S' U' R2 U S",
+        "notation": "[U' M U, F2]",
+        "moves": "U' M U F2 U' M' U F2",
         "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "J",
+        "second": "L",
+        "setup": "R",
+        "setupMoves": 1,
+        "notation": "[R: [U', L S2 L']]",
+        "moves": "R U' L S2 L' U L S2 L' R'",
+        "length": 10
       }
     ],
     "letters": [
       {
-        "letter": "L"
-      },
-      {
-        "letter": "W"
-      },
-      {
-        "letter": "P"
+        "letter": "G"
       },
       {
         "letter": "M"
       },
       {
-        "letter": "V"
+        "letter": "E"
       },
       {
-        "letter": "G"
+        "letter": "U"
+      },
+      {
+        "letter": "J"
+      },
+      {
+        "letter": "L"
       }
     ]
   },
   "example2": {
-    "scramble": "R' L F L' E L F' L' E' R D F D' M2 D F' D' M2",
+    "scramble": "F L F' M F L' F' M' S' D S U S' D' S U'",
     "steps": [
       {
         "kind": "edge pair",
-        "first": "B",
-        "second": "F",
+        "first": "D",
+        "second": "S",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[U', R' E R]",
-        "moves": "U' R' E R U R' E' R",
+        "notation": "[U, S' D S]",
+        "moves": "U S' D S U' S' D' S",
         "length": 8
       },
       {
         "kind": "edge pair",
-        "first": "W",
-        "second": "L",
+        "first": "K",
+        "second": "D",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[U L' U', M2]",
-        "moves": "U L' U' M2 U L U' M2",
+        "notation": "[M, F L F']",
+        "moves": "M F L F' M' F L' F'",
         "length": 8
       }
     ],
     "letters": [
       {
-        "letter": "B"
-      },
-      {
-        "letter": "F",
+        "letter": "D",
         "cycleBreak": true
       },
       {
-        "letter": "W"
+        "letter": "S"
       },
       {
-        "letter": "L"
+        "letter": "K"
+      },
+      {
+        "letter": "D"
       }
     ],
     "breaks": [
       {
-        "letter": "F",
-        "letters": "B F* W L",
+        "letter": "D",
+        "letters": "D* S K D",
         "moves": 16
       },
       {
-        "letter": "L",
-        "letters": "B L* S F",
+        "letter": "E",
+        "letters": "E* W U E",
         "moves": 16
       }
     ]
@@ -582,102 +571,15 @@ export const edgeExercises = [
   {
     "n": 1,
     "skill": "One pair, direct",
-    "setup": "U' R E' R' U R E R'",
-    "solution": "[R E' R', U']",
-    "solutionMoves": "R E' R' U' R E R' U",
-    "letters": [
-      {
-        "letter": "H"
-      },
-      {
-        "letter": "B"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "H",
-        "second": "B",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[R E' R', U']",
-        "moves": "R E' R' U' R E R' U",
-        "length": 8
-      }
-    ]
-  },
-  {
-    "n": 2,
-    "skill": "The four-move kind",
-    "setup": "D2 M D2 M'",
-    "solution": "[M, D2]",
-    "solutionMoves": "M D2 M' D2",
-    "letters": [
-      {
-        "letter": "W"
-      },
-      {
-        "letter": "U"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "W",
-        "second": "U",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[M, D2]",
-        "moves": "M D2 M' D2",
-        "length": 4
-      }
-    ]
-  },
-  {
-    "n": 3,
-    "skill": "One pair, one setup move",
-    "setup": "D' U' S2 U L U' S2 U L' D",
-    "solution": "[D': [L, U' S2 U]]",
-    "solutionMoves": "D' L U' S2 U L' U' S2 U D",
-    "letters": [
-      {
-        "letter": "L"
-      },
-      {
-        "letter": "U"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "L",
-        "second": "U",
-        "setup": "D'",
-        "setupMoves": 1,
-        "notation": "[D': [L, U' S2 U]]",
-        "moves": "D' L U' S2 U L' U' S2 U D",
-        "length": 10
-      }
-    ]
-  },
-  {
-    "n": 4,
-    "skill": "One cycle, two pairs",
-    "setup": "R F E' F' U F E F' U' R' L2 F' E' F L2 F' E F",
-    "solution": "[F' E' F, L2] [R: [U, F E' F']]",
-    "solutionMoves": "F' E' F L2 F' E F L2 R U F E' F' U' F E F' R'",
+    "setup": "L2 F' E' F L2 F' E F",
+    "solution": "[F' E' F, L2]",
+    "solutionMoves": "F' E' F L2 F' E F L2",
     "letters": [
       {
         "letter": "R"
       },
       {
         "letter": "L"
-      },
-      {
-        "letter": "B"
-      },
-      {
-        "letter": "J"
       }
     ],
     "steps": [
@@ -690,183 +592,118 @@ export const edgeExercises = [
         "notation": "[F' E' F, L2]",
         "moves": "F' E' F L2 F' E F L2",
         "length": 8
+      }
+    ]
+  },
+  {
+    "n": 2,
+    "skill": "The four-move kind",
+    "setup": "U2 M U2 M'",
+    "solution": "[M, U2]",
+    "solutionMoves": "M U2 M' U2",
+    "letters": [
+      {
+        "letter": "A"
+      },
+      {
+        "letter": "W"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "A",
+        "second": "W",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[M, U2]",
+        "moves": "M U2 M' U2",
+        "length": 4
+      }
+    ]
+  },
+  {
+    "n": 3,
+    "skill": "One pair, one setup move",
+    "setup": "E R F E F' R' F E' F' E'",
+    "solution": "[E: [F E F', R]]",
+    "solutionMoves": "E F E F' R F E' F' R' E'",
+    "letters": [
+      {
+        "letter": "P"
+      },
+      {
+        "letter": "B"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "P",
+        "second": "B",
+        "setup": "E",
+        "setupMoves": 1,
+        "notation": "[E: [F E F', R]]",
+        "moves": "E F E F' R F E' F' R' E'",
+        "length": 10
+      }
+    ]
+  },
+  {
+    "n": 4,
+    "skill": "One cycle, two pairs",
+    "setup": "M2 F R' F' M2 F R F' M D' L' D M' D' L D",
+    "solution": "[D' L' D, M] [F R' F', M2]",
+    "solutionMoves": "D' L' D M D' L D M' F R' F' M2 F R F' M2",
+    "letters": [
+      {
+        "letter": "H"
+      },
+      {
+        "letter": "K"
+      },
+      {
+        "letter": "W"
+      },
+      {
+        "letter": "M"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "H",
+        "second": "K",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[D' L' D, M]",
+        "moves": "D' L' D M D' L D M'",
+        "length": 8
       },
       {
         "kind": "edge pair",
-        "first": "B",
-        "second": "J",
-        "setup": "R",
-        "setupMoves": 1,
-        "notation": "[R: [U, F E' F']]",
-        "moves": "R U F E' F' U' F E F' R'",
-        "length": 10
+        "first": "W",
+        "second": "M",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[F R' F', M2]",
+        "moves": "F R' F' M2 F R F' M2",
+        "length": 8
       }
     ]
   },
   {
     "n": 5,
     "skill": "Cycle closes early",
-    "setup": "S' U' R2 U S U' R2 U R' F R S2 R' F' R S2 R U' R' E2 R U R' E2",
-    "solution": "[E2, R U' R'] [S, R F R'] [U L2 U', S2]",
-    "solutionMoves": "E2 R U' R' E2 R U R' S R F R' S' R F' R' U L2 U' S2 U L2 U' S2",
+    "setup": "D M' F R2 F' M F R2 F' D' U2 M' U2 M U R U' M' U R' U' M",
+    "solution": "[D: [F2, M B' M']] [U2, F' M' F] [D: [U R2 U', M']]",
+    "solutionMoves": "D F2 M B' M' F2 M B M' D' U2 F' M' F U2 F' M F D U R2 U' M' U R2 U' M D'",
     "letters": [
-      {
-        "letter": "R"
-      },
-      {
-        "letter": "J"
-      },
-      {
-        "letter": "B",
-        "cycleBreak": true
-      },
-      {
-        "letter": "O"
-      },
       {
         "letter": "X"
       },
       {
-        "letter": "B"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "R",
-        "second": "J",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[E2, R U' R']",
-        "moves": "E2 R U' R' E2 R U R'",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "B",
-        "second": "O",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[S, R F R']",
-        "moves": "S R F R' S' R F' R'",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "X",
-        "second": "B",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[U L2 U', S2]",
-        "moves": "U L2 U' S2 U L2 U' S2",
-        "length": 8
-      }
-    ]
-  },
-  {
-    "n": 6,
-    "skill": "Buffer already home",
-    "setup": "D2 E' S E D2 E' S' E",
-    "solution": "[S2, U L2 U'] [U S2 U', R2]",
-    "solutionMoves": "S2 U L2 U' S2 U L2 S2 U' R2 U S2 U' R2",
-    "letters": [
-      {
-        "letter": "B",
-        "cycleBreak": true
-      },
-      {
-        "letter": "X"
-      },
-      {
-        "letter": "V"
-      },
-      {
-        "letter": "B"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "B",
-        "second": "X",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[S2, U L2 U']",
-        "moves": "S2 U L2 U' S2 U L2 U'",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "V",
-        "second": "B",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[U S2 U', R2]",
-        "moves": "U S2 U' R2 U S2 U' R2",
-        "length": 8
-      }
-    ]
-  },
-  {
-    "n": 7,
-    "skill": "Flipped pair",
-    "setup": "R2 B U2 M' U' M' U' M' U2 M U' M U' M B' R2 D B2 U2 M' U' M' U' M' U2 M U' M U' M B2 D' U' R' E R U R' E' R",
-    "solution": "[R' E R, U'] [R2 B: M' U M' U M' U2 M U M U M U2] [D B2: M' U M' U M' U2 M U M U M U2]",
-    "solutionMoves": "R' E R U' R' E' R U R2 B M' U M' U M' U2 M U M U M U2 B' R2 D B2 M' U M' U M' U2 M U M U M U2 B2 D'",
-    "letters": [
-      {
-        "letter": "F"
-      },
-      {
-        "letter": "B"
-      }
-    ],
-    "steps": [
-      {
-        "kind": "edge pair",
-        "first": "F",
-        "second": "B",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[R' E R, U']",
-        "moves": "R' E R U' R' E' R U",
-        "length": 8
-      },
-      {
-        "kind": "edge flip",
-        "edge": "FR",
-        "setup": "R2 B",
-        "setupMoves": 2,
-        "notation": "[R2 B: M' U M' U M' U2 M U M U M U2]",
-        "moves": "R2 B M' U M' U M' U2 M U M U M U2 B' R2",
-        "length": 16
-      },
-      {
-        "kind": "edge flip",
-        "edge": "DR",
-        "setup": "D B2",
-        "setupMoves": 2,
-        "notation": "[D B2: M' U M' U M' U2 M U M U M U2]",
-        "moves": "D B2 M' U M' U M' U2 M U M U M U2 B2 D'",
-        "length": 16
-      }
-    ]
-  },
-  {
-    "n": 9,
-    "skill": "A full edge memo",
-    "setup": "U' R D' B' F L' R2 U D2 D R U' B L' U R' U D2 F2 F' U2 R2 B2 R L",
-    "solution": "[M', D F D'] [U2, F' E F] [M2, U' R U] [D: [M2, U B' U']] [S', R U R'] [U' L2 U, M']",
-    "solutionMoves": "M' D F D' M D F' D' U2 F' E F U2 F' E' F M2 U' R U M2 U' R' U D M2 U B' U' M2 U B U' D' S' R U R' S R U' R' U' L2 U M' U' L2 U M",
-    "letters": [
-      {
-        "letter": "F"
-      },
-      {
-        "letter": "K"
-      },
-      {
-        "letter": "R"
+        "letter": "T"
       },
       {
         "letter": "A",
@@ -876,22 +713,7 @@ export const edgeExercises = [
         "letter": "J"
       },
       {
-        "letter": "W"
-      },
-      {
-        "letter": "V"
-      },
-      {
-        "letter": "N"
-      },
-      {
-        "letter": "M"
-      },
-      {
-        "letter": "D"
-      },
-      {
-        "letter": "G"
+        "letter": "K"
       },
       {
         "letter": "Q"
@@ -900,62 +722,229 @@ export const edgeExercises = [
     "steps": [
       {
         "kind": "edge pair",
-        "first": "F",
-        "second": "K",
+        "first": "X",
+        "second": "T",
+        "setup": "D",
+        "setupMoves": 1,
+        "notation": "[D: [F2, M B' M']]",
+        "moves": "D F2 M B' M' F2 M B M' D'",
+        "length": 10
+      },
+      {
+        "kind": "edge pair",
+        "first": "A",
+        "second": "J",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[M', D F D']",
-        "moves": "M' D F D' M D F' D'",
+        "notation": "[U2, F' M' F]",
+        "moves": "U2 F' M' F U2 F' M F",
+        "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "K",
+        "second": "Q",
+        "setup": "D",
+        "setupMoves": 1,
+        "notation": "[D: [U R2 U', M']]",
+        "moves": "D U R2 U' M' U R2 U' M D'",
+        "length": 10
+      }
+    ]
+  },
+  {
+    "n": 6,
+    "skill": "Buffer already home",
+    "setup": "B D M2 D' B' D M2 D'",
+    "solution": "[F' E2 F, U2] [U S U', U2]",
+    "solutionMoves": "F' E2 F U2 F' E2 F U' S U2 S' U",
+    "letters": [
+      {
+        "letter": "A",
+        "cycleBreak": true
+      },
+      {
+        "letter": "N"
+      },
+      {
+        "letter": "X"
+      },
+      {
+        "letter": "A"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "A",
+        "second": "N",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[F' E2 F, U2]",
+        "moves": "F' E2 F U2 F' E2 F U2",
+        "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "X",
+        "second": "A",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[U S U', U2]",
+        "moves": "U S U2 S' U",
+        "length": 8
+      }
+    ]
+  },
+  {
+    "n": 7,
+    "skill": "Flipped pair",
+    "setup": "B2 U2 M' U' M' U' M' U2 M U' M U' M B2 B U2 M' U' M' U' M' U2 M U' M U' M B' S' U' R2 U S U' R2 U",
+    "solution": "[U' R2 U, S'] [B: M' U M' U M' U2 M U M U M U2] [B2: M' U M' U M' U2 M U M U M U2]",
+    "solutionMoves": "U' R2 U S' U' R2 U S B M' U M' U M' U2 M U M U M U2 B M' U M' U M' U2 M U M U M U2 B2",
+    "letters": [
+      {
+        "letter": "V"
+      },
+      {
+        "letter": "G"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "V",
+        "second": "G",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[U' R2 U, S']",
+        "moves": "U' R2 U S' U' R2 U S",
+        "length": 8
+      },
+      {
+        "kind": "edge flip",
+        "edge": "RB",
+        "setup": "B",
+        "setupMoves": 1,
+        "notation": "[B: M' U M' U M' U2 M U M U M U2]",
+        "moves": "B M' U M' U M' U2 M U M U M U2 B'",
+        "length": 14
+      },
+      {
+        "kind": "edge flip",
+        "edge": "DB",
+        "setup": "B2",
+        "setupMoves": 1,
+        "notation": "[B2: M' U M' U M' U2 M U M U M U2]",
+        "moves": "B2 M' U M' U M' U2 M U M U M U2 B2",
+        "length": 14
+      }
+    ]
+  },
+  {
+    "n": 9,
+    "skill": "A full edge memo",
+    "setup": "R2 U D2 L' D L' F2 B D2 F2 D R2 F2 D2 B B' D2 L R' D R2 L2 U' R' B",
+    "solution": "[F' E2 F, U2] [U S U', F2] [R S R', F] [S D' S', U'] [F' E' F, L2] [U2, U S' U']",
+    "solutionMoves": "F' E2 F U2 F' E2 F U' S U' F2 U S' U' F2 R S R' F R S' R' F' S D' S' U' S D S' U F' E' F L2 F' E F L2 U' S' U2 S U'",
+    "letters": [
+      {
+        "letter": "A",
+        "cycleBreak": true
+      },
+      {
+        "letter": "N"
+      },
+      {
+        "letter": "U"
+      },
+      {
+        "letter": "G"
+      },
+      {
+        "letter": "D"
+      },
+      {
+        "letter": "P"
+      },
+      {
+        "letter": "S"
+      },
+      {
+        "letter": "B"
+      },
+      {
+        "letter": "R"
+      },
+      {
+        "letter": "L"
+      },
+      {
+        "letter": "V"
+      },
+      {
+        "letter": "A"
+      }
+    ],
+    "steps": [
+      {
+        "kind": "edge pair",
+        "first": "A",
+        "second": "N",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[F' E2 F, U2]",
+        "moves": "F' E2 F U2 F' E2 F U2",
+        "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "U",
+        "second": "G",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[U S U', F2]",
+        "moves": "U S U' F2 U S' U' F2",
+        "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "D",
+        "second": "P",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[R S R', F]",
+        "moves": "R S R' F R S' R' F'",
+        "length": 8
+      },
+      {
+        "kind": "edge pair",
+        "first": "S",
+        "second": "B",
+        "setup": "",
+        "setupMoves": 0,
+        "notation": "[S D' S', U']",
+        "moves": "S D' S' U' S D S' U",
         "length": 8
       },
       {
         "kind": "edge pair",
         "first": "R",
-        "second": "A",
+        "second": "L",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[U2, F' E F]",
-        "moves": "U2 F' E F U2 F' E' F",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "J",
-        "second": "W",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[M2, U' R U]",
-        "moves": "M2 U' R U M2 U' R' U",
+        "notation": "[F' E' F, L2]",
+        "moves": "F' E' F L2 F' E F L2",
         "length": 8
       },
       {
         "kind": "edge pair",
         "first": "V",
-        "second": "N",
-        "setup": "D",
-        "setupMoves": 1,
-        "notation": "[D: [M2, U B' U']]",
-        "moves": "D M2 U B' U' M2 U B U' D'",
-        "length": 10
-      },
-      {
-        "kind": "edge pair",
-        "first": "M",
-        "second": "D",
+        "second": "A",
         "setup": "",
         "setupMoves": 0,
-        "notation": "[S', R U R']",
-        "moves": "S' R U R' S R U' R'",
-        "length": 8
-      },
-      {
-        "kind": "edge pair",
-        "first": "G",
-        "second": "Q",
-        "setup": "",
-        "setupMoves": 0,
-        "notation": "[U' L2 U, M']",
-        "moves": "U' L2 U M' U' L2 U M",
+        "notation": "[U2, U S' U']",
+        "moves": "U' S' U2 S U'",
         "length": 8
       }
     ]

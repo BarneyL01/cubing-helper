@@ -133,17 +133,10 @@ export function bldPlan(scramble) {
 // ---- Corner cycles and Edge cycles tabs (buffer UFR for corners, UF for edges).
 // Same cycle-following as memo() above, with three differences: a piece that
 // is in its own place but twisted (or flipped) is left out of the letters and
-// reported in `twisted`/`flipped` instead; the break letter can be chosen; and
-// edges can be memorised as if UF and UR had swapped places (the odd-parity
-// method, see docs/bld-edge-cycles-plan.md 2.4).
+// reported in `twisted`/`flipped` instead; and the break letter can be chosen.
 
-const CORNER_BUFFER = 'C';
+const CORNER_BUFFER = 'A'; // UBL, the Old Pochmann corner buffer
 const EDGE_BUFFER = 'C';
-// Edge stickers that trade places in the odd-parity method (UF and UR).
-const EDGE_PARITY_SWAP = [['C', 'B'], ['I', 'M']];
-const swapTo = new Map(
-  EDGE_PARITY_SWAP.flatMap(([a, b]) => [[a, b], [b, a]]).map(([a, b]) => [key(EDGE[a].p, EDGE[a].n), EDGE[b]]),
-);
 
 const sameVec = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
@@ -237,8 +230,8 @@ function withPairs(targets) {
   return pairs;
 }
 
-// Corner cycles: { letters, pairs, twisted: [{ piece, direction }], parity }.
-// `twisted` includes the buffer UFR when it is twisted in place.
+// Corner cycles (buffer UBL): { letters, pairs, twisted: [{ piece, direction }], parity }.
+// `twisted` includes the buffer UBL when it is twisted in place.
 export function cornerCycles(state, { breakLetter } = {}) {
   const { targets, twisted } = cycleTargets(state, CORNER, CORNER_BUFFER, { breakLetter });
   const pos = (p) => p.split(',').map(Number);
@@ -253,16 +246,9 @@ export function cornerCycles(state, { breakLetter } = {}) {
   };
 }
 
-// Edge cycles. `swap` memorises the edges as if UF and UR had swapped places,
-// which is the method for an odd number of corner letters.
-export function edgeCycles(state, { swap = false, breakLetter } = {}) {
-  const at = swap
-    ? state.map((s) => {
-        const to = swapTo.get(key(s.p, s.n));
-        return to ? { ...s, p: to.p, n: to.n } : s;
-      })
-    : state;
-  const { targets, twisted } = cycleTargets(at, EDGE, EDGE_BUFFER, { breakLetter });
+// Edge cycles (buffer UF).
+export function edgeCycles(state, { breakLetter } = {}) {
+  const { targets, twisted } = cycleTargets(state, EDGE, EDGE_BUFFER, { breakLetter });
   return {
     letters: targets,
     pairs: withPairs(targets),

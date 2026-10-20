@@ -261,3 +261,10 @@ and Practice tabs; don't use wide moves (r, u, …) in generated commutators
   swap. The plan says to stop and ask in this case, so the page says the part is
   not finished and does not teach it. See `log/2026-10-16-bld-edge-cycles.md`.
 - Check E9 is therefore reported for even scrambles only.
+
+## Changed 2026-10-20
+
+The corner tab moved to the UBL buffer, so the shared UFR/UBR parity algorithm in
+2.4 is no longer used. The owner chose to teach the corner side of an odd count
+only; the edge side of the odd-count method is off the page and no longer
+planned. The generator no longer keeps the UF/UR edge swap.

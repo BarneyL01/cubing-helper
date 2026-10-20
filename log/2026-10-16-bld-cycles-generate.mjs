@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { applyAlg, solvedCube, faceOf, isSolved } from '../js/cube-sim.js';
 import { cancelMoves, expandBrackets, invertAlg, invertMove } from '../js/algs.js';
-import { bldCorners, bldEdges } from '../data/bld.js';
+import { bldCorners, bldEdges, BLD_CORNER_SWAP } from '../data/bld.js';
 import { cornerCycles, cornerOrientation, edgeCycles, pieceName, scrambledState } from '../js/bld-memo.js';
 
 const WRITE = process.argv.includes('--write');
@@ -137,8 +137,8 @@ function commutators(turns, type) {
 // shortest after cancelling; then a setup that leaves the buffer's stickers
 // alone; then the setup order from the plan.
 function pairTable(comms, levels, type) {
-  const BUF = type === 3 ? CSPOT.C : ESPOT.C;
-  const BUF_SPOTS = type === 3 ? [CSPOT.C, CSPOT.J, CSPOT.M] : [ESPOT.C, ESPOT.I];
+  const BUF = type === 3 ? CSPOT.A : ESPOT.C;
+  const BUF_SPOTS = type === 3 ? [CSPOT.A, CSPOT.E, CSPOT.R] : [ESPOT.C, ESPOT.I];
   const LET = type === 3 ? CLET : ELET;
   const found = new Map();
   for (const setups of levels) {
@@ -184,7 +184,7 @@ const rowsFrom = (found, letters) => {
 };
 
 // ---------- corner tables ----------
-const CORNER_LETTERS = Object.keys(CSPOT).filter((l) => !['C', 'J', 'M'].includes(l));
+const CORNER_LETTERS = Object.keys(CSPOT).filter((l) => !['A', 'E', 'R'].includes(l));
 const EDGE_LETTERS = Object.keys(ESPOT).filter((l) => !['C', 'I'].includes(l));
 
 log('corner commutators…');
@@ -197,7 +197,7 @@ log(`  ${cornerRows.length} of 378 pairs; by setup moves 0/1/2/3: ${cornerBySetu
 check('corner pairs: 378', cornerRows.length === 378, `${cornerRows.length}`);
 const CORNER_PAIR = Object.fromEntries(cornerRows.map((r) => [r.first + r.second, r]));
 
-// Corner twists: a pure twist of the buffer UFR and one other corner, with the
+// Corner twists: a pure twist of the buffer UBL and one other corner, with the
 // two directions (7 corners x 2 = 14 rows). Pure = nothing moves but the twist.
 const TWIST_INSERTIONS = [
   { text: "(R' D' R D)×2", tokens: "R' D' R D R' D' R D".split(' ') },
@@ -207,7 +207,7 @@ function cornerTwistRows() {
   const bases = [...insertions(CORNER_TURNS), ...TWIST_INSERTIONS].map((x) => ({ ...x, p: seqPerm(x.tokens) }));
   const turns = CORNER_TURNS.map((t) => ({ text: t, tokens: [t], p: movePerm(t) }));
   const setups = setupLevels(CORNER_TURNS, FACE_ORDER, 2).flat();
-  const UFR = posOf(CSPOT.C);
+  const UBL = posOf(CSPOT.A);
   const wanted = new Map();
   for (const A of bases) {
     for (const B of turns) {
@@ -222,10 +222,10 @@ function cornerTwistRows() {
           const twisted = [...new Set(SOLVED.filter((t) => ntype(SOLVED.indexOf(t)) === 3).map((t) => posOf(SOLVED.indexOf(t))))]
             .map((c) => [c, cornerOrientation(after, posVec(c))])
             .filter(([, o]) => o);
-          if (twisted.length !== 2 || !twisted.some(([c]) => c === UFR)) continue;
+          if (twisted.length !== 2 || !twisted.some(([c]) => c === UBL)) continue;
           const [[c1, o1], [c2, o2]] = twisted;
           if (o1 + o2 !== 0) continue;
-          const [K, oK, oU] = c1 === UFR ? [c2, o2, o1] : [c1, o1, o2];
+          const [K, oK, oU] = c1 === UBL ? [c2, o2, o1] : [c1, o1, o2];
           const notation = S.tokens.length ? `[${S.tokens.join(' ')}: ${body}]` : body;
           const moves = cancelMoves(expandBrackets(notation));
           const name = pieceName(posVec(K));
@@ -248,19 +248,21 @@ const cornerTwists = [...cornerTwistRows().values()].map(({ score, ...row }) => 
 log(`  ${cornerTwists.length} rows`);
 check('corner twists: 14 rows', cornerTwists.length === 14, `${cornerTwists.length}`);
 
-// Parity: the last unpaired corner letter Z is brought to the sticker B (UBR)
-// by a D, L, B setup that leaves UFR, UF and UR alone; then the parity
-// algorithm; then the setup undone.
-const PARITY = "R U R' F' R U R' U' R' F R2 U' R' U'";
+// Parity: the Old Pochmann corner swap (data/bld.js) swaps the buffer UBL with
+// DFR (sticker A <-> P) and the edges UL and UB. The last unpaired corner letter Z
+// is brought to the sticker P by a D, F, R setup that leaves UBL, UL and UB alone;
+// then the swap; then the setup undone.
+const PARITY = BLD_CORNER_SWAP;
+const PARITY_TARGET = 'P';
 const parityTokens = PARITY.split(' ');
 const parityPerm = seqPerm(parityTokens);
-const paritySetups = setupLevels(CORNER_TURNS.filter((t) => 'DLB'.includes(t[0])), FACE_ORDER, 3).flat();
+const PARITY_FIXED = new Set([posOf(CSPOT.A), posOf(ESPOT.A), posOf(ESPOT.D)]); // UBL, UB, UL
+const paritySetups = setupLevels(CORNER_TURNS.filter((t) => 'DFR'.includes(t[0])), FACE_ORDER, 3).flat();
 const cornerParity = CORNER_LETTERS.map((Z) => {
   let best = null;
   for (const S of paritySetups) {
-    if (S.p[CSPOT[Z]] !== CSPOT.B) continue;
-    if (['C', 'J', 'M'].some((l) => S.p[CSPOT[l]] !== CSPOT[l])) continue;
-    if (['C', 'I', 'B', 'M'].some((l) => S.p[ESPOT[l]] !== ESPOT[l])) continue;
+    if (S.p[CSPOT[Z]] !== CSPOT[PARITY_TARGET]) continue;
+    if (ID.some((i) => PARITY_FIXED.has(posOf(i)) && S.p[i] !== i)) continue;
     const score = `${S.tokens.length}|${S.rank}`;
     if (!best || score < best.score) best = { score, tokens: S.tokens };
   }
@@ -302,24 +304,18 @@ log(`flip rows: ${edgeFlipRows.length}`);
 check('edge flips: 11 rows', edgeFlipRows.length === 11, `${edgeFlipRows.length}`);
 const FLIP_ROW = Object.fromEntries(edgeFlipRows.map((r) => [r.edge, r]));
 
-// Odd-parity edge swap, read off the parity algorithm.
-const EDGE_SWAP = [
-  ['C', 'B'],
-  ['I', 'M'],
-].map(([a, b]) => ({ a, b, ok: parityPerm[ESPOT[a]] === ESPOT[b] && parityPerm[ESPOT[b]] === ESPOT[a] }));
-
 // ---------- solving a scramble (the way the tabs teach it) ----------
 const TWIST = Object.fromEntries(cornerTwists.map((r) => [`${r.corner}|${r.buffer}|${r.twisted}`, r]));
 const opposite = (d) => (d === 'clockwise' ? 'anticlockwise' : 'clockwise');
-// Corner steps, then edge steps (edges memorised with UF and UR swapped when the
-// corner count is odd), then the corner parity step, then the corner twists.
+// Corner steps, then edge steps (even edge counts only), then the corner parity
+// step, then the corner twists.
 function solveSteps(state) {
   const cc = cornerCycles(state);
-  const ec = edgeCycles(state, { swap: cc.parity });
+  const ec = edgeCycles(state);
   const corner = [];
   for (const p of cc.pairs.filter((x) => x.second)) corner.push({ kind: 'corner pair', ...CORNER_PAIR[p.first + p.second] });
   const parity = cc.pairs.find((x) => !x.second);
-  const twists = cc.twisted.filter((t) => t.piece !== 'UFR').map((t) => ({ kind: 'corner twist', ...TWIST[`${t.piece}|${t.direction}|${opposite(t.direction)}`] }));
+  const twists = cc.twisted.filter((t) => t.piece !== 'UBL').map((t) => ({ kind: 'corner twist', ...TWIST[`${t.piece}|${t.direction}|${opposite(t.direction)}`] }));
   const edge = [];
   for (const p of ec.pairs) edge.push({ kind: 'edge pair', ...EDGE_PAIR[p.first + p.second] });
   for (const e of ec.flipped.filter((e) => e !== 'UF')) edge.push({ kind: 'edge flip', ...FLIP_ROW[e] });
@@ -361,7 +357,7 @@ function findScramble(predicate, makeText, solver = solveSteps) {
   }
   throw new Error(`no scramble found for: ${makeText.toString()}`);
 }
-const freeComms = cornerComms.filter((c) => c.p[CSPOT.C] === CSPOT.C);
+const freeComms = cornerComms.filter((c) => c.p[CSPOT.A] === CSPOT.A);
 const randomPairText = (k) => Array.from({ length: k }, () => pick(cornerRows).notation).join(' ');
 const twistRow = (corner, buffer, twisted) => cornerTwists.find((r) => r.corner === corner && r.buffer === buffer && r.twisted === twisted);
 const pairOf = (...names) => names;
@@ -383,10 +379,10 @@ const EXERCISES = [
       const c = pick(freeComms);
       return `[${c.X.text}, ${c.Y.text}]`;
     }),
-  ex(6, 'Twisted pair', (cc) => cc.letters.length === 2 && cc.twisted.length === 2 && cc.twisted.every((t) => t.piece !== 'UFR'),
+  ex(6, 'Twisted pair', (cc) => cc.letters.length === 2 && cc.twisted.length === 2 && cc.twisted.every((t) => t.piece !== 'UBL'),
     () => {
-      const K1 = pick(['DFL', 'DBL', 'DBR', 'UBL', 'UBR', 'UFL', 'DFR']);
-      const K2 = pick(['DFL', 'DBL', 'DBR', 'UBL', 'UBR', 'UFL', 'DFR'].filter((k) => k !== K1));
+      const K1 = pick(['DFL', 'DBL', 'DBR', 'UFR', 'UBR', 'UFL', 'DFR']);
+      const K2 = pick(['DFL', 'DBL', 'DBR', 'UFR', 'UBR', 'UFL', 'DFR'].filter((k) => k !== K1));
       return [randomPairText(1), twistRow(K1, 'clockwise', 'anticlockwise').notation, twistRow(K2, 'anticlockwise', 'clockwise').notation].join(' ');
     }),
   ex(7, 'Odd letters', (cc) => cc.letters.length === 3 && !cc.twisted.length, () => {
@@ -494,11 +490,12 @@ for (const [rows, type, SP] of [
   [cornerRows, 3, CSPOT],
   [edgeRows, 2, ESPOT],
 ]) {
+  const BUF = SP === CSPOT ? CSPOT.A : ESPOT.C;
   for (const r of rows) {
     const p = seqPerm(r.moves.split(' '));
     const moved = ID.filter((i) => p[i] !== i);
     const ok =
-      p[SP.C] === SP[r.first] && p[SP[r.first]] === SP[r.second] && p[SP[r.second]] === SP.C &&
+      p[BUF] === SP[r.first] && p[SP[r.first]] === SP[r.second] && p[SP[r.second]] === BUF &&
       moved.length === 3 * type && moved.every((i) => ntype(i) === type) &&
       r.moves === cancelMoves(expandBrackets(r.notation));
     check(`pair ${r.first}${r.second}`, ok, r.notation);
@@ -506,13 +503,13 @@ for (const [rows, type, SP] of [
 }
 log('check 1: pairs');
 
-// 3. Twist rows: UFR and K twisted in the stated directions; every other
+// 3. Twist rows: UBL and K twisted in the stated directions; every other
 // corner untwisted; positions and edges unchanged.
 for (const r of cornerTwists) {
   const after = applyAlg(SOLVED, r.moves);
   const edgesHome = ID.every((i) => ntype(i) !== 2 || (after[i].p.join() === SOLVED[i].p.join() && after[i].n.join() === SOLVED[i].n.join()));
   const want = new Map([
-    ['UFR', r.buffer === 'clockwise' ? 1 : -1],
+    ['UBL', r.buffer === 'clockwise' ? 1 : -1],
     [r.corner, r.twisted === 'clockwise' ? 1 : -1],
   ]);
   const cornersOk = [...new Set(bldCorners.map((x) => posOf(CSPOT[x.letter])))].every((p) => {
@@ -523,28 +520,27 @@ for (const r of cornerTwists) {
 }
 log('check 3: twists');
 
-// 4. Parity setups: setup + parity + undo swaps the sticker Z with the buffer
-// sticker C, and nothing else among the corners but the piece swapped with Z.
+// 4. Parity setups: setup + swap + undo swaps the sticker Z with the buffer
+// sticker A, moves no other corners but the two swapped, and moves only the
+// UL and UB edges.
 for (const r of cornerParity) {
   const S = seqPerm(r.setup ? r.setup.split(' ') : []);
   const net = comp(comp(S, parityPerm), inv(S));
   const cornerMoved = ID.filter((i) => ntype(i) === 3 && net[i] !== i);
   const zCorner = posOf(CSPOT[r.letter]);
   const ok =
-    net[CSPOT[r.letter]] === CSPOT.C && net[CSPOT.C] === CSPOT[r.letter] &&
-    cornerMoved.every((i) => [posOf(CSPOT.C), zCorner].includes(posOf(i))) &&
-    ID.filter((i) => ntype(i) === 2 && net[i] !== i).every((i) => [ESPOT.C, ESPOT.I, ESPOT.B, ESPOT.M].includes(i));
+    net[CSPOT[r.letter]] === CSPOT.A && net[CSPOT.A] === CSPOT[r.letter] &&
+    cornerMoved.every((i) => [posOf(CSPOT.A), zCorner].includes(posOf(i))) &&
+    ID.filter((i) => ntype(i) === 2 && net[i] !== i).every((i) => [posOf(ESPOT.A), posOf(ESPOT.D)].includes(posOf(i)));
   check(`parity ${r.letter}`, ok, r.notation);
 }
 log('check 4: parity setups');
 
-// 5. The parity algorithm swaps UFR<->UBR and UF<->UR, nothing else.
-const parityCornerMoved = ID.filter((i) => ntype(i) === 3 && parityPerm[i] !== i);
-check('parity algorithm: UFR<->UBR', parityPerm[CSPOT.C] === CSPOT.B && parityPerm[CSPOT.B] === CSPOT.C);
-check('parity algorithm: only UFR and UBR corners move', parityCornerMoved.every((i) => [posOf(CSPOT.C), posOf(CSPOT.B)].includes(posOf(i))), `${parityCornerMoved.length}`);
-check('parity algorithm: UF<->UR edges', EDGE_SWAP.every((s) => s.ok));
-check('parity algorithm: no centre moves', ID.every((i) => ntype(i) !== 1 || parityPerm[i] === i));
-log(`check 5: parity algorithm (edge stickers: ${EDGE_SWAP.map((s) => `${s.a}->${s.b} ${s.ok}`).join(', ')})`);
+// 5. The swap algorithm swaps UBL<->DFR (A<->P) and UL<->UB, nothing else.
+const parityMoved = ID.filter((i) => parityPerm[i] !== i);
+check('parity algorithm: A<->P', parityPerm[CSPOT.A] === CSPOT[PARITY_TARGET] && parityPerm[CSPOT[PARITY_TARGET]] === CSPOT.A);
+check('parity algorithm: only UBL, DFR, UL, UB move', parityMoved.every((i) => [posOf(CSPOT.A), posOf(CSPOT[PARITY_TARGET]), posOf(ESPOT.A), posOf(ESPOT.D)].includes(posOf(i))), `${parityMoved.length}`);
+log('check 5: parity algorithm');
 
 // 6. Flip rows: the edges' positions are unchanged, and exactly UF and K are flipped.
 const edgeOrientAt = (state, p) => {
@@ -623,7 +619,7 @@ for (let i = 0; i < 1000; i++) {
   }
 }
 log(`check E9: even scrambles fully solved: ${1000 - oddTotal - evenFails}/${1000 - oddTotal}`);
-log(`OPEN odd edge method: ${oddSolved}/${oddTotal} odd scrambles fully solved by the method on the page (plan E5 wants all)`);
+log(`OPEN odd edge method: ${oddSolved}/${oddTotal} odd scrambles fully solved (the edge side of an odd count is not on the page; corners are checked by check 8)`);
 let edgeFullFails = 0;
 for (let i = 0; i < 1000; i++) {
   const scramble = randomFaceScramble(25);
@@ -685,7 +681,6 @@ const edgeBlock = [
   `// ${BLOCK_NOTE}`,
   rowsJs('edgeComms', edgeRows),
   rowsJs('edgeFlips', edgeFlipRows),
-  objJs('edgeParitySwap', EDGE_SWAP.map((s) => [s.a, s.b])),
   objJs('edgeExamples', {
     example1: { scramble: edgeWorked.scramble, steps: edgeWorked.steps, letters: edgeWorked.ec.letters },
     example2: { scramble: edgeBreakWorked.scramble, steps: edgeBreakWorked.steps, letters: edgeBreakWorked.ec.letters, breaks: edgeBreakRows },
