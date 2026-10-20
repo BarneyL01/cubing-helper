@@ -27,3 +27,22 @@ Speedsolving wiki). Built `3x3/heise/index.html` + `data/heise.js` from the spec
 ## Checks
 
 Generator: ALL OK. Browser (390 px, 1280 px): no console errors, no page-level sideways scroll; step bar, cards and filmstrips render.
+
+## Update: gaps that could be derived
+
+The owner asked whether the gaps could be solved by simulation. Some could, from the spec's own rules:
+
+- **Where the four squares sit.** Listing every way to place three outer squares and one inner square on a
+  solved cube with no shared pieces, five colours in all and one colour in every square: exactly 96
+  (16 per shared colour). In all 96 the union is the first two layers of the shared colour minus one adjacent
+  corner/edge pair (3 corners, 7 edges, 5 centres), which matches the spec's statement about the cube after
+  step 2. This also settles the spec's inconsistent description of step 3's start: 5 edges and 5 corners are
+  unsolved (the spec's "3 corners" is what is left after step 3). Added as a picture (white shared, front-right
+  slot free) and in the notes, labelled as derived here.
+- **Edge orientation along the F/B axis.** An edge reaches 12 of 24 placements using U, D, R, L and F2, B2, and all 24
+  once F or B quarter turns are allowed. So U, D, R, L keep orientation. Replaces the "not checked" note.
+- **A corner twist example** (pure twist of two corners, from the corner cycles tables): added to step 3, labelled as ours.
+
+Not derivable from the spec (Heise's own definitions, shown as pictures): the three edge types, the simple swap
+and criss/cross moves, the pair 3-cycle moves, and so a worked scramble-to-solution example. Any version of these
+written here would be a reconstruction, not Heise's; they stay on the "not on this page yet" list.

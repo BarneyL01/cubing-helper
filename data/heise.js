@@ -24,7 +24,7 @@ export const heiseExamples = {
         "alg": "",
         "stickering": "full",
         "views": [
-          "D"
+          "cube"
         ],
         "marks": [
           {
@@ -36,11 +36,11 @@ export const heiseExamples = {
             "colour": "pink"
           },
           {
-            "piece": "DL",
+            "piece": "FL",
             "colour": "pink"
           },
           {
-            "piece": "D",
+            "piece": "F",
             "colour": "pink"
           }
         ],
@@ -54,7 +54,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "",
-            "caption": "The white/green/red corner, the two white edges beside it and the white centre."
+            "caption": "The white/green/red corner, the white/green edge and green/red edge beside it, and the green centre."
           }
         ]
       }
@@ -96,6 +96,108 @@ export const heiseExamples = {
             "after": "",
             "label": "",
             "caption": "The green/orange edge in the middle layer with the green and orange centres."
+          }
+        ]
+      }
+    },
+    {
+      "anchor": "four-squares",
+      "name": "The four squares in their solved places",
+      "orientation": "One of the 16 arrangements for white. Derived here from the rules.",
+      "displayAlg": "Three outer + one inner; the DFR corner and FR edge are left out",
+      "noViewer": true,
+      "filmstrip": {
+        "alg": "",
+        "stickering": "full",
+        "views": [
+          "D",
+          "cube"
+        ],
+        "marks": [
+          {
+            "piece": "DFL",
+            "colour": "pink"
+          },
+          {
+            "piece": "FL",
+            "colour": "pink"
+          },
+          {
+            "piece": "DF",
+            "colour": "pink"
+          },
+          {
+            "piece": "F",
+            "colour": "pink"
+          },
+          {
+            "piece": "BDL",
+            "colour": "blue"
+          },
+          {
+            "piece": "BL",
+            "colour": "blue"
+          },
+          {
+            "piece": "BD",
+            "colour": "blue"
+          },
+          {
+            "piece": "B",
+            "colour": "blue"
+          },
+          {
+            "piece": "BDR",
+            "colour": "#7c3aed"
+          },
+          {
+            "piece": "DR",
+            "colour": "#7c3aed"
+          },
+          {
+            "piece": "BR",
+            "colour": "#7c3aed"
+          },
+          {
+            "piece": "R",
+            "colour": "#7c3aed"
+          },
+          {
+            "piece": "DL",
+            "colour": "#16a34a"
+          },
+          {
+            "piece": "D",
+            "colour": "#16a34a"
+          },
+          {
+            "piece": "L",
+            "colour": "#16a34a"
+          }
+        ],
+        "legend": [
+          {
+            "colour": "pink",
+            "text": "DFL, FL, DF, F"
+          },
+          {
+            "colour": "blue",
+            "text": "BDL, BL, BD, B"
+          },
+          {
+            "colour": "#7c3aed",
+            "text": "BDR, DR, BR, R"
+          },
+          {
+            "colour": "#16a34a",
+            "text": "DL, D, L (inner)"
+          }
+        ],
+        "frames": [
+          {
+            "after": "",
+            "label": "",
+            "caption": "The four squares cover the first two layers except the white/green/orange corner and the green/orange edge, which are the free slot (front right). Only the front and right sides show in the cube view; the back and left squares are in the bottom view and on the hidden sides."
           }
         ]
       }
@@ -230,6 +332,53 @@ export const heiseExamples = {
             "after": "M' U2 M U2",
             "label": "M' U2 M U2",
             "caption": "Four moves put the three edges home. Two of the edges move in the U layer, one in the M slice."
+          }
+        ]
+      }
+    },
+    {
+      "anchor": "step3-twist",
+      "name": "A corner twist",
+      "orientation": "Two corners in their own places but twisted; everything else solved.",
+      "displayAlg": "[R: [(R' D' R D)×2, U]]",
+      "noViewer": true,
+      "filmstrip": {
+        "alg": "D' R D R' D' R D U D' R' D R D' R' D R U' R'",
+        "stickering": "full",
+        "views": [
+          "U",
+          "D"
+        ],
+        "marks": [
+          {
+            "piece": "DFR",
+            "colour": "pink"
+          },
+          {
+            "piece": "FRU",
+            "colour": "blue"
+          }
+        ],
+        "legend": [
+          {
+            "colour": "pink",
+            "text": "DFR corner (twisted)"
+          },
+          {
+            "colour": "blue",
+            "text": "UFR corner (twisted)"
+          }
+        ],
+        "frames": [
+          {
+            "after": "",
+            "label": "Start",
+            "caption": "The DFR and UFR corners are twisted in place."
+          },
+          {
+            "after": "D' R D R' D' R D U D' R' D R D' R' D R U' R'",
+            "label": "18 moves",
+            "caption": "The twist turns both corners the right way and puts everything else back. This is a pure corner twist, found and checked here; it is not necessarily the one Heise uses."
           }
         ]
       }
@@ -482,8 +631,8 @@ export const heiseSteps = [
     ],
     notes: [
       'Techniques. Align, then join: to join a corner and an edge, first place them so their matching colours are aligned on the same axis. Of the six ways to place a corner next to an edge, only one is a correct join. Aligned pieces join in one move; unaligned pieces cannot. Move it out of the way: to build a new pair without breaking the block you have, first move the block out of the path of the turns you will use. Destroy and restore: break a block, make some moves, restore it. Best fit: attach each new square snugly so it does not obstruct other pieces.',
-      'The two pictures below show the shape of an outer and an inner square. A solved cube is drawn with the pieces outlined, for the shape only: where all four squares sit in their solved places is something Heise shows only as diagrams, so it is not drawn here.',
-      'Not on this page yet: a worked example of building the four squares from a scramble. The spec does not give one, and it would need the exact goal positions.',
+      'Where the squares sit (derived here, not from Heise\'s pages). Take the notes\' rules literally: four squares that share no pieces, three outer and one inner, five colours in all, and one colour in every square. On a solved cube there are exactly 96 ways to place them, 16 for each colour (all listed and checked by a program). In every one of them the squares fill the first two layers of the shared colour except one corner/edge pair, the free slot: 3 corners, 7 edges and 5 centres. That matches the notes\' statement about the cube after step 2. The third picture shows one of the 16: white shared, front-right slot free; its inner square is a bottom edge with the white centre and a side centre.',
+      'Not on this page yet: a worked example of building the four squares from a scramble. The notes give none, and the order and moves Heise would choose are not described.',
     ],
     cases: heiseExamples.squares,
   },
@@ -502,8 +651,8 @@ export const heiseSteps = [
       { title: 'Done together (the advanced form):', text: 'turning a square also changes edge orientation, so matching the squares and orienting the edges can be a single step. Look for sequences that do both and prefer them to the separate form.' },
     ],
     notes: [
-      'Not specified in the notes this page is built from: the exact meaning of correct, incorrect and neutral (Heise shows these as pictures), and the moves for a simple swap and for criss/cross. They are left out, not guessed.',
-      'Standard theory, not checked here: quarter turns of two opposite faces do not change edge orientation, which matches Heise\'s remark that turning only the red and white faces keeps it.',
+      'Not derived: the three-way split into correct, incorrect and neutral edges (Heise shows it as pictures), and the moves for a simple swap and for criss/cross.',
+      'Checked here, with the orientation axis taken as front/back (the usual meaning of edge orientation, assumed to be what the notes mean): using only U, D, R and L turns and half turns of F and B, an edge reaches 12 of its 24 possible placements, and with F or B quarter turns it reaches all 24. So U, D, R and L turns keep edge orientation, and quarter turns of F and B change it.',
     ],
   },
   {
@@ -524,8 +673,8 @@ export const heiseSteps = [
     notes: [
       'Where this fits: Heise changed the final step of the method in 2004 to solving the last three corners. The notes infer (they do not state) that the later form of the method is approach B: make two pairs, permute the pairs and all remaining edges, then solve the last three corners.',
       'From a forum note rather than Heise\'s pages: for the 3-move edge finish, exactly three edges must be unsolved: two in the top layer and one in the free slot.',
-      'Not specified: the moves for a pair 3-cycle and for a corner twist. The notes describe the start of this step in two ways (first two layers minus one corner/edge pair with edges oriented, and a list of remaining pieces), and the two do not agree, so piece counts are not given here.',
-      'The two examples below are corner and edge 3-cycles, checked on the simulator. The first shows the "two corners with one 3-cycle" idea; the second is one edge 3-cycle.',
+      'Piece counts (derived from the arrangement in step 1): when step 3 starts the cube is the first two layers minus one pair, so the unsolved pieces are 5 edges (the four top edges and the one in the free slot) and 5 corners (the four top corners and the one in the free slot). Step 3 solves all five edges and two corners, which leaves three corners for step 4. Not specified: the moves for a pair 3-cycle.',
+      'The three examples below were checked on the simulator: two corners with one 3-cycle; an edge 3-cycle; and a corner twist (a pure twist of two corners, found here, not necessarily the one Heise uses).',
     ],
     cases: heiseExamples.step3,
   },
@@ -551,11 +700,10 @@ export const heiseSteps = [
   },
 ];
 
-// What the notes this page is built from do not say.
+// What the notes this page is built from do not say, and this page does not guess.
 export const heiseGaps = [
-  'The exact edge types in step 2 (correct, incorrect, neutral): shown only as pictures on Heise\'s site.',
-  'The moves for criss/cross and for a simple swap (step 2), and for a pair 3-cycle, an edge 3-cycle of the pair kind and a corner twist (step 3).',
-  'Where the four squares sit in their solved places, and exactly which pieces make up an inner square (the notes describe it inconsistently).',
-  'A worked example from a scramble to a solution: Heise\'s site has one, but it is interactive.',
-  'The piece counts at the start of step 3: the notes describe that position in two ways that do not agree.',
+  'The three edge types in step 2 (correct, incorrect, neutral): shown only as pictures on Heise\'s site. Plain edge orientation is checked on this page; the three-way split is not derived.',
+  'The moves for a simple swap and for criss/cross (step 2), and for a pair 3-cycle (step 3). The edge 3-cycle, corner 3-cycle and corner twist shown are checked examples, not necessarily Heise\'s.',
+  'A worked example from a scramble to a solution: Heise\'s site has one, but it is interactive. Building one needs the missing moves above.',
+  'Derived here and not from Heise: the places of the four squares and the piece counts at the start of step 3 (see steps 1 and 3).',
 ];

@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { applyAlg, solvedCube, faceOf, caseState } from '../js/cube-sim.js';
 import { cancelMoves, expandBrackets, invertAlg } from '../js/algs.js';
 import { pieceName } from '../js/bld-memo.js';
+import { cornerTwists } from '../data/corner-cycles.js';
 
 const WRITE = process.argv.includes('--write');
 const failures = [];
@@ -184,34 +185,159 @@ const edgeCard = {
   },
 };
 
-// ---- 5. Square pictures (the solved cube with pieces outlined)
+// ---- 5. Squares: where the four squares sit, derived from the spec's rules
+// Outer square = a corner, the two edges of one face at that corner, and that face's centre.
+// Inner square = an edge and its two centres. The rules (spec section 3): four squares, pairwise
+// disjoint, three outer and one inner, five colours in all, one colour in every square.
+const FACE = { U: [0, 1, 0], D: [0, -1, 0], F: [0, 0, 1], B: [0, 0, -1], R: [1, 0, 0], L: [-1, 0, 0] };
+const cubies = [];
+for (let x = -1; x <= 1; x++) for (let y = -1; y <= 1; y++) for (let z = -1; z <= 1; z++) {
+  const p = [x, y, z];
+  const n = p.filter((v) => v).length;
+  if (!n) continue;
+  const faces = Object.entries(FACE).filter(([, v]) => v.some((c, i) => c && c === p[i])).map(([f]) => f).sort().join('');
+  cubies.push({ n, faces });
+}
+const touches = (c, f) => c.faces.includes(f);
+const outerSq = [];
+for (const f of 'UDFBRL') {
+  for (const c of cubies.filter((c) => c.n === 3 && touches(c, f))) {
+    const edges = cubies.filter((e) => e.n === 2 && touches(e, f) && [...e.faces].every((g) => touches(c, g)));
+    outerSq.push([c, ...edges, cubies.find((e) => e.n === 1 && e.faces === f)]);
+  }
+}
+const innerSq = cubies.filter((c) => c.n === 2).map((e) => [e, ...[...e.faces].map((f) => cubies.find((c) => c.n === 1 && c.faces === f))]);
+const faceSet = (sq) => new Set(sq.flatMap((c) => [...c.faces]));
+const overlaps = (a, b) => a.some((c) => b.includes(c));
+const OPP = { U: 'D', D: 'U', F: 'B', B: 'F', R: 'L', L: 'R' };
+const arrangements = [];
+for (let i = 0; i < outerSq.length; i++) for (let j = i + 1; j < outerSq.length; j++) {
+  if (overlaps(outerSq[i], outerSq[j])) continue;
+  for (let k = j + 1; k < outerSq.length; k++) {
+    if (overlaps(outerSq[i], outerSq[k]) || overlaps(outerSq[j], outerSq[k])) continue;
+    for (const inn of innerSq) {
+      const set = [outerSq[i], outerSq[j], outerSq[k], inn];
+      if (set.some((a, x) => set.some((b, y) => y > x && overlaps(a, b)))) continue;
+      const colours = new Set(set.flatMap((sq) => [...faceSet(sq)]));
+      const common = [...colours].filter((col) => set.every((sq) => faceSet(sq).has(col)));
+      if (colours.size === 5 && common.length) arrangements.push({ set, common });
+    }
+  }
+}
+check('squares: 96 arrangements meet the spec rules', arrangements.length === 96, `${arrangements.length}`);
+let allF2LMinusPair = true;
+for (const g of arrangements) {
+  const union = new Set(g.set.flat());
+  const col = g.common.find((c) => [...union].every((x) => !touches(x, OPP[c])));
+  const corners = [...union].filter((x) => x.n === 3).length;
+  const edges = [...union].filter((x) => x.n === 2).length;
+  const centres = [...union].filter((x) => x.n === 1).length;
+  // the first two layers of `col` have 4 corners, 8 edges, 5 centres; minus one corner/edge pair
+  const missCorner = cubies.filter((x) => x.n === 3 && touches(x, col) && !union.has(x));
+  const missEdge = cubies.filter((x) => x.n === 2 && !touches(x, OPP[col]) && !union.has(x));
+  const adjacent = missCorner.length === 1 && missEdge.length === 1 && [...missEdge[0].faces].every((f) => touches(missCorner[0], f));
+  if (!col || corners !== 3 || edges !== 7 || centres !== 5 || !adjacent) allF2LMinusPair = false;
+}
+check('squares: every arrangement is the first two layers minus one corner/edge pair', allF2LMinusPair);
+log(`squares: ${arrangements.length} arrangements; first two layers minus a pair in all: ${allF2LMinusPair}`);
+const pick1 = arrangements.find((g) => g.common.includes('D') && g.set.some((sq) => sq.some((c) => c.faces === 'DFL')) && g.set.some((sq) => sq.some((c) => c.faces === 'BDL')) && g.set.some((sq) => sq.some((c) => c.faces === 'BDR')));
+check('squares: picture arrangement found', !!pick1);
+
 const squareFilm = (marks, views, caption, legend) => ({
   alg: '', stickering: 'full', views, marks, legend,
   frames: [{ after: '', label: '', caption }],
 });
+const sqMarks = (sq, colour) => sq.map((c) => ({ piece: c.faces, colour }));
 const squares = [
   {
     anchor: 'outer-square', name: 'An outer square', orientation: 'A corner, two edges and a centre: a 2x2x1 block.',
     displayAlg: 'Corner + 2 edges + centre', noViewer: true,
-    filmstrip: squareFilm(
-      ['DFL', 'DF', 'DL', 'D'].map((piece) => ({ piece, colour: PINK })), ['D'],
-      'The white/green/red corner, the two white edges beside it and the white centre.',
+    filmstrip: squareFilm(['DFL', 'DF', 'FL', 'F'].map((piece) => ({ piece, colour: PINK })), ['cube'],
+      'The white/green/red corner, the white/green edge and green/red edge beside it, and the green centre.',
       [{ colour: PINK, text: 'one outer square (in its solved place)' }]),
   },
   {
     anchor: 'inner-square', name: 'An inner square', orientation: 'An edge and two centres, no corner.',
     displayAlg: 'Edge + 2 centres', noViewer: true,
-    filmstrip: squareFilm(
-      ['FR', 'F', 'R'].map((piece) => ({ piece, colour: BLUE })), ['cube'],
+    filmstrip: squareFilm(['FR', 'F', 'R'].map((piece) => ({ piece, colour: BLUE })), ['cube'],
       'The green/orange edge in the middle layer with the green and orange centres.',
       [{ colour: BLUE, text: 'one inner square (in its solved place)' }]),
   },
 ];
+if (pick1) {
+  const cols = [PINK, BLUE, PURPLE, '#16a34a'];
+  const ordered = [...pick1.set.filter((sq) => sq.length === 4 && sq.some((c) => c.n === 3)), ...pick1.set.filter((sq) => !sq.some((c) => c.n === 3))];
+  squares.push({
+    anchor: 'four-squares', name: 'The four squares in their solved places',
+    orientation: 'One of the 16 arrangements for white. Derived here from the rules.',
+    displayAlg: 'Three outer + one inner; the DFR corner and FR edge are left out', noViewer: true,
+    filmstrip: squareFilm(ordered.flatMap((sq, i) => sqMarks(sq, cols[i])), ['D', 'cube'],
+      'The four squares cover the first two layers except the white/green/orange corner and the green/orange edge, which are the free slot (front right). Only the front and right sides show in the cube view; the back and left squares are in the bottom view and on the hidden sides.',
+      ordered.map((sq, i) => ({ colour: cols[i], text: `${sq.map((c) => c.faces).join(', ')}${i === 3 ? ' (inner)' : ''}` }))),
+  });
+}
+
+// ---- 6. A corner twist (step 3: when all corners are in place but misoriented)
+const twistRow = [...cornerTwists].sort((a, b) => a.moves.split(' ').length - b.moves.split(' ').length)[0];
+let twistCard = null;
+if (twistRow) {
+  const startT = startOf(twistRow.moves);
+  const badT = unsolved(startT, 3);
+  const endT = applyAlg(startT, twistRow.moves);
+  check('corner twist example found', !!twistRow);
+  check('corner twist example: two corners twisted in place, then solved', badT.length === 2 && unsolved(endT, 3).length === 0 && unsolved(endT, 2).length === 0);
+  twistCard = {
+    anchor: 'step3-twist', name: 'A corner twist', orientation: 'Two corners in their own places but twisted; everything else solved.',
+    displayAlg: twistRow.notation, noViewer: true,
+    filmstrip: {
+      alg: twistRow.moves, stickering: 'full', views: ['U', 'D'],
+      marks: badT.map((x, i) => ({ piece: x.colours, colour: COLOURS[i] })),
+      legend: badT.map((x, i) => ({ colour: COLOURS[i], text: `${nice(x.colours)} corner (twisted)` })),
+      frames: [
+        { after: '', label: 'Start', caption: `The ${badT.map((x) => nice(x.colours)).join(' and ')} corners are twisted in place.` },
+        { after: twistRow.moves, label: `${twistRow.moves.split(' ').length} moves`, caption: 'The twist turns both corners the right way and puts everything else back. This is a pure corner twist, found and checked here; it is not necessarily the one Heise uses.' },
+      ],
+    },
+  };
+  log(`corner twist example: ${twistRow.notation}`);
+}
+
+// ---- 7. Edge orientation along the F/B axis
+// Track one edge's two stickers under U, D, R, L, F2, B2 (and under F, B): the placements it can reach.
+const S0 = solvedCube();
+const idx = new Map(S0.map((s, i) => [`${s.p.join()}|${s.n.join()}`, i]));
+const permOfMove = (t) => applyAlg(S0, t).map((s) => idx.get(`${s.p.join()}|${s.n.join()}`));
+const placements = (moves) => {
+  const perms = moves.map(permOfMove);
+  const edgeOf = (p) => S0.map((s, i) => [s, i]).filter(([s]) => s.p.join() === p.join());
+  const result = [];
+  for (const [p] of [[[0, 1, 1]], [[1, 1, 0]], [[1, 0, 1]], [[-1, -1, 0]]]) {
+    const [[, i0], [, i1]] = edgeOf(p);
+    const seen = new Set([`${i0},${i1}`]);
+    const queue = [[i0, i1]];
+    while (queue.length) {
+      const [a, b] = queue.pop();
+      for (const q of perms) {
+        const next = [q[a], q[b]];
+        const key = next.join();
+        if (!seen.has(key)) { seen.add(key); queue.push(next); }
+      }
+    }
+    result.push(seen.size);
+  }
+  return result;
+};
+const keep = ['U', "U'", 'U2', 'D', "D'", 'D2', 'R', "R'", 'R2', 'L', "L'", 'L2', 'F2', 'B2'];
+const keepSizes = placements(keep);
+const allSizes = placements([...keep, 'F', "F'", 'B', "B'"]);
+check('edge orientation: with U D R L F2 B2 an edge reaches only 12 of 24 placements', keepSizes.every((n) => n === 12), keepSizes.join());
+check('edge orientation: with F and B quarter turns it reaches all 24', allSizes.every((n) => n === 24), allSizes.join());
+log(`edge orientation: placements reached with U D R L F2 B2: ${keepSizes.join('/')}; with F, B too: ${allSizes.join('/')}`);
 
 // ---- output
 const out = {
   squares,
-  step3: [twoCard, edgeCard].filter(Boolean),
+  step3: [twoCard, edgeCard, twistCard].filter(Boolean),
   step4: step4Cards,
 };
 log(failures.length ? `FAILED (${failures.length}):\n  ${failures.join('\n  ')}` : 'ALL OK');
