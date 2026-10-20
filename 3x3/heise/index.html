@@ -21,11 +21,11 @@
     </p>
     <div class="source-note">
       <p>
-        Not from your own notes: built from the specification you pasted, which summarises
-        <a href="https://www.ryanheise.com/cube/heise_method.html">Ryan Heise's pages</a>. The text is
-        reworded and does not copy Heise. The corner and edge 3-cycles in the examples were checked on the
-        cube simulator. Parts the notes leave out (shown by Heise only as diagrams) are listed at the
-        end and are not guessed.
+        Not from your own notes: built from the specification you pasted and from answers read off
+        <a href="https://www.ryanheise.com/cube/heise_method.html">Ryan Heise's pages</a> by another agent.
+        The text is reworded and does not copy Heise. The examples were checked on the cube simulator.
+        Heise gives most move sequences only in an animated applet; those are listed at the end and are
+        not guessed. Anything marked "derived here" was worked out and checked, not read from Heise.
       </p>
     </div>
 
@@ -38,7 +38,7 @@
   </main>
 
   <script type="module">
-    import { heiseFacts, heisePipeline, heiseSteps, heiseGaps } from '../../data/heise.js?v=3';
+    import { heiseFacts, heisePipeline, heiseSteps, heiseGaps } from '../../data/heise.js?v=4';
     import { mountSteps } from '../../js/steps-page.js';
 
     const el = (tag, cls, text) => {
@@ -86,7 +86,7 @@
 
     mountSteps({
       steps: [...heiseSteps, gapsStep],
-      sources: { spec: 'From your spec' },
+      sources: { spec: 'Spec + Heise\'s pages' },
     });
   </script>
 </body>

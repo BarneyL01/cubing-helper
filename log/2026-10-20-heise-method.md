@@ -46,3 +46,15 @@ The owner asked whether the gaps could be solved by simulation. Some could, from
 Not derivable from the spec (Heise's own definitions, shown as pictures): the three edge types, the simple swap
 and criss/cross moves, the pair 3-cycle moves, and so a worked scramble-to-solution example. Any version of these
 written here would be a reconstruction, not Heise's; they stay on the "not on this page yet" list.
+
+## Update: answers from Heise's pages
+
+Another agent answered the open-question list from ryanheise.com (the pages state facts in text, but every move
+sequence for the simple swap, criss/cross, free column, pair 3-cycles, edge 3-cycles, corner twist and the worked
+examples is only in an animated applet). Added to the page, reworded: the orientation (white top, green front);
+the edge orientation rule and the group R, L, U, D, F2, B2 (the earlier "two opposite faces" claim was wrong and is
+corrected); the build order and choice counts for the squares (24, then 9, 3/6, 4/1); the three step 3 approaches
+with their difficulty; pair 3-cycle versions v1 to v3, the F2, down-under and R conjugations; the two edge 3-cycle
+varieties; the corner twist commutator X Y X' Y'; history. Our own two checks: 24 outer and 12 inner squares counted;
+the corner twist example has the shape Heise describes (X disturbs one piece of the U layer, Y = U).
+Still not on the page (applet only): the edge-type rule, the sequences above, a worked example.

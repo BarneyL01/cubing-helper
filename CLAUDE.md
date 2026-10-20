@@ -172,8 +172,9 @@ built ahead of being asked for. As of 2026-10-03:
   intuitive), and the page says so. Re-run the checks if anything in the data
   file changes.
 - **3x3 Heise Method** — Ryan Heise's intuitive method, from a spec the owner pasted on
-  2026-10-20 (the build environment cannot read ryanheise.com), **not from the user's own
-  notes** (the page says so). `data/heise.js`, `3x3/heise/index.html`, menu link "Heise" (Partial);
+  2026-10-20 plus answers another agent read off ryanheise.com (the build environment cannot read it),
+  **not from the user's own notes** (the page says so). Heise shows almost every move sequence only in an
+  animated applet, so none is on the page except our own checked examples. `data/heise.js`, `3x3/heise/index.html`, menu link "Heise" (Partial);
   same layout as the 8355 page (`js/steps-page.js`). Four steps (squares; match + orient edges;
   remaining edges + two corners; last three corners) plus a "what is not on this page yet" list.
   Examples are only the ones that could be checked: outer/inner square pictures, the four squares in
@@ -183,9 +184,10 @@ built ahead of being asked for. As of 2026-10-03:
   shared colour minus one corner/edge pair, so 5 edges and 5 corners are unsolved at the start of step 3)
   and edge orientation along the F/B axis. They are made and checked by
   `log/2026-10-20-heise-examples.mjs` (`--write` rewrites the GENERATED block). **Not built, because
-  the spec leaves them to pictures:** edge types (correct/incorrect/neutral), the simple swap and
-  criss/cross moves, the pair 3-cycle moves and a worked scramble-to-solution example. Do not invent
-  them; ask for the details.
+  Heise gives them only as applet pictures:** the rule for correct/incorrect/neutral edges, the simple swap,
+  criss/cross and free-column moves, the pair 3-cycles (v1 to v3) and conjugations, the two edge 3-cycle
+  varieties, and a worked scramble-to-solution example. Do not invent them; ask for the details. Corrected
+  2026-10-20: the orientation-preserving group is R, L, U, D and half turns of F and B (not "two opposite faces").
 - **3x3 Beginner's Method** — all 7 steps, one data file
   (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
   source, goal, numbered "how", and cases). `js/steps-page.js` builds a

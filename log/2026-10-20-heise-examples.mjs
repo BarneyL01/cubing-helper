@@ -224,6 +224,7 @@ for (let i = 0; i < outerSq.length; i++) for (let j = i + 1; j < outerSq.length;
     }
   }
 }
+check('squares: 24 possible outer squares and 12 inner squares', outerSq.length === 24 && innerSq.length === 12);
 check('squares: 96 arrangements meet the spec rules', arrangements.length === 96, `${arrangements.length}`);
 let allF2LMinusPair = true;
 for (const g of arrangements) {
@@ -300,6 +301,21 @@ if (twistRow) {
     },
   };
   log(`corner twist example: ${twistRow.notation}`);
+}
+
+// ---- 6b. Heise's description of a corner twist: X Y X' Y', where X twists corner A in place and may
+// disturb everything except the rest of A's layer, and Y turns only that layer. Checked on the twist
+// example's commutator [(R' D' R D)x2, U]: X leaves the rest of the U layer alone.
+{
+  const X = "R' D' R D R' D' R D";
+  const afterX = applyAlg(solvedCube(), X);
+  const topLayer = pieces(afterX).filter((x) => x.pos[1] === 1 && !x.home);
+  check('corner twist structure: X disturbs only one piece of the U layer', topLayer.length === 1 && topLayer[0].kind === 3, topLayer.map((x) => `${x.kind}:${x.colours}`).join());
+  const centreHome = afterX.filter((t) => t.p.filter((v) => v !== 0).length === 1).every((t) => faceOf(t.n) === t.colour);
+  check('corner twist structure: X keeps the centres', centreHome);
+  const y = applyAlg(solvedCube(), 'U').filter((t) => t.p[1] !== 1);
+  check('corner twist structure: Y = U moves only the U layer', y.every((t) => faceOf(t.n) === t.colour));
+  log(`corner twist structure: X disturbs ${topLayer.length} piece(s) of the U layer`);
 }
 
 // ---- 7. Edge orientation along the F/B axis
