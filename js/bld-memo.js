@@ -135,7 +135,7 @@ export function bldPlan(scramble) {
 // is in its own place but twisted (or flipped) is left out of the letters and
 // reported in `twisted`/`flipped` instead; and the break letter can be chosen.
 
-const CORNER_BUFFER = 'A'; // UBL, the Old Pochmann corner buffer
+const CORNER_BUFFER = 'V'; // DFR, the Old Pochmann swap's partner corner
 const EDGE_BUFFER = 'C';
 
 const sameVec = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];

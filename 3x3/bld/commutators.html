@@ -25,7 +25,7 @@
       <a href="edge-cycles.html">Edge cycles</a>
     </nav>
 
-    <h2 class="section-heading" style="margin-top:1.5rem">How a commutator works</h2>
+    <h2 class="section-heading" id="how" data-short="How it works" style="margin-top:1.5rem">How a commutator works</h2>
     <div class="source-note">
       <p>
         From the notes you pasted. They started part-way through, so the first
@@ -37,16 +37,16 @@
     </div>
     <div id="comm-intro"></div>
 
-    <h2 class="section-heading" id="variants"></h2>
+    <h2 class="section-heading" id="variants" data-short="Interchange"></h2>
     <p class="subtitle" id="variants-lead"></p>
     <div class="table-wrap"><table class="bld-table" id="variants-table"></table></div>
     <p id="variants-after"></p>
     <ol class="film" id="variants-pictures"></ol>
 
-    <h2 class="section-heading" id="build"></h2>
+    <h2 class="section-heading" id="build" data-short="Building one"></h2>
     <ol class="step-how" id="build-steps"></ol>
 
-    <h2 class="section-heading" id="exercises"></h2>
+    <h2 class="section-heading" id="exercises" data-short="Exercises"></h2>
     <p class="subtitle" id="exercises-lead"></p>
     <div class="view-toggle" id="view-toggle"></div>
     <div id="exercise-cards" class="case-grid"></div>
@@ -54,7 +54,7 @@
     <ul id="exercise-notes" class="faster-tips"></ul>
     <p class="step-note" id="exercise-correction"></p>
 
-    <h2 class="section-heading" id="practice"></h2>
+    <h2 class="section-heading" id="practice" data-short="More practice"></h2>
     <ul id="practice-items" class="faster-tips"></ul>
     <p class="step-note" id="practice-blind"></p>
   </main>
@@ -64,6 +64,7 @@
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
+    import { mountJumpBar } from '../../js/page-jump.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -150,6 +151,7 @@
     practice.items.forEach((t) => $('practice-items').appendChild(el('li', null, t)));
     $('practice-blind').textContent = practice.blind.text;
     $('practice-blind').append(' ', link(practice.blind.link));
+    mountJumpBar();
   </script>
 </body>
 </html>

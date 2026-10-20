@@ -40,7 +40,7 @@
     </div>
 
     <!-- 1 -->
-    <h2 class="section-heading" id="from-scramble">1. From a scramble to cycles</h2>
+    <h2 class="section-heading" id="from-scramble" data-short="Scramble to cycles">1. From a scramble to cycles</h2>
     <ol class="step-how">
       <li><strong>Find the buffer's letters.</strong> UF is the buffer. Its stickers are <strong>C</strong> (U face) and <strong>I</strong> (F face).</li>
       <li><strong>Follow the buffer.</strong> The sticker in the buffer's C spot belongs to an edge. That edge's letter is the first target; the edge at that letter's spot gives the next. Keep going until the chain reaches an edge letter on the buffer's edge again.</li>
@@ -66,7 +66,7 @@
     <div id="ex1-film"></div>
 
     <!-- 2 -->
-    <h2 class="section-heading" id="closes-early">2. When the cycle closes early</h2>
+    <h2 class="section-heading" id="closes-early" data-short="Early close">2. When the cycle closes early</h2>
     <p>
       If the chain comes back to the buffer before every edge is solved, start a new chain at an
       unsolved edge. The first letter of that edge (the <strong>break letter</strong>, underlined)
@@ -92,7 +92,7 @@
     <div id="ex2-film"></div>
 
     <!-- 3 -->
-    <h2 class="section-heading" id="flipped">3. Flipped edges</h2>
+    <h2 class="section-heading" id="flipped" data-short="Flips">3. Flipped edges</h2>
     <p>
       An edge that is in its own place but flipped is left out of the letters. It is fixed at the end
       with a flip row. The flip algorithm <code>M' U M' U M' U2 M U M U M U2</code> flips UF and UB
@@ -105,7 +105,7 @@
     <div class="table-wrap"><table class="bld-table" id="flip-table"></table></div>
 
     <!-- 4 -->
-    <h2 class="section-heading" id="odd">4. An odd number of letters</h2>
+    <h2 class="section-heading" id="odd" data-short="Odd count">4. An odd number of letters</h2>
     <p>
       The number of edge letters is odd exactly when the number of corner letters is odd.
     </p>
@@ -119,7 +119,7 @@
     </p>
 
     <!-- 5 -->
-    <h2 class="section-heading" id="setup-moves">5. Choosing a setup move</h2>
+    <h2 class="section-heading" id="setup-moves" data-short="Setup moves">5. Choosing a setup move</h2>
     <p>
       Choose a setup move in the same way as for corners (the Corner cycles tab, section 6). Edges have
       one addition: the interchange can be a slice (M, E or S) as well as a face. The commutator
@@ -130,7 +130,7 @@
     <ul class="faster-tips" id="setup-examples"></ul>
 
     <!-- 6 -->
-    <h2 class="section-heading" id="lookup">6. Look up a pair</h2>
+    <h2 class="section-heading" id="lookup" data-short="Lookup">6. Look up a pair</h2>
     <p class="subtitle">Pick the first and second letter. C and I (the buffer) are not offered, and the second letter is never on the same edge as the first.</p>
     <div class="lookup-row">
       <label>First letter <select id="pair-first"></select></label>
@@ -140,7 +140,7 @@
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
 
     <!-- 7 -->
-    <h2 class="section-heading" id="exercises">7. Exercises: set up, then solve</h2>
+    <h2 class="section-heading" id="exercises" data-short="Exercises">7. Exercises: set up, then solve</h2>
     <p class="subtitle">
       Start from a solved cube. Apply the setup scramble, look at the edges, and try the solve yourself
       before opening the solution. Pictures show the edges only; corners are greyed. The exercises are
@@ -157,6 +157,7 @@
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { mountJumpBar } from '../../js/page-jump.js';
     import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
 
     const $ = (id) => document.getElementById(id);
@@ -373,6 +374,7 @@
       card.appendChild(solution);
       cards.appendChild(card);
     });
+    mountJumpBar();
   </script>
 </body>
 </html>

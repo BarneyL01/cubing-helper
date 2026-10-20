@@ -44,7 +44,7 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
 - `3x3/bld/corner-cycles.html` — "Corner cycles" tab, built 2026-10-16
-  (choosing which corners to cycle, buffer UBL; setup moves; lookup of all
+  (choosing which corners to cycle, buffer DFR traced from V; setup moves; lookup of all
   378 letter pairs; 8 fixed exercises). Spec: `docs/bld-corner-cycles-plan.md`;
   generator and checks: `log/2026-10-16-bld-cycles-generate.mjs`
 - `3x3/bld/edge-cycles.html` — "Edge cycles" tab, built 2026-10-16 except the

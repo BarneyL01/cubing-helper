@@ -32,23 +32,24 @@
     <div class="source-note">
       <p>
         Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>UBL</strong> (letters A, E, R), the same corner buffer the Reference and Practice
-        tabs use for Old Pochmann. Every commutator, setup, twist and exercise on this page is generated
+        <strong>DFR</strong> (letters V, K, P), traced from V. This is the other corner Old Pochmann
+        uses: on the Reference and Practice tabs UBL is the buffer and DFR is the corner it swaps with.
+        Every commutator, setup, twist and exercise on this page is generated
         and checked by <code>log/2026-10-16-bld-cycles-generate.mjs</code>.
       </p>
     </div>
 
     <!-- 1 -->
-    <h2 class="section-heading" id="from-scramble">1. From a scramble to cycles</h2>
+    <h2 class="section-heading" id="from-scramble" data-short="Scramble to cycles">1. From a scramble to cycles</h2>
     <ol class="step-how">
-      <li><strong>Find the buffer's letters.</strong> UBL is the buffer, as on the Reference tab. Its stickers are <strong>A</strong> (U face), <strong>E</strong> (L face) and <strong>R</strong> (B face). The Speffz letters below show where each sticker is.</li>
-      <li><strong>Follow the buffer.</strong> The sticker in the buffer's A spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
+      <li><strong>Find the buffer's letters.</strong> DFR is the buffer. Its stickers are <strong>V</strong> (D face), <strong>K</strong> (F face) and <strong>P</strong> (R face). Trace from V. The Speffz letters below show where each sticker is.</li>
+      <li><strong>Follow the buffer.</strong> The sticker in the buffer's V spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
       <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Solving the pair is the commutator for its two letters in the table (section 8).</li>
       <li><strong>An odd number of letters</strong> leaves one letter over: section 4.</li>
     </ol>
     <figure class="practice-net bld-example-net">
       <div id="letters-net"></div>
-      <figcaption>Speffz corner letters. Buffer stickers A, E, R are outlined.</figcaption>
+      <figcaption>Speffz corner letters. Buffer stickers V, K, P are outlined.</figcaption>
     </figure>
 
     <h3 class="section-heading" id="worked-1">Worked example</h3>
@@ -65,7 +66,7 @@
     <div id="ex1-film"></div>
 
     <!-- 2 -->
-    <h2 class="section-heading" id="closes-early">2. When the cycle closes early</h2>
+    <h2 class="section-heading" id="closes-early" data-short="Early close">2. When the cycle closes early</h2>
     <p>
       The chain above can come back to the buffer before every corner is solved. Then start a new
       chain at an unsolved corner. The first letter of that corner (the <strong>break letter</strong>,
@@ -92,7 +93,7 @@
     <div id="ex2-film"></div>
 
     <!-- 3 -->
-    <h2 class="section-heading" id="twisted">3. Twisted corners</h2>
+    <h2 class="section-heading" id="twisted" data-short="Twists">3. Twisted corners</h2>
     <p>
       A corner that is in its own place but twisted is left out of the letters. It is fixed at the
       end with a twist row. Directions are seen from outside the corner: <strong>clockwise</strong>
@@ -106,30 +107,30 @@
     <div class="table-wrap"><table class="bld-table" id="twist-table"></table></div>
 
     <!-- 4 -->
-    <h2 class="section-heading" id="odd">4. An odd number of letters</h2>
+    <h2 class="section-heading" id="odd" data-short="Odd count">4. An odd number of letters</h2>
     <p>
       The corner swap from the Reference tab, <code>R U' R' U' R U R' F' R U R' U' R' F R</code>,
-      swaps the buffer's corner UBL with DFR and swaps the edges UL and UB. With an odd number of
-      corner letters, the last letter Z is done like this:
+      swaps UBL with DFR (the buffer) and also swaps two edges. With an odd number of corner
+      letters, the last letter Z is done like this:
     </p>
     <ol class="step-how">
-      <li>Turn the cube with a <strong>D, F or R</strong> setup that brings Z's sticker to <strong>P</strong> (the F-side sticker of DFR). The setup leaves UBL, UL and UB where they are.</li>
+      <li>Turn the cube with a <strong>U, L or B</strong> setup that brings Z's sticker to <strong>E</strong> (the L sticker of UBL). These moves leave the buffer DFR where it is.</li>
       <li>Do the swap algorithm.</li>
-      <li>Undo the setup. Z's sticker and the buffer sticker A have swapped places, so the cube has the last corner home.</li>
+      <li>Undo the setup. Z's sticker and the buffer sticker V have swapped places, so the cube has the last corner home.</li>
     </ol>
-    <p class="step-note">The edges UL and UB end swapped by this algorithm. The Edge cycles tab explains what is and is not covered on the edge side.</p>
+    <p class="step-note">Two edges end swapped by this algorithm: UL and UB with no setup, other edges when a setup is used. The Edge cycles tab explains what is and is not covered on the edge side.</p>
     <div class="table-wrap"><table class="bld-table" id="parity-table"></table></div>
 
     <!-- 5 -->
-    <h2 class="section-heading" id="easiest">5. Easiest cycles to learn</h2>
+    <h2 class="section-heading" id="easiest" data-short="Easiest">5. Easiest cycles to learn</h2>
     <p>
       Every direct pair is an 8-move commutator: one single turn (the <strong>interchange</strong>)
       and a 3-move insertion. The interchange layer holds two of the three corners, so group the
       pairs by the layer that is turned and learn one group at a time.
     </p>
     <ol class="step-how">
-      <li><strong>U layer first.</strong> The buffer UBL is in the U layer, so it is always one of the two corners the U turn swaps. You only have to find where the other two corners are.</li>
-      <li><strong>D layer next.</strong> Two target corners are in the D layer and the D turn swaps them. The buffer is the corner the insertion brings down.</li>
+      <li><strong>D layer first.</strong> The buffer DFR is in the D layer, so it is always one of the two corners the D turn swaps. You only have to find where the other two corners are.</li>
+      <li><strong>U layer next.</strong> Two target corners are in the U layer and the U turn swaps them. The buffer is the corner the insertion brings up.</li>
       <li><strong>Side layers last</strong> (R, L, F, B turns). These have the most shapes to remember.</li>
       <li><strong>Then pairs with one setup move</strong> (section 7), once the direct ones feel familiar.</li>
     </ol>
@@ -137,7 +138,7 @@
     <p class="step-note">Every pair is in the lookup (section 8). This list only suggests an order.</p>
 
     <!-- 5b -->
-    <h2 class="section-heading" id="setup-moves">6. Choosing a setup move</h2>
+    <h2 class="section-heading" id="setup-moves" data-short="Setup moves">6. Choosing a setup move</h2>
     <p>
       Some pairs have no direct commutator. The Commutators tab's five steps build a commutator
       from one layer that holds two of the three stickers. When no such layer exists, use a setup
@@ -153,7 +154,7 @@
     <ul class="faster-tips" id="setup-examples"></ul>
 
     <!-- 7 -->
-    <h2 class="section-heading" id="how-setup">7. How to use a setup move</h2>
+    <h2 class="section-heading" id="how-setup" data-short="Using setups">7. How to use a setup move</h2>
     <ol class="step-how">
       <li><strong>Look up the pair.</strong> If its row has a setup, the table gives it.</li>
       <li><strong>Do the setup.</strong> It carries the two target stickers to spots where a direct commutator exists.</li>
@@ -168,8 +169,8 @@
     <p class="step-note" id="setup-buffer-note"></p>
 
     <!-- 6 -->
-    <h2 class="section-heading" id="lookup">8. Look up a pair</h2>
-    <p class="subtitle">Pick the first and second letter. A, E and R (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
+    <h2 class="section-heading" id="lookup" data-short="Lookup">8. Look up a pair</h2>
+    <p class="subtitle">Pick the first and second letter. V, K and P (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
     <div class="lookup-row">
       <label>First letter <select id="pair-first"></select></label>
       <label>Second letter <select id="pair-second"></select></label>
@@ -178,7 +179,7 @@
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
 
     <!-- 7 -->
-    <h2 class="section-heading" id="exercises">9. Exercises: set up, then solve</h2>
+    <h2 class="section-heading" id="exercises" data-short="Exercises">9. Exercises: set up, then solve</h2>
     <p class="subtitle">
       Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve
       yourself before opening the solution. Pictures show the corners only; edges are greyed.
@@ -194,6 +195,7 @@
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
     import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
+    import { mountJumpBar } from '../../js/page-jump.js';
     import { expandBrackets, invertAlg } from '../../js/algs.js';
 
     const $ = (id) => document.getElementById(id);
@@ -208,7 +210,7 @@
       c.append(child);
       return c;
     };
-    const BUFFER = ['A', 'E', 'R'];
+    const BUFFER = ['V', 'K', 'P'];
     const PIECE = Object.fromEntries(bldCorners.map((r) => [r.letter, r.piece]));
     const sameCorner = (a, b) => [...PIECE[a]].sort().join() === [...PIECE[b]].sort().join();
     const PAIR_COLOURS = ['#e11d9b', '#0ea5e9', '#7c3aed'];
@@ -286,7 +288,7 @@
     {
       const table = $('twist-table');
       const head = table.createTHead().insertRow();
-      ['Corner twisted', 'Buffer UBL turns', 'Corner turns', 'Algorithm', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Corner twisted', 'Buffer DFR turns', 'Corner turns', 'Algorithm', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
       for (const r of [...cornerTwists].sort((a, b) => a.corner.localeCompare(b.corner) || a.buffer.localeCompare(b.buffer))) {
         const tr = body.insertRow();
@@ -304,7 +306,7 @@
     {
       const table = $('parity-table');
       const head = table.createTHead().insertRow();
-      ['Last letter', 'Setup (D, F, R)', 'Full algorithm'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Last letter', 'Setup (U, L, B)', 'Full algorithm'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
       for (const r of cornerParity) {
         const tr = body.insertRow();
@@ -353,8 +355,8 @@
         return a.split(' ').length === 1 ? a : b;
       };
       const tiers = [
-        ['1', 'U layer (U, U\', U2)', (t) => t[0] === 'U'],
-        ['2', 'D layer (D, D\', D2)', (t) => t[0] === 'D'],
+        ['1', 'D layer (D, D\', D2)', (t) => t[0] === 'D'],
+        ['2', 'U layer (U, U\', U2)', (t) => t[0] === 'U'],
         ['3', 'Side layers (R, L, F, B)', (t) => 'RLFB'.includes(t[0])],
       ];
       const table = $('easy-table');
@@ -393,11 +395,11 @@
         p.appendChild(code(setupSpan(undo)));
         p.append('.');
         host.replaceChildren(p);
-        const marks = [[r.first, PAIR_COLOURS[0]], [r.second, PAIR_COLOURS[1]], ['A', PAIR_COLOURS[2]]].map(([l, colour]) => ({ piece: PIECE[l], colour }));
+        const marks = [[r.first, PAIR_COLOURS[0]], [r.second, PAIR_COLOURS[1]], ['V', PAIR_COLOURS[2]]].map(([l, colour]) => ({ piece: PIECE[l], colour }));
         const legend = [
           { colour: PAIR_COLOURS[0], text: `${r.first}'s corner` },
           { colour: PAIR_COLOURS[1], text: `${r.second}'s corner` },
-          { colour: PAIR_COLOURS[2], text: 'the buffer UBL' },
+          { colour: PAIR_COLOURS[2], text: 'the buffer DFR' },
         ];
         host.appendChild(buildFilmstrip({
           alg, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, marks, legend,
@@ -483,7 +485,7 @@
         } else if (s.kind === 'corner parity') {
           li.append(`Parity, last letter ${s.letter}: `);
           li.appendChild(code(notationEl(s.notation, s.setup)));
-          li.append(' (the UL and UB edges end swapped)');
+          li.append(' (two edges end swapped)');
         } else {
           li.append(`Twist ${s.corner} (buffer ${s.buffer}, corner ${s.twisted}): `);
           li.appendChild(code(notationEl(s.notation, s.setup)));
@@ -494,6 +496,7 @@
       card.appendChild(solution);
       cards.appendChild(card);
     }
+    mountJumpBar();
   </script>
 </body>
 </html>

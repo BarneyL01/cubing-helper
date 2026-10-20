@@ -216,7 +216,7 @@ built ahead of being asked for. As of 2026-10-03:
   (`(R' D' R D)×2` twists four corners, not one) and is corrected on the page.
   No mnemonics for most of it: the cipher has no D letter.
   **Two more tabs are built (2026-10-16):** "Corner cycles"
-  (`3x3/bld/corner-cycles.html`, buffer UBL like Old Pochmann, letters A/E/R: 378 pairs, twists, odd count,
+  (`3x3/bld/corner-cycles.html`, buffer DFR (the corner Old Pochmann's swap exchanges with UBL), letters V/K/P, traced from V: 378 pairs, twists, odd count,
   setup moves, lookup, 8 exercises) and "Edge cycles" (`3x3/bld/edge-cycles.html`,
   buffer UF: 440 pairs, flips, 8 exercises). Their tables are generated and
   checked by `log/2026-10-16-bld-cycles-generate.mjs` (`--write` rewrites the
@@ -224,7 +224,10 @@ built ahead of being asked for. As of 2026-10-03:
   the edge side of an odd number of letters is not on the page (the first
   method tried solved 1 of 493 random scrambles); the owner chose to teach the
   corner side only. Corner parity uses the Old Pochmann corner swap
-  (`BLD_CORNER_SWAP`: UBL↔DFR and UL↔UB) with D/F/R setups.
+  (`BLD_CORNER_SWAP`: UBL↔DFR and two edges) with U/L/B setups that bring the last letter to E.
+  Setup moves are shown in orange (`js/move-format.js`). The three long Blindfolded pages (Commutators,
+  Corner cycles, Edge cycles) have a sticky "Jump to" bar built by `js/page-jump.js` from their
+  `h2.section-heading[id]` headings (`data-short` = pill label).
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).

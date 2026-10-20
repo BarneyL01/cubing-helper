@@ -2024,3 +2024,16 @@ html.menu-open {
 :root[data-theme="dark"] .mv-setup {
   color: #fbbf24;
 }
+
+/* "Jump to" bar on the long Blindfolded pages (js/page-jump.js); it reuses the step bar. */
+.jump-bar {
+  margin-top: 0.5rem;
+}
+
+.step-pill.no-num {
+  padding-left: 0.7rem;
+}
+
+.jump-target {
+  scroll-margin-top: var(--jump-offset, 4rem);
+}

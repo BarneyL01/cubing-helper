@@ -352,3 +352,10 @@ structure above are unchanged. Parity uses the Old Pochmann corner swap
 (`R U' R' U' R U R' F' R U R' U' R' F R`): it swaps UBL and DFR (A ↔ P) and the UL
 and UB edges; setups are D, F, R moves (at most 2 moves). See
 `log/2026-10-20-bld-corner-ubl.md`.
+
+## Changed 2026-10-20 (later): buffer DFR
+
+The owner tried the three-base idea and chose the **DFR** buffer (sticker V, with K and P)
+with L and B setup moves allowed, to learn it. The table has the same shape (198 / 138 / 36 / 6).
+Parity: the Old Pochmann swap with U, L, B setups bringing the last letter to E.
+See `log/2026-10-20-bld-corner-dfr.md`.
