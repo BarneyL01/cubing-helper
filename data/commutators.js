@@ -7,13 +7,14 @@
 // (log/2026-10-04-commutators.md): all four table rows, all seven exercises
 // (each solution solves its setup) and every cycle named. One explanation was
 // wrong in the paste and is corrected here: (R' D' R D)×2 twists FOUR corners
-// (UFR, DFR, DBL, DBR), not one; exercise 7 works because only one of them
-// (UFR) is in the U layer, which is the interchange there.
+// (C, V, X, W), not one; exercise 7 works because only one of them
+// (C) is in the U layer, which is the interchange there.
 
 export const intro = {
   paragraphs: [
     "A commutator is written [A, B] and means: do A, do B, undo A, undo B — A B A' B'. If A and B stay mostly out of each other's way, nearly everything cancels and what is left is a 3-cycle of pieces. A is called the insertion and B the interchange.",
     "Example: [R U R', D] — A is R U R' (the insertion), B is D (the interchange). Written out it is R U R' D R U' R' D'.",
+    "Pieces are named by Speffz letters here: a corner by the letter of its U- or D-face sticker (C is the UFR corner, V is DFR, U is DFL), an edge the same way (C is the UF edge, U is DF, X is DL, A is UB). Corner and edge letters repeat, so each line says which it means.",
   ],
   // The same three corners followed through that example.
   filmstrip: {
@@ -27,39 +28,39 @@ export const intro = {
       { piece: 'DFL', colour: '#7c3aed' },
     ],
     legend: [
-      { colour: 'pink', text: 'yellow/green/orange corner (starts at UFR)' },
-      { colour: 'blue', text: 'white/green/orange corner (starts at DFR)' },
-      { colour: '#7c3aed', text: 'white/green/red corner (starts at DFL)' },
+      { colour: 'pink', text: 'yellow/green/orange corner (starts at C)' },
+      { colour: 'blue', text: 'white/green/orange corner (starts at V)' },
+      { colour: '#7c3aed', text: 'white/green/red corner (starts at U)' },
     ],
     frames: [
-      { after: '', label: 'Solved', caption: 'Three corners to follow: pink at UFR, blue at DFR, purple at DFL.' },
+      { after: '', label: 'Solved', caption: 'Three corners to follow: pink at C, blue at V, purple at U.' },
       {
         after: "R U R'",
         label: "A = R U R'",
         caption:
-          'The insertion. The pink corner goes down into the DFR slot and kicks the blue corner up to UFL. In the bottom layer it touches only that one slot.',
+          'The insertion. The pink corner goes down into the V slot and kicks the blue corner up to D. In the bottom layer it touches only that one slot.',
       },
       {
         after: 'D',
         label: 'B = D',
         caption:
-          'The interchange. Turning the bottom layer carries the pink corner away from DFR to DBR and brings the purple corner into DFR.',
+          'The interchange. Turning the bottom layer carries the pink corner away from V to W and brings the purple corner into V.',
       },
       {
         after: "R U' R'",
         label: "A' = R U' R'",
         caption:
-          "The insertion undone — but now the purple corner is in the slot. The blue corner comes back down to DFR and the purple corner is lifted up to UFR.",
+          "The insertion undone — but now the purple corner is in the slot. The blue corner comes back down to V and the purple corner is lifted up to C.",
       },
       {
         after: "D'",
         label: "B' = D'",
         caption:
-          'The turn undone: the pink corner comes round to DFR and the blue corner to DFL. Net: pink UFR → DFR, blue DFR → DFL, purple DFL → UFR.',
+          'The turn undone: the pink corner comes round to V and the blue corner to U. Net: pink C → V, blue V → U, purple U → C.',
       },
     ],
   },
-  netEffect: 'The net effect is a 3-cycle of corners: UFR → DFR → DFL → UFR (the piece in each position moves to the next one).',
+  netEffect: 'The net effect is a 3-cycle of corners: C → V → U → C (the piece in each position moves to the next one).',
   why: "Why it works: the insertion touches only one slot in the D layer, so the D turn can swap that slot's contents without disturbing anything else the insertion moved. When you undo both, the only change left is the three pieces.",
 };
 
@@ -67,10 +68,10 @@ export const variantsTable = {
   heading: 'Changing the interchange changes the cycle',
   lead: "Keep the insertion R U R' and change only the D turn:",
   rows: [
-    ["[R U R', D]", "R U R' D R U' R' D'", 'UFR → DFR → DFL'],
-    ["[R U R', D']", "R U R' D' R U' R' D", 'UFR → DFR → DBR'],
-    ["[R U R', D2]", "R U R' D2 R U' R' D2", 'UFR → DFR → DBL'],
-    ["[D, R U R']", "D R U R' D' R U' R'", 'Reverse of row 1', 'On a solved cube: UFR → DFL → DFR — row 1 backwards.'],
+    ["[R U R', D]", "R U R' D R U' R' D'", 'C → V → U'],
+    ["[R U R', D']", "R U R' D' R U' R' D", 'C → V → W'],
+    ["[R U R', D2]", "R U R' D2 R U' R' D2", 'C → V → X'],
+    ["[D, R U R']", "D R U R' D' R U' R'", 'Reverse of row 1', 'On a solved cube: C → U → V — row 1 backwards.'],
   ],
   after:
     'Swapping the order of A and B reverses the cycle direction. That is the whole trick for fixing direction.',
@@ -131,10 +132,10 @@ export const exercises = {
     heading: 'Notes on each',
     items: [
       '1 to 3 teach you to pick the interchange turn (D, D\', D2) for the target position.',
-      "4 is [U: [R U R', D]]. It cycles UBR → DFR → DFL. The U setup moves the UBR piece into UFR first.",
-      { text: '5 cycles UF → DF → UB. This works with U2 because U2 swaps the only two U-layer slots that M\' disturbs.', link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
-      { text: "6 is [D: [M', U2]]. It cycles UF → DL → UB. The D setup brings DL into DF.", link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
-      "7 uses (R' D' R D)×2 as the insertion. That sequence twists four corners (UFR, DFR, DBL, DBR), but only one of them, UFR, is in the U layer — and U is the interchange here. So the commutator leaves two U-layer corners twisted in opposite directions. This handles twisted corners in blindfold.",
+      "4 is [U: [R U R', D]]. It cycles B → V → U. The U setup moves the B piece into C first.",
+      { text: '5 cycles C → U → A. This works with U2 because U2 swaps the only two U-layer slots that M\' disturbs.', link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
+      { text: "6 is [D: [M', U2]]. It cycles C → X → A. The D setup brings X into U.", link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
+      "7 uses (R' D' R D)×2 as the insertion. That sequence twists four corners (C, V, X, W), but only one of them, C, is in the U layer — and U is the interchange here. So the commutator leaves two U-layer corners twisted in opposite directions. This handles twisted corners in blindfold.",
     ],
     correction:
       "Corrected from the notes you pasted: they said (R' D' R D)×2 twists one corner in place. In the simulator it twists four; the result (two U-layer corners twisted in opposite directions) is as described.",
@@ -149,7 +150,7 @@ export const practice = {
     "You can watch any sequence before trying it on your cube: the Pictures / 3D toggle on this page plays each exercise's solution, and an online viewer such as alg.cubing.net will play anything you type.",
   ],
   blind: {
-    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — UBL for corners, as on the Reference tab — that you build with the five steps above.",
+    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — A for corners (the UBL corner, as on the Reference tab) — that you build with the five steps above.",
     link: { text: 'Corner cycles and Edge cycles tabs: which pairs to cycle', href: 'corner-cycles.html' },
   },
 };
