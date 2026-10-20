@@ -162,6 +162,10 @@ function pairTable(comms, levels, type) {
           best.set(key, {
             setup: S.tokens.join(' '),
             setupMoves: S.tokens.length,
+            // The bare commutator and the pair it solves: what the setup turns this pair into
+            // (empty when the setup moves the buffer, so the commutator does not use it).
+            comm: body,
+            inner: S.p[BUF] !== BUF || c.p[BUF] === BUF ? '' : LET[c.p[BUF]] + LET[c.p[c.p[BUF]]],
             notation,
             moves,
             length: expandBrackets(notation).split(' ').length,
@@ -178,7 +182,10 @@ const rowsFrom = (found, letters) => {
   const rows = [];
   for (const X of letters) for (const Y of letters) {
     const rec = X !== Y && found.get(X + Y);
-    if (rec) rows.push({ first: X, second: Y, setup: rec.setup, setupMoves: rec.setupMoves, notation: rec.notation, moves: rec.moves, length: rec.length });
+    if (!rec) continue;
+    const row = { first: X, second: Y, setup: rec.setup, setupMoves: rec.setupMoves, notation: rec.notation, moves: rec.moves, length: rec.length };
+    if (rec.setupMoves) Object.assign(row, rec.inner ? { comm: rec.comm, inner: rec.inner } : { comm: rec.comm });
+    rows.push(row);
   }
   return rows;
 };
@@ -501,7 +508,16 @@ for (const [rows, type, SP] of [
     check(`pair ${r.first}${r.second}`, ok, r.notation);
   }
 }
-log('check 1: pairs');
+// 2. Setup rows: the bare commutator solves the inner pair (buffer -> inner[0] -> inner[1]),
+// and the setup carries the pair's two stickers onto the inner pair's two stickers.
+for (const r of cornerRows.filter((x) => x.inner)) {
+  const c = seqPerm(expandBrackets(r.comm).split(' '));
+  const S = seqPerm(r.setup.split(' '));
+  const [i0, i1] = [CSPOT[r.inner[0]], CSPOT[r.inner[1]]];
+  const ok = c[CSPOT.A] === i0 && c[i0] === i1 && S[CSPOT[r.first]] === i0 && S[CSPOT[r.second]] === i1;
+  check(`setup row ${r.first}${r.second} inner pair`, ok, `${r.setup} ${r.comm} ${r.inner}`);
+}
+log('check 1: pairs; check 2: setup rows');
 
 // 3. Twist rows: UBL and K twisted in the stated directions; every other
 // corner untwisted; positions and edges unchanged.

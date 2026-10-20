@@ -26,3 +26,10 @@ The owner also chose: teach the corner side of an odd count only.
   solving every corner, and the even full solves (507 of 507). Edge tables unchanged
   (440 pairs, 318 direct, 122 with one setup move; 11 flips).
 - Headless Chromium at 390 px and 1280 px: no console errors, no page-level sideways scroll.
+
+## Added: "Easiest cycles to learn" and "How to use a setup move" (corner tab)
+
+- New sections 5 (easiest cycles) and 7 (how to use a setup move); the old 5, 6, 7 are now 6, 8, 9. The edge page's reference to the setup section is now section 6.
+- Easiest cycles: the 198 direct pairs grouped by the layer the interchange turns: U layer 44, D layer 22, side layers 132 (counted from the table on the page). Order: U, D, sides, then one-setup pairs.
+- Setup rows now carry `comm` (the bare commutator) and, when the setup leaves the buffer sticker alone, `inner` (the pair the bare commutator solves). 168 of the 180 setup rows have one; the other 12 use a setup that moves the buffer's sticker and the page says so. New generator check 2 verifies each inner pair (the commutator solves it and the setup carries both stickers onto it). All checks pass.
+- The page shows one-setup and two-setup examples from the table as a filmstrip: start, setup, commutator, undo.

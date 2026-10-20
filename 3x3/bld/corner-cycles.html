@@ -43,7 +43,7 @@
     <ol class="step-how">
       <li><strong>Find the buffer's letters.</strong> UBL is the buffer, as on the Reference tab. Its stickers are <strong>A</strong> (U face), <strong>E</strong> (L face) and <strong>R</strong> (B face). The Speffz letters below show where each sticker is.</li>
       <li><strong>Follow the buffer.</strong> The sticker in the buffer's A spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
-      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Solving the pair is the commutator for its two letters in the table (section 6).</li>
+      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Solving the pair is the commutator for its two letters in the table (section 8).</li>
       <li><strong>An odd number of letters</strong> leaves one letter over: section 4.</li>
     </ol>
     <figure class="practice-net bld-example-net">
@@ -121,7 +121,23 @@
     <div class="table-wrap"><table class="bld-table" id="parity-table"></table></div>
 
     <!-- 5 -->
-    <h2 class="section-heading" id="setup-moves">5. Choosing a setup move</h2>
+    <h2 class="section-heading" id="easiest">5. Easiest cycles to learn</h2>
+    <p>
+      Every direct pair is an 8-move commutator: one single turn (the <strong>interchange</strong>)
+      and a 3-move insertion. The interchange layer holds two of the three corners, so group the
+      pairs by the layer that is turned and learn one group at a time.
+    </p>
+    <ol class="step-how">
+      <li><strong>U layer first.</strong> The buffer UBL is in the U layer, so it is always one of the two corners the U turn swaps. You only have to find where the other two corners are.</li>
+      <li><strong>D layer next.</strong> Two target corners are in the D layer and the D turn swaps them. The buffer is the corner the insertion brings down.</li>
+      <li><strong>Side layers last</strong> (R, L, F, B turns). These have the most shapes to remember.</li>
+      <li><strong>Then pairs with one setup move</strong> (section 7), once the direct ones feel familiar.</li>
+    </ol>
+    <div class="table-wrap"><table class="bld-table" id="easy-table"></table></div>
+    <p class="step-note">Every pair is in the lookup (section 8). This list only suggests an order.</p>
+
+    <!-- 5b -->
+    <h2 class="section-heading" id="setup-moves">6. Choosing a setup move</h2>
     <p>
       Some pairs have no direct commutator. The Commutators tab's five steps build a commutator
       from one layer that holds two of the three stickers. When no such layer exists, use a setup
@@ -136,8 +152,23 @@
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
     <ul class="faster-tips" id="setup-examples"></ul>
 
+    <!-- 7 -->
+    <h2 class="section-heading" id="how-setup">7. How to use a setup move</h2>
+    <ol class="step-how">
+      <li><strong>Look up the pair.</strong> If its row has a setup, the table gives it.</li>
+      <li><strong>Do the setup.</strong> It carries the two target stickers to spots where a direct commutator exists.</li>
+      <li><strong>Do the commutator.</strong> It solves the pair the setup turned yours into.</li>
+      <li><strong>Undo the setup:</strong> reverse the order and invert each turn. <code>R' F'</code> is undone by <code>F R</code>.</li>
+    </ol>
+    <p>The two examples below are taken from the table. Each frame shows the position still to solve, with the buffer and the two target corners outlined.</p>
+    <h3 class="section-heading">One setup move</h3>
+    <div id="setup-ex-1"></div>
+    <h3 class="section-heading">Two setup moves</h3>
+    <div id="setup-ex-2"></div>
+    <p class="step-note" id="setup-buffer-note"></p>
+
     <!-- 6 -->
-    <h2 class="section-heading" id="lookup">6. Look up a pair</h2>
+    <h2 class="section-heading" id="lookup">8. Look up a pair</h2>
     <p class="subtitle">Pick the first and second letter. A, E and R (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
     <div class="lookup-row">
       <label>First letter <select id="pair-first"></select></label>
@@ -146,7 +177,7 @@
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
 
     <!-- 7 -->
-    <h2 class="section-heading" id="exercises">7. Exercises: set up, then solve</h2>
+    <h2 class="section-heading" id="exercises">9. Exercises: set up, then solve</h2>
     <p class="subtitle">
       Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve
       yourself before opening the solution. Pictures show the corners only; edges are greyed.
@@ -161,6 +192,7 @@
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { expandBrackets, invertAlg } from '../../js/algs.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -305,7 +337,77 @@
       }
     }
 
-    // ---- 6: lookup
+    // ---- 5: easiest cycles, grouped by the layer the interchange turns
+    {
+      const direct = cornerComms.filter((r) => r.setupMoves === 0);
+      // [A, B]: the interchange is the one that is a single turn.
+      const interchange = (r) => {
+        const [a, b] = r.notation.slice(1, -1).split(', ');
+        return a.split(' ').length === 1 ? a : b;
+      };
+      const tiers = [
+        ['1', 'U layer (U, U\', U2)', (t) => t[0] === 'U'],
+        ['2', 'D layer (D, D\', D2)', (t) => t[0] === 'D'],
+        ['3', 'Side layers (R, L, F, B)', (t) => 'RLFB'.includes(t[0])],
+      ];
+      const table = $('easy-table');
+      const head = table.createTHead().insertRow();
+      ['Learn', 'Interchange turns', 'Direct pairs', 'Examples'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      for (const [n, label, test] of tiers) {
+        const rows = direct.filter((r) => test(interchange(r)));
+        const tr = body.insertRow();
+        tr.appendChild(el('th', 'bld-letter', n));
+        tr.appendChild(el('td', null, label));
+        tr.appendChild(el('td', null, String(rows.length)));
+        const ex = el('td');
+        rows.slice(0, 4).forEach((r) => {
+          ex.append(`${r.first}${r.second} `);
+          ex.appendChild(el('code', null, r.notation));
+          ex.appendChild(el('br'));
+        });
+        tr.appendChild(ex);
+      }
+    }
+
+    // ---- 7: how to use a setup move, from table rows whose setup leaves the buffer sticker alone
+    {
+      const frameFor = (hostId, r) => {
+        const host = $(hostId);
+        const undo = invertAlg(r.setup);
+        const comm = expandBrackets(r.comm);
+        const alg = `${r.setup} ${comm} ${undo}`;
+        const p = el('p');
+        p.append(`Pair ${r.first} → ${r.second}. The setup `);
+        p.appendChild(el('code', null, r.setup));
+        p.append(` carries the stickers at ${r.first} and ${r.second} to ${r.inner[0]} and ${r.inner[1]}. The pair ${r.inner[0]} → ${r.inner[1]} has the direct commutator `);
+        p.appendChild(el('code', null, r.comm));
+        p.append(', then the setup is undone with ');
+        p.appendChild(el('code', null, undo));
+        p.append('.');
+        host.replaceChildren(p);
+        const marks = [[r.first, PAIR_COLOURS[0]], [r.second, PAIR_COLOURS[1]], ['A', PAIR_COLOURS[2]]].map(([l, colour]) => ({ piece: PIECE[l], colour }));
+        const legend = [
+          { colour: PAIR_COLOURS[0], text: `${r.first}'s corner` },
+          { colour: PAIR_COLOURS[1], text: `${r.second}'s corner` },
+          { colour: PAIR_COLOURS[2], text: 'the buffer UBL' },
+        ];
+        host.appendChild(buildFilmstrip({
+          alg, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, marks, legend,
+          frames: [
+            { after: '', label: 'Start' },
+            { after: r.setup, label: `Setup ${r.setup}` },
+            { after: comm, label: 'Commutator' },
+            { after: undo, label: 'Undo the setup' },
+          ],
+        }));
+      };
+      for (const n of [1, 2]) frameFor(`setup-ex-${n}`, cornerComms.find((x) => x.setupMoves === n && x.inner));
+      const moveBuffer = cornerComms.filter((x) => x.setupMoves && !x.inner).length;
+      $('setup-buffer-note').textContent = `${moveBuffer} of the ${cornerComms.filter((x) => x.setupMoves).length} setup rows use a setup that moves the buffer's own sticker. They are checked and work, but the commutator inside them is not a buffer pair, so use those rows as they are written.`;
+    }
+
+    // ---- 8: lookup
     const first = $('pair-first');
     const second = $('pair-second');
     const LETTERS = Object.keys(PIECE).filter((l) => !BUFFER.includes(l));
