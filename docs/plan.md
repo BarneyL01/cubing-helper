@@ -50,6 +50,8 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/bld/edge-cycles.html` — "Edge cycles" tab, built 2026-10-16 except the
   odd-count edge method (the page teaches the corner side only, owner's choice). Same approach for
   edges, buffer UF; 440 pairs; flips. Spec: `docs/bld-edge-cycles-plan.md`
+- `3x3/heise/index.html` — Heise method (Ryan Heise), from a pasted spec, 2026-10-20: four steps with checked
+  3-cycle examples; the gaps the spec leaves are listed on the page. Partial.
 - `2x2/index.html` — Ortega: OLL and PBL done, all 7 OLL cases recorded
 - `megaminx/index.html` — Gray star, align star, and Gray corner notes
   recorded; no interactive 3D preview (see Open questions)

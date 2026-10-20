@@ -171,6 +171,18 @@ built ahead of being asked for. As of 2026-10-03:
   rule that always picks the best cycle for part A (the wiki calls it
   intuitive), and the page says so. Re-run the checks if anything in the data
   file changes.
+- **3x3 Heise Method** — Ryan Heise's intuitive method, from a spec the owner pasted on
+  2026-10-20 (the build environment cannot read ryanheise.com), **not from the user's own
+  notes** (the page says so). `data/heise.js`, `3x3/heise/index.html`, menu link "Heise" (Partial);
+  same layout as the 8355 page (`js/steps-page.js`). Four steps (squares; match + orient edges;
+  remaining edges + two corners; last three corners) plus a "what is not on this page yet" list.
+  Examples are only the ones that could be checked: outer/inner square pictures, a corner 3-cycle
+  that solves two corners, an edge 3-cycle, and three last-three-corners solves
+  (`[R U' R', D]` direct, with `R2`, with `U R2`). They are made and checked by
+  `log/2026-10-20-heise-examples.mjs` (`--write` rewrites the GENERATED block). **Not built, because
+  the spec leaves them to pictures:** edge types (correct/incorrect/neutral), the simple swap and
+  criss/cross moves, pair 3-cycle and corner twist moves, a worked scramble-to-solution example, and
+  where the four squares sit in their solved places. Do not invent them; ask for the details.
 - **3x3 Beginner's Method** — all 7 steps, one data file
   (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
   source, goal, numbered "how", and cases). `js/steps-page.js` builds a

@@ -27,6 +27,7 @@ const MENU = [
       { label: 'Roux', path: '3x3/roux/index.html', badge: 'Partial' },
       { label: "Beginner's", path: '3x3/beginners/index.html' },
       { label: '8355', path: '3x3/8355/index.html' },
+      { label: 'Heise', path: '3x3/heise/index.html', badge: 'Partial' },
       {
         label: 'Blindfolded',
         path: '3x3/bld/index.html',
