@@ -160,7 +160,7 @@
       <li><strong>Do the commutator.</strong> It solves the pair the setup turned yours into.</li>
       <li><strong>Undo the setup:</strong> reverse the order and invert each turn. <code>R' F'</code> is undone by <code>F R</code>.</li>
     </ol>
-    <p>The two examples below are taken from the table. Each frame shows the position still to solve, with the buffer and the two target corners outlined.</p>
+    <p>Setup moves are shown in <span class="mv-setup">orange</span> wherever they appear on this page. The two examples below are taken from the table. Each frame shows the position still to solve, with the buffer and the two target corners outlined.</p>
     <h3 class="section-heading">One setup move</h3>
     <div id="setup-ex-1"></div>
     <h3 class="section-heading">Two setup moves</h3>
@@ -174,6 +174,7 @@
       <label>First letter <select id="pair-first"></select></label>
       <label>Second letter <select id="pair-second"></select></label>
     </div>
+    <p class="step-note">Setup moves are <span class="mv-setup">orange</span>. "Every move" is the full sequence before adjacent moves are cancelled.</p>
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
 
     <!-- 7 -->
@@ -187,11 +188,12 @@
 
   <script type="module">
     import { bldCorners } from '../../data/bld.js';
-    import { cornerComms, cornerTwists, cornerParity, cornerExamples, cornerExercises } from '../../data/corner-cycles.js';
+    import { cornerComms, cornerTwists, cornerParity, cornerExamples, cornerExercises } from '../../data/corner-cycles.js?v=3';
     import { scrambledState } from '../../js/bld-memo.js';
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
     import { expandBrackets, invertAlg } from '../../js/algs.js';
 
     const $ = (id) => document.getElementById(id);
@@ -200,6 +202,11 @@
       if (cls) n.className = cls;
       if (text !== undefined) n.textContent = text;
       return n;
+    };
+    const code = (child) => {
+      const c = el('code');
+      c.append(child);
+      return c;
     };
     const BUFFER = ['A', 'E', 'R'];
     const PIECE = Object.fromEntries(bldCorners.map((r) => [r.letter, r.piece]));
@@ -230,7 +237,7 @@
         const tr = body.insertRow();
         tr.appendChild(el('th', 'bld-letter', `${s.first}${s.second}`));
         const c = el('td');
-        c.appendChild(el('code', null, s.notation));
+        c.appendChild(code(notationEl(s.notation, s.setup)));
         tr.appendChild(c);
         tr.appendChild(el('td', null, s.moves));
         tr.appendChild(el('td', 'bld-muted', String(s.length)));
@@ -287,7 +294,7 @@
         tr.appendChild(el('td', null, r.buffer));
         tr.appendChild(el('td', null, r.twisted));
         const alg = el('td');
-        alg.appendChild(el('code', null, r.notation));
+        alg.appendChild(code(notationEl(r.notation, r.setup)));
         tr.appendChild(alg);
         tr.appendChild(el('td', 'bld-muted', String(r.moves.split(' ').length)));
       }
@@ -303,10 +310,10 @@
         const tr = body.insertRow();
         tr.appendChild(el('th', 'bld-letter', r.letter));
         const setup = el('td');
-        setup.appendChild(el('code', null, r.setup || '(none)'));
+        setup.appendChild(code(r.setup ? setupSpan(r.setup) : '(none)'));
         tr.appendChild(setup);
         const alg = el('td');
-        alg.appendChild(el('code', null, r.notation));
+        alg.appendChild(code(notationEl(r.notation, r.setup)));
         tr.appendChild(alg);
       }
     }
@@ -332,7 +339,7 @@
         const r = cornerComms.find((x) => x.setupMoves === n);
         const li = el('li');
         li.append(`${n === 0 ? 'Direct' : `${n} setup move${n > 1 ? 's' : ''}`}: pair ${r.first}${r.second}, `);
-        li.appendChild(el('code', null, r.notation));
+        li.appendChild(code(notationEl(r.notation, r.setup)));
         list.appendChild(li);
       }
     }
@@ -363,7 +370,7 @@
         const ex = el('td');
         rows.slice(0, 4).forEach((r) => {
           ex.append(`${r.first}${r.second} `);
-          ex.appendChild(el('code', null, r.notation));
+          ex.appendChild(code(notationEl(r.notation, r.setup)));
           ex.appendChild(el('br'));
         });
         tr.appendChild(ex);
@@ -371,7 +378,7 @@
     }
 
     // ---- 7: how to use a setup move, from table rows whose setup leaves the buffer sticker alone
-    {
+    try {
       const frameFor = (hostId, r) => {
         const host = $(hostId);
         const undo = invertAlg(r.setup);
@@ -379,11 +386,11 @@
         const alg = `${r.setup} ${comm} ${undo}`;
         const p = el('p');
         p.append(`Pair ${r.first} → ${r.second}. The setup `);
-        p.appendChild(el('code', null, r.setup));
+        p.appendChild(code(setupSpan(r.setup)));
         p.append(` carries the stickers at ${r.first} and ${r.second} to ${r.inner[0]} and ${r.inner[1]}. The pair ${r.inner[0]} → ${r.inner[1]} has the direct commutator `);
         p.appendChild(el('code', null, r.comm));
         p.append(', then the setup is undone with ');
-        p.appendChild(el('code', null, undo));
+        p.appendChild(code(setupSpan(undo)));
         p.append('.');
         host.replaceChildren(p);
         const marks = [[r.first, PAIR_COLOURS[0]], [r.second, PAIR_COLOURS[1]], ['A', PAIR_COLOURS[2]]].map(([l, colour]) => ({ piece: PIECE[l], colour }));
@@ -405,6 +412,9 @@
       for (const n of [1, 2]) frameFor(`setup-ex-${n}`, cornerComms.find((x) => x.setupMoves === n && x.inner));
       const moveBuffer = cornerComms.filter((x) => x.setupMoves && !x.inner).length;
       $('setup-buffer-note').textContent = `${moveBuffer} of the ${cornerComms.filter((x) => x.setupMoves).length} setup rows use a setup that moves the buffer's own sticker. They are checked and work, but the commutator inside them is not a buffer pair, so use those rows as they are written.`;
+    } catch (e) {
+      $('setup-ex-1').textContent = 'This section did not load. Reload the page (Ctrl+Shift+R) to get the latest data.';
+      console.error(e);
     }
 
     // ---- 8: lookup
@@ -433,10 +443,11 @@
       const title = el('h3', null, `${first.value} → ${second.value}`);
       box.appendChild(title);
       const dl = el('dl', 'pair-facts');
-      const fact = (k, v) => { dl.appendChild(el('dt', null, k)); dl.appendChild(el('dd', null, v)); };
-      fact('Setup moves', r.setupMoves === 0 ? 'none (direct)' : r.setup);
-      fact('Commutator', r.notation);
-      fact('Plain moves', r.moves);
+      const fact = (k, v) => { const dd = el('dd'); dd.append(v); dl.appendChild(el('dt', null, k)); dl.appendChild(dd); };
+      fact('Setup moves', r.setupMoves === 0 ? 'none (direct)' : setupSpan(r.setup));
+      fact('Commutator', notationEl(r.notation, r.setup));
+      fact('Every move', movesEl(r.notation, r.setup));
+      fact('After cancelling', r.moves);
       fact('Length', `${r.moves.split(' ').length} moves after cancelling (${r.length} before)`);
       box.appendChild(dl);
       box.appendChild(picture(r.moves));
@@ -467,15 +478,15 @@
         const li = el('li');
         if (s.kind === 'corner pair') {
           li.append(`Pair ${s.first}${s.second}: `);
-          li.appendChild(el('code', null, s.notation));
+          li.appendChild(code(notationEl(s.notation, s.setup)));
           li.append(' → ', el('span', 'bld-muted', s.moves));
         } else if (s.kind === 'corner parity') {
           li.append(`Parity, last letter ${s.letter}: `);
-          li.appendChild(el('code', null, s.notation));
+          li.appendChild(code(notationEl(s.notation, s.setup)));
           li.append(' (the UL and UB edges end swapped)');
         } else {
           li.append(`Twist ${s.corner} (buffer ${s.buffer}, corner ${s.twisted}): `);
-          li.appendChild(el('code', null, s.notation));
+          li.appendChild(code(notationEl(s.notation, s.setup)));
         }
         list.appendChild(li);
       }

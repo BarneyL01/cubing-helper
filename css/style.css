@@ -2008,3 +2008,19 @@ html.menu-open {
   width: 100%;
   max-width: 24rem;
 }
+
+/* Setup moves are shown in a different colour from the commutator (js/move-format.js). */
+.mv-setup {
+  color: #b45309;
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mv-setup {
+    color: #fbbf24;
+  }
+}
+
+:root[data-theme="dark"] .mv-setup {
+  color: #fbbf24;
+}

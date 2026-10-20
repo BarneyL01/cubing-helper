@@ -136,6 +136,7 @@
       <label>First letter <select id="pair-first"></select></label>
       <label>Second letter <select id="pair-second"></select></label>
     </div>
+    <p class="step-note">Setup moves are <span class="mv-setup">orange</span>. "Every move" is the full sequence before adjacent moves are cancelled.</p>
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
 
     <!-- 7 -->
@@ -150,12 +151,13 @@
 
   <script type="module">
     import { bldEdges } from '../../data/bld.js';
-    import { edgeComms, edgeFlips, edgeExamples, edgeExercises } from '../../data/edge-cycles.js';
+    import { edgeComms, edgeFlips, edgeExamples, edgeExercises } from '../../data/edge-cycles.js?v=3';
     import { scrambledState } from '../../js/bld-memo.js';
     import { caseState } from '../../js/cube-sim.js';
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -163,6 +165,11 @@
       if (cls) n.className = cls;
       if (text !== undefined) n.textContent = text;
       return n;
+    };
+    const code = (child) => {
+      const c = el('code');
+      c.append(child);
+      return c;
     };
     const BUFFER = ['C', 'I'];
     const PIECE = Object.fromEntries(bldEdges.map((r) => [r.letter, r.piece]));
@@ -202,7 +209,7 @@
         const tr = body.insertRow();
         tr.appendChild(el('th', 'bld-letter', `${s.first}${s.second}`));
         const c = el('td');
-        c.appendChild(el('code', null, s.notation));
+        c.appendChild(code(notationEl(s.notation, s.setup)));
         tr.appendChild(c);
         tr.appendChild(el('td', null, s.moves));
         tr.appendChild(el('td', 'bld-muted', String(s.length)));
@@ -255,10 +262,10 @@
         const tr = body.insertRow();
         tr.appendChild(el('th', 'bld-letter', r.edge));
         const setup = el('td');
-        setup.appendChild(el('code', null, r.setup || '(none)'));
+        setup.appendChild(code(r.setup ? setupSpan(r.setup) : '(none)'));
         tr.appendChild(setup);
         const row = el('td');
-        row.appendChild(el('code', null, r.notation));
+        row.appendChild(code(notationEl(r.notation, r.setup)));
         tr.appendChild(row);
         tr.appendChild(el('td', 'bld-muted', String(r.moves.split(' ').length)));
       }
@@ -287,13 +294,13 @@
         const r = edgeComms.find((x) => x.setupMoves === n && x.moves.split(' ').length === (n === 0 ? 8 : 10));
         const li = el('li');
         li.append(`${n === 0 ? 'Direct' : '1 setup move'}: pair ${r.first}${r.second}, `);
-        li.appendChild(el('code', null, r.notation));
+        li.appendChild(code(notationEl(r.notation, r.setup)));
         list.appendChild(li);
       }
       const four = edgeComms.find((x) => x.moves.split(' ').length === 4);
       const li = el('li');
       li.append(`Four-move kind: pair ${four.first}${four.second}, `);
-      li.appendChild(el('code', null, four.notation));
+      li.appendChild(code(notationEl(four.notation, four.setup)));
       list.appendChild(li);
     }
 
@@ -319,10 +326,11 @@
       box.replaceChildren();
       box.appendChild(el('h3', null, `${first.value} → ${second.value}`));
       const dl = el('dl', 'pair-facts');
-      const fact = (k, v) => { dl.appendChild(el('dt', null, k)); dl.appendChild(el('dd', null, v)); };
-      fact('Setup moves', r.setupMoves === 0 ? 'none (direct)' : r.setup);
-      fact('Commutator', r.notation);
-      fact('Plain moves', r.moves);
+      const fact = (k, v) => { const dd = el('dd'); dd.append(v); dl.appendChild(el('dt', null, k)); dl.appendChild(dd); };
+      fact('Setup moves', r.setupMoves === 0 ? 'none (direct)' : setupSpan(r.setup));
+      fact('Commutator', notationEl(r.notation, r.setup));
+      fact('Every move', movesEl(r.notation, r.setup));
+      fact('After cancelling', r.moves);
       fact('Length', `${r.moves.split(' ').length} moves after cancelling (${r.length} before)`);
       box.appendChild(dl);
       box.appendChild(picture(r.moves));
@@ -353,11 +361,11 @@
         const li = el('li');
         if (s.kind === 'edge pair') {
           li.append(`Pair ${s.first}${s.second}: `);
-          li.appendChild(el('code', null, s.notation));
+          li.appendChild(code(notationEl(s.notation, s.setup)));
           li.append(' → ', el('span', 'bld-muted', s.moves));
         } else {
           li.append(`Flip ${s.edge} (with UF): `);
-          li.appendChild(el('code', null, s.notation));
+          li.appendChild(code(notationEl(s.notation, s.setup)));
         }
         list.appendChild(li);
       }
