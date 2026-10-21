@@ -22,30 +22,33 @@
       <a href="practice.html">Practice</a>
       <a href="commutators.html">Commutators</a>
       <a href="corner-cycles.html" class="active" aria-current="page">Corner cycles</a>
+      <a href="corner-table.html">Corner table</a>
+      <a href="corner-twists.html">Twists &amp; parity</a>
       <a href="edge-cycles.html">Edge cycles</a>
     </nav>
 
     <p class="subtitle">
-      Choosing which corners to cycle, one pair of letters at a time. Each pair is one 3-cycle
-      with the buffer, built from a commutator in the table below.
+      Solve the corners with three base commutators. Each pair of corner letters is one 3-cycle with the
+      buffer: pick a base, then use a setup move to carry the pieces onto it.
     </p>
     <div class="source-note">
       <p>
         Not from your notes: written here and checked with the cube simulator. Buffer
         <strong>DFR</strong> (letters V, K, P), traced from V. This is the other corner Old Pochmann
         uses: on the Reference and Practice tabs UBL is the buffer and DFR is the corner it swaps with.
-        Every commutator, setup, twist and exercise on this page is generated
-        and checked by <code>log/2026-10-16-bld-cycles-generate.mjs</code>.
+        The bases, setups, examples and exercises on this page are generated and checked by
+        <code>log/2026-10-21-bld-three-base.mjs</code>. The full table of a separate commutator for every pair
+        is on the Corner table tab; twisted corners and the odd-count step are on the Twists &amp; parity tab.
       </p>
     </div>
 
     <!-- 1 -->
     <h2 class="section-heading" id="from-scramble" data-short="Scramble to cycles">1. From a scramble to cycles</h2>
     <ol class="step-how">
-      <li><strong>Find the buffer's letters.</strong> DFR is the buffer. Its stickers are <strong>V</strong> (D face), <strong>K</strong> (F face) and <strong>P</strong> (R face). Trace from V. The Speffz letters below show where each sticker is.</li>
+      <li><strong>Find the buffer's letters.</strong> DFR is the buffer. Its stickers are <strong>V</strong> (D face), <strong>K</strong> (F face) and <strong>P</strong> (R face). Trace from V.</li>
       <li><strong>Follow the buffer.</strong> The sticker in the buffer's V spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
-      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Solving the pair is the commutator for its two letters in the table (section 8).</li>
-      <li><strong>An odd number of letters</strong> leaves one letter over: section 4.</li>
+      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Each pair is done with a base and a setup (sections 3 to 6).</li>
+      <li><strong>An odd number of letters, or twisted corners,</strong> are on the Twists &amp; parity tab.</li>
     </ol>
     <figure class="practice-net bld-example-net">
       <div id="letters-net"></div>
@@ -68,16 +71,16 @@
     <!-- 2 -->
     <h2 class="section-heading" id="closes-early" data-short="Early close">2. When the cycle closes early</h2>
     <p>
-      The chain above can come back to the buffer before every corner is solved. Then start a new
-      chain at an unsolved corner. The first letter of that corner (the <strong>break letter</strong>,
-      underlined) starts it, and the chain runs on until it reaches a letter on the same corner again.
-      A break adds letters to the list, and the pairs are taken in list order as before.
+      The chain can come back to the buffer before every corner is solved. Then start a new chain at an
+      unsolved corner. The first letter of that corner (the <strong>break letter</strong>, underlined) starts
+      it, and the chain runs on until it reaches a letter on the same corner again. A break adds letters to
+      the list, and the pairs are taken in list order as before.
     </p>
     <p>
-      Which sticker starts the break is a free choice, one of the three stickers of the unsolved
-      corner. The table gives the total moves for each choice in the worked example below. The rule
-      this site uses: <strong>pick the break letter that makes the total cheapest</strong>. If you do
-      not remember the table, take the first letter of the corner in letter order (the Practice tab's rule).
+      Which sticker starts the break is a free choice, one of the three stickers of the unsolved corner. The
+      table gives the total moves for each choice in the worked example below. The rule used here:
+      <strong>pick the break letter that makes the total cheapest</strong>. Without the table, take the first
+      letter of the corner in letter order (the Practice tab's rule).
     </p>
     <div class="bld-example">
       <div>
@@ -93,110 +96,99 @@
     <div id="ex2-film"></div>
 
     <!-- 3 -->
-    <h2 class="section-heading" id="twisted" data-short="Twists">3. Twisted corners</h2>
+    <h2 class="section-heading" id="bases" data-short="The three bases">3. The three bases</h2>
     <p>
-      A corner that is in its own place but twisted is left out of the letters. It is fixed at the
-      end with a twist row. Directions are seen from outside the corner: <strong>clockwise</strong>
-      means its U or D sticker moves on to the next face clockwise.
+      A base is a commutator that cycles three corners. All three bases below use the same insertion,
+      <code>R U R'</code>, and differ only in the bottom turn (<code>D</code>, <code>D'</code> or <code>D2</code>).
+      In every base the buffer corner DFR and the corner UFR are two of the three corners; the third is another
+      bottom corner. Written the other way round (<code>[D, R U R']</code>) a base does the opposite cycle.
     </p>
-    <ul class="faster-tips">
-      <li>Each twist row changes exactly two corners: the buffer and one other corner K. The buffer changes the other way, so the total twist stays zero.</li>
-      <li>To fix K twisted clockwise, use the row whose <strong>K turns anticlockwise</strong> (and so the buffer turns clockwise).</li>
-      <li>Two twisted corners: use one row for each. The buffer's twists cancel out.</li>
-    </ul>
-    <div class="table-wrap"><table class="bld-table" id="twist-table"></table></div>
+    <div class="table-wrap"><table class="bld-table" id="forms-table"></table></div>
+    <div id="base-cards" class="case-grid"></div>
+    <p class="step-note">
+      One base alone could do every pair, but with longer setups: with only <code>[R U R', D]</code> and its
+      reverse, most pairs need three or four setup moves. Three bases give shorter setups: at most three.
+    </p>
 
     <!-- 4 -->
-    <h2 class="section-heading" id="odd" data-short="Odd count">4. An odd number of letters</h2>
+    <h2 class="section-heading" id="how-it-works" data-short="How it works">4. How a setup turns a base into any pair</h2>
     <p>
-      The corner swap from the Reference tab, <code>R U' R' U' R U R' F' R U R' U' R' F R</code>,
-      swaps UBL with DFR (the buffer) and also swaps two edges. With an odd number of corner
-      letters, the last letter Z is done like this:
+      A setup <code>S</code>, then a base, then <code>S'</code> (written <code>[S: base]</code>) cycles the
+      three pieces that <code>S</code> carries onto the base's three corners. Everything else <code>S</code>
+      moved is put back by <code>S'</code>. So to do the pair V → X → Y:
     </p>
     <ol class="step-how">
-      <li>Turn the cube with a <strong>U, L or B</strong> setup that brings Z's sticker to <strong>E</strong> (the L sticker of UBL). These moves leave the buffer DFR where it is.</li>
-      <li>Do the swap algorithm.</li>
-      <li>Undo the setup. Z's sticker and the buffer sticker V have swapped places, so the cube has the last corner home.</li>
+      <li><strong>Pick a base.</strong> Its three stickers are listed in the table above, in cycle order. For <code>[D, R U R']</code> they are V → M → U.</li>
+      <li><strong>Find a setup</strong> that carries the three stickers V, X and Y onto the base's three stickers <strong>in the base's cycle order</strong>. You may start the order at any of the three. For <code>[D, R U R']</code> the setup may carry (V, X, Y) to (V, M, U), to (M, U, V) or to (U, V, M).</li>
+      <li><strong>Do the setup, the base, then undo the setup.</strong> The pieces cycle, and the rest of the cube is restored.</li>
     </ol>
-    <p class="step-note">Two edges end swapped by this algorithm: UL and UB with no setup, other edges when a setup is used. The Edge cycles tab explains what is and is not covered on the edge side.</p>
-    <div class="table-wrap"><table class="bld-table" id="parity-table"></table></div>
+    <p>
+      A setup that leaves the buffer corner where it is (U, L and B turns do) carries V onto V and only the two
+      targets move. Many shortest setups also move the buffer. The lookup's "onto" line shows which case a pair is.
+    </p>
+    <p>The three examples are taken from the table, with one, two and three setup moves.</p>
+    <div id="demo-cards" class="case-grid"></div>
+    <p class="step-note" id="buffer-note"></p>
 
     <!-- 5 -->
-    <h2 class="section-heading" id="easiest" data-short="Easiest">5. Easiest cycles to learn</h2>
-    <p>
-      Every direct pair is an 8-move commutator: one single turn (the <strong>interchange</strong>)
-      and a 3-move insertion. The interchange layer holds two of the three corners, so group the
-      pairs by the layer that is turned and learn one group at a time.
+    <h2 class="section-heading" id="work-it-out" data-short="Work it out">5. Working out a pair yourself</h2>
+    <ol class="step-how">
+      <li><strong>Write the pair</strong> from your memo: the buffer's piece goes to X, the piece at X goes to Y.</li>
+      <li><strong>Look at where X and Y are</strong> and which bottom corner (DFL, DBR or DBL) is close to them. That bottom corner is the third corner of the base, so it picks the base: <code>D</code> to DFL, <code>D'</code> to DBR, <code>D2</code> to DBL.</li>
+      <li><strong>Choose the direction:</strong> the base or its reverse, whichever cycles V → ? → ? in the order you need.</li>
+      <li><strong>Find the setup:</strong> move the sticker X onto the base's next sticker with turns that keep the corner where Y is out of the way, then check that Y lands on the one after. A setup of one to three moves exists for every pair. The lookup below gives the shortest one.</li>
+      <li><strong>Check before you commit:</strong> after the setup, the buffer's piece, the piece at X and the piece at Y must sit on the three base corners. If not, try another start of the order (section 4).</li>
+    </ol>
+    <p class="step-note">
+      This is a way to search, not a rule that always picks the shortest setup. The table in section 6 is the
+      shortest for every pair (found and checked by a program), and you can hide its answer to practise.
     </p>
-    <ol class="step-how">
-      <li><strong>D layer first.</strong> The buffer DFR is in the D layer, so it is always one of the two corners the D turn swaps. You only have to find where the other two corners are.</li>
-      <li><strong>U layer next.</strong> Two target corners are in the U layer and the U turn swaps them. The buffer is the corner the insertion brings up.</li>
-      <li><strong>Side layers last</strong> (R, L, F, B turns). These have the most shapes to remember.</li>
-      <li><strong>Then pairs with one setup move</strong> (section 7), once the direct ones feel familiar.</li>
-    </ol>
-    <div class="table-wrap"><table class="bld-table" id="easy-table"></table></div>
-    <p class="step-note">Every pair is in the lookup (section 8). This list only suggests an order.</p>
-
-    <!-- 5b -->
-    <h2 class="section-heading" id="setup-moves" data-short="Setup moves">6. Choosing a setup move</h2>
-    <p>
-      Some pairs have no direct commutator. The Commutators tab's five steps build a commutator
-      from one layer that holds two of the three stickers. When no such layer exists, use a setup
-      move: turn one target sticker into a position where the five steps work, then undo the setup.
-    </p>
-    <ol class="step-how">
-      <li>Try to build the commutator directly (the Commutators tab, "Building one yourself").</li>
-      <li>If that fails, do <strong>one move</strong> that brings one target sticker into a spot where step 1 works. Prefer a move that does not touch the buffer. Do the commutator, then undo the move.</li>
-      <li>If no single move works, try two moves (or three for the hardest pairs).</li>
-    </ol>
-    <p class="step-note">No simple rule decides which pairs need a setup. These numbers are the whole table, from the generator.</p>
-    <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
-    <ul class="faster-tips" id="setup-examples"></ul>
-
-    <!-- 7 -->
-    <h2 class="section-heading" id="how-setup" data-short="Using setups">7. How to use a setup move</h2>
-    <ol class="step-how">
-      <li><strong>Look up the pair.</strong> If its row has a setup, the table gives it.</li>
-      <li><strong>Do the setup.</strong> It carries the two target stickers to spots where a direct commutator exists.</li>
-      <li><strong>Do the commutator.</strong> It solves the pair the setup turned yours into.</li>
-      <li><strong>Undo the setup:</strong> reverse the order and invert each turn. <code>R' F'</code> is undone by <code>F R</code>.</li>
-    </ol>
-    <p>Setup moves are shown in <span class="mv-setup">orange</span> wherever they appear on this page. The two examples below are taken from the table. Each frame shows the position still to solve, with the buffer and the two target corners outlined.</p>
-    <h3 class="section-heading">One setup move</h3>
-    <div id="setup-ex-1"></div>
-    <h3 class="section-heading">Two setup moves</h3>
-    <div id="setup-ex-2"></div>
-    <p class="step-note" id="setup-buffer-note"></p>
 
     <!-- 6 -->
-    <h2 class="section-heading" id="lookup" data-short="Lookup">8. Look up a pair</h2>
+    <h2 class="section-heading" id="lookup" data-short="Lookup">6. Look up a pair</h2>
     <p class="subtitle">Pick the first and second letter. V, K and P (the buffer) are not offered, and the second letter is never on the same corner as the first.</p>
     <div class="lookup-row">
       <label>First letter <select id="pair-first"></select></label>
       <label>Second letter <select id="pair-second"></select></label>
+      <label>Show <select id="pair-level">
+        <option value="0">Position only (practise)</option>
+        <option value="1">The base</option>
+        <option value="2">Base and setup</option>
+        <option value="3">Everything</option>
+      </select></label>
     </div>
     <p class="step-note">Setup moves are <span class="mv-setup">orange</span>. "Every move" is the full sequence before adjacent moves are cancelled.</p>
     <div id="pair-result" class="pair-result" aria-live="polite"></div>
+    <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
 
     <!-- 7 -->
-    <h2 class="section-heading" id="exercises" data-short="Exercises">9. Exercises: set up, then solve</h2>
+    <h2 class="section-heading" id="easiest" data-short="Learning order">7. What to learn first</h2>
+    <ol class="step-how">
+      <li><strong>The 6 direct pairs.</strong> Each base on its own, in both directions. No setup.</li>
+      <li><strong>The pairs with one setup move.</strong> Pick one at a time; the setup is a single turn.</li>
+      <li><strong>Then two setup moves, then three.</strong> By then the idea in section 4 does the work.</li>
+    </ol>
+    <div id="easy-lists"></div>
+
+    <!-- 8 -->
+    <h2 class="section-heading" id="exercises" data-short="Exercises">8. Exercises: set up, then solve</h2>
     <p class="subtitle">
-      Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve
-      yourself before opening the solution. Pictures show the corners only; edges are greyed.
+      Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve yourself
+      before opening the solution. Pictures show the corners only; edges are greyed.
     </p>
     <div id="exercise-cards" class="case-grid"></div>
   </main>
 
   <script type="module">
     import { bldCorners } from '../../data/bld.js';
-    import { cornerComms, cornerTwists, cornerParity, cornerExamples, cornerExercises } from '../../data/corner-cycles.js?v=3';
+    import { baseRows, baseData } from '../../data/corner-bases.js?v=1';
     import { scrambledState } from '../../js/bld-memo.js';
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
+    import { renderCases } from '../../js/render-cases.js';
     import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
     import { mountJumpBar } from '../../js/page-jump.js';
-    import { expandBrackets, invertAlg } from '../../js/algs.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -220,22 +212,26 @@
       target.replaceChildren();
       letters.forEach((l) => target.appendChild(letterSpan(l)));
     };
+    const withPalette = (card) => ({ ...card, filmstrip: { ...card.filmstrip, palette: WHITE_TOP } });
+    const ROW = Object.fromEntries(baseRows.map((r) => [r.first + r.second, r]));
 
-    // ---- 1: letters net, worked example 1
+    // ---- 1 and 2: worked examples
     $('letters-net').innerHTML = bldNet('corners', { buffers: BUFFER });
-    const ex1 = cornerExamples.example1;
+    const ex1 = baseData.examples.example1;
+    const ex2 = baseData.examples.example2;
     $('ex1-scramble').textContent = ex1.scramble;
     $('ex1-net').innerHTML = colourNet(scrambledState(ex1.scramble), WHITE_TOP);
     lettersInto($('ex1-letters'), ex1.letters);
+    $('ex2-scramble').textContent = ex2.scramble;
+    lettersInto($('ex2-letters'), ex2.letters);
 
-    // Pair table and the filmstrip for one example: the pairs' moves in order.
     function pairTable(tableId, steps) {
       const table = $(tableId);
       table.replaceChildren();
       const head = table.createTHead().insertRow();
-      ['Pair', 'Commutator', 'Moves (cancelled)', 'Length'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Pair', 'Base and setup', 'Moves (cancelled)', 'Length'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
-      steps.forEach((s, i) => {
+      for (const s of steps) {
         const tr = body.insertRow();
         tr.appendChild(el('th', 'bld-letter', `${s.first}${s.second}`));
         const c = el('td');
@@ -243,28 +239,18 @@
         tr.appendChild(c);
         tr.appendChild(el('td', null, s.moves));
         tr.appendChild(el('td', 'bld-muted', String(s.length)));
-      });
+      }
     }
-    // One picture per pair, the moves of the pairs in order (no cancelling across pairs,
-    // so each frame's moves are exactly one pair's moves).
-    function filmFor(hostId, steps, marks, legend) {
+    function filmFor(hostId, steps) {
       const alg = steps.map((s) => s.moves).join(' ');
+      const marks = steps.flatMap((s, i) => [s.first, s.second].map((l) => ({ piece: PIECE[l], colour: PAIR_COLOURS[i] })));
+      const legend = steps.map((s, i) => ({ colour: PAIR_COLOURS[i], text: `pair ${i + 1} (${s.first}${s.second})` }));
       const frames = [{ after: '', label: 'Start', caption: 'Scrambled corners.' }];
       steps.forEach((s, i) => frames.push({ after: s.moves, label: `Pair ${i + 1}: ${s.first}${s.second}`, caption: `After pair ${i + 1}, letters ${s.first} and ${s.second} are solved.` }));
       $(hostId).replaceChildren(buildFilmstrip({ alg, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, marks, legend, frames }));
     }
-    const marksFor = (steps) =>
-      steps.flatMap((s, i) =>
-        [s.first, s.second].map((l) => ({ piece: PIECE[l], colour: PAIR_COLOURS[i] })),
-      );
-    const legendFor = (steps) => steps.map((s, i) => ({ colour: PAIR_COLOURS[i], text: `pair ${i + 1} (${s.first}${s.second})` }));
     pairTable('ex1-table', ex1.steps);
-    filmFor('ex1-film', ex1.steps, marksFor(ex1.steps), legendFor(ex1.steps));
-
-    // ---- 2: the break example
-    const ex2 = cornerExamples.example2;
-    $('ex2-scramble').textContent = ex2.scramble;
-    lettersInto($('ex2-letters'), ex2.letters);
+    filmFor('ex1-film', ex1.steps);
     {
       const table = $('ex2-table');
       table.createCaption().textContent = 'Total moves for each break letter (the pairs of this example)';
@@ -282,185 +268,116 @@
       }
     }
     pairTable('ex2-table-pairs', ex2.steps);
-    filmFor('ex2-film', ex2.steps, marksFor(ex2.steps), legendFor(ex2.steps));
+    filmFor('ex2-film', ex2.steps);
 
-    // ---- 3: twists
+    // ---- 3: the three bases
     {
-      const table = $('twist-table');
+      const table = $('forms-table');
       const head = table.createTHead().insertRow();
-      ['Corner twisted', 'Buffer DFR turns', 'Corner turns', 'Algorithm', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      ['Base', 'Sticker cycle', 'Corners (position of each sticker)'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
-      for (const r of [...cornerTwists].sort((a, b) => a.corner.localeCompare(b.corner) || a.buffer.localeCompare(b.buffer))) {
+      for (const f of baseData.forms) {
         const tr = body.insertRow();
-        tr.appendChild(el('th', 'bld-letter', r.corner));
-        tr.appendChild(el('td', null, r.buffer));
-        tr.appendChild(el('td', null, r.twisted));
-        const alg = el('td');
-        alg.appendChild(code(notationEl(r.notation, r.setup)));
-        tr.appendChild(alg);
-        tr.appendChild(el('td', 'bld-muted', String(r.moves.split(' ').length)));
+        const c = el('td');
+        c.appendChild(el('code', null, f.text));
+        tr.appendChild(c);
+        tr.appendChild(el('td', null, f.stickers.join(' → ') + ' → ' + f.stickers[0]));
+        tr.appendChild(el('td', null, f.positions.join(' → ')));
       }
     }
+    renderCases('base-cards', baseData.baseCards.map(withPalette));
 
-    // ---- 4: parity setups
+    // ---- 4: setup examples
+    renderCases('demo-cards', baseData.demoCards.map((c) => withPalette({
+      ...c,
+      orientation: `Pair ${c.first} → ${c.second}. The setup carries the stickers V, ${c.first}, ${c.second} onto ${[...c.onto].join(', ')} on the base ${c.base}.`,
+    })));
     {
-      const table = $('parity-table');
-      const head = table.createTHead().insertRow();
-      ['Last letter', 'Setup (U, L, B)', 'Full algorithm'].forEach((h) => head.appendChild(el('th', null, h)));
-      const body = table.createTBody();
-      for (const r of cornerParity) {
-        const tr = body.insertRow();
-        tr.appendChild(el('th', 'bld-letter', r.letter));
-        const setup = el('td');
-        setup.appendChild(code(r.setup ? setupSpan(r.setup) : '(none)'));
-        tr.appendChild(setup);
-        const alg = el('td');
-        alg.appendChild(code(notationEl(r.notation, r.setup)));
-        tr.appendChild(alg);
-      }
+      const moved = baseRows.filter((r) => !r.bufferFixed).length;
+      $('buffer-note').textContent = `In ${moved} of the ${baseRows.length} shortest setups the setup moves the buffer corner too, so V is carried onto a different sticker of the base. The other ${baseRows.length - moved} leave it where it is.`;
     }
 
-    // ---- 5: setup counts, from the table itself
-    {
-      const table = $('setup-table');
-      const head = table.createTHead().insertRow();
-      ['Setup moves needed', 'Pairs', 'Commutator length (no cancelling)'].forEach((h) => head.appendChild(el('th', null, h)));
-      const body = table.createTBody();
-      for (const n of [0, 1, 2, 3]) {
-        const rows = cornerComms.filter((r) => r.setupMoves === n);
-        const lengths = rows.map((r) => r.length);
-        const tr = body.insertRow();
-        tr.appendChild(el('th', 'bld-letter', n === 0 ? '0 (direct)' : String(n)));
-        tr.appendChild(el('td', null, String(rows.length)));
-        tr.appendChild(el('td', null, `${Math.min(...lengths)}${Math.min(...lengths) === Math.max(...lengths) ? '' : `–${Math.max(...lengths)}`}`));
-      }
-    }
-    {
-      const list = $('setup-examples');
-      for (const n of [0, 1, 2, 3]) {
-        const r = cornerComms.find((x) => x.setupMoves === n);
-        const li = el('li');
-        li.append(`${n === 0 ? 'Direct' : `${n} setup move${n > 1 ? 's' : ''}`}: pair ${r.first}${r.second}, `);
-        li.appendChild(code(notationEl(r.notation, r.setup)));
-        list.appendChild(li);
-      }
-    }
-
-    // ---- 5: easiest cycles, grouped by the layer the interchange turns
-    {
-      const direct = cornerComms.filter((r) => r.setupMoves === 0);
-      // [A, B]: the interchange is the one that is a single turn.
-      const interchange = (r) => {
-        const [a, b] = r.notation.slice(1, -1).split(', ');
-        return a.split(' ').length === 1 ? a : b;
-      };
-      const tiers = [
-        ['1', 'D layer (D, D\', D2)', (t) => t[0] === 'D'],
-        ['2', 'U layer (U, U\', U2)', (t) => t[0] === 'U'],
-        ['3', 'Side layers (R, L, F, B)', (t) => 'RLFB'.includes(t[0])],
-      ];
-      const table = $('easy-table');
-      const head = table.createTHead().insertRow();
-      ['Learn', 'Interchange turns', 'Direct pairs', 'Examples'].forEach((h) => head.appendChild(el('th', null, h)));
-      const body = table.createTBody();
-      for (const [n, label, test] of tiers) {
-        const rows = direct.filter((r) => test(interchange(r)));
-        const tr = body.insertRow();
-        tr.appendChild(el('th', 'bld-letter', n));
-        tr.appendChild(el('td', null, label));
-        tr.appendChild(el('td', null, String(rows.length)));
-        const ex = el('td');
-        rows.slice(0, 4).forEach((r) => {
-          ex.append(`${r.first}${r.second} `);
-          ex.appendChild(code(notationEl(r.notation, r.setup)));
-          ex.appendChild(el('br'));
-        });
-        tr.appendChild(ex);
-      }
-    }
-
-    // ---- 7: how to use a setup move, from table rows whose setup leaves the buffer sticker alone
-    try {
-      const frameFor = (hostId, r) => {
-        const host = $(hostId);
-        const undo = invertAlg(r.setup);
-        const comm = expandBrackets(r.comm);
-        const alg = `${r.setup} ${comm} ${undo}`;
-        const p = el('p');
-        p.append(`Pair ${r.first} → ${r.second}. The setup `);
-        p.appendChild(code(setupSpan(r.setup)));
-        p.append(` carries the stickers at ${r.first} and ${r.second} to ${r.inner[0]} and ${r.inner[1]}. The pair ${r.inner[0]} → ${r.inner[1]} has the direct commutator `);
-        p.appendChild(el('code', null, r.comm));
-        p.append(', then the setup is undone with ');
-        p.appendChild(code(setupSpan(undo)));
-        p.append('.');
-        host.replaceChildren(p);
-        const marks = [[r.first, PAIR_COLOURS[0]], [r.second, PAIR_COLOURS[1]], ['V', PAIR_COLOURS[2]]].map(([l, colour]) => ({ piece: PIECE[l], colour }));
-        const legend = [
-          { colour: PAIR_COLOURS[0], text: `${r.first}'s corner` },
-          { colour: PAIR_COLOURS[1], text: `${r.second}'s corner` },
-          { colour: PAIR_COLOURS[2], text: 'the buffer DFR' },
-        ];
-        host.appendChild(buildFilmstrip({
-          alg, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, marks, legend,
-          frames: [
-            { after: '', label: 'Start' },
-            { after: r.setup, label: `Setup ${r.setup}` },
-            { after: comm, label: 'Commutator' },
-            { after: undo, label: 'Undo the setup' },
-          ],
-        }));
-      };
-      for (const n of [1, 2]) frameFor(`setup-ex-${n}`, cornerComms.find((x) => x.setupMoves === n && x.inner));
-      const moveBuffer = cornerComms.filter((x) => x.setupMoves && !x.inner).length;
-      $('setup-buffer-note').textContent = `${moveBuffer} of the ${cornerComms.filter((x) => x.setupMoves).length} setup rows use a setup that moves the buffer's own sticker. They are checked and work, but the commutator inside them is not a buffer pair, so use those rows as they are written.`;
-    } catch (e) {
-      $('setup-ex-1').textContent = 'This section did not load. Reload the page (Ctrl+Shift+R) to get the latest data.';
-      console.error(e);
-    }
-
-    // ---- 8: lookup
+    // ---- 6: lookup, with the answer hidden by default
     const first = $('pair-first');
     const second = $('pair-second');
+    const level = $('pair-level');
     const LETTERS = Object.keys(PIECE).filter((l) => !BUFFER.includes(l));
     for (const l of LETTERS) first.appendChild(el('option', null, l));
-    const saved = (() => { try { return JSON.parse(localStorage.getItem('cubing-helper:bld-corner-cycles')) || {}; } catch { return {}; } })();
+    const saved = (() => { try { return JSON.parse(localStorage.getItem('cubing-helper:bld-corner-bases')) || {}; } catch { return {}; } })();
     const fillSecond = () => {
       const keep = second.value;
       second.replaceChildren();
-      for (const l of LETTERS) {
-        if (sameCorner(l, first.value)) continue;
-        second.appendChild(el('option', null, l));
-      }
+      for (const l of LETTERS) if (!sameCorner(l, first.value)) second.appendChild(el('option', null, l));
       if ([...second.options].some((o) => o.value === keep)) second.value = keep;
     };
     first.value = LETTERS.includes(saved.first) ? saved.first : LETTERS[0];
     fillSecond();
     if (saved.second && [...second.options].some((o) => o.value === saved.second)) second.value = saved.second;
+    level.value = ['0', '1', '2', '3'].includes(String(saved.level)) ? String(saved.level) : '3';
     function showPair() {
-      try { localStorage.setItem('cubing-helper:bld-corner-cycles', JSON.stringify({ first: first.value, second: second.value })); } catch {}
-      const r = cornerComms.find((x) => x.first === first.value && x.second === second.value);
+      try { localStorage.setItem('cubing-helper:bld-corner-bases', JSON.stringify({ first: first.value, second: second.value, level: Number(level.value) })); } catch {}
+      const r = ROW[first.value + second.value];
+      const lv = Number(level.value);
       const box = $('pair-result');
       box.replaceChildren();
-      const title = el('h3', null, `${first.value} → ${second.value}`);
-      box.appendChild(title);
+      box.appendChild(el('h3', null, `${first.value} → ${second.value}`));
       const dl = el('dl', 'pair-facts');
       const fact = (k, v) => { const dd = el('dd'); dd.append(v); dl.appendChild(el('dt', null, k)); dl.appendChild(dd); };
-      fact('Setup moves', r.setupMoves === 0 ? 'none (direct)' : setupSpan(r.setup));
-      fact('Commutator', notationEl(r.notation, r.setup));
-      fact('Every move', movesEl(r.notation, r.setup));
-      fact('After cancelling', r.moves);
-      fact('Length', `${r.moves.split(' ').length} moves after cancelling (${r.length} before)`);
+      fact('Pair', `V → ${first.value} → ${second.value} → V`);
+      if (lv >= 1) fact('Base', code(r.base));
+      if (lv >= 2) {
+        fact('Setup', r.setupMoves ? setupSpan(r.setup) : 'none (direct)');
+        fact('Onto', `the setup carries V, ${first.value}, ${second.value} onto ${[...r.onto].join(', ')}`);
+        fact('Full notation', code(notationEl(r.notation, r.setup)));
+      }
+      if (lv >= 3) {
+        fact('Every move', movesEl(r.notation, r.setup));
+        fact('After cancelling', `${r.moves} (${r.moves.split(' ').length} moves)`);
+      }
       box.appendChild(dl);
       box.appendChild(picture(r.moves));
     }
     first.addEventListener('change', () => { fillSecond(); showPair(); });
     second.addEventListener('change', showPair);
+    level.addEventListener('change', showPair);
     showPair();
+    {
+      const table = $('count-table');
+      table.createCaption().textContent = 'All 378 pairs: how many need each number of setup moves, and which base they use';
+      const head = table.createTHead().insertRow();
+      ['Setup moves', 'Pairs', ...baseData.forms.map((f) => f.text)].forEach((h, i) => head.appendChild(i < 2 ? el('th', null, h) : (() => { const th = el('th'); th.appendChild(el('code', null, h)); return th; })()));
+      const body = table.createTBody();
+      for (const n of [0, 1, 2, 3]) {
+        const rows = baseRows.filter((r) => r.setupMoves === n);
+        const tr = body.insertRow();
+        tr.appendChild(el('th', 'bld-letter', n === 0 ? '0 (direct)' : String(n)));
+        tr.appendChild(el('td', null, String(rows.length)));
+        for (const f of baseData.forms) tr.appendChild(el('td', 'bld-muted', String(rows.filter((r) => r.base === f.text).length)));
+      }
+    }
 
-    // ---- 7: exercises
+    // ---- 7: what to learn first
+    {
+      const host = $('easy-lists');
+      for (const n of [0, 1, 2, 3]) {
+        const rows = baseRows.filter((r) => r.setupMoves === n);
+        const h = el('h3', 'section-heading', `${n === 0 ? 'No setup' : `${n} setup move${n > 1 ? 's' : ''}`}: ${rows.length} pairs`);
+        host.appendChild(h);
+        const ul = el('ul', 'faster-tips');
+        for (const r of rows.slice(0, n === 0 ? 6 : 5)) {
+          const li = el('li');
+          li.append(`${r.first}${r.second} `);
+          li.appendChild(code(notationEl(r.notation, r.setup)));
+          ul.appendChild(li);
+        }
+        if (rows.length > (n === 0 ? 6 : 5)) ul.appendChild(el('li', 'bld-muted', `…and ${rows.length - 5} more in the lookup.`));
+        host.appendChild(ul);
+      }
+    }
+
+    // ---- 8: exercises
     const cards = $('exercise-cards');
-    for (const ex of cornerExercises) {
+    for (const ex of baseData.exercises) {
       const card = el('article', 'case-card');
       card.id = `exercise-${ex.n}`;
       card.appendChild(el('h3', null, `${ex.n} · ${ex.skill}`));
@@ -478,18 +395,9 @@
       const list = el('ol', 'bld-steps');
       for (const s of ex.steps) {
         const li = el('li');
-        if (s.kind === 'corner pair') {
-          li.append(`Pair ${s.first}${s.second}: `);
-          li.appendChild(code(notationEl(s.notation, s.setup)));
-          li.append(' → ', el('span', 'bld-muted', s.moves));
-        } else if (s.kind === 'corner parity') {
-          li.append(`Parity, last letter ${s.letter}: `);
-          li.appendChild(code(notationEl(s.notation, s.setup)));
-          li.append(' (two edges end swapped)');
-        } else {
-          li.append(`Twist ${s.corner} (buffer ${s.buffer}, corner ${s.twisted}): `);
-          li.appendChild(code(notationEl(s.notation, s.setup)));
-        }
+        li.append(`Pair ${s.first}${s.second}: `);
+        li.appendChild(code(notationEl(s.notation, s.setup)));
+        li.append(' → ', el('span', 'bld-muted', s.moves));
         list.appendChild(li);
       }
       solution.appendChild(list);

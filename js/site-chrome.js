@@ -35,6 +35,8 @@ const MENU = [
           { label: 'Practice', path: '3x3/bld/practice.html' },
           { label: 'Commutators', path: '3x3/bld/commutators.html' },
           { label: 'Corner cycles', path: '3x3/bld/corner-cycles.html' },
+          { label: 'Corner table', path: '3x3/bld/corner-table.html' },
+          { label: 'Twists & parity', path: '3x3/bld/corner-twists.html' },
           { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],
       },

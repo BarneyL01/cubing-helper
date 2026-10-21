@@ -232,6 +232,14 @@ built ahead of being asked for. As of 2026-10-03:
   exercise was checked by simulation; one explanation in the paste was wrong
   (`(R' D' R D)×2` twists four corners, not one) and is corrected on the page.
   No mnemonics for most of it: the cipher has no D letter.
+  **Corner tabs rebuilt around three bases (2026-10-21):** "Corner cycles"
+  (`3x3/bld/corner-cycles.html`) teaches buffer V with three base commutators
+  `[R U R', D]`, `[R U R', D']`, `[R U R', D2]` (and reverses) plus a setup of any
+  faces (0-3 moves, mean 2.1; every pair is base + setup). Data `data/corner-bases.js`
+  is generated and checked by `log/2026-10-21-bld-three-base.mjs` (`--write`).
+  The old full table (one shortest commutator per pair) moved to "Corner table"
+  (`corner-table.html`), twists and parity to "Twists & parity" (`corner-twists.html`),
+  both still using `data/corner-cycles.js`. The older notes below describe that table.
   **Two more tabs are built (2026-10-16):** "Corner cycles"
   (`3x3/bld/corner-cycles.html`, buffer DFR (the corner Old Pochmann's swap exchanges with UBL), letters V/K/P, traced from V: 378 pairs, twists, odd count,
   setup moves, lookup, 8 exercises) and "Edge cycles" (`3x3/bld/edge-cycles.html`,

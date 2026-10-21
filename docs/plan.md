@@ -43,6 +43,9 @@ Megaminx. Hosted free on GitHub Pages.
   search). Spec: `docs/roux-block-practice-plan.md`
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
+- `3x3/bld/corner-cycles.html` — rebuilt 2026-10-21 around three base commutators plus
+  a setup (`data/corner-bases.js`); the old full table is `corner-table.html` and twists/parity
+  is `corner-twists.html`. The entry below is the original build.
 - `3x3/bld/corner-cycles.html` — "Corner cycles" tab, built 2026-10-16
   (choosing which corners to cycle, buffer DFR traced from V; setup moves; lookup of all
   378 letter pairs; 8 fixed exercises). Spec: `docs/bld-corner-cycles-plan.md`;
