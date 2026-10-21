@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3x3 Blindfolded After 8355 — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script type="module" src="../../js/site-chrome.js"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>3x3 — Blindfolded</h1>
+    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+
+    <nav class="tabs" aria-label="Blindfolded pages">
+      <a href="index.html">Reference</a>
+      <a href="practice.html">Practice</a>
+      <a href="commutators.html">Commutators</a>
+      <a href="corner-cycles.html">Corner cycles</a>
+      <a href="corner-table.html">Corner table</a>
+      <a href="corner-8355.html" class="active" aria-current="page">After 8355</a>
+      <a href="corner-twists.html">Twists &amp; parity</a>
+      <a href="edge-cycles.html">Edge cycles</a>
+    </nav>
+
+    <p class="subtitle">
+      The cycles to learn if you solve the first two layers with 8355. Only the pairs among the corners
+      that are still unsolved, built from the same three bases as the Corner cycles tab, with setups that
+      never turn L or B.
+    </p>
+    <div class="source-note">
+      <p>
+        Not from your notes: written here and checked with the cube simulator. After 8355 step 4 the unsolved
+        corners are the four top-layer corners (letters A, B, C, D) and the buffer corner DFR (V), each possibly
+        twisted. The 108 pairs, their setups and their moves are generated and checked by
+        <code>log/2026-10-21-bld-8355-corners.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="left" data-short="Corners left">1. The corners that are left</h2>
+    <p>
+      Five corners are unsolved. Each target letter below is a sticker on one of the four top-layer corners;
+      the buffer corner DFR holds V, K and P. A pair is two target letters on <strong>different</strong> corners.
+    </p>
+    <div class="table-wrap"><table class="bld-table" id="left-table"></table></div>
+    <p class="step-note">
+      A top-layer corner that is in the right place but twisted is not a pair: use the Twists &amp; parity tab.
+      That tab also has the odd-count step, for when the number of letters in your memo is odd.
+    </p>
+
+    <h2 class="section-heading" id="setups" data-short="Setups">2. The setups, simplest first</h2>
+    <p>
+      Every pair is one of the three bases plus a setup of R, U, F and D turns only. Setups are shown in
+      orange. The table counts the pairs by setup length and compares with setups that may turn any face.
+    </p>
+    <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
+    <p>
+      Learning the setups below first covers the most pairs. Each is turned, then the base, then the setup undone.
+    </p>
+    <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
+
+    <h2 class="section-heading" id="list" data-short="All pairs">3. Every pair</h2>
+    <p>
+      <label for="first-filter">Show pairs that start with </label>
+      <select id="first-filter"></select>
+    </p>
+    <div class="table-wrap"><table class="bld-table" id="pair-table"></table></div>
+    <p class="step-note">
+      Each row sends the buffer's piece to the first letter, the piece at the first letter to the second,
+      and the piece at the second back to the buffer. Order matters: AB and BA are different rows.
+    </p>
+  </main>
+
+  <script type="module">
+    import { bldCorners } from '../../data/bld.js';
+    import { corner8355Rows } from '../../data/corner-8355.js?v=1';
+    import { notationEl, setupSpan } from '../../js/move-format.js';
+    import { mountJumpBar } from '../../js/page-jump.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    const code = (child) => { const c = el('code'); c.append(child); return c; };
+    const header = (table, cols) => { const h = table.createTHead().insertRow(); cols.forEach((c) => h.appendChild(el('th', null, c))); return table.createTBody(); };
+    const rows = corner8355Rows;
+    const cornerOf = (l) => [...bldCorners.find((r) => r.letter === l).piece].join('');
+
+    try {
+      {
+        const body = header($('left-table'), ['Corner', 'Letters']);
+        const groups = new Map();
+        for (const l of [...new Set(rows.map((r) => r.first))].sort()) {
+          const key = [...cornerOf(l)].sort().join('');
+          (groups.get(key) ?? groups.set(key, { name: cornerOf(l), letters: [] }).get(key)).letters.push(l);
+        }
+        for (const g of groups.values()) {
+          const tr = body.insertRow();
+          tr.appendChild(el('th', 'bld-letter', g.name));
+          tr.appendChild(el('td', null, g.letters.join(' ')));
+        }
+        const tr = body.insertRow();
+        tr.appendChild(el('th', 'bld-letter', 'DFR (buffer)'));
+        tr.appendChild(el('td', null, 'V K P'));
+      }
+      {
+        const body = header($('count-table'), ['Setup moves', 'Pairs (R U F D only)', 'Pairs (any face)']);
+        for (const n of [1, 2, 3, 4]) {
+          const tr = body.insertRow();
+          tr.appendChild(el('th', 'bld-letter', String(n)));
+          tr.appendChild(el('td', null, String(rows.filter((r) => r.setupMoves === n).length)));
+          tr.appendChild(el('td', null, String(rows.filter((r) => r.fullSetupMoves === n).length)));
+        }
+        const mean = (f) => (rows.reduce((a, r) => a + f(r), 0) / rows.length).toFixed(2);
+        const tr = body.insertRow();
+        tr.appendChild(el('th', 'bld-letter', 'Mean'));
+        tr.appendChild(el('td', null, mean((r) => r.setupMoves)));
+        tr.appendChild(el('td', null, mean((r) => r.fullSetupMoves)));
+      }
+      {
+        const body = header($('setup-table'), ['Setup', 'Pairs using it', 'Examples']);
+        const bySetup = new Map();
+        for (const r of rows) (bySetup.get(r.setup) ?? bySetup.set(r.setup, []).get(r.setup)).push(r);
+        const list = [...bySetup.entries()].sort((a, b) => b[1].length - a[1].length || a[0].split(' ').length - b[0].split(' ').length);
+        for (const [setup, rs] of list.slice(0, 12)) {
+          const tr = body.insertRow();
+          const th = el('th', 'bld-letter');
+          th.appendChild(setupSpan(setup));
+          tr.appendChild(th);
+          tr.appendChild(el('td', null, String(rs.length)));
+          tr.appendChild(el('td', null, rs.slice(0, 4).map((r) => r.first + r.second).join(' ')));
+        }
+      }
+      {
+        const sel = $('first-filter');
+        sel.appendChild(new Option('any letter', ''));
+        for (const l of [...new Set(rows.map((r) => r.first))]) sel.appendChild(new Option(l, l));
+        const saved = (() => { try { return localStorage.getItem('cubing-helper:bld-8355-first') || ''; } catch { return ''; } })();
+        sel.value = [...sel.options].some((o) => o.value === saved) ? saved : '';
+        const draw = () => {
+          const t = $('pair-table');
+          t.replaceChildren();
+          const body = header(t, ['Pair', 'Commutator', 'Moves', 'Length']);
+          for (const r of rows.filter((x) => !sel.value || x.first === sel.value)) {
+            const tr = body.insertRow();
+            tr.appendChild(el('th', 'bld-letter', r.first + r.second));
+            tr.appendChild(el('td')).appendChild(code(notationEl(r.notation, r.setup)));
+            tr.appendChild(el('td')).appendChild(code(r.moves));
+            tr.appendChild(el('td', null, String(r.length)));
+          }
+          try { localStorage.setItem('cubing-helper:bld-8355-first', sel.value); } catch {}
+        };
+        sel.addEventListener('change', draw);
+        draw();
+      }
+    } catch (e) {
+      const p = el('p', 'step-note', `This page could not load its table: ${e.message}`);
+      document.querySelector('main').appendChild(p);
+    }
+    mountJumpBar();
+  </script>
+</body>
+</html>
