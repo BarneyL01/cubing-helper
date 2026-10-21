@@ -2037,3 +2037,21 @@ html.menu-open {
 .jump-target {
   scroll-margin-top: var(--jump-offset, 4rem);
 }
+
+/* 3D applets shown on request (Corner cycles, the three bases) */
+.applet-viewer {
+  display: block;
+  width: 100%;
+  height: 260px;
+}
+
+.applet-button {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--border, #c8ccd4);
+  border-radius: 8px;
+  background: var(--surface, transparent);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}

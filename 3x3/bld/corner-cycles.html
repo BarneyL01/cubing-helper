@@ -107,6 +107,13 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="forms-table"></table></div>
     <div id="base-cards" class="case-grid"></div>
+    <h3>3D applets</h3>
+    <p>
+      Each applet plays one base on a solved cube. Use the play button or drag the slider, and drag the cube to turn it
+      (the cube is shown from below, where the bottom corners are).
+    </p>
+    <p><button type="button" class="applet-button" id="show-3d">Load the 3D applets</button> <span id="show-3d-status" role="status"></span></p>
+    <div id="base-applets" class="case-grid" hidden></div>
     <p class="step-note">
       One base alone could do every pair, but with longer setups: with only <code>[R U R', D]</code> and its
       reverse, most pairs need three or four setup moves. Three bases give shorter setups: at most three.
@@ -288,6 +295,35 @@
       }
     }
     renderCases('base-cards', baseData.baseCards.map(withPalette));
+
+    // 3D applets for the three bases (cubing.js is self-hosted and only loaded when asked for)
+    {
+      const host = $('base-applets');
+      const status = $('show-3d-status');
+      const button = $('show-3d');
+      baseData.baseCards.forEach((c) => {
+        const card = el('div', 'case-card');
+        card.appendChild(el('h4', 'case-name', c.name));
+        const player = document.createElement('twisty-player');
+        player.setAttribute('puzzle', '3x3x3');
+        player.setAttribute('alg', c.moves);
+        player.setAttribute('background', 'none');
+        player.setAttribute('control-panel', 'bottom-row');
+        player.setAttribute('camera-latitude', '-35');
+        player.setAttribute('camera-longitude', '30');
+        player.className = 'applet-viewer';
+        card.appendChild(player);
+        card.appendChild(el('p', 'step-note', c.orientation));
+        host.appendChild(card);
+      });
+      button.addEventListener('click', () => {
+        button.disabled = true;
+        status.textContent = 'Loading 3D…';
+        import('../../js/vendor/cubing/twisty.js')
+          .then(() => { host.hidden = false; status.textContent = ''; button.hidden = true; })
+          .catch(() => { button.disabled = false; status.textContent = "The 3D applets couldn't load."; });
+      });
+    }
 
     // ---- 4: setup examples
     renderCases('demo-cards', baseData.demoCards.map((c) => withPalette({
