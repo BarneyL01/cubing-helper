@@ -37,6 +37,7 @@ const MENU = [
           { label: 'Corner cycles', path: '3x3/bld/corner-cycles.html' },
           { label: 'Corner table', path: '3x3/bld/corner-table.html' },
           { label: 'After 8355', path: '3x3/bld/corner-8355.html' },
+          { label: 'After 8355 (L/B)', path: '3x3/bld/corner-8355-lb.html' },
           { label: 'Twists & parity', path: '3x3/bld/corner-twists.html' },
           { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],

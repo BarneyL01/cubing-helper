@@ -245,6 +245,9 @@ built ahead of being asked for. As of 2026-10-03:
   pairs among them (12 target stickers on 4 corners), same three bases, setups restricted to R U F D
   (no L/B; mean 2.78 setup moves vs 2.15 with any face; max 15 moves). Data `data/corner-8355.js`,
   generated and checked by `log/2026-10-21-bld-8355-corners.mjs` (`--write`).
+  **"After 8355 (L/B)" tab (`3x3/bld/corner-8355-lb.html`):** the same 108 pairs with setups of any face
+  (setup moves 1/2/3 = 18/56/34, none longer; mean 2.15, mean 11.70 total moves, max 14). Data
+  `data/corner-8355-lb.js` from `node log/2026-10-21-bld-8355-corners.mjs --lb --write`.
   **Two more tabs are built (2026-10-16):** "Corner cycles"
   (`3x3/bld/corner-cycles.html`, buffer DFR (the corner Old Pochmann's swap exchanges with UBL), letters V/K/P, traced from V: 378 pairs, twists, odd count,
   setup moves, lookup, 8 exercises) and "Edge cycles" (`3x3/bld/edge-cycles.html`,
