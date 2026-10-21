@@ -61,7 +61,7 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
     <p>
-      Learning the setups below first covers the most pairs. Each is turned, then the base, then the setup undone.
+      Learning the setups below first covers the most pairs. Each row lists every pair that uses that setup, with its full commutator: the setup, then the base, then the setup undone.
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
 
@@ -127,7 +127,7 @@
         tr.appendChild(el('td', null, mean((r) => r.fullSetupMoves)));
       }
       {
-        const body = header($('setup-table'), ['Setup', 'Pairs using it', 'Examples']);
+        const body = header($('setup-table'), ['Setup', 'Pairs and commutators']);
         const bySetup = new Map();
         for (const r of rows) (bySetup.get(r.setup) ?? bySetup.set(r.setup, []).get(r.setup)).push(r);
         const list = [...bySetup.entries()].sort((a, b) => b[1].length - a[1].length || a[0].split(' ').length - b[0].split(' ').length);
@@ -136,8 +136,14 @@
           const th = el('th', 'bld-letter');
           th.appendChild(setupSpan(setup));
           tr.appendChild(th);
-          tr.appendChild(el('td', null, String(rs.length)));
-          tr.appendChild(el('td', null, rs.slice(0, 4).map((r) => r.first + r.second).join(' ')));
+          const td = el('td');
+          rs.forEach((r) => {
+            const line = el('div');
+            line.append(`${r.first}${r.second} `);
+            line.appendChild(code(notationEl(r.notation, r.setup)));
+            td.appendChild(line);
+          });
+          tr.appendChild(td);
         }
       }
       {
