@@ -24,7 +24,12 @@ const MENU = [
           { label: 'F2L map', path: '3x3/cfop/f2l.html' },
         ],
       },
-      { label: 'Roux', path: '3x3/roux/index.html', badge: 'Partial' },
+      {
+        label: 'Roux',
+        path: '3x3/roux/index.html',
+        badge: 'Partial',
+        children: [{ label: 'LSE map', path: '3x3/roux/lse-map.html' }],
+      },
       { label: "Beginner's", path: '3x3/beginners/index.html' },
       { label: '8355', path: '3x3/8355/index.html' },
       { label: 'Heise', path: '3x3/heise/index.html', badge: 'Partial' },

@@ -1,65 +1,96 @@
-// LSE edge-orientation map: how the bad-edge pattern changes under simple M/U moves, and how many
-// repeats of U' M' it takes to reach an arrow. Orientation is judged against the centres, as on the
-// Roux page: an edge is bad when its yellow/white sticker is on a face whose centre is not yellow/white.
-//   node log/2026-10-22-lse-eo-map.mjs
+// LSE edge-orientation map (owner's way, 2026-10-22): from each starting case (centres lined up),
+// repeat U' M' and look after every pair; as soon as the position is an "arrow" (one of the short
+// finishes below orients every edge), finish it. Cases that loop forever get one fix move first.
+// Orientation is judged as on the Roux page (line the centres up first, then a top/bottom edge is bad
+// unless its yellow/white sticker is on the top/bottom face).
+//   node log/2026-10-22-lse-eo-map.mjs [--json]
 import { applyAlg, solvedCube, faceOf } from '../js/cube-sim.js';
 import { eoCases } from '../data/roux.js';
 
 const POS = { UF: [0, 1, 1], UB: [0, 1, -1], UL: [-1, 1, 0], UR: [1, 1, 0], DF: [0, -1, 1], DB: [0, -1, -1] };
 const ORDER = ['UF', 'UB', 'UL', 'UR', 'DF', 'DB'];
-const centreAt = (st, face) => st.find((s) => s.p.filter((v) => v !== 0).length === 1 && faceOf(s.n) === face).colour;
-// pattern of a state: x = bad, . = good, in ORDER; plus whether the centres are lined up
-function patternOf(st) {
-  const ud = new Set(['U', 'D']);
-  const faceIsUD = (f) => ud.has(centreAt(st, f));
-  const pat = ORDER.map((k) => {
-    const ss = st.filter((s) => s.p.join() === POS[k].join());
-    const y = ss.find((s) => ud.has(s.colour));
-    return faceIsUD(faceOf(y.n)) ? '.' : 'x';
+const UD = new Set(['U', 'D']);
+const centreColourOn = (st, face) => st.find((s) => s.p.filter((v) => v !== 0).length === 1 && faceOf(s.n) === face).colour;
+const aligned = (st) => UD.has(centreColourOn(st, 'U'));
+// judged pattern: line the centres up with M' if needed, then x = bad
+const judged = (alg) => {
+  let st = applyAlg(solvedCube(), alg);
+  if (!aligned(st)) st = applyAlg(st, "M'");
+  return ORDER.map((k) => {
+    const y = st.find((s) => s.p.join() === POS[k].join() && UD.has(s.colour));
+    return UD.has(faceOf(y.n)) ? '.' : 'x';
   }).join('');
-  return { pat, aligned: centreAt(st, 'U') === 'U' || centreAt(st, 'U') === 'D' };
-}
-// build a state with a given pattern by searching M/U sequences from solved (BFS), keyed by pattern + alignment
-const MOVES = ['U', "U'", 'U2', 'M', "M'", 'M2'];
-const seen = new Map();
+};
+const ADJ = ['', 'U', "U'", 'U2'];
+const CORE = ["M' U M", "M U M'", "M' U' M", "M U' M'"];
+const FINISHES = ADJ.flatMap((a) => CORE.map((c) => `${a} ${c}`.trim()));
+// the arrow finish for a position (or null)
+const finishOf = (alg) => FINISHES.find((f) => judged(`${alg} ${f}`) === '......') ?? null;
+
+// all 32 starting patterns with the centres lined up: BFS over M/U from solved, keep aligned states
+const starts = new Map();
 let frontier = [''];
-seen.set(JSON.stringify(patternOf(solvedCube())), '');
-for (let d = 0; d < 9 && frontier.length; d++) {
+const seen = new Set(['']);
+for (let d = 0; d < 16 && starts.size < 32; d++) {
   const next = [];
-  for (const a of frontier) for (const m of MOVES) {
+  for (const a of frontier) for (const m of ['U', "U'", 'U2', 'M', "M'", 'M2']) {
     const alg = `${a} ${m}`.trim();
-    const k = JSON.stringify(patternOf(applyAlg(solvedCube(), alg)));
-    if (!seen.has(k)) { seen.set(k, alg); next.push(alg); }
+    const st = applyAlg(solvedCube(), alg);
+    const key = `${judged(alg)}|${centreColourOn(st, 'U')}`;
+    if (seen.has(key)) continue;
+    seen.add(key); next.push(alg);
+    if (aligned(st) && !starts.has(judged(alg))) starts.set(judged(alg), alg);
   }
   frontier = next;
 }
-console.log(`reachable (pattern, centres) states: ${seen.size}`);
-// family name of a pattern (aligned or not, judged against the centres): match the eoCases cards up to U turns
-const rotU = (p) => { const [uf, ub, ul, ur, df, db] = p; return [ur, ul, uf, ub, df, db].join(''); }; // U turn: UF->UL ... (positions rotate)
-const famOf = (p) => {
-  const variants = [p];
-  for (let i = 0; i < 3; i++) variants.push(rotU(variants.at(-1)));
-  const card = eoCases.find((c) => variants.includes(c.pattern));
-  return card ? card.name.split(' — ')[0] : (p === '......' ? 'Oriented' : `? ${p}`);
+const rotU = (p) => { const [uf, ub, ul, ur, df, db] = p; return [ur, ul, uf, ub, df, db].join(''); };
+const family = (p) => {
+  if (p === '......') return 'Oriented';
+  const vs = [p]; for (let i = 0; i < 3; i++) vs.push(rotU(vs.at(-1)));
+  const c = eoCases.find((e) => vs.includes(e.pattern));
+  return c ? c.name.split(' — ')[0] : `? ${p}`;
 };
-const isArrow = (p) => famOf(p).includes('Arrow');
-const STEP = "U' M'";
-console.log(`\nRepeating ${STEP} from each state (pattern judged against the centres):`);
-const rows = [];
-for (const [k, alg] of seen) {
-  const { pat, aligned } = JSON.parse(k);
-  let a = alg; let n = 0; const path = [famOf(pat)];
-  let p = pat;
-  while (!isArrow(p) && p !== '......' && n < 12) {
-    a = `${a} ${STEP}`; n++;
-    p = patternOf(applyAlg(solvedCube(), a)).pat;
-    path.push(famOf(p));
+const PAIR = "U' M'";
+const FIXES = ['U', "U'", 'U2', 'M2', "M'", 'M'];
+function spam(alg, max = 12) {
+  const seq = []; let a = alg;
+  for (let n = 0; n <= max; n++) {
+    const f = judged(a) === '......' ? '' : finishOf(a);
+    if (f !== null) return { pairs: n, finish: f, seq };
+    a = `${a} ${PAIR}`; seq.push(judged(a));
   }
-  rows.push({ pat, aligned, fam: famOf(pat), n: isArrow(p) || p === '......' ? n : null, path });
+  return null;
 }
-const byFam = {};
-for (const r of rows) (byFam[`${r.fam} | centres ${r.aligned ? 'lined up' : 'off'}`] ??= []).push(r);
-for (const [f, rs] of Object.entries(byFam).sort()) {
-  const ns = rs.map((r) => (r.n === null ? 'never' : r.n));
-  console.log(`- ${f}: ${rs.length} patterns; repeats to arrow/oriented: ${ns.join(' ')}; e.g. path ${rs[0].path.join(' → ')}`);
+const out = [];
+for (const [pat, alg] of [...starts.entries()].sort((a, b) => family(a[0]).localeCompare(family(b[0])) || a[0].localeCompare(b[0]))) {
+  let r = spam(alg); let fix = '';
+  if (!r) {
+    // shortest fix move that makes the spam reach an arrow (fewest pairs after it)
+    // one fix move if possible, else two
+    const ones = FIXES.map((f) => ({ f, r: spam(`${alg} ${f}`) })).filter((o) => o.r);
+    const twos = ones.length ? [] : FIXES.flatMap((f) => FIXES.filter((g) => g[0] !== f[0]).map((g) => `${f} ${g}`)).map((f) => ({ f, r: spam(`${alg} ${f}`) })).filter((o) => o.r);
+    const threes = ones.length || twos.length ? [] : FIXES.flatMap((f) => FIXES.filter((g) => g[0] !== f[0]).flatMap((g) => FIXES.filter((h) => h[0] !== g[0]).map((h) => `${f} ${g} ${h}`))).map((f) => ({ f, r: spam(`${alg} ${f}`) })).filter((o) => o.r);
+    const opts = [...ones, ...twos, ...threes].sort((x, y) => x.r.pairs - y.r.pairs);
+    if (opts.length) { fix = opts[0].f; r = opts[0].r; }
+  }
+  // check: start, fix, pairs, finish orients every edge
+  const solve = [fix, ...Array(r ? r.pairs : 0).fill(PAIR), r ? r.finish : ''].filter(Boolean).join(' ');
+  const total = `${alg} ${solve}`.trim();
+  // every edge oriented at the end (judged with the centres lined up); blocks and corners never move with M and U
+  const ok = !!r && judged(total) === '......';
+  out.push({ pattern: pat, family: family(pat), setup: alg, fix, pairs: r?.pairs ?? null, finish: r?.finish ?? null, solve, ok });
+}
+if (process.argv.includes('--write')) {
+  if (out.some((o) => !o.ok)) throw new Error('not writing: some rows fail');
+  const { writeFileSync } = await import('node:fs');
+  writeFileSync('data/lse-map.js', `// GENERATED by log/2026-10-22-lse-eo-map.mjs --write. Do not edit by hand.\n` +
+    `// LSE edge orientation by repeating U' M' (looking after every pair) until an arrow, then a short finish.\n` +
+    `// pattern: bad edges in the order UF UB UL UR DF DB (x = bad), judged with the centres lined up.\n` +
+    `export const lseMapRows = [\n${out.map((o) => `  ${JSON.stringify(o)}`).join(',\n')}\n];\n`);
+  console.log('wrote data/lse-map.js');
+}
+{
+  for (const o of out) console.log(`${o.family.padEnd(20)} ${o.pattern}  ${o.fix ? `fix ${o.fix.padEnd(3)}` : '       '} pairs ${o.pairs}  finish ${o.finish ?? '-'}  ${o.ok ? 'ok' : 'FAILED'}`);
+  const bad = out.filter((o) => !o.ok);
+  console.log(`${out.length} starting patterns; fixes needed ${out.filter((o) => o.fix).length}; max pairs ${Math.max(...out.map((o) => o.pairs ?? 0))}; ${bad.length ? `FAILED ${bad.length}` : 'ALL OK'}`);
 }
