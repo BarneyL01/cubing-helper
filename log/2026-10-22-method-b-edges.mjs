@@ -4,7 +4,10 @@
 import { piece, pieces, makeMoves, turns, FACES, SLICES, solvedState, applyText, rng, randomScramble, runStep, mean, hist, SOLVED } from './2026-10-22-sim-engine.mjs';
 
 const [COUNT, MODE, SET, DEPTH] = [Number(process.argv[2] || 5), process.argv[3] || 'singles', process.argv[4] || 'all', Number(process.argv[5] || 6)];
-const moves = makeMoves(SET === 'all' ? [...turns(SLICES), ...turns(FACES)] : [...turns(SLICES), ...turns(FACES, ['2'])]);
+// SET: 'slice' = slices + half turns; 'all' = slices + every face turn; 'cycle' = 'all' plus one edge
+// sequence, M' U2 M U2 (a 3-cycle of UF, UB, DF) and its reverse, each counting as one move
+const CYCLE = [{ name: "(M' U2 M U2)", alg: "M' U2 M U2", family: 'C1' }, { name: "(U2 M' U2 M)", alg: "U2 M' U2 M", family: 'C2' }];
+const moves = makeMoves(SET === 'slice' ? [...turns(SLICES), ...turns(FACES, ['2'])] : SET === 'cycle' ? [...turns(SLICES), ...turns(FACES), ...CYCLE] : [...turns(SLICES), ...turns(FACES)]);
 const CORNERS = pieces((p) => p.kind === 'corner');
 const CENTRES = pieces((p) => p.kind === 'centre');
 const BARS = [['UF', 'UB'], ['UL', 'UR'], ['DF', 'DB'], ['DL', 'DR'], ['FL', 'FR'], ['BL', 'BR']].map((b) => b.map(piece));
