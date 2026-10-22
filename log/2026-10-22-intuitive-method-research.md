@@ -86,3 +86,14 @@ Shortest sequences with exactly the same effect (U, D, M and half turns of R L F
 C and W 4 (as now: `(U2 M')x2`, `(M U2)x2`); I and S 10 (now 11, all commutator-shaped);
 Q 11 (now 16, but the 16 is mostly `U' M'` repeated). No setup of up to 4 turns + M2 + undo does
 any of them. I = `D (M' X) (M X) D' M2` and S = `M2 D (X M') (X M) D'` with the same X = `U R2 U'`.
+
+## 8355 last five corners: move first, then twist (`2026-10-22-l5c-tools.mjs`)
+
+Held as on the 8355 page (four unsolved corners in the bottom layer, the fifth at UFR, edges solved).
+All 4860 positions, two phases (move the corners into place, then twist), bottom-turn setups:
+- Mover `(Sassy)x3 D? (Sassy)x3 D?'` (26 turns; 3-cycle of UFR, DFR and the corner the D turn brings):
+  at most 3 movers + 3 twists, mean 3.69 algorithms, mean 86.8 turns.
+- Mover `(D2 L U2 L')x2` (8 turns, 3-cycle UFR DFR DBL) with bottom-turn setups only: at most 6 + 3,
+  mean 5.21 algorithms, mean 68.3 turns.
+- Twists: the Sassy twist (bottom pairs) and `R' (twist) R` for UFR: every twist pattern in at most 3.
+- For comparison, the repeated-Sassy procedure: mean 15 Sassys (60 turns), worst 24.
