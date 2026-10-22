@@ -149,6 +149,40 @@ const startOf = (alg) => applyAlg(solvedCube(), invertAlg(alg));
   check('step 5 example: all eight corners after the series', homeOf(applyAlg(st, X), 3) === 8);
 }
 
+// ---- 7. The two extra algorithms (published, not Marshall's). Each must change only the orientation
+// of the named pieces: every corner and edge stays in its own slot, and only the named pieces are turned.
+const turnedNames = (state, kind) => {
+  const by = new Map();
+  for (const s of state) { const k = s.p.join(); (by.get(k) ?? by.set(k, []).get(k)).push(s); }
+  const displaced = [], turned = [];
+  for (const ss of by.values()) {
+    if (ss.length !== kind) continue;
+    const slot = pieceName(ss[0].p);
+    if (!isInSlot(slot, ss)) { displaced.push(slot); continue; }
+    if (!ss.every((s) => s.colour === faceOf(s.n))) turned.push(slot);
+  }
+  return { displaced, turned: turned.sort().join(' ') };
+};
+const isInSlot = (slot, ss) => [...slot].sort().join('') === ss.map((s) => s.colour).sort().join('');
+{
+  const X = "D R' D' R U R' D R D' R' D R U' R' D' R";
+  const st = applyAlg(solvedCube(), X);
+  const corners = turnedNames(st, 3);
+  const edges = turnedNames(st, 2);
+  check('extra corner twist: no corner moves out of its slot', corners.displaced.length === 0, corners.displaced.join());
+  check('extra corner twist: no edge moves or turns', edges.displaced.length === 0 && edges.turned === '', edges.displaced.join() + ' ' + edges.turned);
+  check('extra corner twist: turns exactly DFL and UBR', corners.turned === 'DFL UBR', corners.turned);
+}
+{
+  const X = "R' E' R2 E2 R' U' R E2' R2' E R U";
+  const st = applyAlg(solvedCube(), X);
+  const corners = turnedNames(st, 3);
+  const edges = turnedNames(st, 2);
+  check('extra edge flip: no edge moves out of its slot', edges.displaced.length === 0, edges.displaced.join());
+  check('extra edge flip: no corner moves or turns', corners.displaced.length === 0 && corners.turned === '', corners.displaced.join() + ' ' + corners.turned);
+  check('extra edge flip: flips exactly UF and UR', edges.turned === 'UF UR', edges.turned);
+}
+
 if (failures.length) {
   console.error('FAILED:\n  ' + failures.join('\n  '));
   process.exit(1);

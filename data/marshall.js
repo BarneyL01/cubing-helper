@@ -7,12 +7,17 @@
 // Marshall writes the Step One example as B' T' R F 2 L T 2 (T = top, B = back); here it is B' U' R F2 L U2.
 //
 // Every sequence and claim below is checked by log/2026-10-22-marshall-check.mjs.
+//
+// NOT Marshall's: two extra algorithms at the end (a corner twist and an edge flip) for orientations the
+// series cannot fix. They come from published sources (credited in extraAlgsTable) and were checked on the
+// simulator: each changes only the orientation of the named pieces, and moves nothing else.
 
 export const marshallFacts = [
   ['Method', 'Edges first: all 12 edges are placed before any corner, then the corners.'],
   ['Series', 'An Edge Piece Series (F R\' F\' R, four moves) and a Corner Piece Series (eight moves).'],
   ['Steps', 'Five: the cross, the middle-layer edges, the top edges, five corners, and the end game.'],
   ['His figure', 'About 65 moves on average (70 turns) over 100 scrambled cubes; the fewest was 40. Not re-measured here.'],
+  ['Added here', 'Two extra algorithms, not Marshall\'s: a corner twist and an edge flip, from published sources, for turned pieces the series cannot fix.'],
 ];
 
 // The two series as picture strips. Each frame is the solved cube after the moves so far (fromSolved).
@@ -221,6 +226,7 @@ export const marshallSteps = [
     ],
     notes: [
       'The choice of which edge to take next, and which version of the series to use, is a judgement in his method. No rule for it is coded or checked here.',
+      'Added here, not in his text: if an edge is in place but turned, and the series cannot turn it back, the edge flip at the end of this page turns two edges in place and moves nothing else.',
     ],
   },
   {
@@ -311,6 +317,7 @@ export const marshallSteps = [
     ],
     notes: [
       'Marshall\'s worked examples for this step (his figures 7 to 13) are pictures and are not reproduced. The setups are described by face in words, not by a worked move list.',
+      'Added here, not in his text: if a corner is in place but turned, and the series cannot turn it back, the corner twist at the end of this page turns two corners in place and moves nothing else.',
     ],
   },
   {
@@ -360,13 +367,72 @@ export const marshallSteps = [
   },
 ];
 
+// The two extra algorithms. Not Marshall's. Each is a published algorithm, checked on the simulator.
+// Both are shown as what they do to a solved cube (fromSolved), so only the turned pieces show.
+export const marshallExtraAlgs = [
+  {
+    anchor: 'extra-corner-twist',
+    name: 'Corner twist: two corners, in place',
+    orientation: 'Turns two corners in place, in opposite directions. Nothing else moves. Shown from a solved cube: the two outlined corners are the ones turned.',
+    displayAlg: "D R' D' R U R' D R D' R' D R U' R' D' R",
+    noViewer: true,
+    filmstrip: {
+      alg: "D R' D' R U R' D R D' R' D R U' R' D' R",
+      fromSolved: true,
+      stickering: 'full',
+      views: ['cube'],
+      marks: [
+        { piece: 'DFL', colour: 'pink' },
+        { piece: 'UBR', colour: 'pink' },
+      ],
+      legend: [{ colour: 'pink', text: 'the two corners it turns' }],
+      frames: [
+        { after: '', label: 'Solved', caption: 'The cube before the algorithm.' },
+        { after: "D R' D' R U R' D R", label: 'Moves 1–8', caption: 'Halfway.' },
+        { after: "D' R' D R U' R' D' R", label: 'Moves 9–16', caption: 'Done: the two outlined corners are turned, and no corner or edge has moved.' },
+      ],
+    },
+  },
+  {
+    anchor: 'extra-edge-flip',
+    name: 'Edge flip: two edges, in place',
+    orientation: 'Flips two adjacent edges in place. Nothing else moves. E is the middle slice, turned like D. Shown from a solved cube.',
+    displayAlg: "R' E' R2 E2 R' U' R E2' R2' E R U",
+    noViewer: true,
+    filmstrip: {
+      alg: "R' E' R2 E2 R' U' R E2' R2' E R U",
+      fromSolved: true,
+      stickering: 'edges',
+      views: ['cube'],
+      marks: [
+        { piece: 'UF', colour: 'pink' },
+        { piece: 'UR', colour: 'pink' },
+      ],
+      legend: [{ colour: 'pink', text: 'the two edges it flips' }],
+      frames: [
+        { after: '', label: 'Solved', caption: 'The cube before the algorithm.' },
+        { after: "R' E' R2 E2 R' U'", label: 'Moves 1–6', caption: 'Halfway.' },
+        { after: "R E2' R2' E R U", label: 'Moves 7–12', caption: 'Done: the two outlined edges are flipped, and no other edge or corner has moved.' },
+      ],
+    },
+  },
+];
+
+// The table for the extra algorithms, with where each comes from.
+export const marshallExtraAlgsTable = [
+  ['Corner twist', "D R' D' R U R' D R D' R' D R U' R' D' R", '16', 'DFL and UBR, turned in opposite directions', 'Waterloo corner-twist generator (csclub.uwaterloo.ca/~krmatthe/corner-twist.cgi), first result for stickers LDF and RUB'],
+  ['Edge flip', "R' E' R2 E2 R' U' R E2' R2' E R U", '12', 'UF and UR, flipped', 'Ned Batchelder, "Two-part Rubik\'s algorithms" (nedbatchelder.com/text/rubiks_algorithms)'],
+];
+
 export const marshallSources = {
   marshall: "Philip Marshall's page",
+  published: 'Published algorithms (not Marshall)',
 };
 
 // What this page does not check. Listed on the page so nobody takes it for checked.
 export const marshallGaps = [
   'The whole method on random scrambles: not run. Marshall says his average is about 65 moves over 100 scrambles; that figure is his, not measured here.',
+  'The two extra algorithms are published, not Marshall\'s. Each was checked on the simulator: it changes only the orientation of the named pieces. Their use in a solve (the setup to bring the turned pieces to the named places) is not checked against a full solve.',
   'The judgement parts of steps 2 to 5 (which edge or corner to take next, and which face to set up): his rules are reworded, not coded, so they are not checked by simulation.',
   'His own worked examples for steps 2 to 5 (his figures) are not reproduced. The examples on the page are ours: built from the moves, and checked on the simulator.',
   'His statement that one of the three edges in the Edge Piece Series ends inverted: his figure numbers the edges, and the page does not reproduce that numbering.',

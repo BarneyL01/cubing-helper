@@ -28,6 +28,8 @@
         sequence and claim was checked on the cube simulator. Marshall's steps 2 to 5 depend on judgement
         about which piece to take next; those are described as he describes them and are not checked as a
         whole method. The list at the end says what is not checked.
+        Two algorithms at the end are not Marshall's: a corner twist and an edge flip, from published sources,
+        for turned pieces the series cannot fix.
       </p>
     </div>
 
@@ -39,7 +41,7 @@
   </main>
 
   <script type="module">
-    import { marshallFacts, marshallSeries, marshallSeriesTable, marshallSteps, marshallSources, marshallGaps } from '../../data/marshall.js?v=1';
+    import { marshallFacts, marshallSeries, marshallSeriesTable, marshallSteps, marshallSources, marshallGaps, marshallExtraAlgs, marshallExtraAlgsTable } from '../../data/marshall.js?v=2';
     import { mountSteps } from '../../js/steps-page.js';
 
     const el = (tag, cls, text) => {
@@ -86,6 +88,35 @@
       },
     };
 
+    const extraStep = {
+      id: 'extra-algs',
+      title: 'Two extra algorithms (not Marshall\'s)',
+      short: 'Extra algs',
+      extra: true,
+      mark: '+',
+      source: 'published',
+      intro: 'Not part of Marshall\'s method. For a turned corner or edge that the series cannot turn back. Each changes only the orientation of the named pieces; apply it once the pieces are in place, bring the turned pieces to the named places (rotate the whole cube, so no other piece moves), then rotate back.',
+      cases: marshallExtraAlgs,
+      custom(section) {
+        const wrap = el('div', 'table-wrap');
+        const table = el('table', 'bld-table');
+        table.createCaption().textContent = 'The two extra algorithms and where they come from';
+        const head = table.createTHead().insertRow();
+        ['Algorithm', 'Moves', 'Count', 'Pieces changed', 'Source'].forEach((h) => head.appendChild(el('th', null, h)));
+        const body = table.createTBody();
+        for (const row of marshallExtraAlgsTable) {
+          const tr = body.insertRow();
+          row.forEach((cell, i) => {
+            const td = el('td');
+            td.appendChild(i === 1 ? el('code', null, cell) : document.createTextNode(cell));
+            tr.appendChild(td);
+          });
+        }
+        wrap.appendChild(table);
+        section.appendChild(wrap);
+      },
+    };
+
     const gapsStep = {
       id: 'not-checked',
       title: 'What is not checked yet',
@@ -102,7 +133,7 @@
     };
 
     mountSteps({
-      steps: [seriesStep, ...marshallSteps, gapsStep],
+      steps: [seriesStep, ...marshallSteps, extraStep, gapsStep],
       sources: marshallSources,
     });
   </script>

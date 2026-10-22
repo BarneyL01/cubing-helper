@@ -33,3 +33,13 @@ on a solved cube; `log/2026-10-22-marshall-check.mjs` checks each count in the c
 - Step 4: setup `R`, series, undo `R'` (5 → 2 → 4 → 8 corners).
 - Step 5: three corners out, one series (5 → 8).
 Searched and not used: no two-corner-at-once setup was found for the three-piece pattern in this search.
+
+## Two extra algorithms (not Marshall's), from published sources
+Added for turned pieces the series cannot turn back. Both change only the named pieces (checked in
+`log/2026-10-22-marshall-check.mjs`, section 7).
+- Corner twist, 16 moves: `D R' D' R U R' D R D' R' D R U' R' D' R`. Turns DFL and UBR in opposite
+  directions. Source: Waterloo corner-twist generator, first result for stickers LDF and RUB
+  (csclub.uwaterloo.ca/~krmatthe/corner-twist.cgi).
+- Edge flip, 12 moves: `R' E' R2 E2 R' U' R E2' R2' E R U`. Flips UF and UR. Source: Ned Batchelder,
+  "Two-part Rubik's algorithms" (nedbatchelder.com/text/rubiks_algorithms).
+Not checked: a full solve that uses them with the setup rotations.
