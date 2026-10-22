@@ -45,3 +45,21 @@ Both blocks solved; top corners with Sassy (right block) and its mirror `L' U' L
 U and M turns, keeping both blocks: 10 of 10 positions solved, mean 25 turns. The first corners
 take 1 to 7 moves; the last ones 11 to 12 (Sassy counted as one), found by search, so a rule (like
 8355's "repeat Sassy until it drops in") would be needed to make it intuitive.
+
+## Corners first, then edges ("Marshall the other way round"), with repeat-style sequences
+
+`2026-10-22-repeat-edge-algs.mjs`: words of 2 or 3 turns repeated k times that leave every corner and
+centre solved: 883 different edge-only effects up to 16 turns. Made of U, D, R, M, E only, e.g.
+`(U2 M2)x2` swaps two pairs (4 turns), `(U2 M E2)x2` 3-cycle (6), `(U' M')x4` / `(U M)x4` flip 4
+edges in place (8), `(U M2)x4` moves 6 (8), `(U R2)x6` moves 5 (12).
+
+- Corners: 3 bottom corners intuitive, then 8355's last-five-corners procedure (Sassy repeated).
+- All 12 edges one at a time with every turn plus four repeat sequences (setups up to 2 turns): 5 of 6
+  positions left 2 to 3 edges (usually a flipped pair). Not good enough.
+- Split as in Roux instead: the six side edges (DL DR FL FR BL BR) one at a time, any turns, up to 6:
+  8 of 10 positions done (mean 26.5 turns, mostly 4-turn inserts like `M R U' M' U R'`), 2 left one
+  edge (flipped in place). Peak solved pieces out 8-13: these inserts are commutator-shaped.
+- Last six edges with M and U plus sequences (`2026-10-22-lse-repeat.mjs`, 40 positions, up to 8
+  moves per edge, a sequence counting 1): M/U only 39 stuck; + `(U' M')x4` and `(U2 M2)x2`: 0 stuck
+  (mean 45.8 turns); + `(U M2)x4` too: 0 stuck (mean 50.0, shorter horizons); + `(U' M')x4` and
+  `M' U2 M U2`: 1 stuck.

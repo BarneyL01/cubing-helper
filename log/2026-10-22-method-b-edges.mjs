@@ -29,7 +29,10 @@ const parityOdd = (st) => {
   for (let i = 0; i < 8; i++) { if (seen[i]) continue; let j = i, len = 0; while (!seen[j]) { seen[j] = true; j = ps[j]; len++; } sw += len - 1; }
   return sw % 2 === 1;
 };
-const step = { name: 'edges', moves, groups: MODE === 'bars' ? BARS : pieces((p) => p.kind === 'edge').map((pc) => [pc]), maxDepth: DEPTH, nodeLimit: 2e8 };
+// MODE 'sides': only the six edges outside the M slice and top layer (DL DR FL FR BL BR), as in Roux;
+// the other six are left for a last-six-edges finish
+const SIDES = ['DL', 'DR', 'FL', 'FR', 'BL', 'BR'].map((n) => [piece(n)]);
+const step = { name: 'edges', moves, groups: MODE === 'sides' ? SIDES : MODE === 'bars' ? BARS : pieces((p) => p.kind === 'edge').map((pc) => [pc]), maxDepth: DEPTH, nodeLimit: 2e8 };
 const recs = []; let stuck = 0; const totals = [];
 let made = 0;
 while (made < COUNT) {
