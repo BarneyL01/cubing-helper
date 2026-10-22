@@ -150,6 +150,12 @@ built ahead of being asked for. As of 2026-10-03:
   out. The whole chain (align centres → 4a → 4b → align centres → 4c) solves
   all 46,080 legal LSE positions; the checker is in the log entry — re-run it
   if anything in `data/roux.js` changes.
+- **3x3 Marshall Method** — Philip Marshall's edges-first method ("The Ultimate Solution to Rubik's Cube"),
+  from his own page (helm.lu/cube/MarshallPhilipp, read 2026-10-22), **not from the user's notes** (the page says
+  so and credits him). Two series (`F R' F' R`, `U R U' L' U R' U' L` and its mirror) with checked picture strips,
+  then five steps reworded from his text. His figures are not reproduced. Not checked: the whole method on random
+  scrambles and his 65-move figure, and the judgement in steps 2–5 (listed on the page). `data/marshall.js`,
+  `3x3/marshall/index.html`, menu link "Marshall" (Partial); checks in `log/2026-10-22-marshall-check.mjs`.
 - **3x3 8355 Method** — Reheart Sheu's beginner method, from the
   Speedsolving wiki text the user pasted (2026-10-03), **not from the
   user's own notes** (the page says so and credits the wiki). `data/

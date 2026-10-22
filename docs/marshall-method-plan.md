@@ -1,6 +1,6 @@
 # Marshall method ("The Ultimate Solution") page — build plan
 
-Status: **planned, not built** (written 2026-10-22). Written so a different agent can build it.
+Status: **built 2026-10-22** (page, data, checker and log entry: see `log/2026-10-22-marshall-page.md`). Written so a different agent can build it.
 Read `CLAUDE.md` first (stack, page chrome, verification, branch workflow), then this file.
 
 ## Why this page

@@ -63,6 +63,7 @@ Megaminx. Hosted free on GitHub Pages.
   (Pictures / 3D switch), `data/`
   (per-page algorithm data as ES modules — `data/corner-orientation.js`
   holds the 7 corner-orientation cases shared by Ortega and Roux CMLL)
+- `3x3/marshall/index.html` — Marshall method (Philip Marshall, "The Ultimate Solution"), from his own page (helm.lu), 2026-10-22: two series with checked pictures, five steps reworded from his text, and a "not checked yet" list (his 1,000-scramble and 65-move figures are not re-measured; steps 2–5 judgement is not coded). Partial.
 
 ## Per-algorithm content
 
