@@ -64,7 +64,21 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
 
-    <h2 class="section-heading" id="list" data-short="All pairs">3. Every pair</h2>
+    <h2 class="section-heading" id="place" data-short="Place, then twist">3. Easiest: put the corners in place, twist later</h2>
+    <p>
+      If you don't mind corners ending up twisted, you only need one commutator per pair of <strong>corners</strong>,
+      not per pair of stickers: 12 instead of 108. Then fix the twists at the end with your corner-twist algorithm.
+    </p>
+    <ol class="step-how">
+      <li><strong>Memo by corners, not stickers.</strong> Look at the piece in the buffer (DFR): which top corner does it belong in? Then the piece sitting in that corner: where does it belong? Keep going. If the buffer's own piece comes back to the buffer while top corners are still out of place, start again from the first one that is out of place.</li>
+      <li><strong>Pair them up</strong> and do the card below for each pair: it sends the buffer's piece to the first corner and that corner's piece to the second. Which way round a piece ends up doesn't matter yet.</li>
+      <li><strong>Twist.</strong> Every corner is now in its place, some of them twisted. Fix them with your twist algorithm <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code> (U2 or U' for the other top corners, and with R before and R' after to include the buffer corner), or see the Twists &amp; parity tab.</li>
+    </ol>
+    <p class="step-note" id="place-stats"></p>
+    <p><button type="button" class="applet-button" id="place-3d">Load the 3D applets</button> <span id="place-3d-status" role="status"></span></p>
+    <div id="place-cards" class="case-grid"></div>
+
+    <h2 class="section-heading" id="list" data-short="All pairs">4. Every pair</h2>
     <p>
       <label for="first-filter">Show pairs that start with </label>
       <select id="first-filter"></select>
@@ -79,6 +93,8 @@
   <script type="module">
     import { bldCorners } from '../../data/bld.js';
     import { corner8355LbRows } from '../../data/corner-8355-lb.js?v=1';
+    import { corner8355Place } from '../../data/corner-8355-place.js?v=1';
+    import { invertAlg } from '../../js/algs.js';
     import { corner8355Rows } from '../../data/corner-8355.js?v=1';
     import { notationEl, setupSpan } from '../../js/move-format.js';
     import { mountJumpBar } from '../../js/page-jump.js';
@@ -173,6 +189,36 @@
     } catch (e) {
       const p = el('p', 'step-note', `This page could not load its table: ${e.message}`);
       document.querySelector('main').appendChild(p);
+    }
+    // ---- 3: place, then twist (checked by log/2026-10-22-8355-placing.mjs on all 4860 positions)
+    {
+      $('place-stats').textContent = 'Checked on every one of the 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Setups are in orange; the 3D applets start from the position the commutator fixes and play it.';
+      const host = $('place-cards');
+      for (const p of corner8355Place) {
+        const card = el('article', 'case-card');
+        card.appendChild(el('h3', null, `Buffer → ${p.from} → ${p.to}`));
+        card.appendChild(el('p', 'step-note', `${p.setupMoves} setup move${p.setupMoves === 1 ? '' : 's'}, ${p.length} turns in all (letters ${p.first}${p.second}; ${p.options} sticker versions, this is the shortest)`));
+        card.appendChild(el('p')).appendChild(code(notationEl(p.notation, p.setup)));
+        card.appendChild(el('p', 'bld-muted')).appendChild(code(p.moves));
+        const player = document.createElement('twisty-player');
+        player.setAttribute('puzzle', '3x3x3');
+        player.setAttribute('alg', p.moves);
+        player.setAttribute('experimental-setup-alg', invertAlg(p.moves));
+        player.setAttribute('background', 'none');
+        player.setAttribute('control-panel', 'bottom-row');
+        player.className = 'applet-viewer';
+        player.style.display = 'none';
+        card.appendChild(player);
+        host.appendChild(card);
+      }
+      const button = $('place-3d');
+      button.addEventListener('click', () => {
+        button.disabled = true;
+        $('place-3d-status').textContent = 'Loading 3D…';
+        import('../../js/vendor/cubing/twisty.js')
+          .then(() => { host.querySelectorAll('twisty-player').forEach((t) => (t.style.display = '')); $('place-3d-status').textContent = ''; button.hidden = true; })
+          .catch(() => { button.disabled = false; $('place-3d-status').textContent = "The 3D applets couldn't load."; });
+      });
     }
     mountJumpBar();
   </script>
