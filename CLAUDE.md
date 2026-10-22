@@ -134,6 +134,11 @@ built ahead of being asked for. As of 2026-10-03:
   DF and DB, with the centres lined up, identify the 4c case; plus which slots
   to read before the lining-up M turn, and a sticker-match version). The page
   uses `js/steps-page.js` (step bar). Block building is placeholder.
+  **LSE map tab (2026-10-22, `3x3/roux/lse-map.html`, `data/lse-map.js`):** the owner's way of doing 4a —
+  repeat `U' M'`, look after every pair, finish the arrow with `M' U M` or a mirror (U turn first if needed).
+  One card per bad-edge pattern (32, grouped by family) with a picture after every pair; 16 patterns need a
+  short fix first (they loop otherwise). Generated and checked by `log/2026-10-22-lse-eo-map.mjs --write`.
+  The Roux pages now have tabs (Reference / LSE map) and a MENU child.
   **Block practice is planned, not built:** `docs/roux-block-practice-plan.md`
   is the full spec (first block + second block drills on
   `3x3/roux/practice.html`, an in-browser shortest-solution search in
