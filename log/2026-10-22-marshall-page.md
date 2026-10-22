@@ -24,3 +24,12 @@ the index, the two series, and steps one to five.
 - Whole-method test on 1,000 random scrambles and the 65-move comparison: not built. Steps 2–5 depend on his
   judgement about which piece to take next and are not coded.
 - His figures (colour-coded examples in steps 2–5) are not reproduced.
+
+## Worked examples added (second pass, same day)
+Our own examples, built from the moves (not Marshall's figures). Each start is the inverse of the example
+on a solved cube; `log/2026-10-22-marshall-check.mjs` checks each count in the captions.
+- Step 2: one series places the last three edges (9 → 12); a top turn first (7 → 9 → 12).
+- Step 3: the side turn `R U2 R' U2` from solved (moves FR, UR, UL only; bottom layer untouched).
+- Step 4: setup `R`, series, undo `R'` (5 → 2 → 4 → 8 corners).
+- Step 5: three corners out, one series (5 → 8).
+Searched and not used: no two-corner-at-once setup was found for the three-piece pattern in this search.

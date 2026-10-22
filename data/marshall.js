@@ -167,6 +167,58 @@ export const marshallSteps = [
       { title: 'If two top edges are right:', text: 'when three middle edges are in place but only two top edges have their top colour up, apply one more series using only top edges. The top edge in the middle layer comes up with its top colour up, and the top edge with the wrong colour goes into the middle layer.' },
       { title: 'Finish:', text: 'if the last turn of a series is a turn of the top face, it can be left out: a top turn cannot change the bottom layer, which the series is there to protect.' },
     ],
+    cases: [
+      {
+        anchor: 'edge-series-example',
+        name: 'One series places the last three edges',
+        orientation: 'Nine edges are in place at the start. One Edge Piece Series puts the other three in place. The three edges that move are outlined.',
+        displayAlg: "F R' F' R",
+        noViewer: true,
+        filmstrip: {
+          alg: "F R' F' R",
+          stickering: 'edges',
+          views: ['cube'],
+          marks: [
+            { piece: 'UR', colour: 'pink' },
+            { piece: 'UF', colour: 'pink' },
+            { piece: 'FR', colour: 'pink' },
+          ],
+          legend: [{ colour: 'pink', text: 'the three edges that are out of place at the start' }],
+          frames: [
+            { after: '', label: 'Start', caption: 'Nine edges in place; the three outlined are not.' },
+            { after: 'F', label: 'F', caption: 'Front turned clockwise.' },
+            { after: "R'", label: "R'", caption: 'Right turned counterclockwise.' },
+            { after: "F'", label: "F'", caption: 'Front turned back.' },
+            { after: 'R', label: 'R', caption: 'Right turned back. All twelve edges are in place.' },
+          ],
+        },
+      },
+      {
+        anchor: 'edge-series-setup',
+        name: 'A top turn first, then the series',
+        orientation: 'Seven edges are in place at the start. A top turn brings two more into place; the series then places the last three.',
+        displayAlg: "U F R' F' R",
+        noViewer: true,
+        filmstrip: {
+          alg: "U F R' F' R",
+          stickering: 'edges',
+          views: ['cube'],
+          marks: [
+            { piece: 'UF', colour: 'pink' },
+            { piece: 'UL', colour: 'pink' },
+            { piece: 'UB', colour: 'pink' },
+            { piece: 'UR', colour: 'pink' },
+            { piece: 'FR', colour: 'pink' },
+          ],
+          legend: [{ colour: 'pink', text: 'the five edges that are out of place at the start' }],
+          frames: [
+            { after: '', label: 'Start', caption: 'Seven edges in place. The five outlined are not.' },
+            { after: 'U', label: 'U', caption: 'Top turned clockwise: nine edges are in place.' },
+            { after: 'F R\' F\' R', label: "F R' F' R", caption: 'The series. All twelve edges are in place.' },
+          ],
+        },
+      },
+    ],
     notes: [
       'The choice of which edge to take next, and which version of the series to use, is a judgement in his method. No rule for it is coded or checked here.',
     ],
@@ -185,6 +237,34 @@ export const marshallSteps = [
       { title: 'All three in order:', text: 'swap top edges with the middle-layer edge one at a time. Turn the top 90° one way and one side face 90° the same way; then turn the top 90° the other way and the side face 90° back the other way. Repeat, alternating the directions, until the fourth turn of the side face brings the last top edge back on top and puts the middle-layer edge in place.' },
       { title: 'Finish:', text: 'turn the top so every top edge is in its place. The twelfth edge then must be right, since eleven right edges force the last one.' },
     ],
+    cases: [
+      {
+        anchor: 'side-turn',
+        name: 'The side turn, from a solved cube',
+        orientation: "Marshall's side turn, X U2 X' U2, with X = R. Shown from a solved cube to see what it moves.",
+        displayAlg: "R U2 R' U2",
+        noViewer: true,
+        filmstrip: {
+          alg: "R U2 R' U2",
+          fromSolved: true,
+          stickering: 'edges',
+          views: ['cube'],
+          marks: [
+            { piece: 'UR', colour: 'pink' },
+            { piece: 'FR', colour: 'pink' },
+            { piece: 'UL', colour: 'pink' },
+          ],
+          legend: [{ colour: 'pink', text: 'the three edges it moves' }],
+          frames: [
+            { after: '', label: 'Solved', caption: 'The cube before the side turn.' },
+            { after: 'R', label: 'R', caption: 'Right turned clockwise.' },
+            { after: 'U2', label: 'U2', caption: 'Top turned half way.' },
+            { after: "R'", label: "R'", caption: 'Right turned back.' },
+            { after: 'U2', label: 'U2', caption: 'Top turned back. Only three edges have moved, all in the top or middle layer; the bottom layer is untouched.' },
+          ],
+        },
+      },
+    ],
     notes: [
       'Marshall names the side faces by the colour in his figure 6. This page says "a side face"; the face is the one beside the edge being moved. Check the case against a picture before relying on the face: his figures are not reproduced here.',
     ],
@@ -202,6 +282,32 @@ export const marshallSteps = [
       { title: 'A corner in place but turned:', text: 'it has to come out. It can be taken out in the same series that places another corner, but a series cannot place two corners and remove a third.' },
       { title: 'Two corners in each other\'s place:', text: 'only one can be placed in one series; the other is moved out of the way.' },
       { title: 'Check:', text: 'step 4 is complete when five corners are placed. A series can add one or two to the count.' },
+    ],
+    cases: [
+      {
+        anchor: 'setup-and-undo',
+        name: 'A setup turn, a series, and the undo',
+        orientation: 'Five corners in place at the start, three out (UFR, UBL, UFL). A right turn, the series and the undo turn place all eight.',
+        displayAlg: "R U R U' L' U R' U' L R'",
+        noViewer: true,
+        filmstrip: {
+          alg: "R U R U' L' U R' U' L R'",
+          stickering: 'full',
+          views: ['cube'],
+          marks: [
+            { piece: 'UFR', colour: 'pink' },
+            { piece: 'UBL', colour: 'pink' },
+            { piece: 'UFL', colour: 'pink' },
+          ],
+          legend: [{ colour: 'pink', text: 'the three corners that are out of place at the start' }],
+          frames: [
+            { after: '', label: 'Start', caption: 'Five corners in place.' },
+            { after: 'R', label: 'R', caption: 'Right turned: this moves placed corners out, so only two are in place.' },
+            { after: "U R U' L' U R' U' L", label: 'The series', caption: 'The series: four corners are in place.' },
+            { after: "R'", label: "R'", caption: 'Right turned back. All eight corners are in place.' },
+          ],
+        },
+      },
     ],
     notes: [
       'Marshall\'s worked examples for this step (his figures 7 to 13) are pictures and are not reproduced. The setups are described by face in words, not by a worked move list.',
@@ -222,6 +328,31 @@ export const marshallSteps = [
       { title: 'Reverse:', text: 'turn the faces back that you turned in step 4.' },
       { title: 'Last corner:', text: 'you need to place only the first two. When everything else is right, the last corner must be right too.' },
     ],
+    cases: [
+      {
+        anchor: 'endgame-series',
+        name: 'Three corners left, one series',
+        orientation: 'Five corners in place; the three that are out (UBR, UBL, UFL) all move into place with one series.',
+        displayAlg: "U R U' L' U R' U' L",
+        noViewer: true,
+        filmstrip: {
+          alg: "U R U' L' U R' U' L",
+          stickering: 'full',
+          views: ['cube'],
+          marks: [
+            { piece: 'UBR', colour: 'pink' },
+            { piece: 'UBL', colour: 'pink' },
+            { piece: 'UFL', colour: 'pink' },
+          ],
+          legend: [{ colour: 'pink', text: 'the three corners left to place' }],
+          frames: [
+            { after: '', label: 'Start', caption: 'Five corners in place; the three outlined are left.' },
+            { after: "U R U' L'", label: 'Moves 1–4', caption: 'The series, first half.' },
+            { after: "U R' U' L", label: 'Moves 5–8', caption: 'The series, second half: all eight corners are in place.' },
+          ],
+        },
+      },
+    ],
     notes: [
       'Marshall leaves one rare arrangement (his figure 21) for the reader to solve, and gives a hint only. It is not solved here.',
       'Marshall describes these rules in colours. The steps are followed as he gives them; the examples in his figures 14 to 21 are not reproduced.',
@@ -237,6 +368,6 @@ export const marshallSources = {
 export const marshallGaps = [
   'The whole method on random scrambles: not run. Marshall says his average is about 65 moves over 100 scrambles; that figure is his, not measured here.',
   'The judgement parts of steps 2 to 5 (which edge or corner to take next, and which face to set up): his rules are reworded, not coded, so they are not checked by simulation.',
-  'His worked examples in steps 2 to 5: they are pictures in his page and are not reproduced.',
+  'His own worked examples for steps 2 to 5 (his figures) are not reproduced. The examples on the page are ours: built from the moves, and checked on the simulator.',
   'His statement that one of the three edges in the Edge Piece Series ends inverted: his figure numbers the edges, and the page does not reproduce that numbering.',
 ];
