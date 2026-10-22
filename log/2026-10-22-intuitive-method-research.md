@@ -63,3 +63,26 @@ edges in place (8), `(U M2)x4` moves 6 (8), `(U R2)x6` moves 5 (12).
   moves per edge, a sequence counting 1): M/U only 39 stuck; + `(U' M')x4` and `(U2 M2)x2`: 0 stuck
   (mean 45.8 turns); + `(U M2)x4` too: 0 stuck (mean 50.0, shorter horizons); + `(U' M')x4` and
   `M' U2 M U2`: 1 stuck.
+
+## Corners last (edges and centres solved first)
+
+Owner's point (2026-10-22): corners first is hard to follow because the centres move; edges (two
+colours) are easy to track, so edges first and corners last.
+
+`2026-10-22-repeat-corner-algs.mjs`: 2796 corner-only effects from 2- to 4-turn words repeated (up
+to 24 turns). Pure 3-cycles from 8 turns, with R, U, D only e.g. `(U2 R D2 R')x2` (DFL UFL UBR),
+`(D2 R U2 R')x2`; double swaps `(U' R U R')x3`, Sassy x3; no repeat word twists corners on its own
+and none cycles three top corners only.
+
+`2026-10-22-corners-last.mjs` (20 positions, corners one at a time, setups of any face turn):
+- `(U2 R D2 R')x2` + reverse + Sassy x3, up to 5 moves per corner: 19 of 20 stuck with 2-3 corners
+  left (twists).
+- plus a twist built from Sassy-on-the-bottom, `(R' D' R D)x2 U (D' R' D R)x2 U'` (and reverse):
+  up to 5 moves: 3 stuck; up to 6: 0 stuck, mean 119.9 turns.
+
+## M2 special cases (`2026-10-22-m2-alternatives.mjs`)
+
+Shortest sequences with exactly the same effect (U, D, M and half turns of R L F B, up to 12):
+C and W 4 (as now: `(U2 M')x2`, `(M U2)x2`); I and S 10 (now 11, all commutator-shaped);
+Q 11 (now 16, but the 16 is mostly `U' M'` repeated). No setup of up to 4 turns + M2 + undo does
+any of them. I = `D (M' X) (M X) D' M2` and S = `M2 D (X M') (X M) D'` with the same X = `U R2 U'`.
