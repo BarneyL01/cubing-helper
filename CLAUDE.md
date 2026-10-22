@@ -259,6 +259,10 @@ built ahead of being asked for. As of 2026-10-03:
   **"After 8355 (L/B)" tab (`3x3/bld/corner-8355-lb.html`):** the same 108 pairs with setups of any face
   (setup moves 1/2/3 = 18/56/34, none longer; mean 2.15, mean 11.70 total moves, max 14). Data
   `data/corner-8355-lb.js` from `node log/2026-10-21-bld-8355-corners.mjs --lb --write`.
+  Section 3 of the L/B tab (2026-10-22): "put the corners in place, twist later" — the easiest commutator for each
+  of the 12 ordered pairs of corners (orientation ignored), with 3D applets loaded on a button; memo by pieces,
+  then fix twists with the owner's twist algorithm. Checked on all 4,860 positions (at most 3 pairs, then at most
+  3 twists) by `log/2026-10-22-8355-placing.mjs --write` (`data/corner-8355-place.js`).
   **Two more tabs are built (2026-10-16):** "Corner cycles"
   (`3x3/bld/corner-cycles.html`, buffer DFR (the corner Old Pochmann's swap exchanges with UBL), letters V/K/P, traced from V: 378 pairs, twists, odd count,
   setup moves, lookup, 8 exercises) and "Edge cycles" (`3x3/bld/edge-cycles.html`,
