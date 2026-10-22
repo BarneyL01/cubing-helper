@@ -100,6 +100,55 @@ const cornerTwisted = (piece) => {
   log(`Step One ${alg}: blue edges start at ${slots.join(' ')} (from the words) and end on top`);
 }
 
+// ---- 6. Worked examples on the page (ours, built from the moves). Each start is the inverse of the
+// example's moves on a solved cube, so the example solves it; these checks test the counts in the captions.
+const homeOf = (state, kind) => pieces(state).filter((p) => p.kind === kind && isHome(p)).length;
+const outOf = (state, kind) => pieces(state).filter((p) => p.kind === kind && !isHome(p)).map((p) => p.name).sort().join(' ');
+const startOf = (alg) => applyAlg(solvedCube(), invertAlg(alg));
+{
+  // Step 2: one series places three edges; nine edges in place at the start.
+  const X = "F R' F' R";
+  const st = startOf(X);
+  check('step 2 example: nine edges in place at the start', homeOf(st, 2) === 9, String(homeOf(st, 2)));
+  check('step 2 example: the three outlined edges are UR UF FR', outOf(st, 2) === 'FR UF UR', outOf(st, 2));
+  check('step 2 example: all twelve edges in place after the series', homeOf(applyAlg(st, X), 2) === 12);
+}
+{
+  // Step 2: a top turn first; seven edges in place, nine after U, twelve after the series.
+  const X = "U F R' F' R";
+  const st = startOf(X);
+  check('step 2 setup example: seven edges in place at the start', homeOf(st, 2) === 7, String(homeOf(st, 2)));
+  check('step 2 setup example: nine after U', homeOf(applyAlg(st, 'U'), 2) === 9);
+  check('step 2 setup example: twelve after the series', homeOf(applyAlg(st, X), 2) === 12);
+  check('step 2 setup example: five outlined edges', outOf(st, 2) === 'FR UB UF UL UR', outOf(st, 2));
+}
+{
+  // Step 3: the side turn from solved moves three edges (all in the top or middle layer).
+  const st = applyAlg(solvedCube(), "R U2 R' U2");
+  const moved = pieces(st).filter((p) => p.kind === 2 && !isHome(p)).map((p) => p.name).sort().join(' ');
+  check('step 3 side turn moves edges FR UR UL only', moved === 'FR UL UR', moved);
+  check('step 3 side turn leaves the bottom-layer edges alone', pieces(st).filter((p) => p.kind === 2 && p.name.startsWith('D') && !isHome(p)).length === 0);
+}
+{
+  // Step 4: setup R, series, undo R. Five corners at the start, three out (UFR UBL UFL).
+  const X = "R U R U' L' U R' U' L R'";
+  const st = startOf(X);
+  check('step 4 example: five corners in place at the start', homeOf(st, 3) === 5, String(homeOf(st, 3)));
+  check('step 4 example: three out are UFR UBL UFL', outOf(st, 3) === 'UBL UFL UFR', outOf(st, 3));
+  const afterR = applyAlg(st, 'R');
+  check('step 4 example: two corners in place after the setup R', homeOf(afterR, 3) === 2, String(homeOf(afterR, 3)));
+  check('step 4 example: four corners in place after the series', homeOf(applyAlg(afterR, "U R U' L' U R' U' L"), 3) === 4);
+  check('step 4 example: all eight corners after the undo R\'', homeOf(applyAlg(st, X), 3) === 8);
+}
+{
+  // Step 5: three corners out (UBR UBL UFL); one series places them.
+  const X = "U R U' L' U R' U' L";
+  const st = startOf(X);
+  check('step 5 example: five corners in place at the start', homeOf(st, 3) === 5, String(homeOf(st, 3)));
+  check('step 5 example: three out are UBL UBR UFL', outOf(st, 3) === 'UBL UBR UFL', outOf(st, 3));
+  check('step 5 example: all eight corners after the series', homeOf(applyAlg(st, X), 3) === 8);
+}
+
 if (failures.length) {
   console.error('FAILED:\n  ' + failures.join('\n  '));
   process.exit(1);
