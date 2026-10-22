@@ -1,5 +1,5 @@
 import { invertAlg } from './algs.js';
-import { caseDiagram } from './cube-diagram.js';
+import { caseDiagram, WHITE_TOP } from './cube-diagram.js';
 import { startHold } from './cube-sim.js';
 import { buildFilmstrip } from './alg-filmstrip.js';
 import { libbyNotation } from './libby.js';
@@ -88,6 +88,7 @@ export function renderCases(containerId, cases, options = {}) {
         stickering: c.stickering,
         views: c.diagramViews,
         hold,
+        palette: c.palette,
       });
       visual.appendChild(diagram);
       // Stays an inert element until the 3D toggle loads the cubing.js script.
@@ -96,7 +97,9 @@ export function renderCases(containerId, cases, options = {}) {
       viewer.setAttribute('alg', viewerAlg);
       // z2 turns cubing.js's default white-on-top cube over to yellow-on-top,
       // matching the pictures.
-      viewer.setAttribute('experimental-setup-alg', `z2 ${hold} ${invertAlg(viewerAlg)}`);
+      // palette: WHITE_TOP (Blindfolded pages) keeps cubing.js's own white-on-top cube.
+      const flip = c.palette === WHITE_TOP ? '' : 'z2 ';
+      viewer.setAttribute('experimental-setup-alg', `${flip}${hold} ${invertAlg(viewerAlg)}`.replace(/\s+/g, ' ').trim());
       viewer.setAttribute('background', 'none');
       viewer.setAttribute('control-panel', 'bottom-row');
       viewer.className = 'case-viewer';
