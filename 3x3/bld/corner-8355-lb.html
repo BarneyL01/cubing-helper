@@ -75,7 +75,7 @@
       <li><strong>Twist.</strong> Every corner is now in its place, some of them twisted. Fix them with your twist algorithm <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code> (U2 or U' for the other top corners, and with R before and R' after to include the buffer corner), or see the Twists &amp; parity tab.</li>
     </ol>
     <p class="step-note" id="place-stats"></p>
-    <p><button type="button" class="applet-button" id="place-3d">Load the 3D applets</button> <span id="place-3d-status" role="status"></span></p>
+    <div class="view-toggle" id="view-toggle"></div>
     <div id="place-cards" class="case-grid"></div>
 
     <h2 class="section-heading" id="list" data-short="All pairs">4. Every pair</h2>
@@ -94,7 +94,9 @@
     import { bldCorners } from '../../data/bld.js';
     import { corner8355LbRows } from '../../data/corner-8355-lb.js?v=1';
     import { corner8355Place } from '../../data/corner-8355-place.js?v=1';
-    import { invertAlg } from '../../js/algs.js';
+    import { renderCases } from '../../js/render-cases.js';
+    import { mountViewToggle } from '../../js/view-toggle.js';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
     import { corner8355Rows } from '../../data/corner-8355.js?v=1';
     import { notationEl, setupSpan } from '../../js/move-format.js';
     import { mountJumpBar } from '../../js/page-jump.js';
@@ -192,33 +194,19 @@
     }
     // ---- 3: place, then twist (checked by log/2026-10-22-8355-placing.mjs on all 4860 positions)
     {
-      $('place-stats').textContent = 'Checked on every one of the 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Setups are in orange; the 3D applets start from the position the commutator fixes and play it.';
-      const host = $('place-cards');
-      for (const p of corner8355Place) {
-        const card = el('article', 'case-card');
-        card.appendChild(el('h3', null, `Buffer → ${p.from} → ${p.to}`));
-        card.appendChild(el('p', 'step-note', `${p.setupMoves} setup move${p.setupMoves === 1 ? '' : 's'}, ${p.length} turns in all (letters ${p.first}${p.second}; ${p.options} sticker versions, this is the shortest)`));
-        card.appendChild(el('p')).appendChild(code(notationEl(p.notation, p.setup)));
-        card.appendChild(el('p', 'bld-muted')).appendChild(code(p.moves));
-        const player = document.createElement('twisty-player');
-        player.setAttribute('puzzle', '3x3x3');
-        player.setAttribute('alg', p.moves);
-        player.setAttribute('experimental-setup-alg', invertAlg(p.moves));
-        player.setAttribute('background', 'none');
-        player.setAttribute('control-panel', 'bottom-row');
-        player.className = 'applet-viewer';
-        player.style.display = 'none';
-        card.appendChild(player);
-        host.appendChild(card);
-      }
-      const button = $('place-3d');
-      button.addEventListener('click', () => {
-        button.disabled = true;
-        $('place-3d-status').textContent = 'Loading 3D…';
-        import('../../js/vendor/cubing/twisty.js')
-          .then(() => { host.querySelectorAll('twisty-player').forEach((t) => (t.style.display = '')); $('place-3d-status').textContent = ''; button.hidden = true; })
-          .catch(() => { button.disabled = false; $('place-3d-status').textContent = "The 3D applets couldn't load."; });
-      });
+      $('place-stats').textContent = 'Checked on every one of the 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Each picture is the position the commutator fixes (corners only); switch to 3D above to play it.';
+      renderCases('place-cards', corner8355Place.map((p) => ({
+        name: `Buffer → ${p.from} → ${p.to}`,
+        orientation: `Setup ${p.setup} (${p.setupMoves} move${p.setupMoves === 1 ? '' : 's'}), ${p.length} turns in all. Letters ${p.first}${p.second}; the shortest of ${p.options} sticker versions.`,
+        alg: p.moves,
+        displayAlg: p.notation,
+        extraAlgs: [{ label: 'Every move', alg: p.moves }],
+        stickering: 'corners',
+        diagramViews: ['U', 'D'],
+        palette: WHITE_TOP,
+        hold: '',
+      })));
+      mountViewToggle($('view-toggle'));
     }
     mountJumpBar();
   </script>

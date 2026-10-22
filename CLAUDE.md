@@ -260,7 +260,7 @@ built ahead of being asked for. As of 2026-10-03:
   (setup moves 1/2/3 = 18/56/34, none longer; mean 2.15, mean 11.70 total moves, max 14). Data
   `data/corner-8355-lb.js` from `node log/2026-10-21-bld-8355-corners.mjs --lb --write`.
   Section 3 of the L/B tab (2026-10-22): "put the corners in place, twist later" — the easiest commutator for each
-  of the 12 ordered pairs of corners (orientation ignored), with 3D applets loaded on a button; memo by pieces,
+  of the 12 ordered pairs of corners (orientation ignored), with pictures and the site-wide Pictures / 3D toggle (render-cases `palette: WHITE_TOP` keeps 3D white-on-top); memo by pieces,
   then fix twists with the owner's twist algorithm. Checked on all 4,860 positions (at most 3 pairs, then at most
   3 twists) by `log/2026-10-22-8355-placing.mjs --write` (`data/corner-8355-place.js`).
   **Two more tabs are built (2026-10-16):** "Corner cycles"
