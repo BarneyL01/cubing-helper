@@ -687,41 +687,7 @@ text.net-marked {
   outline: 2px solid var(--accent);
 }
 
-/* Beginner's method: numbered steps with a sticky step bar */
-.step-bar {
-  position: sticky;
-  top: var(--header-h, 0);
-  z-index: 5;
-  display: flex;
-  gap: 0.4rem;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  margin: 1rem -1rem 0;
-  padding: 0.5rem 1rem;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-}
-
-.step-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  flex: none;
-  padding: 0.25rem 0.7rem 0.25rem 0.3rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
-  font-size: 0.88rem;
-  white-space: nowrap;
-}
-
-.step-pill:hover {
-  text-decoration: none;
-  border-color: var(--accent);
-}
-
-.step-pill-num,
+/* Steps pages: numbered steps */
 .step-num {
   display: inline-grid;
   place-items: center;
@@ -731,26 +697,9 @@ text.net-marked {
   font-weight: 700;
 }
 
-.step-pill-num {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.8rem;
-}
-
-.step-pill.active {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.step-pill.active .step-pill-num {
-  background: var(--accent);
-  color: var(--accent-contrast);
-}
-
-#top,
-.step,
-.step .case-card {
-  scroll-margin-top: var(--step-offset, 1rem);
+/* Anchors land below the sticky header (and, on phones, "On this page"). */
+main [id] {
+  scroll-margin-top: var(--anchor-offset, 4.5rem);
 }
 
 .step {
@@ -830,38 +779,6 @@ text.net-marked {
   color: var(--text-muted);
 }
 
-
-/* Tabs between pages of one section (Blind: Reference / Practice) */
-.tabs {
-  display: flex;
-  gap: 0.25rem;
-  margin: 1rem 0 0.5rem;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: thin;
-}
-
-.tabs a {
-  padding: 0.45rem 1rem;
-  margin-bottom: -1px;
-  border: 1px solid transparent;
-  border-radius: var(--radius) var(--radius) 0 0;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.tabs a:hover {
-  text-decoration: none;
-  color: var(--accent);
-}
-
-.tabs a.active {
-  background: var(--surface);
-  border-color: var(--border);
-  border-bottom-color: var(--surface);
-  color: var(--accent);
-}
 
 .btn {
   font: inherit;
@@ -1460,6 +1377,31 @@ text.net-marked {
   vertical-align: middle;
 }
 
+@media (max-width: 420px) {
+  .header-bar {
+    gap: 0.55rem;
+    padding: 0 0.75rem;
+  }
+
+  .menu-open-button {
+    padding: 0 0.75rem 0 0.65rem;
+  }
+
+  .site-header .brand,
+  .header-section {
+    font-size: 0.94rem;
+  }
+
+  .site-header .brand {
+    gap: 0.45rem;
+  }
+
+  .site-header .brand-logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
 /* The menu. Phones: a full-screen accordion. From 900px: a panel on the left over a scrim. */
 html.menu-open {
   overflow: hidden;
@@ -1804,7 +1746,7 @@ a.menu-sec[aria-current="page"],
 /* Picture index at the top of case pages */
 .picture-index {
   margin-top: 1.25rem;
-  scroll-margin-top: calc(var(--header-h, 56px) + 0.5rem);
+  scroll-margin-top: var(--anchor-offset, 4.5rem);
 }
 
 .index-heading {
@@ -1858,7 +1800,7 @@ a.menu-sec[aria-current="page"],
 /* Case cards: picture left, name and mnemonic right, algorithm full width */
 .case-card,
 .step .case-card {
-  scroll-margin-top: calc(var(--header-h, 56px) + 0.75rem);
+  scroll-margin-top: var(--anchor-offset, 4.5rem);
 }
 
 .case-top {
@@ -1943,8 +1885,6 @@ a.menu-sec[aria-current="page"],
 .btn,
 .chip,
 .view-toggle-buttons button,
-.tabs a,
-.step-pill,
 .finder-clear {
   display: inline-flex;
   align-items: center;
@@ -1998,7 +1938,7 @@ a.menu-sec[aria-current="page"],
 }
 
 .puzzle-label {
-  scroll-margin-top: calc(var(--header-h, 56px) + 0.5rem);
+  scroll-margin-top: var(--anchor-offset, 4.5rem);
 }
 
 /* Blindfolded cycles tabs (corner-cycles.html, edge-cycles.html) */
@@ -2093,19 +2033,6 @@ a.menu-sec[aria-current="page"],
 
 :root[data-theme="dark"] .mv-setup {
   color: #fbbf24;
-}
-
-/* "Jump to" bar on the long Blindfolded pages (js/page-jump.js); it reuses the step bar. */
-.jump-bar {
-  margin-top: 0.5rem;
-}
-
-.step-pill.no-num {
-  padding-left: 0.7rem;
-}
-
-.jump-target {
-  scroll-margin-top: var(--jump-offset, 4rem);
 }
 
 /* 3D applets shown on request (Corner cycles, the three bases) */
@@ -2247,4 +2174,235 @@ a.menu-sec[aria-current="page"],
 }
 .cube-3d.with-mirrors {
   width: min(88vw, 400px);
+}
+
+/* Page title: a small kicker with the section's name above the h1 (pages of multi-page sections) */
+.page-kicker {
+  margin: 0 0 -0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.page-kicker + h1 {
+  margin-top: 0.5rem;
+}
+
+/* Section row: the pages of this section. Quieter than the menu: small text, no pills. */
+.section-row {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0.75rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.section-row::-webkit-scrollbar {
+  display: none;
+}
+
+.section-row-link {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: 44px;
+  padding: 0 0.6rem;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.section-row-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.section-row-link[aria-current="page"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* On this page. Phones: one compact sticky control with a solid background. */
+.otp {
+  position: sticky;
+  top: var(--header-h, 56px);
+  z-index: 10;
+  margin: 0.5rem -1rem 0.75rem;
+  padding: 0.4rem 1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.otp-title {
+  display: none;
+}
+
+.otp-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.otp-label {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.otp-current {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.otp-current::after {
+  content: ' ▾';
+  color: var(--text-muted);
+}
+
+.otp.is-open .otp-current::after {
+  content: ' ▴';
+}
+
+.otp-list {
+  display: none;
+}
+
+.otp.is-open .otp-list {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: calc(100% - 0.2rem);
+  display: grid;
+  max-height: min(65vh, 480px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.35rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.otp-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.65rem;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.otp-link:hover {
+  background: var(--code-bg);
+  text-decoration: none;
+}
+
+.otp-link[aria-current="true"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.otp-num {
+  min-width: 1.1rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.otp-link[aria-current="true"] .otp-num {
+  color: var(--accent);
+}
+
+/* From 900px: a quiet list in a right-hand column that stays in view. */
+@media (min-width: 900px) {
+  body.has-otp main {
+    max-width: 1220px;
+    padding-right: calc(1rem + 250px);
+  }
+
+  .otp {
+    position: fixed;
+    top: calc(var(--header-h, 56px) + 1.75rem);
+    right: max(1rem, calc((100vw - 1220px) / 2 + 1rem));
+    width: 220px;
+    max-height: calc(100vh - var(--header-h, 56px) - 3.5rem);
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0 0 0 0.85rem;
+    background: transparent;
+    border-bottom: 0;
+    border-left: 1px solid var(--border);
+  }
+
+  .otp-title {
+    display: block;
+    margin: 0 0 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .otp-button {
+    display: none;
+  }
+
+  .otp-list,
+  .otp.is-open .otp-list {
+    position: relative;
+    inset: auto;
+    display: grid;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .otp-link {
+    min-height: 32px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .otp-link:hover {
+    color: var(--text);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .otp.is-open .otp-list {
+    animation: otp-pop 0.12s ease-out;
+  }
+
+  @keyframes otp-pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
 }

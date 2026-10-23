@@ -26,14 +26,13 @@
       </p>
     </div>
 
-    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
     <div class="view-toggle" id="view-toggle"></div>
     <div id="steps"></div>
   </main>
 
   <script type="module">
     import { beginnerSteps } from '../../data/beginners.js';
-    import { mountSteps } from '../../js/steps-page.js';
+    import { mountSteps } from '../../js/steps-page.js?v=2';
 
     mountSteps({
       steps: beginnerSteps,

@@ -14,20 +14,8 @@
   </header>
 
   <main>
-    <h1>3x3 — Blindfolded</h1>
-    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+    <h1>Basics</h1>
 
-    <nav class="tabs" aria-label="Blindfolded pages">
-      <a href="index.html">Reference</a>
-      <a href="practice.html">Practice</a>
-      <a href="commutators.html" class="active" aria-current="page">Commutators</a>
-      <a href="corner-cycles.html">Corner cycles</a>
-      <a href="corner-table.html">Corner table</a>
-      <a href="corner-8355.html">After 8355</a>
-      <a href="corner-8355-lb.html">After 8355 (L/B)</a>
-      <a href="corner-twists.html">Twists &amp; parity</a>
-      <a href="edge-cycles.html">Edge cycles</a>
-    </nav>
 
     <h2 class="section-heading" id="how" data-short="How it works" style="margin-top:1.5rem">How a commutator works</h2>
     <div class="source-note">
@@ -67,7 +55,6 @@
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
     import { renderCases } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
-    import { mountJumpBar } from '../../js/page-jump.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -154,7 +141,6 @@
     practice.items.forEach((t) => $('practice-items').appendChild(el('li', null, t)));
     $('practice-blind').textContent = practice.blind.text;
     $('practice-blind').append(' ', link(practice.blind.link));
-    mountJumpBar();
   </script>
 </body>
 </html>

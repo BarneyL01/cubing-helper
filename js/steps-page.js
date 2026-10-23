@@ -1,6 +1,8 @@
-// Builds a numbered step-by-step method page: a sticky step bar, one section
-// per step (goal, "how", case cards, previous/next links) and optional extra
-// sections after the numbered steps. Used by the Beginner's and 8355 pages.
+// Builds a numbered step-by-step method page: one section per step (goal,
+// "how", case cards, previous/next links) and optional extra sections after
+// the numbered steps. Used by the Beginner's, 8355, Heise, Marshall and Roux
+// pages. Each step section carries data-short (and data-num), which
+// js/site-chrome.js uses for its "On this page" list.
 //
 // A step is { id, title, short, source, goal, how, notes, cases, ... }:
 //   intro  – a plain paragraph (used instead of goal/how on extra sections)
@@ -27,7 +29,6 @@ const link = (href, cls, text) => {
 };
 
 export function mountSteps({ steps, sources }) {
-  const bar = document.getElementById('step-bar');
   const root = document.getElementById('steps');
 
   // "Step 3" for numbered steps, just the title for extras.
@@ -35,19 +36,11 @@ export function mountSteps({ steps, sources }) {
   const labels = steps.map((s) => (s.extra ? null : ++count));
   const nameOf = (i) => (labels[i] ? `Step ${labels[i]}: ${steps[i].title}` : steps[i].title);
 
-  const barLinks = [];
   steps.forEach((step, i) => {
-    const pill = link(`#${step.id}`, 'step-pill');
-    pill.append(
-      el('span', 'step-pill-num', labels[i] ? String(labels[i]) : step.mark || '+'),
-      el('span', 'step-pill-title', step.short || step.title),
-    );
-    pill.title = nameOf(i);
-    bar.appendChild(pill);
-    barLinks.push(pill);
-
     const section = el('section', 'step');
     section.id = step.id;
+    section.dataset.short = step.short || step.title;
+    if (labels[i]) section.dataset.num = String(labels[i]);
 
     const head = el('div', 'step-head');
     head.append(el('span', `step-num${labels[i] ? '' : ' extra'}`, labels[i] ? String(labels[i]) : step.mark || '+'), el('h2', null, step.title));
@@ -93,40 +86,4 @@ export function mountSteps({ steps, sources }) {
   });
 
   mountViewToggle(document.getElementById('view-toggle'));
-
-  // The step bar sticks under the site header (which only sticks on wider
-  // screens); jump targets land below both.
-  const header = document.querySelector('.site-header');
-  const root$ = document.documentElement;
-  function measure() {
-    const headerH = getComputedStyle(header).position === 'sticky' ? header.offsetHeight : 0;
-    root$.style.setProperty('--header-h', `${headerH}px`);
-    root$.style.setProperty('--step-offset', `${headerH + bar.offsetHeight + 8}px`);
-  }
-  measure();
-  addEventListener('resize', measure);
-
-  // Highlight the step currently being read.
-  const sections = steps.map((s) => document.getElementById(s.id));
-  function markActive() {
-    const offset = parseFloat(getComputedStyle(root$).getPropertyValue('--step-offset')) + 1;
-    let active = -1;
-    sections.forEach((s, i) => { if (s.getBoundingClientRect().top <= offset) active = i; });
-    // At the very bottom the last steps can't scroll up to the bar: prefer
-    // the step just jumped to, else the last one on screen.
-    if (innerHeight + scrollY >= root$.scrollHeight - 2) {
-      const visible = sections.map((s, i) => (s.getBoundingClientRect().top < innerHeight ? i : -1)).filter((i) => i > active);
-      const jumped = sections.findIndex((s) => `#${s.id}` === location.hash);
-      active = visible.includes(jumped) ? jumped : Math.max(active, ...visible);
-    }
-    barLinks.forEach((a, i) => a.classList.toggle('active', i === active));
-    // On narrow screens the bar scrolls sideways — keep the active pill in view.
-    if (active >= 0 && bar.scrollWidth > bar.clientWidth) {
-      const a = barLinks[active];
-      bar.scrollLeft = a.offsetLeft - (bar.clientWidth - a.offsetWidth) / 2;
-    }
-  }
-  addEventListener('scroll', markActive, { passive: true });
-  addEventListener('hashchange', markActive);
-  markActive();
 }

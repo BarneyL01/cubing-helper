@@ -14,20 +14,8 @@
   </header>
 
   <main>
-    <h1>3x3 — Blindfolded</h1>
-    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+    <h1>Corner table</h1>
 
-    <nav class="tabs" aria-label="Blindfolded pages">
-      <a href="index.html">Reference</a>
-      <a href="practice.html">Practice</a>
-      <a href="commutators.html">Commutators</a>
-      <a href="corner-cycles.html">Corner cycles</a>
-      <a href="corner-table.html" class="active" aria-current="page">Corner table</a>
-      <a href="corner-8355.html">After 8355</a>
-      <a href="corner-8355-lb.html">After 8355 (L/B)</a>
-      <a href="corner-twists.html">Twists &amp; parity</a>
-      <a href="edge-cycles.html">Edge cycles</a>
-    </nav>
 
     <p class="subtitle">
       Every pair of corner letters has its own shortest commutator, with a setup move only when none is
@@ -111,7 +99,6 @@
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
     import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
-    import { mountJumpBar } from '../../js/page-jump.js';
     import { expandBrackets, invertAlg } from '../../js/algs.js';
 
     const $ = (id) => document.getElementById(id);
@@ -315,7 +302,6 @@
       card.appendChild(solution);
       cards.appendChild(card);
     }
-    mountJumpBar();
   </script>
 </body>
 </html>

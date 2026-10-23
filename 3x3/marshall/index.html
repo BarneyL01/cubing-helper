@@ -32,14 +32,13 @@
 
     <dl class="facts" id="facts"></dl>
 
-    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
     <div class="view-toggle" id="view-toggle"></div>
     <div id="steps"></div>
   </main>
 
   <script type="module">
     import { marshallFacts, marshallSeries, marshallSeriesTable, marshallSteps, marshallSources, marshallGaps, marshallExtraAlgs, marshallExtraAlgsTable } from '../../data/marshall.js?v=4';
-    import { mountSteps } from '../../js/steps-page.js';
+    import { mountSteps } from '../../js/steps-page.js?v=2';
 
     const el = (tag, cls, text) => {
       const n = document.createElement(tag);

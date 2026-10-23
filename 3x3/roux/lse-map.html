@@ -14,13 +14,8 @@
   </header>
 
   <main>
-    <h1>3x3 — Roux</h1>
-    <p class="subtitle">Left/right blocks (intuitive), then CMLL, then LSE: orient the edges, place UL and UR, solve the M slice.</p>
+    <h1>LSE map</h1>
 
-    <nav class="tabs" aria-label="Roux pages">
-      <a href="index.html">Reference</a>
-      <a href="lse-map.html" class="active" aria-current="page">LSE map</a>
-    </nav>
 
     <p class="subtitle">
       LSE 4a your way: repeat <code>U' M'</code>, look after every pair, and finish the arrow with
@@ -51,7 +46,6 @@
   <script type="module">
     import { lseMapRows } from '../../data/lse-map.js?v=1';
     import { renderCases } from '../../js/render-cases.js';
-    import { mountJumpBar } from '../../js/page-jump.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -117,7 +111,6 @@
       });
       renderCases(id, cases);
     });
-    mountJumpBar();
   </script>
 </body>
 </html>

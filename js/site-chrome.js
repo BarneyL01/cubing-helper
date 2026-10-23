@@ -290,6 +290,187 @@ function trackHeaderHeight() {
   addEventListener('resize', set);
 }
 
+// Title (tier 2): on a page of a section with several pages, a small kicker
+// with the section's name above the h1 and a quiet row of the section's pages
+// under the title (after the subtitle that follows the h1, if there is one).
+// Returns the element that "On this page" goes after.
+function mountTitle() {
+  const main = document.querySelector('main');
+  const h1 = main?.querySelector('h1');
+  if (!main || !h1) return null;
+  let anchor = h1.nextElementSibling?.classList.contains('subtitle') ? h1.nextElementSibling : h1;
+  if (!currentSection?.pages) return anchor;
+
+  h1.before(el('p', 'page-kicker', currentSection.label));
+  const row = el('nav', 'section-row');
+  row.setAttribute('aria-label', `${currentSection.label} pages`);
+  for (const page of currentSection.pages) row.appendChild(link(page.label, page.path, 'section-row-link'));
+  anchor.after(row);
+  // On a phone the row may scroll sideways: bring the current page into view.
+  const active = row.querySelector('[aria-current="page"]');
+  if (active && row.scrollWidth > row.clientWidth) {
+    row.scrollLeft = active.offsetLeft - (row.clientWidth - active.offsetWidth) / 2;
+  }
+  return row;
+}
+
+// "On this page" (tier 3): one entry per h2.section-heading[id] (data-short is
+// the short label) and per step of a steps page (section.step[id]). Headings
+// that page scripts add later are picked up too, and headings inside a hidden
+// part of the page are left out. Shown only with 3 or more entries.
+const TARGETS = 'h2.section-heading, section.step[id]';
+const slug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function entryOf(t) {
+  const text = (t.matches('section') ? t.querySelector('h2')?.textContent : t.textContent)?.trim() || '';
+  const m = text.match(/^(\d+)\.\s*(.*)$/);
+  return {
+    id: t.id,
+    num: t.dataset.num || (m ? m[1] : ''),
+    label: t.dataset.short || (m ? m[2] : text),
+    title: text,
+  };
+}
+
+function mountOnThisPage(after) {
+  const main = document.querySelector('main');
+  if (!main) return;
+  const wide = matchMedia(MENU_WIDE);
+
+  const box = el('nav', 'otp');
+  box.setAttribute('aria-label', 'On this page');
+  box.hidden = true;
+  const title = el('p', 'otp-title', 'On this page');
+  const button = el('button', 'otp-button');
+  button.type = 'button';
+  button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', 'otp-list');
+  const current = el('span', 'otp-current');
+  button.append(el('span', 'otp-label', 'On this page'), current);
+  const list = el('div', 'otp-list');
+  list.id = 'otp-list';
+  box.append(title, button, list);
+  if (after) after.after(box);
+  else main.prepend(box);
+
+  let targets = [];
+  let links = [];
+  let signature = '';
+
+  const root = document.documentElement;
+  const header = document.getElementById('site-header');
+  function setOffset() {
+    const extra = !box.hidden && !wide.matches ? box.offsetHeight : 0;
+    root.style.setProperty('--anchor-offset', `${(header?.offsetHeight ?? 0) + extra + 8}px`);
+  }
+
+  function setOpen(open) {
+    box.classList.toggle('is-open', open);
+    button.setAttribute('aria-expanded', String(open));
+  }
+  button.addEventListener('click', () => setOpen(!box.classList.contains('is-open')));
+  list.addEventListener('click', (e) => {
+    if (e.target.closest('a')) setOpen(false);
+  });
+  box.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && box.classList.contains('is-open')) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!box.contains(e.target)) setOpen(false);
+  });
+
+  let active = null;
+  function markActive() {
+    if (!targets.length) return;
+    const line = parseFloat(getComputedStyle(root).getPropertyValue('--anchor-offset')) + 16;
+    let now = 0;
+    targets.forEach((t, i) => {
+      if (t.getBoundingClientRect().top <= line) now = i;
+    });
+    // At the very bottom the last sections may be too short to reach the line:
+    // prefer the one just jumped to.
+    if (innerHeight + scrollY >= root.scrollHeight - 2) {
+      const jumped = targets.findIndex((t) => `#${t.id}` === location.hash);
+      now = jumped > now ? jumped : now;
+    }
+    if (now === active) return;
+    active = now;
+    links.forEach((a, i) => (i === now ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    const e = entryOf(targets[now]);
+    current.textContent = e.num ? `${e.num}. ${e.label}` : e.label;
+    // Keep the highlighted entry in view inside the desktop list.
+    if (wide.matches && list.scrollHeight > list.clientHeight) {
+      const a = links[now];
+      if (a.offsetTop < list.scrollTop || a.offsetTop + a.offsetHeight > list.scrollTop + list.clientHeight) {
+        list.scrollTop = a.offsetTop - list.clientHeight / 2;
+      }
+    }
+  }
+
+  function rebuild() {
+    const found = [...main.querySelectorAll(TARGETS)].filter(
+      (t) => !box.contains(t) && !t.closest('[hidden]') && entryOf(t).title,
+    );
+    for (const t of found) {
+      if (!t.id) {
+        let id = slug(entryOf(t).title) || 'section';
+        while (document.getElementById(id)) id += '-2';
+        t.id = id;
+      }
+    }
+    const entries = found.map(entryOf);
+    const sig = entries.map((e) => `${e.id}|${e.num}|${e.label}`).join('\n');
+    if (sig === signature) return;
+    signature = sig;
+    targets = found;
+    active = null;
+    list.replaceChildren();
+    links = entries.map((e) => {
+      const a = el('a', 'otp-link');
+      a.href = `#${e.id}`;
+      if (e.num) a.append(el('span', 'otp-num', e.num));
+      a.append(el('span', null, e.label));
+      if (e.title !== e.label) a.title = e.title;
+      list.appendChild(a);
+      return a;
+    });
+    const show = entries.length >= 3;
+    box.hidden = !show;
+    document.body.classList.toggle('has-otp', show);
+    if (!show) targets = [];
+    setOffset();
+    markActive();
+  }
+
+  let timer = 0;
+  const later = () => {
+    clearTimeout(timer);
+    timer = setTimeout(rebuild, 60);
+  };
+  new MutationObserver((records) => {
+    if (records.some((r) => !box.contains(r.target))) later();
+  }).observe(main, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'id', 'data-short'] });
+
+  rebuild();
+  // Page scripts run after this module: build again once they have.
+  document.addEventListener('DOMContentLoaded', rebuild);
+  addEventListener('load', rebuild);
+  addEventListener('scroll', markActive, { passive: true });
+  addEventListener('hashchange', markActive);
+  addEventListener('resize', () => {
+    setOffset();
+    markActive();
+  });
+  wide.addEventListener('change', () => {
+    setOpen(false);
+    setOffset();
+  });
+}
+
 mountHeader();
 trackHeaderHeight();
+mountOnThisPage(mountTitle());
 mountAbout();

@@ -14,20 +14,8 @@
   </header>
 
   <main>
-    <h1>3x3 — Blindfolded</h1>
-    <p class="subtitle">M2 for edges, Old Pochmann for corners, Speffz letters.</p>
+    <h1>Corner cycles</h1>
 
-    <nav class="tabs" aria-label="Blindfolded pages">
-      <a href="index.html">Reference</a>
-      <a href="practice.html">Practice</a>
-      <a href="commutators.html">Commutators</a>
-      <a href="corner-cycles.html" class="active" aria-current="page">Corner cycles</a>
-      <a href="corner-table.html">Corner table</a>
-      <a href="corner-8355.html">After 8355</a>
-      <a href="corner-8355-lb.html">After 8355 (L/B)</a>
-      <a href="corner-twists.html">Twists &amp; parity</a>
-      <a href="edge-cycles.html">Edge cycles</a>
-    </nav>
 
     <p class="subtitle">
       Each pair of corner letters is one 3-cycle with the buffer: a base commutator, with a setup move if needed.
@@ -187,7 +175,6 @@
     import { buildFilmstrip } from '../../js/alg-filmstrip.js';
     import { renderCases } from '../../js/render-cases.js';
     import { movesEl, notationEl, setupSpan } from '../../js/move-format.js';
-    import { mountJumpBar } from '../../js/page-jump.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -432,7 +419,6 @@
       card.appendChild(solution);
       cards.appendChild(card);
     }
-    mountJumpBar();
   </script>
 </body>
 </html>

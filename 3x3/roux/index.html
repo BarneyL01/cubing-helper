@@ -14,13 +14,9 @@
   </header>
 
   <main>
-    <h1 id="top">3x3 — Roux</h1>
+    <h1 id="top">Reference</h1>
     <p class="subtitle">Left/right blocks (intuitive), then CMLL, then LSE: orient the edges, place UL and UR, solve the M slice.</p>
 
-    <nav class="tabs" aria-label="Roux pages">
-      <a href="index.html" class="active" aria-current="page">Reference</a>
-      <a href="lse-map.html">LSE map</a>
-    </nav>
     <div class="source-note">
       <p>
         The CMLL cases are from your notes. The LSE steps (4a, 4b, 4c and DFDB)
@@ -32,7 +28,6 @@
 
     <dl class="facts" id="facts"></dl>
 
-    <nav class="step-bar" id="step-bar" aria-label="Steps"></nav>
     <div class="view-toggle" id="view-toggle"></div>
     <div id="steps"></div>
   </main>
@@ -42,7 +37,7 @@
       rouxCmllCases, lseFacts, lseOverview, eoCases, eoSteps, ulUrSteps,
       mSliceCases, mSliceSteps, dfdb, rouxLseCases, yourNote,
     } from '../../data/roux.js?v=3';
-    import { mountSteps } from '../../js/steps-page.js';
+    import { mountSteps } from '../../js/steps-page.js?v=2';
 
     const el = (tag, cls, text) => {
       const n = document.createElement(tag);
