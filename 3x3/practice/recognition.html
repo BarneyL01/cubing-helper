@@ -112,24 +112,32 @@
     load();
     form.addEventListener('change', save);
 
-    // ---- the cube: a 3D player (loaded with the page) with a picture as fallback
+    // ---- the cube: a fresh 3D player for every case (changing a player's attributes after it has drawn
+    // did not redraw it reliably), with a picture as fallback if cubing.js cannot load
     const slot = $('cube-slot');
-    let player = null;
-    const TWISTY = '../../js/vendor/cubing/twisty.js';
+    let has3d = false;
+    let running = false;
+    const TWISTY = new URL('../../js/vendor/cubing/twisty.js', import.meta.url).href;
     $('status').textContent = 'Loading 3D…';
     const ready = import(TWISTY)
       .then(() => {
-        player = document.createElement('twisty-player');
-        player.setAttribute('puzzle', '3x3x3');
-        player.setAttribute('background', 'none');
-        // 'none' stops cubing.js drawing the cube here, so keep its small control bar (it also has full screen)
-        player.setAttribute('control-panel', 'bottom-row');
-        player.setAttribute('experimental-setup-alg', 'z2');
-        player.className = 'rec-player';
-        slot.replaceChildren(player);
+        has3d = true;
         $('status').textContent = '';
+        // a solved cube until Start, so you can see the 3D view works
+        if (!running) slot.replaceChildren(makePlayer('', ''));
       })
       .catch(() => { $('status').textContent = "3D couldn't load: showing pictures instead."; });
+    function makePlayer(setup, alg) {
+      const p = document.createElement('twisty-player');
+      p.setAttribute('puzzle', '3x3x3');
+      p.setAttribute('background', 'none');
+      p.setAttribute('control-panel', 'bottom-row');
+      // z2 turns cubing.js's white-on-top cube to yellow-on-top, as on the case cards
+      p.setAttribute('experimental-setup-alg', `z2 ${setup}`.trim());
+      p.setAttribute('alg', alg);
+      p.className = 'rec-player';
+      return p;
+    }
 
     // ---- picking cases: shuffle all chosen cases, go through them, reshuffle (never the same twice in a row)
     let bag = [];
@@ -151,9 +159,9 @@
       const hold = item.c.hold ?? startHold(alg);
       // the case: solved cube, inverse of the algorithm, then a turn of the top layer
       const setup = [hold, invertAlg(alg), turn].filter(Boolean).join(' ');
-      if (player) {
-        player.setAttribute('experimental-setup-alg', `z2 ${setup}`);
-        player.setAttribute('alg', '');
+      if (has3d) {
+        // the case at the start; pressing play would show its solution
+        slot.replaceChildren(makePlayer(setup, [turn ? UNDO[turn] : '', alg].filter(Boolean).join(' ')));
       } else {
         slot.replaceChildren(caseDiagram([turn ? UNDO[turn] : '', alg].filter(Boolean).join(' '), { stickering: SETS[item.set].stickering, views: ['U'], hold }));
       }
@@ -168,7 +176,6 @@
     }
 
     // ---- the run loop
-    let running = false;
     let timer = null;
     let phaseEnd = 0;
     let phaseLength = 1;

@@ -161,7 +161,8 @@ built ahead of being asked for. As of 2026-10-03:
   mnemonic, Libby's line for OLL/PLL) shows for the solution time (default 3 s, can be switched off), then the
   next case. Settings in localStorage `cubing-helper:recognition`; Keep screen on. Every case and turn checked by
   `log/2026-10-23-recognition-check.mjs` (84 combinations). Menu item and home row under 3x3. Note: cubing.js
-  `control-panel="none"` stopped the cube drawing here, so the player keeps `bottom-row`.
+  `control-panel="none"` stopped the cube drawing here, so the player keeps `bottom-row`; and changing a
+  player's attributes after it has drawn did not redraw it reliably, so the page makes a fresh player per case.
 - **3x3 Marshall Method** — Philip Marshall's edges-first method ("The Ultimate Solution to Rubik's Cube"),
   from his own page (helm.lu/cube/MarshallPhilipp, read 2026-10-22), **not from the user's notes** (the page says
   so and credits him). Two series (`F R' F' R`, `U R U' L' U R' U' L` and its mirror) with checked picture strips,
