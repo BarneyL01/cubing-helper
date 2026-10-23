@@ -2128,3 +2128,11 @@ html.menu-open {
 .rec-settings[hidden] {
   display: none;
 }
+.cube-3d-wrap {
+  display: flex;
+  justify-content: center;
+}
+.cube-3d {
+  width: min(70vw, 300px);
+  height: auto;
+}

@@ -68,9 +68,8 @@
     import { ollCases } from '../../data/oll.js';
     import { pllCornerCases, pllEdgeCases } from '../../data/pll.js';
     import { cornerOrientationCases } from '../../data/corner-orientation.js';
-    import { invertAlg } from '../../js/algs.js';
     import { startHold } from '../../js/cube-sim.js';
-    import { caseDiagram } from '../../js/cube-diagram.js';
+    import { case3d } from '../../js/cube-3d.js';
     import { libbyNotation } from '../../js/libby.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
 
@@ -112,32 +111,11 @@
     load();
     form.addEventListener('change', save);
 
-    // ---- the cube: a fresh 3D player for every case (changing a player's attributes after it has drawn
-    // did not redraw it reliably), with a picture as fallback if cubing.js cannot load
+    // ---- the cube: a still 3D-style picture drawn by js/cube-3d.js (our own SVG, no cubing.js)
     const slot = $('cube-slot');
-    let has3d = false;
     let running = false;
-    const TWISTY = new URL('../../js/vendor/cubing/twisty.js', import.meta.url).href;
-    $('status').textContent = 'Loading 3D…';
-    const ready = import(TWISTY)
-      .then(() => {
-        has3d = true;
-        $('status').textContent = '';
-        // a solved cube until Start, so you can see the 3D view works
-        if (!running) slot.replaceChildren(makePlayer('', ''));
-      })
-      .catch(() => { $('status').textContent = "3D couldn't load: showing pictures instead."; });
-    function makePlayer(setup, alg) {
-      const p = document.createElement('twisty-player');
-      p.setAttribute('puzzle', '3x3x3');
-      p.setAttribute('background', 'none');
-      p.setAttribute('control-panel', 'bottom-row');
-      // z2 turns cubing.js's white-on-top cube to yellow-on-top, as on the case cards
-      p.setAttribute('experimental-setup-alg', `z2 ${setup}`.trim());
-      p.setAttribute('alg', alg);
-      p.className = 'rec-player';
-      return p;
-    }
+    const ready = Promise.resolve();
+    slot.replaceChildren(case3d('', { label: 'Solved cube' }));
 
     // ---- picking cases: shuffle all chosen cases, go through them, reshuffle (never the same twice in a row)
     let bag = [];
@@ -158,13 +136,7 @@
       const alg = item.c.alg || item.c.altAlg;
       const hold = item.c.hold ?? startHold(alg);
       // the case: solved cube, inverse of the algorithm, then a turn of the top layer
-      const setup = [hold, invertAlg(alg), turn].filter(Boolean).join(' ');
-      if (has3d) {
-        // the case at the start; pressing play would show its solution
-        slot.replaceChildren(makePlayer(setup, [turn ? UNDO[turn] : '', alg].filter(Boolean).join(' ')));
-      } else {
-        slot.replaceChildren(caseDiagram([turn ? UNDO[turn] : '', alg].filter(Boolean).join(' '), { stickering: SETS[item.set].stickering, views: ['U'], hold }));
-      }
+      slot.replaceChildren(case3d(alg, { hold, turn, label: 'The case to recognise' }));
     }
     function fillSolution(item, turn) {
       const alg = item.c.alg || item.c.altAlg;
