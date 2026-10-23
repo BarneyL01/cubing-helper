@@ -74,3 +74,15 @@
 }
 .pair-grid li { display: flex; gap: 0.5rem; align-items: baseline; padding: 0.2rem 0; border-bottom: 1px solid var(--border); }
 .pair-grid b { min-width: 2.2em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* Coloured net (letter drill): marked sticker outlined, letters readable on any colour */
+.net-cell.net-coloured { stroke: #1f2937; stroke-width: 0.5; }
+.net-target-outer { fill: none; stroke: #111827; stroke-width: 1.4; }
+.net-target-inner { fill: none; stroke: #ffffff; stroke-width: 0.7; }
+text.net-letter-on-colour {
+  fill: #111827;
+  stroke: #ffffff;
+  stroke-width: 0.9;
+  paint-order: stroke;
+  font-weight: 800;
+}

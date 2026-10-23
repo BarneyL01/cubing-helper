@@ -6,8 +6,11 @@ const NET_POS = { U: [1, 0], L: [0, 1], F: [1, 1], R: [2, 1], B: [3, 1], D: [1, 
 const CORNER_CELLS = [[0, 0], [2, 0], [2, 2], [0, 2]];
 const EDGE_CELLS = [[1, 0], [2, 1], [1, 2], [0, 1]];
 
-// `letters: false` leaves the letters off (for the letter-scheme drill).
-export function bldNet(kind, { buffers = [], marked = [], letters = true } = {}) {
+// `letters`: true (all), false (none) or a list of the letters to show.
+// `colours` (face -> CSS colour) draws a coloured cube, with marked stickers outlined
+// instead of filled (the letter-scheme drill).
+export function bldNet(kind, { buffers = [], marked = [], letters = true, colours = null } = {}) {
+  const showLetter = (l) => (Array.isArray(letters) ? letters.includes(l) : letters);
   const cells = kind === 'edges' ? EDGE_CELLS : CORNER_CELLS;
   const S = 10;
   const parts = [];
@@ -17,15 +20,25 @@ export function bldNet(kind, { buffers = [], marked = [], letters = true } = {})
     const oy = fy * 3 * S;
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
-        parts.push(`<rect class="net-cell" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"/>`);
+        const fill = colours ? ` style="fill:${colours[face]}"` : '';
+        parts.push(`<rect class="net-cell${colours ? ' net-coloured' : ''}" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"${fill}/>`);
       }
     }
-    parts.push(`<text class="net-face" x="${ox + 1.5 * S}" y="${oy + 1.5 * S}">${face}</text>`);
+    parts.push(`<text class="net-face${colours ? ' net-letter-on-colour' : ''}" x="${ox + 1.5 * S}" y="${oy + 1.5 * S}">${face}</text>`);
     cells.forEach(([c, r], i) => {
       const letter = String.fromCharCode(65 + f * 4 + i);
       const cls = buffers.includes(letter) ? ' net-buffer' : marked.includes(letter) ? ' net-marked' : '';
+      if (colours) {
+        // the coloured cell is already drawn; outline a marked one (dark ring, then a light one inside)
+        if (marked.includes(letter)) {
+          parts.push(`<rect class="net-target-outer" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"/>`);
+          parts.push(`<rect class="net-target-inner" x="${ox + c * S + 1.5}" y="${oy + r * S + 1.5}" width="${S - 3}" height="${S - 3}" rx="0.6"/>`);
+        }
+        if (showLetter(letter)) parts.push(`<text class="net-letter net-letter-on-colour" x="${ox + (c + 0.5) * S}" y="${oy + (r + 0.5) * S}">${letter}</text>`);
+        return;
+      }
       parts.push(`<rect class="net-cell${cls}" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"/>`);
-      if (letters) parts.push(`<text class="net-letter${cls}" x="${ox + (c + 0.5) * S}" y="${oy + (r + 0.5) * S}">${letter}</text>`);
+      if (showLetter(letter)) parts.push(`<text class="net-letter${cls}" x="${ox + (c + 0.5) * S}" y="${oy + (r + 0.5) * S}">${letter}</text>`);
     });
   });
   return `<svg class="bld-net" viewBox="-0.5 -0.5 121 91" role="img" aria-label="Speffz ${kind} letters on an unfolded cube">${parts.join('')}</svg>`;
