@@ -105,7 +105,10 @@ built ahead of being asked for. As of 2026-10-03:
 
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
   original notes. `data/oll.js`, `data/pll.js` (both reachable straight
-  from the home page since 2026-10-06, as well as via the CFOP page). Plus an **F2L map**
+  from the home page since 2026-10-06, as well as via the CFOP page). Also
+  the **full OLL (57) and full PLL (21)** lists, added 2026-10-23 as sections on
+  the same two pages: standard J Perm algorithms (`data/oll-full.js`,
+  `data/pll-full.js`), standard names only. Plus an **F2L map**
   (`data/f2l.js`, `3x3/cfop/f2l.html`): all 41 cases + 7 in-between steps,
   each step leading to another case. **Not our original work** — it's a
   transcription of the dogschasingsquirrels chart
@@ -303,6 +306,11 @@ cipher (e.g. "Sassy" = RUPV = `R U R' U'`). **Always decode/encode through
 `docs/mnemonics.md`** — never invent new letter meanings without confirming
 with the user. Every algorithm shown on the site should display both the
 standard WCA notation and the user's mnemonic word breakdown.
+
+**Exception (2026-10-23):** the full OLL (57) and full PLL (21) lists
+(`data/oll-full.js`, `data/pll-full.js`; their sections on the OLL and PLL
+pages, and their sets in Recognition practice) show standard names and
+notation only: no mnemonic words and no Libby's line. The user asked for that.
 
 ## Libby's notation
 

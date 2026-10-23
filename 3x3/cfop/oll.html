@@ -16,8 +16,9 @@
   <main>
     <h1>2-look OLL</h1>
     <p class="subtitle">
-      Each card shows the case (yellow = facing up), the standard algorithm,
-      and your mnemonic word breakdown. Switch to 3D to replay an algorithm.
+      Each 2-look card shows the case (yellow = facing up), the standard
+      algorithm, and your mnemonic word breakdown. Switch to 3D to replay an
+      algorithm. The full list further down has standard notation only.
     </p>
     <p class="libby-key">
       <strong>Libby's:</strong> each card also shows the algorithm as digits —
@@ -29,15 +30,27 @@
     <div id="picture-index"></div>
 
     <div id="oll-cases" class="case-grid"></div>
+
+    <h2 class="section-heading" id="full-oll">Full OLL (57 cases)</h2>
+    <p class="subtitle">
+      All 57 OLL cases, each with one standard algorithm. Standard names and
+      notation only: no mnemonic words and no Libby's digits on these cards.
+    </p>
+    <div id="full-oll-cases" class="case-grid"></div>
   </main>
 
   <script type="module">
     import { ollCases } from '../../data/oll.js';
+    import { ollFullCases } from '../../data/oll-full.js';
     import { renderCases, renderPictureIndex } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
     mountViewToggle(document.getElementById('view-toggle'));
     renderCases('oll-cases', ollCases, { libby: true });
-    renderPictureIndex('picture-index', [{ container: 'oll-cases' }]);
+    renderCases('full-oll-cases', ollFullCases);
+    renderPictureIndex('picture-index', [
+      { title: '2-look OLL', container: 'oll-cases' },
+      { title: 'Full OLL', container: 'full-oll-cases' },
+    ]);
   </script>
 </body>
 </html>

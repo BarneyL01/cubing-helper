@@ -23,8 +23,9 @@
       <p>
         The cases and algorithms are the ones on the 2-look OLL, 2-look PLL and Roux CMLL pages (your notes). Each
         case is shown with a random turn of the top layer, as you would meet it in a solve; the solution starts
-        with the top-layer turn to make first. Nothing is recorded: there is no way to check your cube, so this is
-        for recognising cases and getting the moves into your hands. Settings are kept in this browser.
+        with the top-layer turn to make first. The full OLL and full PLL sets use standard names and algorithms
+        only (no mnemonic words, no Libby's digits). Nothing is recorded: there is no way to check your cube, so
+        this is for recognising cases and getting the moves into your hands. Settings are kept in this browser.
       </p>
     </div>
 
@@ -34,6 +35,8 @@
         <label><input type="checkbox" name="set" value="oll" checked /> 2-look OLL (8)</label>
         <label><input type="checkbox" name="set" value="pll" checked /> 2-look PLL (6)</label>
         <label><input type="checkbox" name="set" value="cmll" /> Roux CMLL corners (7)</label>
+        <label><input type="checkbox" name="set" value="full-oll" /> Full OLL (57)</label>
+        <label><input type="checkbox" name="set" value="full-pll" /> Full PLL (21)</label>
       </fieldset>
       <fieldset>
         <legend>Timing</legend>
@@ -68,6 +71,8 @@
   <script type="module">
     import { ollCases } from '../../data/oll.js';
     import { pllCornerCases, pllEdgeCases } from '../../data/pll.js';
+    import { ollFullCases } from '../../data/oll-full.js';
+    import { pllFullEdgeCases, pllFullCornerCases } from '../../data/pll-full.js';
     import { rouxCmllCases } from '../../data/roux.js?v=2';
     import { startHold } from '../../js/cube-sim.js';
     import { case3d } from '../../js/cube-3d.js?v=2';
@@ -80,6 +85,8 @@
       oll: { label: '2-look OLL', cases: ollCases, libby: true, stickering: 'oll' },
       pll: { label: '2-look PLL', cases: [...pllCornerCases, ...pllEdgeCases], libby: true, stickering: 'full' },
       cmll: { label: 'Roux CMLL', cases: rouxCmllCases, libby: false, stickering: 'cmll' },
+      'full-oll': { label: 'Full OLL', cases: ollFullCases, libby: false, stickering: 'oll' },
+      'full-pll': { label: 'Full PLL', cases: [...pllFullCornerCases, ...pllFullEdgeCases], libby: false, stickering: 'full' },
     };
     const TURNS = ['', 'U', 'U2', "U'"];
     const UNDO = { U: "U'", U2: 'U2', "U'": 'U' };

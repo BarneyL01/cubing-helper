@@ -16,8 +16,9 @@
   <main>
     <h1>2-look PLL</h1>
     <p class="subtitle">
-      Permute the last layer's corners first, then its edges. Each card shows
-      the case, the standard algorithm, and your mnemonic word breakdown.
+      Permute the last layer's corners first, then its edges. Each 2-look card
+      shows the case, the standard algorithm, and your mnemonic word breakdown.
+      The full list further down has standard notation only.
     </p>
     <p class="libby-key">
       <strong>Libby's:</strong> each card also shows the algorithm as digits —
@@ -33,18 +34,34 @@
 
     <h2 class="section-heading">Edges</h2>
     <div id="pll-edge-cases" class="case-grid"></div>
+
+    <h2 class="section-heading" id="full-pll">Full PLL (21 cases)</h2>
+    <p class="subtitle">
+      All 21 PLL cases, each with one standard algorithm. Standard names and
+      notation only: no mnemonic words and no Libby's digits on these cards.
+    </p>
+    <h3 class="index-heading">Edges only</h3>
+    <div id="full-pll-edge-cases" class="case-grid"></div>
+
+    <h3 class="index-heading">Corners</h3>
+    <div id="full-pll-corner-cases" class="case-grid"></div>
   </main>
 
   <script type="module">
     import { pllCornerCases, pllEdgeCases } from '../../data/pll.js';
+    import { pllFullEdgeCases, pllFullCornerCases } from '../../data/pll-full.js';
     import { renderCases, renderPictureIndex } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
     mountViewToggle(document.getElementById('view-toggle'));
     renderCases('pll-corner-cases', pllCornerCases, { libby: true });
     renderCases('pll-edge-cases', pllEdgeCases, { libby: true });
+    renderCases('full-pll-edge-cases', pllFullEdgeCases);
+    renderCases('full-pll-corner-cases', pllFullCornerCases);
     renderPictureIndex('picture-index', [
-      { title: 'Corners', container: 'pll-corner-cases' },
-      { title: 'Edges', container: 'pll-edge-cases' },
+      { title: '2-look corners', container: 'pll-corner-cases' },
+      { title: '2-look edges', container: 'pll-edge-cases' },
+      { title: 'Full PLL: edges only', container: 'full-pll-edge-cases' },
+      { title: 'Full PLL: corners', container: 'full-pll-corner-cases' },
     ]);
   </script>
 </body>
