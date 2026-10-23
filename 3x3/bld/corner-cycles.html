@@ -30,26 +30,24 @@
     </nav>
 
     <p class="subtitle">
-      Solve the corners with three base commutators. Each pair of corner letters is one 3-cycle with the
-      buffer: pick a base, then use a setup move to carry the pieces onto it.
+      Each pair of corner letters is one 3-cycle with the buffer: a base commutator, with a setup move if needed.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>DFR</strong> (letters V, K, P), traced from V. This is the other corner Old Pochmann
-        uses: on the Reference and Practice tabs UBL is the buffer and DFR is the corner it swaps with.
-        The bases, setups, examples and exercises on this page are generated and checked by
-        <code>log/2026-10-21-bld-three-base.mjs</code>. The full table of a separate commutator for every pair
-        is on the Corner table tab; twisted corners and the odd-count step are on the Twists &amp; parity tab.
+        Not from your notes: written here and checked in the cube simulator. The buffer is
+        <strong>DFR</strong> (letters V, K, P), traced from V; the Reference tab's swap uses UBL as its buffer
+        instead. Bases, setups, examples and exercises are generated and checked by
+        <code>log/2026-10-21-bld-three-base.mjs</code>. A separate commutator for every pair is on the Corner
+        table tab; twists and parity are on the Twists &amp; parity tab.
       </p>
     </div>
 
     <!-- 1 -->
     <h2 class="section-heading" id="from-scramble" data-short="Scramble to cycles">1. From a scramble to cycles</h2>
     <ol class="step-how">
-      <li><strong>Find the buffer's letters.</strong> DFR is the buffer. Its stickers are <strong>V</strong> (D face), <strong>K</strong> (F face) and <strong>P</strong> (R face). Trace from V.</li>
-      <li><strong>Follow the buffer.</strong> The sticker in the buffer's V spot belongs to some corner. That corner's letter is the first target. Look at the corner that sits on that letter's spot: its piece's letter is the next target. Keep going until the chain reaches a letter on the buffer's corner again.</li>
-      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle: the piece in the buffer goes to the first letter, the piece there goes to the second, and the piece there comes back to the buffer. Each pair is done with a base and a setup (sections 3 to 6).</li>
+      <li><strong>Find the buffer's letters.</strong> DFR is the buffer: <strong>V</strong> (D face), <strong>K</strong> (F face), <strong>P</strong> (R face). Trace from V.</li>
+      <li><strong>Follow the chain.</strong> The sticker in the buffer's V spot belongs to a corner: its letter is the first target. Then take the corner sitting on that letter's spot; its letter is the next target. Stop when a target is V, K or P.</li>
+      <li><strong>Pair the letters in order</strong> (1st and 2nd, 3rd and 4th, and so on). Each pair is one 3-cycle with the buffer, done with a base and a setup (sections 3 to 6).</li>
       <li><strong>An odd number of letters, or twisted corners,</strong> are on the Twists &amp; parity tab.</li>
     </ol>
     <figure class="practice-net bld-example-net">
@@ -67,22 +65,20 @@
         <div class="table-wrap"><table class="bld-table" id="ex1-table"></table></div>
       </div>
     </div>
-    <p class="step-note">Each frame shows the position still to solve after the pairs before it. The coloured outlines follow the corners of each pair.</p>
+    <p class="step-note">Each frame is the position after one more pair. Outlines follow each pair's corners.</p>
     <div id="ex1-film"></div>
 
     <!-- 2 -->
     <h2 class="section-heading" id="closes-early" data-short="Early close">2. When the cycle closes early</h2>
     <p>
-      The chain can come back to the buffer before every corner is solved. Then start a new chain at an
-      unsolved corner. The first letter of that corner (the <strong>break letter</strong>, underlined) starts
-      it, and the chain runs on until it reaches a letter on the same corner again. A break adds letters to
-      the list, and the pairs are taken in list order as before.
+      If the chain returns to the buffer early, start a new chain at an unsolved corner. Its first letter,
+      the <strong>break letter</strong> (underlined), starts it and runs until a letter of that corner comes
+      up again. The pairs are still taken in list order.
     </p>
     <p>
-      Which sticker starts the break is a free choice, one of the three stickers of the unsolved corner. The
-      table gives the total moves for each choice in the worked example below. The rule used here:
-      <strong>pick the break letter that makes the total cheapest</strong>. Without the table, take the first
-      letter of the corner in letter order (the Practice tab's rule).
+      Any of the corner's three stickers can be the break. <strong>Pick the one that gives the fewest total
+      moves</strong> (table below). Without the table, take the corner's first letter in letter order, as on
+      the Practice tab.
     </p>
     <div class="bld-example">
       <div>
@@ -100,57 +96,52 @@
     <!-- 3 -->
     <h2 class="section-heading" id="bases" data-short="The three bases">3. The three bases</h2>
     <p>
-      A base is a commutator that cycles three corners. All three bases below use the same insertion,
-      <code>R U R'</code>, and differ only in the bottom turn (<code>D</code>, <code>D'</code> or <code>D2</code>).
-      In every base the buffer corner DFR and the corner UFR are two of the three corners; the third is another
-      bottom corner. Written the other way round (<code>[D, R U R']</code>) a base does the opposite cycle.
+      A base is a commutator that cycles three corners: the buffer DFR, UFR and one more bottom corner. All
+      three use the insertion <code>R U R'</code> and differ in the bottom turn (<code>D</code>, <code>D'</code>
+      or <code>D2</code>). Written the other way round, as <code>[D, R U R']</code>, a base cycles the other way.
     </p>
     <div class="table-wrap"><table class="bld-table" id="forms-table"></table></div>
     <div id="base-cards" class="case-grid"></div>
     <h3>3D applets</h3>
     <p>
-      Each applet plays one base on a solved cube. Use the play button or drag the slider, and drag the cube to turn it
-      (the cube is shown from below, where the bottom corners are).
+      Each applet plays one base on a solved cube. Drag the cube to turn it.
     </p>
     <p><button type="button" class="applet-button" id="show-3d">Load the 3D applets</button> <span id="show-3d-status" role="status"></span></p>
     <div id="base-applets" class="case-grid" hidden></div>
     <p class="step-note">
-      One base alone could do every pair, but with longer setups: with only <code>[R U R', D]</code> and its
-      reverse, most pairs need three or four setup moves. Three bases give shorter setups: at most three.
+      With only <code>[R U R', D]</code> and its reverse, most pairs need three or four setup moves. The three bases need at most three.
     </p>
 
     <!-- 4 -->
     <h2 class="section-heading" id="how-it-works" data-short="How it works">4. How a setup turns a base into any pair</h2>
     <p>
-      A setup <code>S</code>, then a base, then <code>S'</code> (written <code>[S: base]</code>) cycles the
-      three pieces that <code>S</code> carries onto the base's three corners. Everything else <code>S</code>
-      moved is put back by <code>S'</code>. So to do the pair V → X → Y:
+      A setup <code>S</code>, a base, then <code>S'</code> (written <code>[S: base]</code>) cycles the three
+      pieces <code>S</code> carries onto the base's corners. To do the pair V → X → Y:
     </p>
     <ol class="step-how">
-      <li><strong>Pick a base.</strong> Its three stickers are listed in the table above, in cycle order. For <code>[D, R U R']</code> they are V → M → U.</li>
-      <li><strong>Find a setup</strong> that carries the three stickers V, X and Y onto the base's three stickers <strong>in the base's cycle order</strong>. You may start the order at any of the three. For <code>[D, R U R']</code> the setup may carry (V, X, Y) to (V, M, U), to (M, U, V) or to (U, V, M).</li>
-      <li><strong>Do the setup, the base, then undo the setup.</strong> The pieces cycle, and the rest of the cube is restored.</li>
+      <li><strong>Pick a base.</strong> Its sticker cycle is in the table above. For <code>[D, R U R']</code>: V → M → U.</li>
+      <li><strong>Find a setup</strong> that carries V, X and Y onto the base's three stickers <strong>in cycle order</strong>, starting at any of the three. For <code>[D, R U R']</code>, (V, X, Y) may go to (V, M, U), (M, U, V) or (U, V, M).</li>
+      <li><strong>Do the setup, the base, then undo the setup.</strong></li>
     </ol>
     <p>
-      A setup that leaves the buffer corner where it is (U, L and B turns do) carries V onto V and only the two
-      targets move. Many shortest setups also move the buffer. The lookup's "onto" line shows which case a pair is.
+      A setup of only U, L and B turns leaves the buffer where it is, so only the two targets move. The
+      lookup's "Onto" line shows the case.
     </p>
-    <p>The three examples are taken from the table, with one, two and three setup moves.</p>
+    <p>The three examples come from the table: one, two and three setup moves.</p>
     <div id="demo-cards" class="case-grid"></div>
     <p class="step-note" id="buffer-note"></p>
 
     <!-- 5 -->
     <h2 class="section-heading" id="work-it-out" data-short="Work it out">5. Working out a pair yourself</h2>
     <ol class="step-how">
-      <li><strong>Write the pair</strong> from your memo: the buffer's piece goes to X, the piece at X goes to Y.</li>
-      <li><strong>Look at where X and Y are</strong> and which bottom corner (DFL, DBR or DBL) is close to them. That bottom corner is the third corner of the base, so it picks the base: <code>D</code> to DFL, <code>D'</code> to DBR, <code>D2</code> to DBL.</li>
-      <li><strong>Choose the direction:</strong> the base or its reverse, whichever cycles V → ? → ? in the order you need.</li>
-      <li><strong>Find the setup:</strong> move the sticker X onto the base's next sticker with turns that keep the corner where Y is out of the way, then check that Y lands on the one after. A setup of one to three moves exists for every pair. The lookup below gives the shortest one.</li>
-      <li><strong>Check before you commit:</strong> after the setup, the buffer's piece, the piece at X and the piece at Y must sit on the three base corners. If not, try another start of the order (section 4).</li>
+      <li><strong>Write the pair:</strong> the buffer's piece goes to X, and the piece at X goes to Y.</li>
+      <li><strong>Pick the base</strong> from the bottom corner (DFL, DBR or DBL) close to X and Y: <code>D</code>, <code>D'</code> or <code>D2</code> for DFL, DBR or DBL.</li>
+      <li><strong>Choose the direction:</strong> the base or its reverse, for the order you need.</li>
+      <li><strong>Find the setup</strong> that moves X onto the base's next sticker without disturbing Y. The lookup gives the shortest.</li>
+      <li><strong>Check</strong> that the three pieces sit on the base's corners. If not, try another start (section 4).</li>
     </ol>
     <p class="step-note">
-      This is a way to search, not a rule that always picks the shortest setup. The table in section 6 is the
-      shortest for every pair (found and checked by a program), and you can hide its answer to practise.
+      This is a way to search, not a rule for the shortest setup. Section 6 lists the shortest for every pair.
     </p>
 
     <!-- 6 -->
@@ -173,24 +164,23 @@
     <!-- 7 -->
     <h2 class="section-heading" id="easiest" data-short="Learning order">7. What to learn first</h2>
     <ol class="step-how">
-      <li><strong>The 6 direct pairs.</strong> Each base on its own, in both directions. No setup.</li>
-      <li><strong>The pairs with one setup move.</strong> Pick one at a time; the setup is a single turn.</li>
-      <li><strong>Then two setup moves, then three.</strong> By then the idea in section 4 does the work.</li>
+      <li><strong>The 6 direct pairs:</strong> each base alone, in both directions.</li>
+      <li><strong>Pairs with one setup move:</strong> learn them one at a time.</li>
+      <li><strong>Then two setup moves, then three.</strong> Section 4's idea does the work by then.</li>
     </ol>
     <div id="easy-lists"></div>
 
     <!-- 8 -->
     <h2 class="section-heading" id="exercises" data-short="Exercises">8. Exercises: set up, then solve</h2>
     <p class="subtitle">
-      Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve yourself
-      before opening the solution. Pictures show the corners only; edges are greyed.
+      Start from a solved cube and apply the setup. Try the solve before opening the solution. Pictures show corners only.
     </p>
     <div id="exercise-cards" class="case-grid"></div>
   </main>
 
   <script type="module">
     import { bldCorners } from '../../data/bld.js';
-    import { baseRows, baseData } from '../../data/corner-bases.js?v=1';
+    import { baseRows, baseData } from '../../data/corner-bases.js?v=2';
     import { scrambledState } from '../../js/bld-memo.js';
     import { bldNet, colourNet } from '../../js/bld-net.js';
     import { caseDiagram, WHITE_TOP } from '../../js/cube-diagram.js';
@@ -255,7 +245,7 @@
       const marks = steps.flatMap((s, i) => [s.first, s.second].map((l) => ({ piece: PIECE[l], colour: PAIR_COLOURS[i] })));
       const legend = steps.map((s, i) => ({ colour: PAIR_COLOURS[i], text: `pair ${i + 1} (${s.first}${s.second})` }));
       const frames = [{ after: '', label: 'Start', caption: 'Scrambled corners.' }];
-      steps.forEach((s, i) => frames.push({ after: s.moves, label: `Pair ${i + 1}: ${s.first}${s.second}`, caption: `After pair ${i + 1}, letters ${s.first} and ${s.second} are solved.` }));
+      steps.forEach((s, i) => frames.push({ after: s.moves, label: `Pair ${i + 1}: ${s.first}${s.second}`, caption: `After pair ${i + 1}: ${s.first} and ${s.second} solved.` }));
       $(hostId).replaceChildren(buildFilmstrip({ alg, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, marks, legend, frames }));
     }
     pairTable('ex1-table', ex1.steps);
@@ -328,11 +318,11 @@
     // ---- 4: setup examples
     renderCases('demo-cards', baseData.demoCards.map((c) => withPalette({
       ...c,
-      orientation: `Pair ${c.first} → ${c.second}. The setup carries the stickers V, ${c.first}, ${c.second} onto ${[...c.onto].join(', ')} on the base ${c.base}.`,
+      orientation: `Pair ${c.first} → ${c.second}. Setup onto ${[...c.onto].join(', ')}; base ${c.base}.`,
     })));
     {
       const moved = baseRows.filter((r) => !r.bufferFixed).length;
-      $('buffer-note').textContent = `In ${moved} of the ${baseRows.length} shortest setups the setup moves the buffer corner too, so V is carried onto a different sticker of the base. The other ${baseRows.length - moved} leave it where it is.`;
+      $('buffer-note').textContent = `${moved} of the ${baseRows.length} shortest setups also move the buffer corner.`;
     }
 
     // ---- 6: lookup, with the answer hidden by default

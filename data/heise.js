@@ -56,7 +56,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "",
-            "caption": "The white/green/red corner, the white/green edge and green/red edge beside it, and the green centre."
+            "caption": "The white/green/red corner, its two edges and the green centre."
           }
         ]
       }
@@ -199,7 +199,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "",
-            "caption": "The four squares cover the first two layers except the white/green/orange corner and the green/orange edge, which are the free slot (front right). Only the front and right sides show in the cube view; the back and left squares are in the bottom view and on the hidden sides."
+            "caption": "Four squares fill the first two layers. The free slot is front right."
           }
         ]
       }
@@ -272,7 +272,7 @@ export const heiseExamples = {
           {
             "after": "U D' R U' R' D R U R' U'",
             "label": "One 3-cycle",
-            "caption": "One corner 3-cycle puts two corners home. Three are left (DFL, UFL, DFR): the position for step 4."
+            "caption": "One 3-cycle puts two corners home. Three are left: the position for step 4."
           },
           {
             "after": "D R U' R' D' R U R'",
@@ -333,7 +333,7 @@ export const heiseExamples = {
           {
             "after": "M' U2 M U2",
             "label": "M' U2 M U2",
-            "caption": "Four moves put the three edges home. Two of the edges move in the U layer, one in the M slice."
+            "caption": "Four moves put the three edges home: two in the U layer, one in the M slice."
           }
         ]
       }
@@ -380,7 +380,7 @@ export const heiseExamples = {
           {
             "after": "D' R D R' D' R D U D' R' D R D' R' D R U' R'",
             "label": "18 moves",
-            "caption": "The twist turns both corners the right way and puts everything else back. This is a pure corner twist, found and checked here; it is not necessarily the one Heise uses."
+            "caption": "Both corners turn back and everything else is restored. Found here; Heise may use another."
           }
         ]
       }
@@ -432,7 +432,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "Start",
-            "caption": " The three unsolved corners are outlined: the DFL corner is at DFR; the UFL corner is at DFL; the DFR corner is at UFL. Everything else is solved."
+            "caption": "The three unsolved corners are outlined. Everything else is solved."
           },
           {
             "after": "R U' R'",
@@ -503,7 +503,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "Start",
-            "caption": " The three unsolved corners are outlined: the UFL corner is at UFR; the UBR corner is at UFL; the UFR corner is at UBR. Everything else is solved."
+            "caption": "The three unsolved corners are outlined. Everything else is solved."
           },
           {
             "after": "R2",
@@ -513,7 +513,7 @@ export const heiseExamples = {
           {
             "after": "R U' R' D' R U R' D",
             "label": "Commutator",
-            "caption": "The commutator cycles the three corners; the setup has not been undone yet, so other pieces are displaced."
+            "caption": "The commutator cycles the three corners. The rest is still displaced."
           },
           {
             "after": "R2",
@@ -569,7 +569,7 @@ export const heiseExamples = {
           {
             "after": "",
             "label": "Start",
-            "caption": " The three unsolved corners are outlined: the UBL corner is at UFR; the UBR corner is at UBL; the UFR corner is at UBR. Everything else is solved."
+            "caption": "The three unsolved corners are outlined. Everything else is solved."
           },
           {
             "after": "U R2",
@@ -579,7 +579,7 @@ export const heiseExamples = {
           {
             "after": "R U' R' D' R U R' D",
             "label": "Commutator",
-            "caption": "The commutator cycles the three corners; the setup has not been undone yet, so other pieces are displaced."
+            "caption": "The commutator cycles the three corners. The rest is still displaced."
           },
           {
             "after": "R2 U'",
@@ -596,10 +596,10 @@ export const heiseExamples = {
 
 export const heiseFacts = [
   ['Created by', 'Ryan Heise'],
-  ['Type', 'Intuitive: every turn is planned, and the only memorised moves are commutators in the last step'],
+  ['Type', 'Intuitive: every turn is planned; only the last step uses memorised commutators'],
   ['Moves', 'Under about 40 on average (reported). Move-efficient, but slow for speedsolving'],
   ['Stated aim', 'A completely intuitive speedsolving method (Heise, 2006)'],
-  ['Orientation on Heise\'s site', 'White on top, green in front (some pages use other colours). The pictures here use this site\'s usual yellow-top colours, so a face on top there is on the bottom here when it is white'],
+  ['Orientation on Heise\'s site', 'White on top, green in front (some pages differ). Here yellow is on top, so his white face is on the bottom'],
   ['Path', 'Four squares → match squares and orient edges → remaining edges and two corners → last three corners'],
 ];
 
@@ -619,25 +619,24 @@ export const heiseSteps = [
     source: 'spec',
     goal: 'Four 1x2x2 blocks ("squares"), built wherever their pieces can be joined easily. Their colours do not have to match their final places.',
     how: [
-      { title: 'A square', text: 'is a 1x2x2 block: a 2x2 arrangement of pieces inside one layer.' },
-      { title: 'An outer square', text: 'contains a corner. It is a corner and two edges with a centre, built from a corner/edge pair and a centre/edge pair joined together.' },
-      { title: 'An inner square', text: 'has no corner: an edge and two centres.' },
+      { title: 'Squares:', text: 'a 1x2x2 block in one layer. Outer: a corner, two edges and a centre. Inner: an edge and two centres.' },
       { title: 'Rule 1:', text: 'all four squares share one colour.' },
-      { title: 'Rule 2:', text: 'exactly one square is inner and the other three are outer.' },
-      { title: 'Rule 3:', text: 'together the four squares use only five colours. If all six appear, a mistake was made.' },
-      { title: 'Rule 4:', text: 'it must be possible to rotate all four squares into their solved positions (step 2 does that).' },
-      { title: 'Order:', text: 'first an outer square, then the adjacent inner square (matching colours is usually best), then a third outer square, then the fourth. Any order works, but starting with an outer square is usually more efficient.' },
-      { title: 'How many choices:', text: 'there are 24 possible outer squares for the first (counted here too). After an inner second square with matching colours there are 9 possible third squares: 3 match in colour and 6 do not. A matching third square leaves 4 choices for the fourth; a non-matching one leaves 1.' },
-      { title: 'Rule of thumb:', text: 'do the difficult parts first: corner/edge pairs before centre/edge pairs, and outer squares before inner ones.' },
-      { title: '1st square (outer):', text: 'build a corner/edge pair (find a corner and an edge that share two colours); build a centre/edge pair without breaking the first pair, usually by moving the first pair out of the way first; join the two pairs.' },
-      { title: '2nd square (inner, beside the 1st):', text: 'move the first square out of the way, build the inner square, then join both squares so they do not block later steps.' },
-      { title: '3rd square (outer):', text: 'the same technique as the 1st. It can always be built without permanently breaking the block you have. Heise\'s count for one example: two moves form the corner/edge pair, one moves it out of the way, one forms the centre/edge pair, two join them, and one fits the square onto the existing block.' },
-      { title: '4th square (outer):', text: 'this one is difficult. Some cases can only be solved by temporarily destroying part of the block and restoring it. In Heise\'s general example, a front-face turn joins two blocks but breaks the white block, a move then clears the new block, and a quarter turn of the front face in the other direction restores the broken block.' },
+      { title: 'Rule 2:', text: 'one square is inner and three are outer.' },
+      { title: 'Rule 3:', text: 'five colours in all. Six means a mistake.' },
+      { title: 'Rule 4:', text: 'all four can be rotated into their solved places.' },
+      { title: 'Order 1:', text: 'an outer square.' },
+      { title: 'Order 2:', text: 'the adjacent inner square (matching colours help).' },
+      { title: 'Order 3:', text: 'a third outer square.' },
+      { title: 'Order 4:', text: 'the fourth.' },
+      { title: 'Rule of thumb:', text: 'difficult parts first: corner/edge pairs before centre/edge pairs, and outer squares before inner.' },
+      { title: '1st square (outer):', text: 'build a corner/edge pair, then a centre/edge pair without breaking it (move the first pair out of the way first). Join the two pairs.' },
+      { title: '2nd square (inner):', text: 'move the first square out of the way, build the inner square, then join both.' },
+      { title: '3rd square (outer):', text: "the same technique as the first. Heise's example takes seven moves: two, one, one, two, one." },
+      { title: '4th square (outer):', text: "the difficult one. Some cases break part of the block and restore it. Heise's general example uses a front turn, a move, and a front turn the other way." },
     ],
     notes: [
-      'Techniques. Align, then join: to join a corner and an edge, first place them so their matching colours are aligned on the same axis. Of the six ways to place a corner next to an edge, only one is a correct join. Aligned pieces join in one move; unaligned pieces cannot. Move it out of the way: to build a new pair without breaking the block you have, first move the block out of the path of the turns you will use. Destroy and restore: break a block, make some moves, restore it. Best fit: attach each new square snugly so it does not obstruct other pieces.',
-      'Where the squares sit (derived here, not from Heise\'s pages). Take the rules literally: four squares that share no pieces, three outer and one inner, five colours in all, and one colour in every square. On a solved cube there are exactly 96 ways to place them, 16 for each colour (all listed and checked by a program). In every one of them the squares fill the first two layers of the shared colour except one corner/edge pair, the free slot: 3 corners, 7 edges and 5 centres. That matches Heise\'s description of the cube after step 2. The third picture shows one of the 16: white shared, front-right slot free; its inner square is a bottom edge with the white centre and a side centre.',
-      'Not on this page: a worked example of building the four squares from a scramble. Heise\'s pages give counts and a general picture, but no move-by-move example in text, and no notation for the destroy-and-restore sequence of a fourth square.',
+      'Techniques: align, then join (put matching colours on one axis; only one of the six ways to place a corner next to an edge is a correct join). Move it out of the way (shift a block before building a new pair). Destroy and restore (break a block, make moves, restore it). Best fit (attach each square snugly).',
+      'Derived here, not from Heise: the rules allow 96 arrangements on a solved cube, 16 for each shared colour, all checked by program. Each fills the first two layers of the shared colour except one corner/edge pair (the free slot).',
     ],
     cases: heiseExamples.squares,
   },
@@ -648,18 +647,18 @@ export const heiseSteps = [
     source: 'spec',
     goal: 'All four squares in their solved positions, and no remaining edge "incorrect".',
     how: [
-      { title: 'Edge orientation:', text: 'an edge is correctly oriented if, moved to its correct position using only L, R, U and D turns, it would be correct. L, R, U and D turns flip no edges, and a quarter turn of F or B flips the four edges on that face.' },
-      { title: 'Edge types:', text: 'each remaining edge is correct, incorrect or neutral. You may leave correct or neutral edges, but no incorrect ones.' },
-      { title: 'Done separately:', text: 'first join the four squares in their solved positions, then orient the remaining edges with the tools below.' },
-      { title: 'Simple swap:', text: 'swap a neutral edge in the front/middle position with an incorrect edge on top. The neutral edge can become correct and the incorrect edge can become neutral. Repeating simple swaps removes all incorrect edges.' },
-      { title: 'Criss/cross:', text: 'an efficient move when many incorrect and neutral edges are bunched together.' },
-      { title: 'Reassigning the free column:', text: 'change which column counts as free, so the two tools above can be applied to a different column. For example: reassign the free column, do a simple swap, then return the free column to where it was. A second example combines reassigning with criss/cross.' },
-      { title: 'Done together (the advanced form):', text: 'turning a square also changes edge orientation, so matching the squares and orienting the edges can be a single step. Look for sequences that do both and prefer them to the separate form.' },
+      { title: 'Edge orientation:', text: "an edge is correct if, moved to its place using only L, R, U and D turns, it would be correct. L, R, U and D turns flip no edges; a quarter turn of F or B flips the four edges on that face." },
+      { title: 'Edge types:', text: 'each remaining edge is correct, incorrect or neutral. Correct and neutral edges can stay; incorrect ones cannot.' },
+      { title: 'Order:', text: 'first join the four squares in their solved places, then orient the edges with the tools below.' },
+      { title: 'Simple swap:', text: 'swap a neutral edge in the front/middle position with an incorrect edge on top. Repeat until no incorrect edges remain.' },
+      { title: 'Criss/cross:', text: 'efficient when many incorrect and neutral edges are bunched together.' },
+      { title: 'Reassigning the free column:', text: 'change which column is free, use a tool, then change it back.' },
+      { title: 'Done together (advanced):', text: 'turns of a square also change edge orientation, so look for sequences that match the squares and orient the edges in one go.' },
     ],
     notes: [
-      'Checked here: the turns that keep edge orientation are the group Heise names, R, L, U, D and half turns of F and B. With them an edge reaches 12 of its 24 possible placements; with F or B quarter turns it reaches all 24. (The earlier version of this page said quarter turns of two opposite faces keep orientation. That was wrong; the correct statement is this group.)',
-      'The frame for edge orientation can change. In one frame turning only the red and white faces (R and U) keeps edge orientation, and in another it is the green and white faces. Heise does not define the change further.',
-      'Not on this page: the rule that sorts an edge into correct, incorrect or neutral (Heise shows it as pictures, with two neutral examples), and the moves for a simple swap, criss/cross and reassigning the free column. They are shown only in animated examples.',
+      "Checked: R, L, U, D and half turns of F and B keep edge orientation. (An earlier version of this page named two opposite faces instead; that was wrong.)",
+      'The frame for edge orientation can change (in one, R and U keep it; in another, the green and white faces). Heise does not define how.',
+      'Not on this page: the sorting rule for correct, incorrect and neutral edges, and the moves for the tools above (see the list at the end).',
     ],
   },
   {
@@ -669,27 +668,27 @@ export const heiseSteps = [
     source: 'spec',
     goal: 'The 5 remaining edges solved and any two corners solved, leaving three corners for step 4.',
     how: [
-      { title: 'Three approaches:', text: 'Heise teaches three, from easiest to most advanced, and says one is enough but an expert should know all three. Edges first: easy, sometimes very good and sometimes very bad. Two pairs: medium, average to good, useful for speedcubing and fewest moves. One pair: hard, very good for fewest moves, and permutes the edges while solving the second pair.' },
-      { title: 'Approach A, edges first. Edges:', text: 'solve all the remaining edges. Exactly two top edges correct relative to each other is close to solved. No top edge correct is the same distance as three correct, so when none is correct, first aim for exactly two.' },
-      { title: 'Approach A. Corners:', text: 'solve two corners without disturbing the edges, using corner 3-cycles (the same technique as step 4). Two corners can take one 3-cycle each; better, solve both with a single 3-cycle (example below).' },
-      { title: 'Approach A. The case to avoid:', text: 'all corners in the right places but misoriented. Solving two of them then needs a corner twist. Look ahead and choose a different approach earlier.' },
-      { title: 'Approach B, two pairs. Build:', text: 'build two corner/edge pairs while keeping edge orientation. Turning only the red and white faces (R and U) keeps it in the frame Heise uses on that page.' },
-      { title: 'Approach B. Store:', text: 'each pair can face one of two directions. In a frame that allows only turns of those two faces, one pair can be stored in the free slot of the first two layers.' },
-      { title: 'Approach B. Insert:', text: 'put the three remaining edges between the two pairs. With normal-facing pairs every edge permutation can be solved with one or two pair 3-cycles. Ignoring the corners, the edges can be solved in 3 moves.' },
-      { title: 'Approach B. Move edges:', text: 'when the pairs are positioned correctly relative to each other (opposite-facing pairs), move edges between them with edge 3-cycles.' },
-      { title: 'Pair 3-cycle:', text: 'the corner 3-cycle commutator applied to corner/edge pairs treated as single units. There are three versions, v1, v2 and v3. v2 and v3 are v1 conjugated by a bottom-face rotation, and exist to save one move.' },
-      { title: 'F2 conjugation:', text: 'a half turn of the front face, which keeps edge orientation. It changes two normal-facing pairs into two opposite-facing pairs or two inverted pairs, depending on how it is used.' },
-      { title: 'Down-under:', text: 'the conjugate B2 D\', with R, R2 and R\' variations. It moves the top and rear pieces onto the bottom and right side, and affects the front/right and back/left slots.' },
-      { title: 'R conjugation:', text: 'for inverted pairs. It hides the pair temporarily in the back/right/bottom position, or makes inverted pairs appear normal-facing.' },
-      { title: 'Edge 3-cycles:', text: 'two varieties. Variety 1 is the shortest but can be longer than variety 2 after conjugation. Variety 2 has the same structure as the basic corner commutators.' },
-      { title: 'Corner twist:', text: 'a commutator X Y X\' Y\'. X twists corner A in place and may disturb everything except the rest of A\'s layer. Y moves corner B into A\'s place using only that layer. X\' twists B in the reverse direction, and Y\' returns both corners. Two corners can only be twisted in opposite directions; twisting two the same way is impossible.' },
-      { title: 'Approach C, one pair:', text: 'hard. Heise describes it as permuting the edges while solving the second pair; this page has no more detail on it.' },
+      { title: 'Three approaches:', text: 'Heise says one is enough, but an expert should know all three.' },
+      { title: 'Approach A, edges first:', text: 'easy; sometimes very good, sometimes very bad. Solve all remaining edges, aiming first for exactly two top edges correct.' },
+      { title: 'Approach A, corners:', text: 'two corners by corner 3-cycles, or one 3-cycle that solves both (example below).' },
+      { title: 'Approach A, the case to avoid:', text: 'all corners in place but misoriented: solving two then needs a corner twist.' },
+      { title: 'Approach B, two pairs:', text: "medium; good for speedcubing and the fewest moves. Build two corner/edge pairs with edge orientation kept (R and U turns in Heise's frame)." },
+      { title: 'Approach B, store:', text: 'in that frame one pair is stored in the free slot of the first two layers.' },
+      { title: 'Approach B, insert:', text: 'the three remaining edges go between the two pairs; with normal-facing pairs, one or two pair 3-cycles solve any edge order.' },
+      { title: 'Approach B, move edges:', text: 'with opposite-facing pairs, move edges between them with edge 3-cycles.' },
+      { title: 'Approach C, one pair:', text: 'hard; very good for the fewest moves. Heise says it permutes the edges while solving the second pair; no more detail here.' },
+      { title: 'Pair 3-cycle:', text: 'the corner 3-cycle commutator on corner/edge pairs as units. v2 and v3 are v1 with a bottom turn, saving one move.' },
+      { title: 'F2 conjugation:', text: 'a half turn of F. It turns two normal-facing pairs into opposite-facing or inverted ones.' },
+      { title: 'Down-under:', text: "the conjugate B2 D', with R, R2 and R' variations. It moves the top and rear pieces to the bottom and right side, and affects the front/right and back/left slots." },
+      { title: 'R conjugation:', text: 'for inverted pairs. It hides the pair at back/right/bottom, or makes inverted pairs appear normal-facing.' },
+      { title: 'Edge 3-cycles:', text: 'two varieties. Variety 1 is shortest; variety 2 has the structure of the basic corner commutators.' },
+      { title: 'Corner twist:', text: "the commutator X Y X' Y'. X twists corner A; Y brings corner B into A's place; X' twists B the other way and Y' returns both. Two corners can only be twisted in opposite directions." },
     ],
     notes: [
-      'Where this fits: Heise changed the final step of the method in 2004 to solving the last three corners. Per a history page (secondary), early versions solved the last-slot and last-layer edges first and then two corners; the form with two pairs, permuting the pairs and edges, then the last three corners came later.',
-      'Piece counts (derived from the arrangement in step 1; Heise states "the 5 remaining edges and any two corners"): when step 3 starts the cube is the first two layers minus one pair, so the unsolved pieces are 5 edges and 5 corners (the four top ones and the one in the free slot). Step 3 solves all five edges and two corners, which leaves three corners for step 4. The edges are already oriented relative to the front/back axis at that point.',
-      'The three examples below were checked on the simulator: two corners with one 3-cycle; an edge 3-cycle; and a corner twist. The twist is a commutator X Y X\' Y\' of the shape Heise describes (checked: X disturbs only the one corner in the U layer, and Y is a U turn), found here, not necessarily the one Heise shows.',
-      'Not on this page: the sequences for the pair 3-cycles (v1, v2, v3), for the two varieties of edge 3-cycle and for the conjugations. Heise shows them only in animated examples.',
+      'Heise changed the final step to the last three corners in 2004 (per a secondary history page).',
+      'Derived here from step 1: when step 3 starts, 5 edges and 5 corners are unsolved. Step 3 leaves three corners for step 4.',
+      'The examples were checked on the simulator. The twist is our own commutator of the shape Heise describes.',
+      'Not on this page: the pair 3-cycle, conjugation and edge 3-cycle sequences (see the list at the end).',
     ],
     cases: heiseExamples.step3,
   },
@@ -700,15 +699,15 @@ export const heiseSteps = [
     source: 'spec',
     goal: 'The last three corners solved with a commutator, with a setup move if the corners are not in a commutator-ready arrangement.',
     how: [
-      { title: 'The commutator', text: 'is X Y X\' Y\'. X and Y mostly affect different parts of the cube, but they overlap on exactly the three target corners, so only the pieces in the overlap are affected.' },
-      { title: 'Pick a side:', text: 'choose a side with exactly two unsolved corners, where one is correctly oriented and only needs to move to the other corner\'s position on that side.' },
-      { title: 'Y and X:', text: 'Y affects only the bottom layer. X affects mostly the upper two layers and a small part of the bottom layer.' },
-      { title: 'Two is enough:', text: 'solving two of the three corners forces the third into place. Look for two corners on the bottom (one of them oriented) and one corner on top that can be solved in 3 moves.' },
-      { title: 'Conjugation:', text: 'if the three corners are not in a commutator-ready arrangement, move them with a setup move S, do the commutator, then undo S. The form is S, commutator, S\'. For example, move the right two corners down (S), do the commutator, and undo S.' },
-      { title: 'All oriented:', text: 'if all three corners are correctly oriented on one side, any of them can be the oriented corner.' },
+      { title: 'The commutator', text: "is X Y X' Y'. X and Y overlap only on the three target corners." },
+      { title: 'Pick a side:', text: "a side with two unsolved corners, one oriented, which moves to the other corner's place." },
+      { title: 'Y and X:', text: 'Y affects only the bottom layer. X affects mostly the top two layers and a little of the bottom.' },
+      { title: 'Two is enough:', text: 'solving two corners forces the third. Look for two bottom corners (one oriented) and a top corner solvable in 3 moves.' },
+      { title: 'Conjugation:', text: 'if not ready, do a setup S, the commutator, then undo S. For example, move the right two corners down first.' },
+      { title: 'All oriented:', text: 'if all three corners are oriented on one side, any of them can be the oriented corner.' },
     ],
     notes: [
-      'Checked on the simulator: R U\' R\' D R U R\' D\' (that is [R U\' R\', D]) moves exactly three corners and nothing else. All three examples below use it, with the D, D\' variants and a setup.',
+      "Checked on the simulator: R U' R' D R U R' D' (that is [R U' R', D]) moves exactly three corners and nothing else. The examples use it with the D and D' variants, and a setup.",
       'The same commutator method, with tables for every pair of corners, is on the Corner cycles tab of the Blindfolded section.',
     ],
     cases: heiseExamples.step4,
@@ -717,8 +716,8 @@ export const heiseSteps = [
 
 // What the sources do not give as text, and this page does not guess.
 export const heiseGaps = [
-  'The rule that sorts an edge into correct, incorrect or neutral (step 2), and whether it depends on the free slot or column. Heise shows it as pictures; the edge orientation behind it is stated and checked on this page.',
-  'The move sequences for a simple swap, criss/cross and reassigning the free column (step 2), the pair 3-cycles v1, v2 and v3 and the F2, down-under and R conjugations (step 3), and the two varieties of edge 3-cycle. Heise shows these only in an animated applet. The edge 3-cycle, corner 3-cycle and corner twist examples here are checked examples, not Heise\'s.',
-  'Move-by-move examples of building the four squares (including the destroy-and-restore sequence for a fourth square), and a complete scramble-to-solution example. Heise\'s examples are interactive.',
-  'Derived here and not from Heise: where the four squares sit in their solved places (96 arrangements) and the piece counts at the start of step 3 (5 edges, 5 corners).',
+  'The rule that sorts an edge as correct, incorrect or neutral, and the moves for the simple swap, criss/cross and free column.',
+  'The pair 3-cycles v1 to v3, the F2, down-under and R conjugations, and both edge 3-cycle varieties. Heise shows these only in an animated applet.',
+  'Move-by-move building of the four squares (including the destroy-and-restore sequence), and a full scramble-to-solution example.',
+  'Derived here, not from Heise: where the four squares sit (96 arrangements) and the piece counts at the start of step 3.',
 ];

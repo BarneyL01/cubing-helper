@@ -30,49 +30,46 @@
     </nav>
 
     <p class="subtitle">
-      The same 108 pairs as the After 8355 tab, with setups that may also turn L and B. The setups are
-      shorter (none longer than 3 moves), but each L or B turn is done twice, once in the setup and once undoing it.
+      The same 108 pairs, with setups that may turn L and B too. They are shorter: at most 3 moves.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. After 8355 step 4 the unsolved
-        corners are the four top-layer corners (letters A, B, C, D) and the buffer corner DFR (V), each possibly
-        twisted. The 108 pairs, their setups and their moves are generated and checked by
-        <code>log/2026-10-21-bld-8355-corners.mjs --lb</code>.
+        Not from your notes. Generated and checked in the simulator by
+        <code>log/2026-10-21-bld-8355-corners.mjs --lb</code>. After 8355 step 4 leaves the top-layer
+        corners (A, B, C, D) and the buffer DFR (V), each possibly twisted.
       </p>
     </div>
 
     <h2 class="section-heading" id="left" data-short="Corners left">1. The corners that are left</h2>
     <p>
-      Five corners are unsolved. Each target letter below is a sticker on one of the four top-layer corners;
-      the buffer corner DFR holds V, K and P. A pair is two target letters on <strong>different</strong> corners.
+      Five corners are unsolved: four top-layer corners and the buffer DFR (V, K, P). A pair is two target
+      letters on <strong>different</strong> corners.
     </p>
     <div class="table-wrap"><table class="bld-table" id="left-table"></table></div>
     <p class="step-note">
-      A top-layer corner that is in the right place but twisted is not a pair: use the Twists &amp; parity tab.
-      That tab also has the odd-count step, for when the number of letters in your memo is odd.
+      A twisted corner in place is not a pair: use the Twists &amp; parity tab, which also has the odd-count step.
     </p>
 
     <h2 class="section-heading" id="setups" data-short="Setups">2. The setups, simplest first</h2>
     <p>
-      Every pair is one of the three bases plus a setup of any faces. Setups are shown in
-      orange. The table counts the pairs by setup length and compares with the R, U, F, D only tab.
+      Every pair is one of the three bases plus a setup of any faces. Setups are in orange. The table
+      counts pairs by setup length, against the R, U, F, D tab.
     </p>
     <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
     <p>
-      Learning the setups below first covers the most pairs. Each row lists every pair that uses that setup, with its full commutator: the setup, then the base, then the setup undone.
+      Each row lists the pairs that use one setup, with the full commutator: setup, base, setup undone.
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
 
     <h2 class="section-heading" id="place" data-short="Place, then twist">3. Easiest: put the corners in place, twist later</h2>
     <p>
-      If you don't mind corners ending up twisted, you only need one commutator per pair of <strong>corners</strong>,
-      not per pair of stickers: 12 instead of 108. Then fix the twists at the end with your corner-twist algorithm.
+      If corners may end up twisted, you need one commutator per pair of <strong>corners</strong> (12, not
+      108). Fix the twists at the end.
     </p>
     <ol class="step-how">
-      <li><strong>Memo by corners, not stickers.</strong> Look at the piece in the buffer (DFR): which top corner does it belong in? Then the piece sitting in that corner: where does it belong? Keep going. If the buffer's own piece comes back to the buffer while top corners are still out of place, start again from the first one that is out of place.</li>
-      <li><strong>Pair them up</strong> and do the card below for each pair: it sends the buffer's piece to the first corner and that corner's piece to the second. Which way round a piece ends up doesn't matter yet.</li>
-      <li><strong>Twist.</strong> Every corner is now in its place, some of them twisted. Fix them with your twist algorithm <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code> (U2 or U' for the other top corners, and with R before and R' after to include the buffer corner), or see the Twists &amp; parity tab.</li>
+      <li><strong>Memo by corners.</strong> Find where the buffer's piece belongs, then the piece in that corner, and so on. If the chain returns to the buffer early, start again from the first corner still out of place.</li>
+      <li><strong>Pair them up.</strong> Each card sends the buffer's piece to the first corner and that corner's piece to the second. Orientation can wait.</li>
+      <li><strong>Twist.</strong> Every corner is in place, some twisted. Fix them with <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code> (U2 or U' for the other top corners; R before and R' after to include the buffer). Or see the Twists &amp; parity tab.</li>
     </ol>
     <p class="step-note" id="place-stats"></p>
     <div class="view-toggle" id="view-toggle"></div>
@@ -85,8 +82,8 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="pair-table"></table></div>
     <p class="step-note">
-      Each row sends the buffer's piece to the first letter, the piece at the first letter to the second,
-      and the piece at the second back to the buffer. Order matters: AB and BA are different rows.
+      Each row: the buffer's piece goes to the first letter, that piece to the second, and the second back
+      to the buffer. AB and BA are different rows.
     </p>
   </main>
 
@@ -194,7 +191,7 @@
     }
     // ---- 3: place, then twist (checked by log/2026-10-22-8355-placing.mjs on all 4860 positions)
     {
-      $('place-stats').textContent = 'Checked on every one of the 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Each picture is the position the commutator fixes (corners only); switch to 3D above to play it.';
+      $('place-stats').textContent = 'Checked on all 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Pictures show corners only; use 3D above to play one.';
       renderCases('place-cards', corner8355Place.map((p) => ({
         name: `Buffer → ${p.from} → ${p.to}`,
         orientation: `Setup ${p.setup} (${p.setupMoves} move${p.setupMoves === 1 ? '' : 's'}), ${p.length} turns in all. Letters ${p.first}${p.second}; the shortest of ${p.options} sticker versions.`,

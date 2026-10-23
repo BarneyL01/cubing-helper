@@ -16,8 +16,7 @@
   <main>
     <h1 id="top">3x3 — 8355 Method</h1>
     <p class="subtitle">
-      A beginner method that gets by on one algorithm: Sassy
-      (<code>R U R' U'</code>). Layer by layer, but the middle edges go in
+      A beginner method with one algorithm, Sassy (<code>R U R' U'</code>). The middle edges go in
       through a "keyhole" before the last layer is touched.
     </p>
     <div class="source-note">
@@ -26,9 +25,8 @@
         <a href="https://www.speedsolving.com/wiki/index.php/8355_Method">Speedsolving.com Wiki page</a>
         (see also the
         <a href="https://www.speedsolving.com/threads/8355-method-easy-way-to-solve-cube.10158/">forum thread</a>),
-        using your name for <code>R U R' U'</code>. Every algorithm, both
-        worked examples and the last-corners steps were checked with the cube
-        simulator. Where the wiki needed an addition, the step says so.
+        using your name for <code>R U R' U'</code>. Every algorithm, both worked examples and the
+        last-corners steps were checked in the cube simulator. Additions to the wiki are marked in the steps.
       </p>
     </div>
 
@@ -90,15 +88,15 @@
       extra: true,
       mark: '▶',
       source: 'wiki',
-      intro: 'A complete solve from the wiki, then the last five corners on their own. WCA notation; (…)×n repeats the group n times; lowercase d is a wide turn.',
+      intro: 'A complete solve from the wiki, then the last five corners alone. WCA notation; (…)×n repeats the group n times; lowercase d is a wide turn.',
       custom(section) {
         section.append(
           scrambleLine('Scramble', exampleSolve.scramble),
           movesTable('Complete solve', ['Stage', 'Moves'], exampleSolve.rows, [1]),
-          el('p', 'step-note', 'The wiki does the last two edges in two parts, as here; the cards in step 4 swap them in one go.'),
+          el('p', 'step-note', 'The wiki does the last two edges in two parts; the step 4 cards do them in one go.'),
           scrambleLine('Last five corners — scramble', lastFiveExample.scramble),
           movesTable('Last five corners', ['Stage', 'Moves'], lastFiveExample.rows, [1]),
-          el('p', 'step-note', 'The wiki stops after the last Sassy; the cube is only solved once the bottom layer is turned back (checked in the simulator).'),
+          el('p', 'step-note', 'The wiki stops after the last Sassy. The cube is solved only once the bottom layer is turned back.'),
         );
       },
     };
@@ -110,7 +108,7 @@
       extra: true,
       mark: '»',
       source: 'wiki',
-      intro: 'Ways the wiki suggests to cut the move count once the method is familiar.',
+      intro: 'Ways to cut the move count once the method is familiar.',
       custom(section) {
         section.appendChild(movesTable('Shorter ways to place a corner (step 2)', ['White sticker faces', 'Sassy way', 'Shorter way'], cornerShortcuts, [1, 2]));
         const ul = el('ul', 'faster-tips');

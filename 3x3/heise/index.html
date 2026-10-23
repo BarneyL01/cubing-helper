@@ -23,9 +23,8 @@
       <p>
         Not from your own notes: built from the specification you pasted and from answers read off
         <a href="https://www.ryanheise.com/cube/heise_method.html">Ryan Heise's pages</a> by another agent.
-        The text is reworded and does not copy Heise. The examples were checked on the cube simulator.
-        Heise gives most move sequences only in an animated applet; those are listed at the end and are
-        not guessed. Anything marked "derived here" was worked out and checked, not read from Heise.
+        The text is reworded. The examples were checked on the simulator. Heise gives most sequences only in
+        an animated applet, so they are listed at the end, not guessed. "Derived here" marks our own working.
       </p>
     </div>
 
@@ -38,7 +37,7 @@
   </main>
 
   <script type="module">
-    import { heiseFacts, heisePipeline, heiseSteps, heiseGaps } from '../../data/heise.js?v=4';
+    import { heiseFacts, heisePipeline, heiseSteps, heiseGaps } from '../../data/heise.js?v=6';
     import { mountSteps } from '../../js/steps-page.js';
 
     const el = (tag, cls, text) => {
@@ -76,7 +75,7 @@
       extra: true,
       mark: '?',
       source: 'spec',
-      intro: 'The notes this page is built from do not give these. Heise shows them as pictures or an interactive example. Send them and they can be added and checked.',
+      intro: 'Heise gives these only as pictures or an interactive example. Send them and they can be checked and added.',
       custom(section) {
         const ul = el('ul', 'faster-tips');
         for (const g of heiseGaps) ul.appendChild(el('li', null, g));

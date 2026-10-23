@@ -86,10 +86,10 @@ const filmstripFor = (c, intro) => {
   if (c.setup) parts.push(invertAlg(c.setup));
   const marks = c.bad.map((x, i) => ({ piece: x.colours, colour: COLOURS[i] }));
   const names = c.bad.map((x) => `the ${nice(x.colours)} corner is at ${where(x)}`).join('; ');
-  const frames = [{ after: '', label: 'Start', caption: `${intro} The three unsolved corners are outlined: ${names}. Everything else is solved.` }];
+  const frames = [{ after: '', label: 'Start', caption: 'The three unsolved corners are outlined. Everything else is solved.' }];
   if (c.setup) {
     frames.push({ after: c.setup, label: `Setup ${c.setup}`, caption: 'The setup moves the corners to where the commutator can reach them.' });
-    frames.push({ after: c.body, label: 'Commutator', caption: 'The commutator cycles the three corners; the setup has not been undone yet, so other pieces are displaced.' });
+    frames.push({ after: c.body, label: 'Commutator', caption: 'The commutator cycles the three corners. The rest is still displaced.' });
     frames.push({ after: invertAlg(c.setup), label: 'Undo the setup', caption: 'Undoing the setup puts everything else back. The cube is solved.' });
   } else {
     // X Y X' Y' for [R U' R', D]
@@ -152,7 +152,7 @@ if (two) {
       legend: startBad.map((x, i) => ({ colour: COLOURS[i], text: `${nice(x.colours)} corner` })),
       frames: [
         { after: '', label: 'Start', caption: `Five corners are unsolved (${names(startBad)}); every edge is solved.` },
-        { after: step1, label: 'One 3-cycle', caption: `One corner 3-cycle puts two corners home. Three are left (${names(midBad)}): the position for step 4.` },
+        { after: step1, label: 'One 3-cycle', caption: 'One 3-cycle puts two corners home. Three are left: the position for step 4.' },
         { after: step2, label: 'Step 4', caption: 'A second 3-cycle (step 4) solves the last three corners.' },
       ],
     },
@@ -180,7 +180,7 @@ const edgeCard = {
     legend: edgeBad.map((x, i) => ({ colour: COLOURS[i], text: `${nice(x.colours)} edge` })),
     frames: [
       { after: '', label: 'Start', caption: `Three edges are out of place (${edgeBad.map((x) => nice(x.colours)).join(', ')}).` },
-      { after: EDGE_ALG, label: EDGE_ALG, caption: 'Four moves put the three edges home. Two of the edges move in the U layer, one in the M slice.' },
+      { after: EDGE_ALG, label: EDGE_ALG, caption: 'Four moves put the three edges home: two in the U layer, one in the M slice.' },
     ],
   },
 };
@@ -254,7 +254,7 @@ const squares = [
     anchor: 'outer-square', name: 'An outer square', orientation: 'A corner, two edges and a centre: a 2x2x1 block.',
     displayAlg: 'Corner + 2 edges + centre', noViewer: true,
     filmstrip: squareFilm(['DFL', 'DF', 'FL', 'F'].map((piece) => ({ piece, colour: PINK })), ['cube'],
-      'The white/green/red corner, the white/green edge and green/red edge beside it, and the green centre.',
+      'The white/green/red corner, its two edges and the green centre.',
       [{ colour: PINK, text: 'one outer square (in its solved place)' }]),
   },
   {
@@ -273,7 +273,7 @@ if (pick1) {
     orientation: 'One of the 16 arrangements for white. Derived here from the rules.',
     displayAlg: 'Three outer + one inner; the DFR corner and FR edge are left out', noViewer: true,
     filmstrip: squareFilm(ordered.flatMap((sq, i) => sqMarks(sq, cols[i])), ['D', 'cube'],
-      'The four squares cover the first two layers except the white/green/orange corner and the green/orange edge, which are the free slot (front right). Only the front and right sides show in the cube view; the back and left squares are in the bottom view and on the hidden sides.',
+      'Four squares fill the first two layers. The free slot is front right.',
       ordered.map((sq, i) => ({ colour: cols[i], text: `${sq.map((c) => c.faces).join(', ')}${i === 3 ? ' (inner)' : ''}` }))),
   });
 }
@@ -296,7 +296,7 @@ if (twistRow) {
       legend: badT.map((x, i) => ({ colour: COLOURS[i], text: `${nice(x.colours)} corner (twisted)` })),
       frames: [
         { after: '', label: 'Start', caption: `The ${badT.map((x) => nice(x.colours)).join(' and ')} corners are twisted in place.` },
-        { after: twistRow.moves, label: `${twistRow.moves.split(' ').length} moves`, caption: 'The twist turns both corners the right way and puts everything else back. This is a pure corner twist, found and checked here; it is not necessarily the one Heise uses.' },
+        { after: twistRow.moves, label: `${twistRow.moves.split(' ').length} moves`, caption: 'Both corners turn back and everything else is restored. Found here; Heise may use another.' },
       ],
     },
   };

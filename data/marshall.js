@@ -46,7 +46,7 @@ export const marshallSeries = [
         { after: 'F', label: 'F', caption: 'Front turned clockwise.' },
         { after: "R'", label: "R'", caption: 'Right turned counterclockwise.' },
         { after: "F'", label: "F'", caption: 'Front turned back.' },
-        { after: 'R', label: 'R', caption: 'Right turned back. The three edges have moved round the corner, and the bottom layer is unchanged.' },
+        { after: 'R', label: 'R', caption: 'Right turned back. The bottom layer is unchanged.' },
       ],
     },
   },
@@ -72,7 +72,7 @@ export const marshallSeries = [
       frames: [
         { after: '', label: 'Solved', caption: 'The top corners that will move are outlined.' },
         { after: "U R U' L'", label: 'Moves 1–4', caption: 'Halfway: the corners have moved part of the way round the triangle.' },
-        { after: "U R' U' L", label: 'Moves 5–8', caption: 'Done. From a solved cube the three corners end twisted. The series is for corners that are out of place: each one rolls into its place.' },
+        { after: "U R' U' L", label: 'Moves 5–8', caption: 'Done. From a solved cube the three corners end twisted. Each corner rolls into its place when it is out of place.' },
       ],
     },
   },
@@ -121,12 +121,12 @@ export const marshallSteps = [
     goal: 'A cross on one face, with the edges that already sit on it used where possible.',
     how: [
       { title: 'Choose a face:', text: 'pick a face whose centre matches an edge already on it. In his example, three faces qualify.' },
-      { title: 'Work from the top:', text: 'move each edge to the top face so it sits correctly next to the top edges already there, rather than taking every edge to the bottom first. He says the bottom-first approach needs about eight moves for this cube.' },
+      { title: 'Work from the top:', text: 'move each edge to the top face so it sits correctly next to the top edges already there. He says the bottom-first approach needs about eight moves for this cube.' },
       { title: 'His example:', text: "B' U' R F2 L U2 (his notation: B' T' R F 2 L T 2). Six moves. The card below shows the start the moves solve." },
       { title: 'With practice:', text: 'he expects about seven moves on average. How you reach the cross is up to you, provided you can do it.' },
     ],
     notes: [
-      'Added here, not in his text: his figure 4a is not in the text. The start on the card is found by undoing the six moves, and it matches the four edge positions his words give (the blue/green edge on top; blue/red at front-right; blue/yellow at bottom-front; blue/orange at back-bottom). The check is in log/2026-10-22-marshall-check.mjs.',
+      'Added here: the start on the card is found by undoing the six moves. It matches the four edge positions in his words. Check: log/2026-10-22-marshall-check.mjs.',
     ],
     cases: [
       {
@@ -165,18 +165,18 @@ export const marshallSteps = [
     source: 'marshall',
     goal: 'Three middle-layer edges in place. Three top edges with their top colour up. One top edge in the middle layer. The fourth middle edge on top.',
     how: [
-      { title: 'Take an edge up:', text: 'turn the top so the middle-layer edge that belongs in place can be moved by the Edge Piece Series (F R\' F\' R) into its position and orientation. The series moves three edges round one top corner, so it moves the target edge and two top edges.' },
-      { title: 'Choose which version:', text: 'the same target can be placed with the top turned so it is the first or the third edge the series moves. Pick the version that keeps the top edges\' top colour up, since that is the aim of this step.' },
-      { title: 'Remove a flipped edge:', text: 'a middle-layer edge that is in position but flipped must be taken out with the same series before it can be placed again.' },
-      { title: 'Repeat:', text: 'do this until three middle-layer edges are in place, three top edges have their top colour up, one top edge is in the middle layer, and the fourth middle-layer edge is on top.' },
-      { title: 'If two top edges are right:', text: 'when three middle edges are in place but only two top edges have their top colour up, apply one more series using only top edges. The top edge in the middle layer comes up with its top colour up, and the top edge with the wrong colour goes into the middle layer.' },
-      { title: 'Finish:', text: 'if the last turn of a series is a turn of the top face, it can be left out: a top turn cannot change the bottom layer, which the series is there to protect.' },
+      { title: 'Take an edge up:', text: "turn the top so the middle edge that belongs in place can be moved by the Edge Piece Series (F R' F' R). The series moves three edges round one top corner: the target and two top edges." },
+      { title: 'Choose which version:', text: "the target can be the first or the third edge the series moves. Pick the one that keeps the top colour up." },
+      { title: 'Remove a flipped edge:', text: 'a middle edge that is in place but flipped must be taken out with the same series before it can be placed again.' },
+      { title: 'Repeat:', text: 'until three middle edges are in place, three top edges have their top colour up, one top edge is in the middle layer, and the fourth middle edge is on top.' },
+      { title: 'If two top edges are right:', text: 'with three middle edges in place but only two top edges right, apply one series using only top edges.' },
+      { title: 'Finish:', text: 'a top turn at the end of a series can be left out; it cannot change the bottom layer.' },
     ],
     cases: [
       {
         anchor: 'edge-series-example',
         name: 'One series places the last three edges',
-        orientation: 'Nine edges are in place at the start. One Edge Piece Series puts the other three in place. The three edges that move are outlined.',
+        orientation: 'Nine edges are in place. One series places the other three (outlined).',
         displayAlg: "F R' F' R",
         noViewer: true,
         filmstrip: {
@@ -201,7 +201,7 @@ export const marshallSteps = [
       {
         anchor: 'edge-series-setup',
         name: 'A top turn first, then the series',
-        orientation: 'Seven edges are in place at the start. A top turn brings two more into place; the series then places the last three.',
+        orientation: 'Seven edges in place. A top turn places two more; the series places the last three.',
         displayAlg: "U F R' F' R",
         noViewer: true,
         filmstrip: {
@@ -225,8 +225,8 @@ export const marshallSteps = [
       },
     ],
     notes: [
-      'The choice of which edge to take next, and which version of the series to use, is a judgement in his method. No rule for it is coded or checked here.',
-      'Added here, not in his text: if an edge is in place but turned, and the series cannot turn it back, the edge flip at the end of this page turns two edges in place and moves nothing else.',
+      'The choice of which edge to take next, and which version of the series to use, is his judgement. No rule for it is coded or checked here.',
+      'Added here: if an edge is in place but turned, and the series cannot turn it back, the edge flip at the end of the page turns two edges in place and moves nothing else.',
     ],
   },
   {
@@ -236,18 +236,18 @@ export const marshallSteps = [
     source: 'marshall',
     goal: 'The fourth middle-layer edge in place, and the four top edges in their correct order with their top colour up.',
     how: [
-      { title: 'Four cases', text: 'for the three top edges left after step 2: all three out of order; two adjacent in order and one out; two opposite in order and one out; or all three in order with each other.' },
-      { title: 'All three out of order:', text: 'turn the top so three top edges (one of them the middle-layer edge) are at the top front-right corner, then apply the Edge Piece Series with the middle-layer edge as the first edge. This turns the top edges into one of the other cases.' },
-      { title: 'Two adjacent in order, one out:', text: 'turn the top 180°. Apply the Edge Piece Series to three edges: the top-layer edge that is in the middle layer, the top edge that is out of order, and the fourth middle-layer edge. Turn the top 90° the other way to finish.' },
-      { title: 'Two opposite in order, one out:', text: "move the out-of-order top edge to the other side of the top layer: X U2 X' U2, where X is one side face turned 90° clockwise. Then the top edges are in order." },
-      { title: 'All three in order:', text: 'swap top edges with the middle-layer edge one at a time. Turn the top 90° one way and one side face 90° the same way; then turn the top 90° the other way and the side face 90° back the other way. Repeat, alternating the directions, until the fourth turn of the side face brings the last top edge back on top and puts the middle-layer edge in place.' },
-      { title: 'Finish:', text: 'turn the top so every top edge is in its place. The twelfth edge then must be right, since eleven right edges force the last one.' },
+      { title: 'Four cases', text: 'the three top edges left after step 2 are all out of order, two adjacent in order, two opposite in order, or all in order.' },
+      { title: 'All three out of order:', text: 'turn the top so three top edges (one the middle-layer edge) are at the top front-right, then apply the series with the middle-layer edge first.' },
+      { title: 'Two adjacent in order, one out:', text: "turn the top 180°. Apply the series to the top-layer edge in the middle layer, the out-of-order top edge and the fourth middle edge. Turn the top 90° back." },
+      { title: 'Two opposite in order, one out:', text: "move the out-of-order top edge to the other side of the top layer with X U2 X' U2, where X is one side face turned 90° clockwise. Then the top edges are in order." },
+      { title: 'All three in order:', text: "swap top edges with the middle-layer edge one at a time: turn the top and one side face 90° the same way, then back the other way. Repeat, alternating, until the fourth side-face turn puts the middle edge in place." },
+      { title: 'Finish:', text: 'turn the top so every top edge is in place. The twelfth edge is then right, since eleven right edges force the last one.' },
     ],
     cases: [
       {
         anchor: 'side-turn',
         name: 'The side turn, from a solved cube',
-        orientation: "Marshall's side turn, X U2 X' U2, with X = R. Shown from a solved cube to see what it moves.",
+        orientation: "Marshall's side turn, X U2 X' U2, with X = R, shown from a solved cube.",
         displayAlg: "R U2 R' U2",
         noViewer: true,
         filmstrip: {
@@ -266,13 +266,13 @@ export const marshallSteps = [
             { after: 'R', label: 'R', caption: 'Right turned clockwise.' },
             { after: 'U2', label: 'U2', caption: 'Top turned half way.' },
             { after: "R'", label: "R'", caption: 'Right turned back.' },
-            { after: 'U2', label: 'U2', caption: 'Top turned back. Only three edges have moved, all in the top or middle layer; the bottom layer is untouched.' },
+            { after: 'U2', label: 'U2', caption: 'Top turned back. Only three edges move; the bottom layer is untouched.' },
           ],
         },
       },
     ],
     notes: [
-      'Marshall names the side faces by the colour in his figure 6. This page says "a side face"; the face is the one beside the edge being moved. Check the case against a picture before relying on the face: his figures are not reproduced here.',
+      'Marshall names the side faces by colour in his figure 6, which is not reproduced here. This page says "a side face": the one beside the edge being moved.',
     ],
   },
   {
@@ -282,18 +282,18 @@ export const marshallSteps = [
     source: 'marshall',
     goal: 'Five corners placed, each in its place and turned correctly.',
     how: [
-      { title: 'Look for a corner that moves along an edge:', text: 'the Corner Piece Series moves a corner along one cube edge and rolls it into its place. Some corners are placed this way, and some move across a face diagonal. Use whichever is in front of you.' },
-      { title: 'Two at once:', text: 'a series sometimes places two corners together. When one does, use it: it saves a series.' },
-      { title: 'Set up:', text: 'when no corner can move into place, turn one face 90° or 180° first. That brings a corner into a position the series can use, or moves a second corner into the triangle. Apply the series, then turn the face back. Marshall says about 70% of the time a 90° turn does it and about 30% a 180° turn.' },
-      { title: 'A corner in place but turned:', text: 'it has to come out. It can be taken out in the same series that places another corner, but a series cannot place two corners and remove a third.' },
-      { title: 'Two corners in each other\'s place:', text: 'only one can be placed in one series; the other is moved out of the way.' },
-      { title: 'Check:', text: 'step 4 is complete when five corners are placed. A series can add one or two to the count.' },
+      { title: 'Look for a corner that moves along an edge:', text: 'the Corner Piece Series moves a corner along one cube edge into place. Some corners go this way; others move across a face diagonal.' },
+      { title: 'Two at once:', text: 'a series sometimes places two corners together. Use it when it does.' },
+      { title: 'Set up:', text: 'when no corner can move into place, turn one face 90° or 180° first, apply the series, then turn the face back. Marshall says 90° works about 70% of the time, 180° about 30%.' },
+      { title: 'A corner in place but turned:', text: 'it has to come out. One series cannot place two corners and remove a third.' },
+      { title: "Two corners in each other's place:", text: 'only one can be placed in one series; the other is moved out of the way.' },
+      { title: 'Check:', text: 'step 4 is complete when five corners are placed.' },
     ],
     cases: [
       {
         anchor: 'setup-and-undo',
         name: 'A setup turn, a series, and the undo',
-        orientation: 'Five corners in place at the start, three out (UFR, UBL, UFL). A right turn, the series and the undo turn place all eight.',
+        orientation: 'Five corners in place; UFR, UBL and UFL are out. A right turn, the series and the undo place all eight.',
         displayAlg: "R U R U' L' U R' U' L R'",
         noViewer: true,
         filmstrip: {
@@ -316,8 +316,8 @@ export const marshallSteps = [
       },
     ],
     notes: [
-      'Marshall\'s worked examples for this step (his figures 7 to 13) are pictures and are not reproduced. The setups are described by face in words, not by a worked move list.',
-      'Added here, not in his text: if a corner is in place but turned, and the series cannot turn it back, the corner twist at the end of this page turns two corners in place and moves nothing else.',
+      "Marshall's worked examples for this step (his figures 7 to 13) are not reproduced. The setups are described in words.",
+      'Added here: a turned corner the series cannot fix can be turned by the corner twist at the end of the page.',
     ],
   },
   {
@@ -327,19 +327,19 @@ export const marshallSteps = [
     source: 'marshall',
     goal: 'The last three corners placed, with one Corner Piece Series. Once two corners are right the third must be right too.',
     how: [
-      { title: 'Find or make a corner:', text: 'look for a corner that can move along an edge into place. Half the time one exists; if none does, make one with a 90° turn of a face (about 70% of the time) or a 180° turn (about 30%).' },
-      { title: 'Note the colour:', text: 'the first corner will replace the second corner. Note the colour of the second corner that comes to the top face when it is placed in one of the two target positions.' },
+      { title: 'Find or make a corner:', text: 'look for a corner that can move along an edge into place. Half the time one exists; if not, make one with a 90° or 180° turn (about 70% and 30%).' },
+      { title: 'Note the colour:', text: 'the first corner will replace the second. Note the colour of the second corner when it reaches the top face in a target position.' },
       { title: 'Find the third corner:', text: 'find the third corner on the face of that colour, and note its colour on that face.' },
       { title: 'Bring it to the top:', text: 'turn faces until that colour is on the top face, in one of the target positions.' },
       { title: 'Series:', text: 'apply the Corner Piece Series so the target colour of the second corner replaces that colour. The three corners then move into place.' },
-      { title: 'Reverse:', text: 'turn the faces back that you turned in step 4.' },
+      { title: 'Reverse:', text: 'turn back the faces you turned in step 4.' },
       { title: 'Last corner:', text: 'you need to place only the first two. When everything else is right, the last corner must be right too.' },
     ],
     cases: [
       {
         anchor: 'endgame-series',
         name: 'Three corners left, one series',
-        orientation: 'Five corners in place; the three that are out (UBR, UBL, UFL) all move into place with one series.',
+        orientation: 'Five corners in place; UBR, UBL and UFL move into place with one series.',
         displayAlg: "U R U' L' U R' U' L",
         noViewer: true,
         filmstrip: {
@@ -362,7 +362,7 @@ export const marshallSteps = [
     ],
     notes: [
       'Marshall leaves one rare arrangement (his figure 21) for the reader to solve, and gives a hint only. It is not solved here.',
-      'Marshall describes these rules in colours. The steps are followed as he gives them; the examples in his figures 14 to 21 are not reproduced.',
+      "Marshall describes these rules in colours. His examples (figures 14 to 21) are not reproduced.",
     ],
   },
 ];
@@ -373,7 +373,7 @@ export const marshallExtraAlgs = [
   {
     anchor: 'extra-corner-twist',
     name: 'Corner twist: two corners, in place',
-    orientation: 'Turns two corners in place, in opposite directions. Nothing else moves. Shown from a solved cube: the two outlined corners are the ones turned.',
+    orientation: 'Turns two corners in place in opposite directions; nothing else moves.',
     displayAlg: "D R' D' R U R' D R D' R' D R U' R' D' R",
     noViewer: true,
     filmstrip: {
@@ -396,7 +396,7 @@ export const marshallExtraAlgs = [
   {
     anchor: 'extra-edge-flip',
     name: 'Edge flip: two edges, in place',
-    orientation: 'Flips two adjacent edges in place. Nothing else moves. E is the middle slice, turned like D. Shown from a solved cube.',
+    orientation: 'Flips two adjacent edges in place; nothing else moves. E is the middle slice, turned like D.',
     displayAlg: "R' E' R2 E2 R' U' R E2' R2' E R U",
     noViewer: true,
     filmstrip: {
@@ -431,9 +431,9 @@ export const marshallSources = {
 
 // What this page does not check. Listed on the page so nobody takes it for checked.
 export const marshallGaps = [
-  'The whole method on random scrambles: not run. Marshall says his average is about 65 moves over 100 scrambles; that figure is his, not measured here.',
-  'The two extra algorithms are published, not Marshall\'s. Each was checked on the simulator: it changes only the orientation of the named pieces. Their use in a solve (the setup to bring the turned pieces to the named places) is not checked against a full solve.',
-  'The judgement parts of steps 2 to 5 (which edge or corner to take next, and which face to set up): his rules are reworded, not coded, so they are not checked by simulation.',
-  'His own worked examples for steps 2 to 5 (his figures) are not reproduced. The examples on the page are ours: built from the moves, and checked on the simulator.',
-  'His statement that one of the three edges in the Edge Piece Series ends inverted: his figure numbers the edges, and the page does not reproduce that numbering.',
+  'The whole method on random scrambles, and his 65-move average (his figure).',
+  'The judgement in steps 2 to 5: which edge or corner to take next, and which face to set up.',
+  'His worked examples for steps 2 to 5 (his figures). Ours are built from the moves and checked.',
+  'How the two extra algorithms fit into a full solve.',
+  'His remark that one edge in the Edge Piece Series ends inverted (his figure numbering).',
 ];

@@ -23,27 +23,25 @@
     </nav>
 
     <p class="subtitle">
-      Orienting the edges (LSE 4a) your way: repeat <code>U' M'</code>, look after every pair, and as soon as you
-      see an arrow, finish it with <code>M' U M</code> or a mirror of it. Each card below starts from one bad-edge
-      pattern (centres lined up) and shows the position after every pair until the arrow, then the finish.
+      LSE 4a your way: repeat <code>U' M'</code>, look after every pair, and finish the arrow with
+      <code>M' U M</code> or a mirror. Each card starts from one bad-edge pattern and shows each pair until
+      the arrow, then the finish.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: worked out with the cube simulator from your description (repeat <code>U' M'</code>,
-        check after every pair, finish the arrow with <code>M' U M</code> or similar), and checked for all 32
-        bad-edge patterns by <code>log/2026-10-22-lse-eo-map.mjs</code>. "Arrow" here means any position that
-        one of <code>M' U M</code>, <code>M U M'</code>, <code>M' U' M</code>, <code>M U' M'</code> (with a U turn
-        first if needed) orients completely. Orientation is judged as on the Reference tab: line the centres up,
-        then a top or bottom edge is bad unless its yellow or white sticker is on the top or bottom face.
+        Not from your notes. Worked out in the simulator from your description, and checked for all 32 bad-edge
+        patterns by <code>log/2026-10-22-lse-eo-map.mjs</code>. An arrow is any of <code>M' U M</code>,
+        <code>M U M'</code>, <code>M' U' M</code> or <code>M U' M'</code> (with a U turn first if needed) that
+        orients every edge. Orientation is judged as on the Reference tab.
       </p>
     </div>
 
     <h2 class="section-heading" id="how" data-short="How to read">How to read a card</h2>
     <ol class="step-how">
-      <li><strong>Start</strong>: the bad-edge pattern with the centres lined up (yellow or white top centre). Turn U until your cube looks like the picture.</li>
-      <li><strong>Fix</strong> (only some cards): a few moves first, because <code>U' M'</code> alone would go round in a loop and never reach an arrow.</li>
-      <li><strong><code>U' M'</code> 1, 2, …</strong>: the position after each pair. The centres are a quarter turn out after every odd pair; that is expected.</li>
-      <li><strong>Finish</strong>: the arrow is solved. Every edge is oriented (judged with the centres lined up). Go on to 4b.</li>
+      <li><strong>Start</strong>: the pattern with the centres lined up. Turn U until your cube matches the picture.</li>
+      <li><strong>Fix</strong> (some cards only): a few moves first, or <code>U' M'</code> loops and never reaches an arrow.</li>
+      <li><strong><code>U' M'</code> 1, 2, …</strong>: the position after each pair. The centres are a quarter turn out after odd pairs; that is expected.</li>
+      <li><strong>Finish</strong>: the arrow is solved and every edge is oriented. Go on to 4b.</li>
     </ol>
     <div class="table-wrap"><table class="bld-table" id="summary-table"></table></div>
 

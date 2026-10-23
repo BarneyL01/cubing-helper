@@ -51,10 +51,10 @@ export const lseFacts = [
 // front, blue back, red left, orange right).
 export const lseOverview = {
   intro:
-    'After CMLL, the only unsolved pieces are six edges and the M-slice centres. M and U are the only moves that leave both blocks alone, so LSE is done with those two alone. Start with the top corners lined up with the blocks (turn U if CMLL left them a turn out); every step below ends with them lined up again.',
+    'After CMLL, six edges and the M-slice centres are unsolved. Only M and U are used, so both blocks stay put. Turn U first if CMLL left the top corners a turn out; each step ends with them lined up.',
   pieces: [
-    'UL and UR: the yellow–red and yellow–orange edges. They belong to the blocks, so they have to end up on the left and right.',
-    'UF, UB, DF and DB: the yellow–green, yellow–blue, white–green and white–blue edges. They sit in the M slice with the four centres.',
+    'UL and UR: the yellow–red and yellow–orange edges, which belong on the left and right blocks.',
+    'UF, UB, DF and DB: the yellow–green, yellow–blue, white–green and white–blue edges, in the M slice.',
   ],
 };
 
@@ -78,15 +78,15 @@ export const eoCases = [
 export const eoSteps = {
   goal: 'Orient all six edges (no edge "flipped"), with the centres lined up again afterwards.',
   how: [
-    { title: 'Line the centres up.', text: 'Turn M until the top centre is the top colour (yellow here). Orientation is judged against the centres, not against the faces of the cube.' },
+    { title: 'Line the centres up.', text: 'Turn M until the top centre is the top colour (yellow here). Orientation is judged against the centres.' },
     { title: 'Find the bad edges.', text: 'A bad edge has its yellow or white sticker on a face that does not have a yellow or white centre. Top-layer edge: it is bad unless its yellow/white sticker is on top. Bottom-layer edge: bad unless its yellow/white sticker is on the bottom.' },
     { title: 'Count them.', text: 'There is always an even number: 0, 2, 4 or 6. If there are none, go straight to 4b.' },
-    { title: 'Turn U until the picture matches.', text: 'U turns carry the bad top-layer edges around, so any rotation of a pattern is the same case. Turn U until the top layer looks like the card, do its algorithm, then turn U back the same number of turns the other way. (Every algorithm here turns U a net zero times, so the top corners are still lined up with the blocks afterwards.) The cards below list one case from each family.' },
+    { title: 'Turn U until the picture matches.', text: 'U turns carry the bad edges round, so a rotated pattern is the same case. Turn U until the top layer matches a card, do its algorithm, then turn U back the same number of times. Every algorithm turns U a net zero times, so the top corners stay lined up. The cards list one case from each family.' },
   ],
   notes: [
-    'Names and the (top/bad) counts are the ones on Scheopner\'s LSE page: the numbers are bad edges in the top layer / bottom layer, a = the two top ones are adjacent, o = opposite. The 11 cards are his 9 non-mirror cases with the two mirror pairs (arrow, 1+1) shown both ways.',
-    'The algorithms were found by search: the shortest M/U sequence for each family that ends with every edge oriented, the centres lined up and the top corners back where they started. Checked against Scheopner\'s page: his V + D-Line algorithm (M2 U\' M\' U M\') is the same as ours; his others are shorter, because they turn U a net quarter or half turn (his F Arrow is M\' U M\', ours M\' U M U\'), which leaves the top corners out of line with the blocks.',
-    'All 32 bad-edge patterns were checked: each, turned by U to the card that matches it, solved by the card, then turned back, ends with every edge oriented, the centres lined up and the top corners lined up with the blocks.',
+    'Names and counts (bad edges on top / bottom; a = adjacent, o = opposite) follow Scheopner\'s LSE page. The 11 cards are his 9 non-mirror cases, with two mirror pairs shown both ways.',
+    'Found by search: the shortest M/U sequences that keep the top corners lined up. His V + D-Line algorithm (M2 U\' M\' U M\') is the same as ours. His others turn U a net quarter or half turn (his F Arrow is M\' U M\'), which leaves the top corners out of line.',
+    'All 32 bad-edge patterns were checked: each one ends with every edge oriented, the centres lined up and the top corners lined up.',
   ],
 };
 
@@ -95,12 +95,12 @@ export const eoSteps = {
 export const ulUrSteps = {
   goal: 'Put the left piece in UL and the right piece in UR, keeping every edge oriented. The other four edges can be anywhere.',
   how: [
-    { title: 'Find the left piece and the right piece.', text: 'The yellow–red edge and the yellow–orange edge (the edges that belong with the left and right blocks).' },
-    { title: 'Look up where they are.', text: 'The table below has all 30 positions, read with the top corners lined up with the blocks (4a leaves them that way). Positions are named by where an edge sits now: UL, UR, UF, UB (top layer) or DF, DB (bottom).' },
-    { title: 'Do the moves.', text: 'Every sequence is only M, U and their inverses. Every edge is still oriented at the end, UL and UR are in place and the top corners are lined up with the blocks again (the turns of U add up to zero). The centres may end up turned: that is dealt with at the start of 4c.' },
+    { title: 'Find the left piece and the right piece.', text: 'The yellow–red and yellow–orange edges.' },
+    { title: 'Look up where they are.', text: 'Find their positions in the table below (30 cases, top corners lined up). Positions are named by where the edge sits now.' },
+    { title: 'Do the moves.', text: 'Only M and U are used. At the end UL and UR are solved, every edge is oriented and the top corners are lined up. The centres may be turned; 4c fixes that.' },
   ],
   notes: [
-    'The table gives the shortest sequence found for each position that also leaves the top corners lined up. Other sequences exist, and they leave the M slice in a different arrangement, which is exactly what DFDB (below) lets you predict and choose between.',
+    'The table gives the shortest sequence for each position that keeps the top corners lined up. Other sequences leave the M slice differently; DFDB (below) predicts that.',
     'Rule of thumb from the table: both pieces on the bottom is three moves; two in the top layer opposite each other is four (or five when they are swapped); one on the bottom is five to seven; neighbours in the top layer are six.',
   ],
   groups: [
@@ -185,20 +185,20 @@ export const mSliceCases = [
 export const mSliceSteps = {
   goal: 'Solve the four M-slice edges and the four centres. UL and UR stay where they are.',
   how: [
-    { title: 'Line the centres up.', text: 'Turn M, M\' or M2 until the centres match the sides again (the U centre on top). That is the only turn you ever need before the case; a solved case ends here.' },
-    { title: 'Read the case.', text: 'With the centres lined up and UL/UR solved, the edges in DF and DB (the "DFDB" pair, next section) identify it. Or compare the picture: the 11 unsolved cases are 8 three-cycles and 3 pairs of swaps.' },
-    { title: 'Do the algorithm.', text: 'Every one uses only M and U2, so UL, UR and the orientation survive. The cube is solved when it finishes.' },
+    { title: 'Line the centres up.', text: 'Turn M, M\' or M2 until the centres match (U centre on top). That is the only turn needed before the case.' },
+    { title: 'Read the case.', text: 'With the centres lined up, the edges in DF and DB identify the case (DFDB, below). Or compare the picture: 8 three-cycles and 3 pairs of swaps make up the 11 unsolved cases.' },
+    { title: 'Do the algorithm.', text: 'Every algorithm uses only M and U2, so UL, UR and the orientation survive.' },
   ],
   notes: [
-    'Only 12 cases: checked in the simulator, after 4a and 4b the four M-slice edges cannot be in just any arrangement. Once the centres are lined up, the edges in DF and DB fix where the other two are. In all 48 positions that 4b can leave (12 for each turn of the centres), the lining-up turn followed by the matching card solves the cube.',
-    'Algorithms were found by search (shortest M/U2 sequence for each case). Checked against Scheopner\'s page, which lists four unsolved kinds: his two 3-cycle algorithms (U2 M\' U2 M and M\' U2 M U2) are two of the cards above, move for move; his H (M2 U2 M2 U2) does the same thing as ours (U2 M2 U2 M2); his "Dots" (M\' E2 M E2) leaves the edges where they are and turns the centres half way, which is the same case as our last card (it needs E2, which is not an M/U move). The other cards are the same kinds in the other positions.',
+    'Checked: after 4a and 4b there are only 12 cases once the centres are lined up, and the edges in DF and DB fix which one. The lining-up turn and the matching card solve all 48 positions 4b can leave.',
+    'Found by search (shortest M/U2 sequence for each case). Scheopner\'s page has the same cases: his 3-cycle algorithms (U2 M\' U2 M and M\' U2 M U2) are two of the cards above, move for move; his H (M2 U2 M2 U2) does the same as our U2 M2 U2 M2. His "Dots" (M\' E2 M E2) is our last card, and it needs E2, which is not an M/U move.',
   ],
 };
 
 // DFDB: which two edges to look at, and where they are before the centres are lined up.
 export const dfdb = {
   intro:
-    "DFDB is a way to recognise the 4c case from two edges, tracked while doing 4b. athefre's page describes it as tracking the DF and DB stickers (or the UF and UB ones) through 4b, then aligning the U layer after 4b from where they ended up, looking at the up/down stickers of the M-slice edges. U turns never touch DF and DB, so during 4b they only move when you turn M, which is what makes them easy to follow.",
+    "DFDB recognises the 4c case from the two edges in DF and DB, once the centres are lined up. U turns never move DF and DB, so they change only when M is turned. The idea follows athefre's page, which tracks the DF and DB stickers through 4b.",
   rule: [
     'First, how far are the centres off? Look at where the top-colour centre is: on top (aligned), at the front (M needed), on the bottom (M2) or at the back (M\' needed).',
     'Second, with the centres lined up, which two edges are in DF and DB? Name an edge by the slot it belongs in (the UF edge is the yellow–green one, the UB edge the yellow–blue one, the DF edge the white–green one, the DB edge the white–blue one).',
@@ -208,7 +208,7 @@ export const dfdb = {
   // are the ones that will be in DF and DB afterwards.
   beforeTurn: {
     heading: 'Read them before you turn',
-    lead: 'You do not have to turn M to read the case: the edges that will be in DF and DB after the lining-up turn are already somewhere in the M slice.',
+    lead: 'You can read the case before turning: the edges that will be in DF and DB are already in the M slice.',
     columns: ['Centres are off by', 'Lining-up turn', 'Read the edges now in'],
     rows: [
       ['Aligned', '(none)', 'DF and DB'],
@@ -225,7 +225,7 @@ export const dfdb = {
   // The sticker version of the same thing: does each sticker match the centre next to it?
   stickers: {
     heading: 'The same thing as sticker matches',
-    lead: 'If you would rather not name edges: with the centres lined up, each of the two edges has two stickers that touch two centres. Ask whether each sticker matches the centre it touches.',
+    lead: 'If you would rather not name edges: with the centres lined up, ask whether each sticker matches the centre it touches.',
     columns: ['Edge', 'Bottom sticker matches bottom centre?', 'Front/back sticker matches its centre?', 'So it is the'],
     rows: [
       ['In DF', 'Yes', 'Yes', 'DF edge'],
@@ -246,7 +246,7 @@ export const dfdb = {
     ['Edge orientation (EO), Speedsolving wiki (not opened from here)', 'https://www.speedsolving.com/wiki/index.php?title=EO'],
   ],
   caveat:
-    "What is checked: this version (the edges in DF and DB, once the centres are lined up) identifies the 4c case in every one of the 48 positions. The wording is mine. athefre's page gives the idea but no case table, and Scheopner's page predicts the case a different way (by finding the UF edge's matching edge and comparing its front sticker with the front centre), so none of this is copied from either.",
+    "Checked: the DF and DB edges identify the 4c case in all 48 positions. The table is our own. athefre's page gives the idea but no table; Scheopner's predicts the case another way, so nothing here is copied from either.",
 };
 
 // The one LSE card from the user's own notes, kept as written.
@@ -266,14 +266,14 @@ export const rouxLseCases = [
 
 export const yourNote = {
   intro:
-    "Kept exactly as you recorded it. Your \"2o/2\" is the (U+D)-Line orientation case in the notation on Scheopner's page: 2 bad edges in the top layer, opposite each other, and both bottom edges bad. On its own, M U2 M changes no edge's orientation, so it cannot be a whole algorithm. But it is the first three moves of the algorithm for that case: M U2 M, then U2 M' U M' (and U' to line the corners up) — and Scheopner's version for the same case is the mirror image, M' U2 M' U2 M U M. That fits your wording \"M or M' + U2 and reverse\": the first half is M U2 M or M' U2 M' depending on the direction, and the second half turns M the other way. So I read your card as the opening of that algorithm. This is a reading, not something you wrote. Please confirm or correct it.",
+    "Kept as you recorded it. We read your \"2o/2\" as the (U+D)-Line case on Scheopner's page. On its own, M U2 M changes no edge's orientation, but it is the first three moves of that case's algorithm, shown below. This is a reading, not something you wrote: please confirm or correct it.",
   extra: [
     {
       id: 'lse-4c-full',
       name: 'The whole (U+D)-Line algorithm — your card is its first three moves',
       stickering: 'eo',
       diagramViews: ['U', 'D'],
-      orientation: 'UL and UR bad, DF and DB bad (UF and UB good). Your M U2 M, then U2 M\' U M\', then U\' to line the corners up. Mirror image (M\' first): Scheopner\'s M\' U2 M\' U2 M U M, which leaves the top corners a quarter turn out.',
+      orientation: 'UL, UR, DF and DB bad; UF and UB good. Your M U2 M, then U2 M\' U M\' and U\' to line the corners up. Mirror (M\' first): Scheopner\'s M\' U2 M\' U2 M U M, which leaves the top corners a quarter turn out.',
       alg: "M U2 M U2 M' U M' U'",
       altAlg: "M' U2 M' U2 M U M",
     },

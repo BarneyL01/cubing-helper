@@ -159,8 +159,6 @@ const baseCards = FORMS.slice(0, 3).map((f, k) => {
   const bad = pieces(after).filter((x) => !x.home);
   check(`base ${f.text}: three corners move, nothing else`, bad.length === 3 && bad.every((x) => x.kind === 3));
   const [, X, Y] = f.stickers;
-  const cyc = `the sticker at V goes to ${X}, the one at ${X} goes to ${Y}, the one at ${Y} goes to V`;
-  const where = `the ${posName('V')} corner goes to ${posName(X)}, the ${posName(X)} corner to ${posName(Y)}, and the ${posName(Y)} corner to ${posName('V')}`;
   return {
     anchor: `base-${k + 1}`, name: `Base ${k + 1}: ${f.text}`, orientation: `Buffer cycle: V → ${X} → ${Y}`, displayAlg: f.text, noViewer: true,
     filmstrip: {
@@ -172,7 +170,7 @@ const baseCards = FORMS.slice(0, 3).map((f, k) => {
         { after: a.replace(/ /g, ' '), label: a, caption: 'The insertion (or the single turn, in the reverse form).' },
         { after: b, label: b, caption: 'The other part.' },
         { after: invertAlg(a), label: `${a} undone`, caption: 'The first part undone.' },
-        { after: invertAlg(b), label: `${b} undone`, caption: `The second part undone. On a solved cube: ${cyc}; that is ${where}.` },
+        { after: invertAlg(b), label: `${b} undone`, caption: `Net: ${posName('V')} → ${posName(X)} → ${posName(Y)} → ${posName('V')}, for the three outlined corners.` },
       ],
     },
     moves: alg,
@@ -293,9 +291,9 @@ const demoCards = demos.map((r, k) => {
       marks: bad.map((x, i) => ({ piece: x.colours, colour: COLOURS[i] })),
       legend: bad.map((x, i) => ({ colour: COLOURS[i], text: `${nice(x.colours)} corner` })),
       frames: [
-        { after: '', label: 'Start', caption: `The three unsolved corners are outlined. The base ${f.text} cycles the corners at ${[...f.stickers].map((l) => posName(l)).join(', ')}.` },
+        { after: '', label: 'Start', caption: 'The three unsolved corners are outlined.' },
         { after: r.setup, label: `Setup ${r.setup}`, caption: 'The setup carries the three pieces onto the three corners the base cycles.' },
-        { after: body, label: 'Base', caption: 'The base cycles them into place; everything the setup moved is still displaced.' },
+        { after: body, label: 'Base', caption: 'The base cycles them into place. The rest is still displaced.' },
         { after: undo, label: 'Undo the setup', caption: 'Undoing the setup puts the rest back. Solved.' },
       ],
     },

@@ -30,16 +30,13 @@
     </nav>
 
     <p class="subtitle">
-      Choosing which edges to cycle, one pair of letters at a time. Each pair is one 3-cycle with
-      the buffer UF, built from a commutator in the table below.
+      Each pair of edge letters is one 3-cycle with the buffer UF, built from a commutator in the table below.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>UF</strong> (letters C and I), not the DF buffer the Reference and Practice tabs use
-        for M2. The method on the Corner cycles tab is the same, with edges in place of corners. Every
-        commutator, flip and exercise here is generated and checked by
-        <code>log/2026-10-16-bld-cycles-generate.mjs</code>.
+        Not from your notes. Every commutator, flip and exercise is generated and checked in the simulator by
+        <code>log/2026-10-16-bld-cycles-generate.mjs</code>. The buffer is <strong>UF</strong> (C and I), not
+        the DF buffer the Reference tab uses for M2.
       </p>
     </div>
 
@@ -47,8 +44,8 @@
     <h2 class="section-heading" id="from-scramble" data-short="Scramble to cycles">1. From a scramble to cycles</h2>
     <ol class="step-how">
       <li><strong>Find the buffer's letters.</strong> UF is the buffer. Its stickers are <strong>C</strong> (U face) and <strong>I</strong> (F face).</li>
-      <li><strong>Follow the buffer.</strong> The sticker in the buffer's C spot belongs to an edge. That edge's letter is the first target; the edge at that letter's spot gives the next. Keep going until the chain reaches an edge letter on the buffer's edge again.</li>
-      <li><strong>Pair the letters in order:</strong> (1st, 2nd), (3rd, 4th), and so on. Each pair is one 3-cycle with the buffer, from the table in section 6.</li>
+      <li><strong>Follow the chain.</strong> The sticker in the buffer's C spot names the first target. Then take the edge sitting on that letter's spot, and so on, until a target is C or I.</li>
+      <li><strong>Pair the letters in order.</strong> Each pair is one 3-cycle with the buffer (table in section 6).</li>
       <li><strong>An odd number of letters</strong> is covered in section 4.</li>
     </ol>
     <figure class="practice-net bld-example-net">
@@ -66,21 +63,19 @@
         <div class="table-wrap"><table class="bld-table" id="ex1-table"></table></div>
       </div>
     </div>
-    <p class="step-note">Each frame shows the position still to solve after the pairs before it. The coloured outlines follow the edges of each pair.</p>
+    <p class="step-note">Each frame is the position after one more pair. Outlines follow each pair's edges.</p>
     <div id="ex1-film"></div>
 
     <!-- 2 -->
     <h2 class="section-heading" id="closes-early" data-short="Early close">2. When the cycle closes early</h2>
     <p>
-      If the chain comes back to the buffer before every edge is solved, start a new chain at an
-      unsolved edge. The first letter of that edge (the <strong>break letter</strong>, underlined)
-      starts it, and the chain runs on until it reaches a letter on the same edge again. Each unsolved
-      edge has two stickers to choose from.
+      If the chain returns to the buffer early, start a new chain at an unsolved edge. Its first letter
+      (the <strong>break letter</strong>, underlined) starts it and runs until a letter of that edge comes
+      up again. Either sticker of the edge can be the break.
     </p>
     <p>
-      The rule this site uses: <strong>pick the break letter that makes the total cheapest</strong>.
-      If you do not remember the table, take the first letter of the edge in letter order (the
-      Practice tab's rule).
+      <strong>Pick the break that gives the fewest total moves</strong> (table below). Without the table,
+      take the edge's first letter in letter order, as on the Practice tab.
     </p>
     <div class="bld-example">
       <div>
@@ -98,12 +93,11 @@
     <!-- 3 -->
     <h2 class="section-heading" id="flipped" data-short="Flips">3. Flipped edges</h2>
     <p>
-      An edge that is in its own place but flipped is left out of the letters. It is fixed at the end
-      with a flip row. The flip algorithm <code>M' U M' U M' U2 M U M U M U2</code> flips UF and UB
-      in place and changes nothing else.
+      A flipped edge in its own place is left out of the letters and fixed at the end with a flip row. The
+      flip <code>M' U M' U M' U2 M U M U M U2</code> flips UF and UB in place and nothing else.
     </p>
     <ul class="faster-tips">
-      <li>Each flip row flips exactly two edges: the buffer UF and one other edge K. Each row is a setup that brings K to UB without moving UF, then the flip, then the setup undone.</li>
+      <li>A flip row flips two edges: the buffer UF and one other edge K. Its setup brings K to UB without moving UF; undo it after the flip.</li>
       <li>The number of flipped edges is always even, so the buffer's flip comes out right once every flipped edge has its row.</li>
     </ul>
     <div class="table-wrap"><table class="bld-table" id="flip-table"></table></div>
@@ -125,10 +119,8 @@
     <!-- 5 -->
     <h2 class="section-heading" id="setup-moves" data-short="Setup moves">5. Choosing a setup move</h2>
     <p>
-      Choose a setup move in the same way as for corners (the Corner cycles tab, section 6). Edges have
-      one addition: the interchange can be a slice (M, E or S) as well as a face. The commutator
-      <code>[M', U2]</code> has four moves and is the shortest edge cycle. Its shape is a useful one to
-      know.
+      Choose a setup as for corners (Corner cycles, section 6). Edges can also use a slice (M, E or S) as
+      the interchange. The commutator <code>[M', U2]</code> is the shortest edge cycle, with four moves.
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
     <ul class="faster-tips" id="setup-examples"></ul>
@@ -146,9 +138,8 @@
     <!-- 7 -->
     <h2 class="section-heading" id="exercises" data-short="Exercises">7. Exercises: set up, then solve</h2>
     <p class="subtitle">
-      Start from a solved cube. Apply the setup scramble, look at the edges, and try the solve yourself
-      before opening the solution. Pictures show the edges only; corners are greyed. The exercises are
-      numbered 1 to 8 here: the odd-count exercise is left out until section 4 is settled.
+      Start from a solved cube and apply the setup. Try the solve before opening the solution. The
+      odd-count exercise is left out until section 4 is settled.
     </p>
     <div id="exercise-cards" class="case-grid"></div>
   </main>
@@ -225,7 +216,7 @@
       const marks = steps.flatMap((s, i) => [s.first, s.second].map((l) => ({ piece: PIECE[l], colour: PAIR_COLOURS[i] })));
       const legend = steps.map((s, i) => ({ colour: PAIR_COLOURS[i], text: `pair ${i + 1} (${s.first}${s.second})` }));
       const frames = [{ after: '', label: 'Start', caption: 'Scrambled edges.' }];
-      steps.forEach((s, i) => frames.push({ after: s.moves, label: `Pair ${i + 1}: ${s.first}${s.second}`, caption: `After pair ${i + 1}, letters ${s.first} and ${s.second} are solved.` }));
+      steps.forEach((s, i) => frames.push({ after: s.moves, label: `Pair ${i + 1}: ${s.first}${s.second}`, caption: `After pair ${i + 1}: ${s.first} and ${s.second} solved.` }));
       $(hostId).replaceChildren(
         buildFilmstrip({ alg, stickering: 'edges', views: ['U', 'D', 'cube'], palette: WHITE_TOP, marks, legend, frames }),
       );

@@ -29,7 +29,7 @@ export const beginnerSteps = [
     source: 'standard',
     goal: 'A white cross on the bottom, each edge’s side colour matching the centre above it.',
     how: [
-      'Yellow on top. Bring the four white edges up around the yellow centre, white facing up — the “daisy”.',
+      'Yellow on top. Bring the four white edges up around the yellow centre, white facing up (the “daisy”).',
       'Turn the top until a daisy edge’s side colour matches the centre below it, then turn that face twice. Repeat for all four.',
     ],
     cases: [
@@ -37,7 +37,7 @@ export const beginnerSteps = [
         anchor: 'daisy',
         name: 'Make the daisy',
         orientation:
-          "Turn a side to lift a white edge up next to the yellow centre. Turn the top first so you don't knock off an edge already placed.",
+          "Turn a side to lift a white edge next to the yellow centre. Turn the top first so you don't knock off a placed edge.",
         displayAlg: 'Intuitive — no algorithm',
         noViewer: true,
       },
@@ -60,7 +60,7 @@ export const beginnerSteps = [
     how: [
       'Find a white corner in the top layer.',
       'Turn the top until it sits above its slot (between its two side colours), and hold that slot at the front-right.',
-      'Repeat Sassy until the corner drops in solved — how many times depends on which way the white sticker faces.',
+      'Repeat Sassy until the corner drops in solved. How many times depends on which way the white sticker faces.',
     ],
     cases: [
       {
@@ -108,11 +108,11 @@ export const beginnerSteps = [
     title: 'Middle layer edges',
     short: 'Middle edges',
     source: 'standard',
-    goal: 'The four middle-layer edges in place — the first two layers solved.',
+    goal: 'The four middle-layer edges in place: the first two layers solved.',
     how: [
       'Find a top-layer edge with no yellow on it.',
       'Turn the top until its front colour matches the front centre.',
-      'Its top colour matches the right or the left centre — that’s the side it goes to.',
+      'Its top colour matches the right or the left centre: that is the side it goes to.',
     ],
     cases: [
       {
@@ -156,7 +156,7 @@ export const beginnerSteps = [
     title: 'Yellow cross',
     short: 'Yellow cross',
     source: 'standard',
-    goal: 'A yellow cross on top. Only the edges matter — ignore the corners.',
+    goal: 'A yellow cross on top. Only the edges matter; ignore the corners.',
     how: [
       'Look at which top edges have yellow facing up: none (dot), two neighbours (L), two opposite (line), or all four (done).',
       'One algorithm, held as shown: dot → L → line → cross. Same algorithm as the U case in 2x2 Ortega and Roux CMLL.',
@@ -216,7 +216,7 @@ export const beginnerSteps = [
           { word: 'U', moves: 'U' },
         ],
         story: 'Your memory: “Match Cross = RU algo.” Back Right (if 2 matching).',
-        note: 'It twists the corners too — steps 6 and 7 fix that.',
+        note: 'It also twists corners; steps 6 and 7 fix that.',
       },
     ],
   },
@@ -251,7 +251,7 @@ export const beginnerSteps = [
       'Turn the cube over so yellow is on the bottom, keeping the same side at the front.',
       'Hold an unsolved corner at the bottom front-right. Repeat Sassy until its yellow faces down (2 or 4 times).',
       'Turn only the bottom layer to bring the next unsolved corner to the front-right. Don’t turn the whole cube.',
-      'The top looks scrambled part-way — keep going. It comes back once the last corner is done. Turn the bottom to line it up.',
+      'The top looks scrambled part-way; keep going. It comes right once the last corner is done. Turn the bottom to line it up.',
     ],
     cases: [
       {

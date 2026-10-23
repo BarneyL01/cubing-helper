@@ -35,21 +35,19 @@
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>DFR</strong> (letters V, K, P), traced from V. The twist rows and parity setups are
-        generated and checked by <code>log/2026-10-16-bld-cycles-generate.mjs</code>.
+        Not from your notes. The twist rows and parity setups are generated and checked in the simulator by
+        <code>log/2026-10-16-bld-cycles-generate.mjs</code>. Buffer <strong>DFR</strong> (V, K, P).
       </p>
     </div>
 
     <!-- 3 -->
     <h2 class="section-heading" id="twisted" data-short="Twists">1. Twisted corners</h2>
     <p>
-      A corner that is in its own place but twisted is left out of the letters. It is fixed at the
-      end with a twist row. Directions are seen from outside the corner: <strong>clockwise</strong>
-      means its U or D sticker moves on to the next face clockwise.
+      A twisted corner in its own place is left out of the letters and fixed at the end with a twist row.
+      <strong>Clockwise</strong> is seen from outside the corner: its U or D sticker moves on to the next face clockwise.
     </p>
     <ul class="faster-tips">
-      <li>Each twist row changes exactly two corners: the buffer and one other corner K. The buffer changes the other way, so the total twist stays zero.</li>
+      <li>A twist row changes two corners: the buffer and one other corner K, in opposite directions.</li>
       <li>To fix K twisted clockwise, use the row whose <strong>K turns anticlockwise</strong> (and so the buffer turns clockwise).</li>
       <li>Two twisted corners: use one row for each. The buffer's twists cancel out.</li>
     </ul>
@@ -57,47 +55,42 @@
 
     <h3 id="sassy-twist">Two twisted corners with Sassy</h3>
     <p>
-      Without a buffer: this twists two corners of the <strong>bottom layer</strong>, one each way, and leaves every
-      other piece solved. It is built from Sassy only: Sassy twice, a bottom turn, Sassy backwards twice, the bottom
-      turn back. Sassy twice twists the front-right bottom corner (and upsets some top pieces); the bottom turn brings
-      the other twisted corner to front-right; Sassy backwards twice twists that one the other way and puts the top
-      pieces back.
+      This twists two <strong>bottom-layer</strong> corners, one each way, and leaves everything else solved.
+      It uses only Sassy: Sassy twice, a bottom turn, Sassy backwards twice, the bottom turn back.
     </p>
     <ol class="step-how">
       <li>Hold the cube so both twisted corners are in the bottom layer, one of them at front-right (DFR).</li>
-      <li>Look at where the DFR corner's bottom colour is: on the <strong>right</strong> face → start with Sassy twice; on the <strong>front</strong> face → start with Sassy backwards twice.</li>
+      <li>Check the bottom colour of the DFR corner: on the <strong>right</strong> face, start with Sassy twice; on the <strong>front</strong> face, start with Sassy backwards twice.</li>
       <li>The middle turn brings the other corner to front-right: <code>D</code> for DFL, <code>D2</code> for DBL, <code>D'</code> for DBR. The last turn undoes it.</li>
     </ol>
     <div class="table-wrap"><table class="bld-table" id="sassy-twist-table"></table></div>
     <div id="sassy-twist-pictures" class="bld-example"></div>
     <p class="step-note">
       The same idea with the bottom and right faces, <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code>, twists two
-      top-layer corners (UFR and the one the U turn brings in). The R/U version above is the same sequence with the
-      roles of U and D swapped. Sassy ×4 does the same as Sassy backwards ×2 (Sassy ×6 changes nothing), so
-      <code>(R U R' U')×2 D (R U R' U')×4 D'</code> also works: 26 turns, but only Sassy. All rows are checked by
+      top-layer corners. Sassy ×4 does the same as Sassy backwards ×2 (Sassy ×6 changes nothing), so
+      <code>(R U R' U')×2 D (R U R' U')×4 D'</code> also works: 26 turns, Sassy only. Checked by
       <code>log/2026-10-22-sassy-twist-check.mjs</code>.
     </p>
 
     <!-- 4 -->
     <h2 class="section-heading" id="odd" data-short="Odd count">2. An odd number of letters</h2>
     <p>
-      The corner swap from the Reference tab, <code>R U' R' U' R U R' F' R U R' U' R' F R</code>,
-      swaps UBL with DFR (the buffer) and also swaps two edges. With an odd number of corner
-      letters, the last letter Z is done like this:
+      The Reference tab's corner swap, <code>R U' R' U' R U R' F' R U R' U' R' F R</code>, swaps UBL with
+      DFR and also two edges. With an odd number of letters, do the last letter Z like this:
     </p>
     <ol class="step-how">
-      <li>Turn the cube with a <strong>U, L or B</strong> setup that brings Z's sticker to <strong>E</strong> (the L sticker of UBL). These moves leave the buffer DFR where it is.</li>
+      <li>Set up with <strong>U, L or B</strong> turns so Z's sticker is at <strong>E</strong> (the L sticker of UBL). They leave DFR alone.</li>
       <li>Do the swap algorithm.</li>
-      <li>Undo the setup. Z's sticker and the buffer sticker V have swapped places, so the cube has the last corner home.</li>
+      <li>Undo the setup. Z's sticker and V have swapped, so the last corner is home.</li>
     </ol>
-    <p class="step-note">Two edges end swapped by this algorithm: UL and UB with no setup, other edges when a setup is used. The Edge cycles tab explains what is and is not covered on the edge side.</p>
+    <p class="step-note">The algorithm also swaps two edges: UL and UB with no setup, others with a setup. The Edge cycles tab says what is not covered.</p>
     <div class="table-wrap"><table class="bld-table" id="parity-table"></table></div>
 
     <!-- 3 -->
     <h2 class="section-heading" id="exercises" data-short="Exercises">3. Exercises: set up, then solve</h2>
     <p class="subtitle">
-      Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve yourself
-      before opening the solution. The pairs in these solutions come from the Corner table tab.
+      Start from a solved cube and apply the setup. Try the solve before opening the solution. The pairs
+      come from the Corner table tab.
     </p>
     <div id="exercise-cards" class="case-grid"></div>
   </main>

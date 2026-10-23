@@ -12,9 +12,9 @@
 
 export const intro = {
   paragraphs: [
-    "A commutator is written [A, B] and means: do A, do B, undo A, undo B — A B A' B'. If A and B stay mostly out of each other's way, nearly everything cancels and what is left is a 3-cycle of pieces. A is called the insertion and B the interchange.",
-    "Example: [R U R', D] — A is R U R' (the insertion), B is D (the interchange). Written out it is R U R' D R U' R' D'.",
-    "Pieces are named by Speffz letters here: a corner by the letter of its U- or D-face sticker (C is the UFR corner, V is DFR, U is DFL), an edge the same way (C is the UF edge, U is DF, X is DL, A is UB). Corner and edge letters repeat, so each line says which it means.",
+    "A commutator [A, B] means A B A' B': do A, do B, undo A, undo B. When A and B mostly stay out of each other's way, the rest cancels and leaves a 3-cycle of pieces. A is the insertion, B the interchange.",
+    "Example: [R U R', D] is R U R' D R U' R' D'.",
+    "Pieces use Speffz letters: C is the UFR corner and the UF edge, V is DFR, U is DFL.",
   ],
   // The same three corners followed through that example.
   filmstrip: {
@@ -33,35 +33,31 @@ export const intro = {
       { colour: '#7c3aed', text: 'white/green/red corner (starts at U)' },
     ],
     frames: [
-      { after: '', label: 'Solved', caption: 'Three corners to follow: pink at C, blue at V, purple at U.' },
+      { after: '', label: 'Solved', caption: 'Start: pink at C, blue at V, purple at U.' },
       {
         after: "R U R'",
         label: "A = R U R'",
-        caption:
-          'The insertion. The pink corner goes down into the V slot and kicks the blue corner up to D. In the bottom layer it touches only that one slot.',
+        caption: 'Pink drops into V; blue is pushed up to D.',
       },
       {
         after: 'D',
         label: 'B = D',
-        caption:
-          'The interchange. Turning the bottom layer carries the pink corner away from V to W and brings the purple corner into V.',
+        caption: 'Pink moves away to W; purple comes into V.',
       },
       {
         after: "R U' R'",
         label: "A' = R U' R'",
-        caption:
-          "The insertion undone — but now the purple corner is in the slot. The blue corner comes back down to V and the purple corner is lifted up to C.",
+        caption: 'Blue returns to V; purple lifts to C.',
       },
       {
         after: "D'",
         label: "B' = D'",
-        caption:
-          'The turn undone: the pink corner comes round to V and the blue corner to U. Net: pink C → V, blue V → U, purple U → C.',
+        caption: 'Pink comes round to V; blue to U.',
       },
     ],
   },
-  netEffect: 'The net effect is a 3-cycle of corners: C → V → U → C (the piece in each position moves to the next one).',
-  why: "Why it works: the insertion touches only one slot in the D layer, so the D turn can swap that slot's contents without disturbing anything else the insertion moved. When you undo both, the only change left is the three pieces.",
+  netEffect: 'Net effect: a 3-cycle of corners, C → V → U → C.',
+  why: 'Why it works: the insertion touches only one bottom slot, so the bottom turn changes only that slot, and undoing both leaves just the three pieces moved.',
 };
 
 export const variantsTable = {
@@ -73,23 +69,22 @@ export const variantsTable = {
     ["[R U R', D2]", "R U R' D2 R U' R' D2", 'C → V → X'],
     ["[D, R U R']", "D R U R' D' R U' R'", 'Reverse of row 1', 'On a solved cube: C → U → V — row 1 backwards.'],
   ],
-  after:
-    'Swapping the order of A and B reverses the cycle direction. That is the whole trick for fixing direction.',
+  after: 'Swapping A and B reverses the cycle direction.',
 };
 
 export const buildSteps = {
   heading: 'Building one yourself',
   steps: [
-    { title: 'Step 1:', text: 'Name the three pieces you want cycled.' },
-    { title: 'Step 2:', text: 'Find a layer that holds two of them. That layer is your interchange.' },
+    { title: 'Step 1:', text: 'Name the three pieces to cycle.' },
+    { title: 'Step 2:', text: 'Pick a layer that holds two of them. That is the interchange layer.' },
     {
       title: 'Step 3:',
-      text: 'Find a 3-move insertion that takes the third piece into one of those two slots, in the orientation it needs, touching only that one slot in the interchange layer.',
+      text: 'Find a 3-move insertion that brings the third piece, correctly oriented, into one of those slots, touching no other slot in that layer.',
     },
-    { title: 'Step 4:', text: 'Choose A-first or B-first based on which direction the cycle must go.' },
+    { title: 'Step 4:', text: 'Put A first or B first, whichever gives the direction you need.' },
     {
       title: 'Step 5:',
-      text: 'If no clean insertion exists, use a setup move (a conjugate) to bring one piece into a better position, then undo it at the end.',
+      text: 'If no clean insertion exists, add a setup move (a conjugate) and undo it at the end.',
       link: { text: 'More on choosing setup moves: Corner cycles tab', href: 'corner-cycles.html' },
     },
   ],
@@ -99,7 +94,7 @@ export const buildSteps = {
 // setup scramble is the inverse of the solution (checked).
 export const exercises = {
   heading: 'Exercises: set up, then solve',
-  lead: 'Start from a solved cube each time. Apply the setup scramble, look at which pieces moved, try to solve it without reading the solution, then check.',
+  lead: 'Start from a solved cube. Apply the setup, try to solve it without the solution, then check.',
   cards: [
     { n: 1, skill: 'Basic corner cycle', setup: "D R U R' D' R U' R'", solution: "R U R' D R U' R' D'" },
     { n: 2, skill: 'Other D corner', setup: "D' R U R' D R U' R'", solution: "R U R' D' R U' R' D" },
@@ -131,26 +126,26 @@ export const exercises = {
   notes: {
     heading: 'Notes on each',
     items: [
-      '1 to 3 teach you to pick the interchange turn (D, D\', D2) for the target position.',
+      '1 to 3 teach choosing the interchange turn (D, D\' or D2).',
       "4 is [U: [R U R', D]]. It cycles B → V → U. The U setup moves the B piece into C first.",
-      { text: '5 cycles C → U → A. This works with U2 because U2 swaps the only two U-layer slots that M\' disturbs.', link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
+      { text: "5 cycles C → U → A. U2 swaps the two U-layer slots that M' disturbs.", link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
       { text: "6 is [D: [M', U2]]. It cycles C → X → A. The D setup brings X into U.", link: { text: 'More: Edge cycles tab', href: 'edge-cycles.html' } },
-      "7 uses (R' D' R D)×2 as the insertion. That sequence twists four corners (C, V, X, W), but only one of them, C, is in the U layer — and U is the interchange here. So the commutator leaves two U-layer corners twisted in opposite directions. This handles twisted corners in blindfold.",
+      "7 uses (R' D' R D)×2. It twists four corners; only C is in the U layer, so two U-layer corners end up twisted in opposite directions.",
     ],
     correction:
-      "Corrected from the notes you pasted: they said (R' D' R D)×2 twists one corner in place. In the simulator it twists four; the result (two U-layer corners twisted in opposite directions) is as described.",
+      "Corrected: your notes said (R' D' R D)×2 twists one corner. It twists four. Exercise 7 works as described.",
   },
 };
 
 export const practice = {
   heading: 'Generating unlimited practice',
   items: [
-    'Take any solution from the exercises and change one part (the interchange turn, the setup move, or the A/B order). Predict the cycle, then perform it on a solved cube to check.',
-    'Reverse drill: on a solved cube, do any commutator you make up. That is your scramble. Now solve it by finding the inverse yourself.',
-    "You can watch any sequence before trying it on your cube: the Pictures / 3D toggle on this page plays each exercise's solution, and an online viewer such as alg.cubing.net will play anything you type.",
+    'Change one part of an exercise solution (the interchange, the setup, or the A/B order). Predict the cycle, then check it on a solved cube.',
+    'Reverse drill: on a solved cube, do a commutator you make up. Then solve it yourself.',
+    'The Pictures / 3D toggle plays each exercise solution; alg.cubing.net plays anything you type.',
   ],
   blind: {
-    text: "Blindfolded, this is 3-style: instead of memorised setups and a swap algorithm (the Old Pochmann method on the Reference tab), each pair of targets becomes a 3-cycle with the buffer — V for corners (the DFR corner, the other corner Old Pochmann uses) — that you build with the five steps above.",
+    text: "Blindfolded, each pair of targets becomes a 3-cycle with buffer V (the DFR corner), built with the steps above, instead of Old Pochmann's memorised swap.",
     link: { text: 'Corner cycles and Edge cycles tabs: which pairs to cycle', href: 'corner-cycles.html' },
   },
 };

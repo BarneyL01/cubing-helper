@@ -30,30 +30,27 @@
     </nav>
 
     <p class="subtitle">
-      The full table: every pair of corner letters has its own best commutator, with a setup move only
-      when none is direct. The Corner cycles tab teaches the same cycles with just three base
-      commutators and setups.
+      Every pair of corner letters has its own shortest commutator, with a setup move only when none is
+      direct. The Corner cycles tab uses three base commutators instead.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. Buffer
-        <strong>DFR</strong> (letters V, K, P), traced from V. Every commutator and setup on this page is
-        generated and checked by <code>log/2026-10-16-bld-cycles-generate.mjs</code>. Twisted corners and
-        the odd-count step are on the Twists &amp; parity tab.
+        Not from your notes. Every commutator and setup is generated and checked in the simulator by
+        <code>log/2026-10-16-bld-cycles-generate.mjs</code>. Buffer <strong>DFR</strong> (V, K, P), traced
+        from V. Twists and odd counts are on the Twists &amp; parity tab.
       </p>
     </div>
 
     <!-- 5 -->
     <h2 class="section-heading" id="easiest" data-short="Easiest">1. Easiest cycles to learn</h2>
     <p>
-      Every direct pair is an 8-move commutator: one single turn (the <strong>interchange</strong>)
-      and a 3-move insertion. The interchange layer holds two of the three corners, so group the
-      pairs by the layer that is turned and learn one group at a time.
+      Each direct pair is an 8-move commutator: a single-turn <strong>interchange</strong> and a 3-move
+      insertion. Learn them one layer at a time.
     </p>
     <ol class="step-how">
-      <li><strong>D layer first.</strong> The buffer DFR is in the D layer, so it is always one of the two corners the D turn swaps. You only have to find where the other two corners are.</li>
-      <li><strong>U layer next.</strong> Two target corners are in the U layer and the U turn swaps them. The buffer is the corner the insertion brings up.</li>
-      <li><strong>Side layers last</strong> (R, L, F, B turns). These have the most shapes to remember.</li>
+      <li><strong>D layer first.</strong> The buffer is always one of the two corners the D turn swaps. You find only the other two.</li>
+      <li><strong>U layer next.</strong> The U turn swaps two target corners, and the insertion brings the buffer up.</li>
+      <li><strong>Side layers last</strong> (R, L, F, B turns), which have the most shapes.</li>
       <li><strong>Then pairs with one setup move</strong> (section 3), once the direct ones feel familiar.</li>
     </ol>
     <div class="table-wrap"><table class="bld-table" id="easy-table"></table></div>
@@ -62,28 +59,27 @@
     <!-- 5b -->
     <h2 class="section-heading" id="setup-moves" data-short="Setup moves">2. Choosing a setup move</h2>
     <p>
-      Some pairs have no direct commutator. The Commutators tab's five steps build a commutator
-      from one layer that holds two of the three stickers. When no such layer exists, use a setup
-      move: turn one target sticker into a position where the five steps work, then undo the setup.
+      Some pairs have no direct commutator. Then use a setup move that brings a target sticker to where
+      the Commutators tab's five steps work, and undo it afterwards.
     </p>
     <ol class="step-how">
       <li>Try to build the commutator directly (the Commutators tab, "Building one yourself").</li>
-      <li>If that fails, do <strong>one move</strong> that brings one target sticker into a spot where step 1 works. Prefer a move that does not touch the buffer. Do the commutator, then undo the move.</li>
+      <li>If that fails, do <strong>one move</strong> that puts a target sticker where step 1 works. Prefer a move that leaves the buffer alone. Do the commutator, then undo the move.</li>
       <li>If no single move works, try two moves (or three for the hardest pairs).</li>
     </ol>
-    <p class="step-note">No simple rule decides which pairs need a setup. These numbers are the whole table, from the generator.</p>
+    <p class="step-note">No simple rule says which pairs need a setup; the table is the full list.</p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
     <ul class="faster-tips" id="setup-examples"></ul>
 
     <!-- 7 -->
     <h2 class="section-heading" id="how-setup" data-short="Using setups">3. How to use a setup move</h2>
     <ol class="step-how">
-      <li><strong>Look up the pair.</strong> If its row has a setup, the table gives it.</li>
-      <li><strong>Do the setup.</strong> It carries the two target stickers to spots where a direct commutator exists.</li>
-      <li><strong>Do the commutator.</strong> It solves the pair the setup turned yours into.</li>
+      <li><strong>Look up the pair.</strong> Its row gives the setup, if it has one.</li>
+      <li><strong>Do the setup.</strong> It moves the two target stickers to where a direct commutator works.</li>
+      <li><strong>Do the commutator.</strong> It solves the pair the setup leaves you with.</li>
       <li><strong>Undo the setup:</strong> reverse the order and invert each turn. <code>R' F'</code> is undone by <code>F R</code>.</li>
     </ol>
-    <p>Setup moves are shown in <span class="mv-setup">orange</span> wherever they appear on this page. The two examples below are taken from the table. Each frame shows the position still to solve, with the buffer and the two target corners outlined.</p>
+    <p>Setup moves are shown in <span class="mv-setup">orange</span>. The two examples below come from the table; the outlines mark the buffer and the two targets.</p>
     <h3 class="section-heading">One setup move</h3>
     <div id="setup-ex-1"></div>
     <h3 class="section-heading">Two setup moves</h3>
@@ -103,8 +99,8 @@
     <!-- 7 -->
     <h2 class="section-heading" id="exercises" data-short="Exercises">5. Exercises: set up, then solve</h2>
     <p class="subtitle">
-      Start from a solved cube. Apply the setup scramble, look at the corners, and try the solve
-      yourself before opening the solution. Pictures show the corners only; edges are greyed. Exercises that need a twist or the odd-count step are on the Twists &amp; parity tab.
+      Start from a solved cube and apply the setup. Try the solve before opening the solution. Twist and
+      odd-count exercises are on the Twists &amp; parity tab.
     </p>
     <div id="exercise-cards" class="case-grid"></div>
   </main>
@@ -234,7 +230,7 @@
       };
       for (const n of [1, 2]) frameFor(`setup-ex-${n}`, cornerComms.find((x) => x.setupMoves === n && x.inner));
       const moveBuffer = cornerComms.filter((x) => x.setupMoves && !x.inner).length;
-      $('setup-buffer-note').textContent = `${moveBuffer} of the ${cornerComms.filter((x) => x.setupMoves).length} setup rows use a setup that moves the buffer's own sticker. They are checked and work, but the commutator inside them is not a buffer pair, so use those rows as they are written.`;
+      $('setup-buffer-note').textContent = `${moveBuffer} of the ${cornerComms.filter((x) => x.setupMoves).length} setup rows use a setup that moves the buffer's own sticker. They are checked; use them as written.`;
     } catch (e) {
       $('setup-ex-1').textContent = 'This section did not load. Reload the page (Ctrl+Shift+R) to get the latest data.';
       console.error(e);

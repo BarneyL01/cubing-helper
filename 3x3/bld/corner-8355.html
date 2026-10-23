@@ -30,38 +30,35 @@
     </nav>
 
     <p class="subtitle">
-      The cycles to learn if you solve the first two layers with 8355. Only the pairs among the corners
-      that are still unsolved, built from the same three bases as the Corner cycles tab, with setups that
-      never turn L or B.
+      The cycles to learn after 8355 has solved the first two layers. Only pairs among the unsolved
+      corners; setups never turn L or B.
     </p>
     <div class="source-note">
       <p>
-        Not from your notes: written here and checked with the cube simulator. After 8355 step 4 the unsolved
-        corners are the four top-layer corners (letters A, B, C, D) and the buffer corner DFR (V), each possibly
-        twisted. The 108 pairs, their setups and their moves are generated and checked by
-        <code>log/2026-10-21-bld-8355-corners.mjs</code>.
+        Not from your notes. Generated and checked in the simulator by
+        <code>log/2026-10-21-bld-8355-corners.mjs</code>. The unsolved corners are the top-layer A, B, C, D
+        and the buffer DFR (V).
       </p>
     </div>
 
     <h2 class="section-heading" id="left" data-short="Corners left">1. The corners that are left</h2>
     <p>
-      Five corners are unsolved. Each target letter below is a sticker on one of the four top-layer corners;
-      the buffer corner DFR holds V, K and P. A pair is two target letters on <strong>different</strong> corners.
+      Five corners are unsolved: four top-layer corners and the buffer DFR (V, K, P). A pair is two target
+      letters on <strong>different</strong> corners.
     </p>
     <div class="table-wrap"><table class="bld-table" id="left-table"></table></div>
     <p class="step-note">
-      A top-layer corner that is in the right place but twisted is not a pair: use the Twists &amp; parity tab.
-      That tab also has the odd-count step, for when the number of letters in your memo is odd.
+      A twisted corner in place is not a pair: use the Twists &amp; parity tab, which also has the odd-count step.
     </p>
 
     <h2 class="section-heading" id="setups" data-short="Setups">2. The setups, simplest first</h2>
     <p>
-      Every pair is one of the three bases plus a setup of R, U, F and D turns only. Setups are shown in
-      orange. The table counts the pairs by setup length and compares with setups that may turn any face.
+      Every pair is one of the three bases plus a setup of R, U, F and D turns only. Setups are in orange.
+      The table compares with setups that may turn any face.
     </p>
     <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
     <p>
-      Learning the setups below first covers the most pairs. Each row lists every pair that uses that setup, with its full commutator: the setup, then the base, then the setup undone.
+      Each row lists the pairs that use one setup, with the full commutator: setup, base, setup undone.
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
 
@@ -72,8 +69,8 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="pair-table"></table></div>
     <p class="step-note">
-      Each row sends the buffer's piece to the first letter, the piece at the first letter to the second,
-      and the piece at the second back to the buffer. Order matters: AB and BA are different rows.
+      Each row: the buffer's piece goes to the first letter, that piece to the second, and the second back
+      to the buffer. AB and BA are different rows.
     </p>
   </main>
 

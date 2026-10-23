@@ -34,7 +34,7 @@ export const steps8355 = [
     goal: 'A cross on the bottom: four edges in place, each matching its side centre.',
     how: [
       'Hold the cross on the bottom for the first four steps.',
-      'Solve it however you like — it is intuitive, with no algorithm. Planning the whole cross during inspection keeps the move count down.',
+      'Solve it however you like; there is no algorithm. Plan it during inspection to keep the move count down.',
     ],
     cases: [
       {
@@ -54,8 +54,8 @@ export const steps8355 = [
     goal: 'Three of the four bottom corners in place. The fourth stays unsolved: it is the keyhole in step 3.',
     how: [
       'Find a white corner in the top layer.',
-      'Turn the top layer until it is above the slot it belongs in, with that slot at the front-right.',
-      'Repeat Sassy until it drops in solved: 1, 3 or 5 times, depending on which way its white sticker faces (cards below).',
+      'Turn the top layer so the corner is above its slot, with that slot at the front-right.',
+      'Repeat Sassy until it drops in: 1, 3 or 5 times, depending on where its white sticker faces.',
       'Do this for three corners. Leave the fourth bottom corner alone.',
     ],
     cases: [
@@ -97,24 +97,24 @@ export const steps8355 = [
     source: 'wiki',
     goal: 'Three of the four middle-layer edges in place, using the unsolved bottom corner as a keyhole.',
     how: [
-      'Look for an edge in the top layer with no yellow on it — it belongs in the middle layer. Hold its slot at the front-right.',
+      'Find a top edge with no yellow; it belongs in the middle layer. Put its slot at the front-right.',
       {
         title: 'Keyhole:',
-        text: 'turn the bottom layer so the unsolved bottom corner is directly under that slot (bottom front-right).',
+        text: 'turn the bottom layer so the unsolved bottom corner is under that slot.',
       },
-      'Turn the top layer to bring the edge to the spot shown on card 1 or card 2, then do that algorithm.',
-      'Cards 3 and 4 do the same job without the keyhole and leave the bottom layer alone.',
+      'Turn the top layer to the spot on card 1 or 2, then do that algorithm.',
+      'Cards 3 and 4 do the same without the keyhole.',
       'Do this for three edges. The fourth middle slot stays empty for step 4.',
     ],
     notes: [
-      'Added here, not on the wiki: the bottom layer ends up turned out of line with the sides during the keyhole steps. Leave it — it is lined up at the very end of step 5. If the keyhole corner happens to end up solved, use cards 3 and 4 for the remaining edges.',
+      'Added here, not on the wiki: the bottom layer ends up out of line during the keyhole steps. Step 5 lines it up. If the keyhole corner is already solved, use cards 3 and 4.',
     ],
     cases: [
       {
         anchor: 'keyhole-front',
         name: '1 · Keyhole: edge at the front',
         orientation:
-          "Edge at the top front: its front sticker is the colour of the right-hand centre, its top sticker is the colour of the front centre. Unsolved bottom corner under the front-right slot.",
+          'Top front edge: front sticker matches the right centre, top sticker the front centre. Unsolved corner under the front-right slot.',
         alg: "R U' R'",
         stickering: 'f2l',
         diagramViews: ['cube'],
@@ -124,7 +124,7 @@ export const steps8355 = [
         anchor: 'keyhole-right',
         name: '2 · Keyhole: edge at the right',
         orientation:
-          "Edge at the top right: its right sticker is the colour of the front centre, its top sticker is the colour of the right-hand centre. Unsolved bottom corner under the front-right slot.",
+          'Top right edge: right sticker matches the front centre, top sticker the right centre. Unsolved corner under the front-right slot.',
         alg: "F' U F",
         stickering: 'f2l',
         diagramViews: ['cube'],
@@ -138,7 +138,7 @@ export const steps8355 = [
         anchor: 'no-keyhole-right',
         name: '3 · Without the keyhole: slot at the right',
         orientation:
-          "Edge at the top right, sitting above its own centre: its right sticker matches the right-hand centre and its top sticker is the colour of the front centre. Goes into the front-right slot; the bottom layer is not touched.",
+          'Top right edge above its own centre: right sticker matches the right centre, top sticker the front centre. Goes to the front-right slot; bottom untouched.',
         alg: "R' U' R' U' R' U R U R",
         stickering: 'f2l',
         diagramViews: ['cube'],
@@ -156,7 +156,7 @@ export const steps8355 = [
         anchor: 'no-keyhole-left',
         name: '4 · Without the keyhole: slot at the left',
         orientation:
-          "The mirror image of card 3: edge at the top left above its own centre, its top sticker is the colour of the front centre. Goes into the front-left slot.",
+          'Mirror of card 3: top left edge above its own centre, its top sticker matches the front centre. It goes into the front-left slot.',
         alg: "L U L U L U' L' U' L'",
         stickering: 'f2l',
         diagramViews: ['cube'],
@@ -173,31 +173,30 @@ export const steps8355 = [
     how: [
       {
         title: 'The picture to keep in mind.',
-        text: 'Five edges are still loose: the four in the top layer and the one in the empty middle slot. Treat the top layer as a ring. The ring edges only have to be in the right order relative to each other — turning the top layer never changes that order, so you line the ring up with the side centres at the very end.',
+        text: 'Five edges are loose: four in the top layer and one in the empty middle slot. Treat the top layer as a ring; turning it never changes the ring\'s order.',
       },
       {
         title: 'The one move: a cycle.',
-        text: "R lifts the edge in the slot up to the top right. Turn the top layer. R' drops whichever edge has arrived at the top right down into the slot. So each cycle puts the slot's edge into the ring and takes one ring edge down into the slot. How far you turn the top layer (U, U' or U2) decides where the lifted edge lands and which edge is dropped. F' U F does the same from the front. Card 1 shows one cycle move by move.",
+        text: "R lifts the slot's edge to the top right. A turn of the top layer (U, U' or U2) brings a ring edge there, and R' drops it into the slot. F' U F does the same from the front. Card 1 shows one cycle.",
       },
       {
-        title: 'Part A — three top edges.',
-        text: 'Hold the empty slot at the front-right. Look at the edge in the slot and work out where in the ring it belongs, beside the top edges that are already right. Choose the cycle (R or F\', and the turn) that lands it there. Repeat until three ring edges are in the right order relative to each other.',
+        title: 'Part A: three top edges.',
+        text: 'Put the empty slot at the front-right. Choose the cycle that lands the slot\'s edge beside its ring partner. Repeat until three ring edges are in order.',
       },
       {
-        title: 'Part B — the last two edges.',
-        text: "Now the edge in the slot belongs in the ring and the ring's leftover edge belongs in the slot: they have traded places. Do the cycle twice, with a turn of the top layer between (cards 2 and 3). Look at the yellow sticker of the edge in the slot: facing front → card 2; facing right → card 3. Turn the top layer first so the unsolved top edge is where the first picture shows it (front for card 2, right for card 3).",
+        title: 'Part B: the last two edges.',
+        text: "Check the slot edge's yellow sticker: facing front, card 2; facing right, card 3. Turn the top so the unsolved top edge is at the front or right.",
       },
       'Turn the top layer to line it up with the side centres.',
     ],
     notes: [
-      "Checked in the simulator: the cycle on its own (R or F' with a turn of the top layer, plus free top-layer turns) solves every one of the 1,920 possible arrangements of these five edges, in at most 5 cycles — most take 2 or 3. I haven't found a simple rule that always picks the best cycle for part A (the wiki calls it intuitive); if a cycle makes things worse, undo it with its reverse and try the other turn. Part B is exact: the wiki's two swap algorithms R U R' U R U R' and F' U' F U' F' U' F are cards 2 and 3 without the final turn, and with it they solved all 32 arrangements tried.",
+      "Checked: the cycle solves all 1,920 arrangements of these five edges in at most 5 cycles. I haven't found a simple rule for part A (the wiki calls it intuitive). The wiki's swap algorithms, R U R' U R U R' and F' U' F U' F' U' F, are cards 2 and 3 without the final turn; with it they solved all 32 arrangements tried.",
     ],
     cases: [
       {
         anchor: 'one-cycle',
         name: '1 · One cycle, move by move',
-        orientation:
-          'The first cycle of card 2, drawn after each move. The pictures show the top view and the cube from the front-right; only edges are coloured.',
+        orientation: 'The first cycle of card 2, after each move. Only edges are coloured.',
         alg: "R U R'",
         displayAlg: "R U R'",
         extraAlgs: [
@@ -223,23 +222,19 @@ export const steps8355 = [
           frames: [
             {
               after: '',
-              caption:
-                'The yellow/green edge (blue) is stuck in the slot. The green/orange edge (pink) is up at the top front.',
+              caption: 'Blue is stuck in the slot; pink is at the top front.',
             },
             {
               after: 'R',
-              caption:
-                "R lifts the slot's edge up to the top right (blue). It also drags the bottom-right edge up into the slot and sends the old top-right edge down to the back-right — R' puts both back.",
+              caption: 'R lifts blue to the top right. Two other edges move; R\' puts them back.',
             },
             {
               after: 'U',
-              caption:
-                'U turns the top layer a quarter turn clockwise. The blue edge goes round to the top front, where it belongs. The edge that has arrived at the top right (yellow/blue) is the one that will be dropped.',
+              caption: 'U: blue reaches the top front. Yellow/blue is now top right, ready to drop.',
             },
             {
               after: "R'",
-              caption:
-                "R' drops the yellow/blue edge into the slot and puts the other two edges back. One cycle done: the blue edge is in its place.",
+              caption: 'R\' drops yellow/blue into the slot. Blue is in place: one cycle done.',
             },
           ],
         },
@@ -248,7 +243,7 @@ export const steps8355 = [
         anchor: 'swap-plain',
         name: '2 · Last two edges: yellow faces front',
         orientation:
-          'The yellow sticker of the slot edge faces front. Turn the top layer so the unsolved top edge is at the front. Then: cycle, turn, cycle, and line the top layer up.',
+          'Slot edge\'s yellow faces front. Turn the top so the unsolved top edge is at the front. Then cycle, turn, cycle, line up.',
         alg: "R U R' U R U R' U2",
         mnemonicChunks: [
           { word: 'Ugly', moves: "R U R' U" },
@@ -271,26 +266,23 @@ export const steps8355 = [
           frames: [
             {
               after: '',
-              caption:
-                'The two edges have traded places: the green/orange edge (pink) is at the top front, the yellow/green edge (blue) is in the slot with its yellow sticker facing front. The other three top edges are right relative to each other.',
+              caption: 'Pink is at the top front; blue is in the slot, yellow facing front.',
             },
             {
               after: "R U R'",
-              caption:
-                'First cycle. The yellow/green edge (blue) is back at the top front, and the top-right edge is right too. The slot now holds the yellow/blue edge, and the green/orange edge (pink) has been carried round to the top left. Three edges are still out of place.',
+              caption: 'First cycle: blue is back at the top front. Pink has moved to the top left.',
             },
             {
               after: 'U',
-              caption: "A quarter turn of the top layer (U). It only changes where the second cycle's lift lands.",
+              caption: 'U: a quarter turn. It changes only where the next lift lands.',
             },
             {
               after: "R U R'",
-              caption:
-                'Second cycle. The green/orange edge (pink) has dropped into the slot, and the four top edges are in the right order relative to each other — the top layer is just turned.',
+              caption: 'Second cycle: pink drops into the slot. The top edges are in order, just turned.',
             },
             {
               after: 'U2',
-              caption: 'Half a turn of the top layer lines it up with the side centres: every edge is solved.',
+              caption: 'U2 lines the top layer up with the side centres: every edge is solved.',
             },
           ],
           every: { summary: 'Show every single move' },
@@ -300,7 +292,7 @@ export const steps8355 = [
         anchor: 'swap-flipped',
         name: '3 · Last two edges: yellow faces right',
         orientation:
-          "The yellow sticker of the slot edge faces right. Turn the top layer so the unsolved top edge is at the right. Then the same thing from the front: cycle, turn, cycle, and line the top layer up.",
+          'Slot edge\'s yellow faces right. Turn the top so the unsolved top edge is at the right. Then cycle, turn, cycle, line up, from the front.',
         alg: "F' U' F U' F' U' F U2",
         mnemonicChunks: [
           { word: 'G', moves: "F'" },
@@ -326,26 +318,23 @@ export const steps8355 = [
           frames: [
             {
               after: '',
-              caption:
-                'The two edges have traded places: the green/orange edge (pink) is at the top right, the yellow/orange edge (blue) is in the slot with its yellow sticker facing right. The other three top edges are right relative to each other.',
+              caption: 'Pink is at the top right; blue is in the slot, yellow facing right.',
             },
             {
               after: "F' U' F",
-              caption:
-                'First cycle. The yellow/orange edge (blue) is back at the top right. The slot now holds the yellow/red edge, and the green/orange edge (pink) has been carried round to the top back. Three edges are still out of place.',
+              caption: 'First cycle: blue is back at the top right. Pink has moved to the top back.',
             },
             {
               after: "U'",
-              caption: "A quarter turn of the top layer the other way (U'). It only changes where the second cycle's lift lands.",
+              caption: "U': a quarter turn the other way. It changes only where the next lift lands.",
             },
             {
               after: "F' U' F",
-              caption:
-                'Second cycle. The green/orange edge (pink) has dropped into the slot, and the four top edges are in the right order relative to each other — the top layer is just turned.',
+              caption: 'Second cycle: pink drops into the slot. The top edges are in order, just turned.',
             },
             {
               after: 'U2',
-              caption: 'Half a turn of the top layer lines it up with the side centres: every edge is solved.',
+              caption: 'U2 lines the top layer up with the side centres: every edge is solved.',
             },
           ],
           every: { summary: 'Show every single move' },
@@ -360,18 +349,18 @@ export const steps8355 = [
     source: 'wiki',
     goal: 'The cube solved. Only Sassy, bottom-layer turns and one whole-cube rotation.',
     how: [
-      'Flip the cube over so four of the five unsolved corners are in the bottom layer and the fifth is at the top front-right. That one is the buffer.',
-      'Before each round (added — see the note): turn the bottom layer so an unsolved bottom corner is directly under the buffer.',
-      "If the buffer corner doesn't belong in the bottom layer (it has no yellow on it), do Sassy once to bring a bottom corner up into the buffer.",
-      'Turn the bottom layer until the buffer corner is directly above the slot it belongs in (the slot between the two bottom edges that match its colours).',
+      'Flip the cube so four of the five unsolved corners are in the bottom layer and the fifth, the buffer, is at the top front-right.',
+      'Added (see note): turn the bottom layer so an unsolved bottom corner is under the buffer.',
+      "If the buffer has no yellow, do Sassy once to bring a bottom corner up into it.",
+      'Turn the bottom layer so the buffer is above its slot (between the two bottom edges that match its colours).',
       'Repeat Sassy until that corner is solved in the bottom layer (1, 3 or 5 times).',
       'Repeat steps 2–5 until only one unsolved bottom corner is left.',
-      "Turn the bottom layer so that corner is under the buffer. Repeat Sassy until the cube is solved, or only two corners are unsolved: twisted in place, everything else solved. A bottom layer that is just turned out of line doesn't count. If the bottom layer ends up fully solved but the top isn't, keep going.",
+      "Turn the bottom layer so that corner is under the buffer. Repeat Sassy until the cube is solved, or only two twisted corners are left. If the bottom is solved but the top is not, keep going.",
       'Two twisted corners left: use the second card.',
       'Turn the bottom layer to line it up with the sides. Solved.',
     ],
     notes: [
-      "Added here, not on the wiki: (a) turning the bottom layer so an unsolved corner is under the buffer before each round — a corner already placed there would otherwise be pulled back out by the next Sassy; (b) the exact way to finish the last two twisted corners. The wiki says to rotate the whole cube so the bottom layer holds both, which is impossible when they sit at opposite corners of the cube, so the bottom layer is turned first (card 2). Run on 3,000 random positions of the last five corners, the steps as written here solved every one (at most 24 Sassys, 15 on average).",
+      "Added here, not on the wiki: (a) turn the bottom layer so an unsolved corner is under the buffer before each round; (b) how to finish the last two twisted corners (card 2). The wiki's whole-cube rotation cannot hold both when they sit at opposite corners. These steps solved all 3,000 random positions tested (at most 24 Sassys, 15 on average).",
     ],
     cases: [
       {
@@ -387,7 +376,7 @@ export const steps8355 = [
         anchor: 'two-twisted',
         name: '2 · Two twisted corners left',
         orientation:
-          "Turn the bottom layer so the unsolved bottom corner is under the buffer. If the buffer is one of the twisted corners, rotate the whole cube x' so both twisted corners are in the bottom layer. Sassy until the front-right corner is solved (2 or 4 times); turn the bottom layer so the other twisted corner is at the front-right; Sassy the remaining times (4 or 2 — 6 in all); turn the bottom layer back. Rotate back (x if you rotated), then line up the bottom layer.",
+          "Turn the bottom layer so an unsolved corner is under the buffer. If the buffer is twisted, rotate x' so both are in the bottom layer. Sassy until the front-right corner is solved (2 or 4 times). Turn the bottom so the other twisted corner is front-right, then Sassy the remaining 4 or 2 times. Turn the bottom back, rotate back (x if you rotated), then line up.",
         alg: SASSY,
         displayAlg: `x'  (${SASSY}) ×2 or ×4  D'  (${SASSY}) ×4 or ×2  D  x`,
         mnemonicChunks: [{ word: 'Sassy', moves: SASSY }],

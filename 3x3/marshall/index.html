@@ -23,13 +23,10 @@
       <p>
         Not from your own notes. This is Philip Marshall's method, from his page
         <a href="http://helm.lu/cube/MarshallPhilipp/">The Ultimate Solution to Rubik's Cube</a>
-        (his latest revision is dated 2005). The text is reworded here and his figures are not reproduced:
-        his figures use his own colours, so the pictures here are our own, drawn from the moves. Every
-        sequence and claim was checked on the cube simulator. Marshall's steps 2 to 5 depend on judgement
-        about which piece to take next; those are described as he describes them and are not checked as a
-        whole method. The list at the end says what is not checked.
-        Two algorithms at the end are not Marshall's: a corner twist and an edge flip, from published sources,
-        for turned pieces the series cannot fix.
+        (latest revision 2005). The text is reworded; his figures are not reproduced, so the pictures are ours.
+        Every sequence and claim was checked in the simulator. Steps 2 to 5 rely on judgement and are not
+        checked as a whole method; the list at the end says what is not checked. The two algorithms at the end
+        are not Marshall's: a corner twist and an edge flip, from published sources.
       </p>
     </div>
 
@@ -41,7 +38,7 @@
   </main>
 
   <script type="module">
-    import { marshallFacts, marshallSeries, marshallSeriesTable, marshallSteps, marshallSources, marshallGaps, marshallExtraAlgs, marshallExtraAlgsTable } from '../../data/marshall.js?v=2';
+    import { marshallFacts, marshallSeries, marshallSeriesTable, marshallSteps, marshallSources, marshallGaps, marshallExtraAlgs, marshallExtraAlgsTable } from '../../data/marshall.js?v=4';
     import { mountSteps } from '../../js/steps-page.js';
 
     const el = (tag, cls, text) => {
@@ -65,7 +62,7 @@
       extra: true,
       mark: '◎',
       source: 'marshall',
-      intro: 'The two series the method is built on. Each picture is the cube after the moves so far, starting from solved, so you can see what the series does. The second corner series is the first one mirrored.',
+      intro: 'The two series the method is built on. Each picture is the solved cube after the moves so far. The second corner series is the first one mirrored.',
       cases: marshallSeries,
       custom(section) {
         const wrap = el('div', 'table-wrap');
@@ -84,7 +81,7 @@
         }
         wrap.appendChild(table);
         section.appendChild(wrap);
-        section.appendChild(el('p', 'step-note', 'Marshall calls the three corners of a series a triangle. Each corner series moves three corners of the top face round it, and the corners of the top face are the only pieces it moves.'));
+        section.appendChild(el('p', 'step-note', 'Marshall calls the three moved corners a triangle. A corner series moves only three top corners.'));
       },
     };
 
@@ -95,7 +92,7 @@
       extra: true,
       mark: '+',
       source: 'published',
-      intro: 'Not part of Marshall\'s method. For a turned corner or edge that the series cannot turn back. Each changes only the orientation of the named pieces; apply it once the pieces are in place, bring the turned pieces to the named places (rotate the whole cube, so no other piece moves), then rotate back.',
+      intro: 'Not part of Marshall\'s method, for a turned piece the series cannot turn back. Each changes only the orientation of its named pieces. Rotate the cube so the turned pieces sit in the named places, apply it, then rotate back.',
       cases: marshallExtraAlgs,
       custom(section) {
         const wrap = el('div', 'table-wrap');
@@ -124,7 +121,7 @@
       extra: true,
       mark: '?',
       source: 'marshall',
-      intro: 'The sequences and claims above are checked. These parts of the method are not, so do not rely on the page for them without the source.',
+      intro: 'The sequences and claims above are checked. These parts are not; use the source for them.',
       custom(section) {
         const ul = el('ul', 'faster-tips');
         for (const g of marshallGaps) ul.appendChild(el('li', null, g));

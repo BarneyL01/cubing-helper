@@ -540,7 +540,7 @@ export const baseData = {
           {
             "after": "D'",
             "label": "D undone",
-            "caption": "The second part undone. On a solved cube: the sticker at V goes to U, the one at U goes to M, the one at M goes to V; that is the DFR corner goes to DFL, the DFL corner to UFR, and the UFR corner to DFR."
+            "caption": "Net: DFR → DFL → UFR → DFR, for the three outlined corners."
           }
         ]
       },
@@ -612,7 +612,7 @@ export const baseData = {
           {
             "after": "D",
             "label": "D' undone",
-            "caption": "The second part undone. On a solved cube: the sticker at V goes to W, the one at W goes to M, the one at M goes to V; that is the DFR corner goes to DBR, the DBR corner to UFR, and the UFR corner to DFR."
+            "caption": "Net: DFR → DBR → UFR → DFR, for the three outlined corners."
           }
         ]
       },
@@ -684,7 +684,7 @@ export const baseData = {
           {
             "after": "D2",
             "label": "D2 undone",
-            "caption": "The second part undone. On a solved cube: the sticker at V goes to X, the one at X goes to M, the one at M goes to V; that is the DFR corner goes to DBL, the DBL corner to UFR, and the UFR corner to DFR."
+            "caption": "Net: DFR → DBL → UFR → DFR, for the three outlined corners."
           }
         ]
       },
@@ -743,7 +743,7 @@ export const baseData = {
           {
             "after": "",
             "label": "Start",
-            "caption": "The three unsolved corners are outlined. The base [R U R', D] cycles the corners at DFR, DFL, UFR."
+            "caption": "The three unsolved corners are outlined."
           },
           {
             "after": "L2",
@@ -753,7 +753,7 @@ export const baseData = {
           {
             "after": "R U R' D R U' R' D'",
             "label": "Base",
-            "caption": "The base cycles them into place; everything the setup moved is still displaced."
+            "caption": "The base cycles them into place. The rest is still displaced."
           },
           {
             "after": "L2",
@@ -814,7 +814,7 @@ export const baseData = {
           {
             "after": "",
             "label": "Start",
-            "caption": "The three unsolved corners are outlined. The base [R U R', D'] cycles the corners at DFR, DBR, UFR."
+            "caption": "The three unsolved corners are outlined."
           },
           {
             "after": "B2 U'",
@@ -824,7 +824,7 @@ export const baseData = {
           {
             "after": "R U R' D' R U' R' D",
             "label": "Base",
-            "caption": "The base cycles them into place; everything the setup moved is still displaced."
+            "caption": "The base cycles them into place. The rest is still displaced."
           },
           {
             "after": "U B2",
@@ -885,7 +885,7 @@ export const baseData = {
           {
             "after": "",
             "label": "Start",
-            "caption": "The three unsolved corners are outlined. The base [D2, R U R'] cycles the corners at DFR, UFR, DBL."
+            "caption": "The three unsolved corners are outlined."
           },
           {
             "after": "L U' B2",
@@ -895,7 +895,7 @@ export const baseData = {
           {
             "after": "D2 R U R' D2 R U' R'",
             "label": "Base",
-            "caption": "The base cycles them into place; everything the setup moved is still displaced."
+            "caption": "The base cycles them into place. The rest is still displaced."
           },
           {
             "after": "B2 U L'",
