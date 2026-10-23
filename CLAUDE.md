@@ -156,7 +156,7 @@ built ahead of being asked for. As of 2026-10-03:
   all 46,080 legal LSE positions; the checker is in the log entry — re-run it
   if anything in `data/roux.js` changes.
 - **Recognition practice (2026-10-23, `3x3/practice/recognition.html`):** a timed practice page — a still
-  3D-style picture of the cube (our own isometric SVG, `js/cube-3d.js`: top, front and right faces, shaded; no
+  3D-style picture of the cube (our own isometric SVG, `js/cube-3d.js`: top, front and right faces, shaded, with mirrors of the left and back faces; no
   cubing.js, which did not show on the owner's phone here) shows a random 2-look OLL, 2-look PLL and/or Roux
   CMLL case with a random top-layer turn; after the case time (default 30 s) the solution (name, U turn +
   algorithm, mnemonic, Libby's line for OLL/PLL) shows for the solution time (default 3 s, can be switched off),

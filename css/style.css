@@ -2136,3 +2136,45 @@ html.menu-open {
   width: min(70vw, 300px);
   height: auto;
 }
+/* Recognition practice: big, clear buttons (the cube is held in both hands) */
+.rec-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin: 0.75rem 0;
+}
+.rec-controls #status {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.rec-btn {
+  min-height: 60px;
+  padding: 0 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rec-btn-primary {
+  grid-column: 1 / -1;
+  min-height: 68px;
+  font-size: 1.35rem;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.rec-btn-primary.rec-btn-stop {
+  background: #b42318;
+  border-color: #b42318;
+  color: #ffffff;
+}
+.rec-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.cube-3d.with-mirrors {
+  width: min(88vw, 400px);
+}

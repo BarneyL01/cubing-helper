@@ -45,9 +45,10 @@
     </form>
 
     <div class="rec-controls">
-      <button type="button" class="applet-button" id="start">Start</button>
-      <button type="button" class="applet-button" id="next" disabled>Next case now</button>
-      <span id="status" role="status"></span>
+      <button type="button" class="rec-btn rec-btn-primary" id="start">Start</button>
+      <button type="button" class="rec-btn" id="show" disabled>Show solution</button>
+      <button type="button" class="rec-btn" id="next" disabled>Next case</button>
+      <p id="status" role="status"></p>
     </div>
     <div class="view-toggle" id="view-toggle"></div>
 
@@ -186,7 +187,9 @@
       clearTimeout(timer);
       cancelAnimationFrame(raf);
       $('start').textContent = 'Start';
+      $('start').classList.remove('rec-btn-stop');
       $('next').disabled = true;
+      $('show').disabled = true;
       form.hidden = false;
       $('phase').dataset.mode = '';
       $('phase').textContent = 'Stopped. Press Start to go again.';
@@ -202,11 +205,15 @@
       form.hidden = true;
       document.querySelector('.rec-stage').scrollIntoView({ block: 'start' });
       $('start').textContent = 'Stop';
+      $('start').classList.add('rec-btn-stop');
       $('next').disabled = false;
+      $('show').disabled = false;
       runCase();
       tick();
     });
     $('next').addEventListener('click', () => { if (running) runCase(); });
+    // show the current case's solution now; it stays until the next case (the timer keeps going)
+    $('show').addEventListener('click', () => { if (running) $('solution').hidden = false; });
     // changing the sets while running takes effect from the next shuffle
     form.addEventListener('change', () => { bag = []; });
 
