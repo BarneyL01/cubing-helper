@@ -6,7 +6,7 @@ import { applyAlg, solvedCube, isSolved, startHold } from '../js/cube-sim.js';
 import { invertAlg } from '../js/algs.js';
 import { ollCases } from '../data/oll.js';
 import { pllCornerCases, pllEdgeCases } from '../data/pll.js';
-import { cornerOrientationCases } from '../data/corner-orientation.js';
+import { rouxCmllCases as cornerOrientationCases } from '../data/roux.js';
 const UNDO = { U: "U'", U2: 'U2', "U'": 'U' };
 let n = 0, bad = 0;
 for (const c of [...ollCases, ...pllCornerCases, ...pllEdgeCases, ...cornerOrientationCases]) {

@@ -68,7 +68,7 @@
   <script type="module">
     import { ollCases } from '../../data/oll.js';
     import { pllCornerCases, pllEdgeCases } from '../../data/pll.js';
-    import { cornerOrientationCases } from '../../data/corner-orientation.js';
+    import { rouxCmllCases } from '../../data/roux.js?v=2';
     import { startHold } from '../../js/cube-sim.js';
     import { case3d } from '../../js/cube-3d.js?v=2';
     import { libbyNotation } from '../../js/libby.js';
@@ -79,7 +79,7 @@
     const SETS = {
       oll: { label: '2-look OLL', cases: ollCases, libby: true, stickering: 'oll' },
       pll: { label: '2-look PLL', cases: [...pllCornerCases, ...pllEdgeCases], libby: true, stickering: 'full' },
-      cmll: { label: 'Roux CMLL', cases: cornerOrientationCases, libby: false, stickering: 'cmll' },
+      cmll: { label: 'Roux CMLL', cases: rouxCmllCases, libby: false, stickering: 'cmll' },
     };
     const TURNS = ['', 'U', 'U2', "U'"];
     const UNDO = { U: "U'", U2: 'U2', "U'": 'U' };

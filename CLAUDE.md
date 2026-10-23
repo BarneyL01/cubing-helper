@@ -117,7 +117,8 @@ built ahead of being asked for. As of 2026-10-03:
   computed from the simulated case by `js/f2l-features.js`, chart
   category, and free text (`js/f2l-finder.js`).
 - **3x3 Roux** — CMLL done, reusing `data/corner-orientation.js` (see
-  below). **LSE built out on request 2026-10-06, not from the user's
+  below). On the Roux pages (and Recognition practice) **H's main algorithm is `F (R U R' U')×3 F'`**
+  (owner, 2026-10-23): `rouxCmllCases` in `data/roux.js` swaps H's main and alternative; 2x2 Ortega keeps the shared data. **LSE built out on request 2026-10-06, not from the user's
   notes** (the page says so). Algorithms and tables are our own, found and
   checked by simulation, then compared with Scheopner's LSE page
   (scheopner.com/cube/lse.php) and athefre's DFDB page
