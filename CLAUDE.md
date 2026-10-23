@@ -58,15 +58,31 @@ content and drills get added as they're actually needed.
 - **Page chrome and phone layout** (redesign, 2026-10-06; the owner approved a
   mockup and answered the open questions — see `log/2026-10-06-mobile-redesign.md`).
   Phone (390 px, cube in hand) is the primary target.
-  - Every page has only `<header class="site-header" id="site-header">` with a
-    plain Home link inside (the no-JS fallback) and loads `js/site-chrome.js`
-    in `<head>`. That module builds the one-line sticky header, a grouped menu
-    (**one `MENU` list at the top of `js/site-chrome.js` — add new pages there**),
-    breadcrumbs (group › parent › page, from the same list), and moves every
-    `.source-note` on the page into a collapsed "About this page" at the bottom.
-    Menu: full-screen panel on screens under 1280 px (Esc/Close, focus kept
-    inside, scroll locked); inline grouped nav from 1280 px up. Pages have no
-    footer any more.
+  - **Navigation (redesign 2026-10-23, `docs/nav-redesign-brief.md`, log
+    `log/2026-10-23-nav-redesign.md`).** Every page has only `<header class="site-header"
+    id="site-header">` with a plain Home link inside (the no-JS fallback) and loads
+    `js/site-chrome.js?v=N` in `<head>`. **One `MENU` list at the top of `js/site-chrome.js` —
+    add new pages there**: four groups (Methods, Blindfolded, Practice, Other puzzles) of
+    sections; a section is one page (`{ label, path }`) or up to 6 (`{ label, pages }`). Every
+    page is in exactly one section. The module builds three tiers:
+    1. Header (all widths): "☰ Menu", brand (home), "› <section>" (its first page). The menu is
+       a 340 px panel on the left over a scrim from **900 px** (`MENU_WIDE`; every section and
+       page listed), a full-screen accordion below (multi-page sections open with +/−, the
+       current one starts open). Close / Esc / scrim close it; focus stays inside and returns
+       to Menu; page scroll is locked.
+    2. On pages of multi-page sections: a kicker with the section name above the h1 (the h1 is
+       the page name) and a quiet section row of the section's pages (after the subtitles
+       under the h1). Never hand-write tab bars.
+    3. "On this page" from `h2.section-heading` (`data-short` = short label; ids added if
+       missing) and `section.step[id]` on steps pages: a sticky control on phones, a right-hand
+       column from 900 px. Only with 3+ entries; headings in a `[hidden]` part are left out;
+       headings that page scripts add later are picked up (MutationObserver).
+       A `.page-switch` right under the title (After 8355) stays above it.
+    It also moves every `.source-note` into a collapsed "About this page" at the bottom.
+    Anchors land below the header/On this page via `--anchor-offset`. No breadcrumbs, no
+    jump/step/pill bars, no footer. Rejected, do not build: search box, hide-on-scroll header,
+    recent/pinned pages, bottom bar, new prev/next links, picture index as table of contents,
+    keyboard shortcuts.
   - Case cards (`js/render-cases.js`): picture/3D left, name + step label +
     mnemonic word right, algorithm full width at 19 px, **Libby's line
     directly under the algorithm, never inside a collapsed section**, then a
@@ -86,9 +102,10 @@ content and drills get added as they're actually needed.
   - Badges: only "Partial" / "Coming soon"; no "Ready". Partial uses
     `--partial` (#8a6408, white text; light colour in dark mode). Tappable
     controls are at least 44 px tall.
-  - Home (`index.html`) is grouped by puzzle with one `.row-card` per method
-    (icon, title, one-line description, chevron) and quick links (CFOP: OLL,
-    PLL, F2L map; Blindfolded: Practice, Commutators). `.method-card` (whole
+  - Home (`index.html`) is grouped by the four menu groups with one `.row-card` per
+    section (icon, title, one-line description, chevron) and quick links (CFOP: OLL,
+    PLL, F2L map; Blind: M2 edges, Old Pochmann, Letter pairs; Commutators: Corner
+    cycles, After 8355; Practice: Recognition, Blind drills, Blind memo). `.method-card` (whole
     card clickable via its stretched link) is only used on the CFOP hub now.
 
 ## Repo layout
@@ -114,8 +131,8 @@ built ahead of being asked for. As of 2026-10-03:
   transcription of the dogschasingsquirrels chart
   (https://dogschasingsquirrels.files.wordpress.com/2014/06/f2l.jpg); keep
   that credit on the page and in the data file. No mnemonic words for F2L
-  (they weren't in the user's notes). It has its own top-menu link
-  ("3x3 · F2L") rather than living under CFOP, and a "Find a case" panel:
+  (they weren't in the user's notes). It is a page of the CFOP section
+  ("F2L map"), and a "Find a case" panel:
   filters (pieces' location, white sticker direction, edge state, pair)
   computed from the simulated case by `js/f2l-features.js`, chart
   category, and free text (`js/f2l-finder.js`).
@@ -142,7 +159,7 @@ built ahead of being asked for. As of 2026-10-03:
   repeat `U' M'`, look after every pair, finish the arrow with `M' U M` or a mirror (U turn first if needed).
   One card per bad-edge pattern (32, grouped by family) with a picture after every pair; 16 patterns need a
   short fix first (they loop otherwise). Generated and checked by `log/2026-10-22-lse-eo-map.mjs --write`.
-  The Roux pages now have tabs (Reference / LSE map) and a MENU child.
+  The Roux section has two pages (Reference / LSE map) in `MENU` and its section row.
   **Block practice is planned, not built:** `docs/roux-block-practice-plan.md`
   is the full spec (first block + second block drills on
   `3x3/roux/practice.html`, an in-browser shortest-solution search in
@@ -165,7 +182,7 @@ built ahead of being asked for. As of 2026-10-03:
   CMLL case with a random top-layer turn; after the case time (default 30 s) the solution (name, U turn +
   algorithm, mnemonic, Libby's line for OLL/PLL) shows for the solution time (default 3 s, can be switched off),
   then the next case. Settings in localStorage `cubing-helper:recognition`; Keep screen on. Every case and turn
-  checked by `log/2026-10-23-recognition-check.mjs` (84 combinations). Menu item and home row under 3x3.
+  checked by `log/2026-10-23-recognition-check.mjs` (84 combinations). Page "Recognition" of the Practice section (menu, section row, home quick link).
 - **3x3 Marshall Method** — Philip Marshall's edges-first method ("The Ultimate Solution to Rubik's Cube"),
   from his own page (helm.lu/cube/MarshallPhilipp, read 2026-10-22), **not from the user's notes** (the page says
   so and credits him). Two series (`F R' F' R`, `U R U' L' U R' U' L` and its mirror) with checked picture strips,
@@ -175,7 +192,7 @@ built ahead of being asked for. As of 2026-10-03:
 - **3x3 8355 Method** — Reheart Sheu's beginner method, from the
   Speedsolving wiki text the user pasted (2026-10-03), **not from the
   user's own notes** (the page says so and credits the wiki). `data/
-  method-8355.js`, `3x3/8355/index.html`, own top-menu link "3x3 · 8355".
+  method-8355.js`, `3x3/8355/index.html`, its own one-page section "8355" in the menu.
   Same layout as the Beginner's page (shared `js/steps-page.js`): 5 steps
   (cross, 3 corners, 3 middle edges with a keyhole, remaining edges, last 5
   corners) plus an "Example solve" and a "Getting faster" section. Every
@@ -226,14 +243,19 @@ built ahead of being asked for. As of 2026-10-03:
   thousands of random last-layer states; re-run that if they change.
 - **3x3 Blindfolded** — M2 edges + Old Pochmann corners, Speffz letters,
   from the user's notes: setup moves for every letter, parity, corner swap.
-  `data/bld.js`, `3x3/bld/index.html`, letter nets from `js/bld-net.js`.
+  `data/bld.js`, letter nets from `js/bld-net.js`. **Split 2026-10-23** into the Blind section:
+  Overview (`3x3/bld/index.html`: order and letters, links to the two pages below and Blind memo),
+  M2 edges (`m2.html`: edge setup table + parity) and Old Pochmann (`old-pochmann.html`: tips, swap,
+  corner setup table), plus Letter pairs (`letter-pairs.html`). A small script on index.html sends
+  old anchors (`#edge-*`, `#corner-*`, `#bld-edges`, `#bld-parity`, `#bld-tips`, `#bld-swap`,
+  `#bld-corners`, `#edges-m2`, `#corners-old-pochmann`) to the new pages.
   Verified by simulating 500 full blind solves (memo from the scramble →
   execute every setup/alg) — all solve. One fix to the user's notes: edge
   B's setup is `R' U R U'` (notes said `R' U R' U'`, which targets V);
   flagged on the page. Edges must be done before corners (each corner swap
   also swaps UL/UB). Re-run that simulation if any setup changes.
-  A **Practice** tab (`3x3/bld/practice.html`, tabs shared with the
-  reference page) generates a random-move scramble (or takes the user's own,
+  **Blind memo** (`3x3/bld/practice.html`, a page of the Practice section; the
+  file stays in `3x3/bld/`) generates a random-move scramble (or takes the user's own,
   face turns only), draws it as a colour net (WCA white-top or yellow-top
   colours), and shows the edge/corner memo in letter pairs plus the moves
   for every letter — worked out by `js/bld-memo.js` from `data/bld.js`.
@@ -245,7 +267,8 @@ built ahead of being asked for. As of 2026-10-03:
   Cycle breaks start at the first unsolved piece in letter order. Checked:
   running every listed move solves 2,000 random scrambles; re-run if the
   memo code or any setup changes.
-  A **Commutators** tab (`3x3/bld/commutators.html`, `data/commutators.js`)
+  The **Commutators** section (2026-10-23): Basics, Corner cycles, Corner table, After 8355,
+  Twists & parity, Edge cycles. Basics (`3x3/bld/commutators.html`, `data/commutators.js`)
   explains commutators (insertion + interchange), the effect of changing the
   interchange turn, how to build one, and seven set-up-then-solve exercises
   (setup scramble and picture shown, solution behind a button). From notes
@@ -262,15 +285,18 @@ built ahead of being asked for. As of 2026-10-03:
   The old full table (one shortest commutator per pair) moved to "Corner table"
   (`corner-table.html`), twists and parity to "Twists & parity" (`corner-twists.html`),
   both still using `data/corner-cycles.js`. The older notes below describe that table.
-  **"After 8355" tab (2026-10-21, `3x3/bld/corner-8355.html`):** for someone who finishes the first two
+  **"After 8355" (2026-10-21, `3x3/bld/corner-8355.html`; one page since 2026-10-23 with a switch
+  "Setups: R U F D only / Any face (L, B too)", kept in localStorage `cubing-helper:corner-8355`,
+  `?setups=lb` selects any face; `corner-8355-lb.html` is a redirect there, keeping the hash; the
+  sections below follow the switch, section 3 shows in both):** for someone who finishes the first two
   layers with 8355, so only the corners UBL UBR UFR UFL (A-D) and DFR (V) are unsolved. Lists the 108
   pairs among them (12 target stickers on 4 corners), same three bases, setups restricted to R U F D
   (no L/B; mean 2.78 setup moves vs 2.15 with any face; max 15 moves). Data `data/corner-8355.js`,
   generated and checked by `log/2026-10-21-bld-8355-corners.mjs` (`--write`).
-  **"After 8355 (L/B)" tab (`3x3/bld/corner-8355-lb.html`):** the same 108 pairs with setups of any face
+  **Any face (was the "After 8355 (L/B)" tab):** the same 108 pairs with setups of any face
   (setup moves 1/2/3 = 18/56/34, none longer; mean 2.15, mean 11.70 total moves, max 14). Data
   `data/corner-8355-lb.js` from `node log/2026-10-21-bld-8355-corners.mjs --lb --write`.
-  Section 3 of the L/B tab (2026-10-22): "put the corners in place, twist later" — the easiest commutator for each
+  Section 3 (2026-10-22; shown for both setup choices; two of its 12 cards use L2): "put the corners in place, twist later" — the easiest commutator for each
   of the 12 ordered pairs of corners (orientation ignored), with pictures and the site-wide Pictures / 3D toggle (render-cases `palette: WHITE_TOP` keeps 3D white-on-top); memo by pieces,
   then fix twists with the owner's twist algorithm. Checked on all 4,860 positions (at most 3 pairs, then at most
   3 twists) by `log/2026-10-22-8355-placing.mjs --write` (`data/corner-8355-place.js`).
@@ -284,9 +310,9 @@ built ahead of being asked for. As of 2026-10-03:
   method tried solved 1 of 493 random scrambles); the owner chose to teach the
   corner side only. Corner parity uses the Old Pochmann corner swap
   (`BLD_CORNER_SWAP`: UBL↔DFR and two edges) with U/L/B setups that bring the last letter to E.
-  Setup moves are shown in orange (`js/move-format.js`). The three long Blindfolded pages (Commutators,
-  Corner cycles, Edge cycles) have a sticky "Jump to" bar built by `js/page-jump.js` from their
-  `h2.section-heading[id]` headings (`data-short` = pill label).
+  Setup moves are shown in orange (`js/move-format.js`). Long pages get "On this page" from their
+  `h2.section-heading[id]` headings (`data-short` = short label), built by `js/site-chrome.js`
+  (`js/page-jump.js` was removed 2026-10-23).
 - **2x2 Ortega** — all 7 OLL (corner-orientation) cases plus all 5 PBL
   cases. `data/ortega.js`.
 - **Megaminx** — last-layer notes (Gray star, align star, Gray corners).
@@ -345,9 +371,9 @@ Method").
   than loading large precomputed tables or outside services. Algorithm lists
   in `data/` are fine even when a script generated them (keep the script and
   its checks in `log/`).
-- Practice pages: one page per drill area, reached by a tab next to the
-  reference page (like `3x3/bld/practice.html`) and a `children` entry in
-  `MENU`. The current item is kept in localStorage (`cubing-helper:<page>`),
+- Practice pages: one page per drill area, listed as a page of the Practice
+  section in `MENU` (Recognition, Blind drills, Blind memo so far; the menu and
+  section row come from there — no hand-written tabs). The current item is kept in localStorage (`cubing-helper:<page>`),
   answers are hidden until a button is pressed, and anything generated (a
   scramble, a solver's solution) is checked by simulation in a Node checker
   kept in `log/`.

@@ -23,20 +23,26 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/cfop/oll.html` — 2-look OLL cases
 - `3x3/cfop/pll.html` — 2-look PLL cases
 - `3x3/cfop/f2l.html` — F2L map (all 41 cases), transcribed from the
-  dogschasingsquirrels chart — credited on the page. In the top menu as
-  "3x3 · F2L"; has a "Find a case" search/filter panel
+  dogschasingsquirrels chart — credited on the page. A page of the CFOP
+  section ("F2L map"); has a "Find a case" search/filter panel
 - `3x3/roux/index.html` — CMLL done (shares the same 7 cases as Ortega's
   OLL); LSE built out 2026-10-06 (4a EO, 4b UL/UR, 4c M slice, DFDB —
   added on request, verified by simulation); block building still placeholder
 - `3x3/beginners/index.html` — all 7 steps (1–4 standard method, not from
   the user's notes; 5–7 from their notes), one numbered section per step
-  with a goal and "how", a sticky 1–7 step bar, and previous/next links
+  with a goal and "how", previous/next links, and the steps in "On this page"
 - `3x3/8355/index.html` — 8355 method (Reheart Sheu; from the wiki text the
   user pasted, not their notes): 5 steps + example solve + "getting faster",
-  in the top menu as "3x3 · 8355"
-- `3x3/bld/index.html` — blindfolded: M2 edges + Old Pochmann corners,
-  letter nets, setup tables (from the user's notes; in the top menu)
-- `3x3/bld/practice.html` — "Practice" tab: scramble + colour net, memo
+  its own one-page section "8355" in the menu
+- `3x3/bld/index.html` — Blind Overview: order of a solve and the letter nets, with links to
+  `m2.html` (M2 edges: setup table + parity) and `old-pochmann.html` (corner tips, swap, setup
+  table) — split out of the old single page on 2026-10-23; old `#edge-*` / `#corner-*` anchors on
+  index.html redirect to the new pages. From the user's notes.
+- `3x3/bld/letter-pairs.html` — Letter pairs (Blind section): a word for every pair of memo letters
+- `3x3/bld/corner-8355.html` — After 8355 (Commutators section), one page since 2026-10-23 with a
+  "Setups: R U F D only / Any face (L, B too)" switch (`?setups=lb`); `corner-8355-lb.html` redirects there
+- `3x3/practice/blind-drills.html` — Blind drills (Practice section)
+- `3x3/bld/practice.html` — "Blind memo" (Practice section): scramble + colour net, memo
   letters worked out, moves for each letter (hideable letters for recall)
 - `3x3/roux/practice.html` — **planned, not built**: "Block practice" tab
   (first block and second block drills with an in-browser shortest-solution
@@ -144,11 +150,31 @@ Each case shows:
 ## Mobile redesign (2026-10-06)
 
 Done from the approved mockup: shared `js/site-chrome.js` (header, grouped menu,
-breadcrumbs, "About this page"), home grouped by puzzle, new case-card layout
+breadcrumbs, "About this page" — header, menu and breadcrumbs replaced on 2026-10-23, see
+"Navigation redesign"), home grouped by puzzle (by menu group since 2026-10-23), new case-card layout
 with Libby's line always visible, picture index on OLL/PLL/2x2/Megaminx, Keep
 screen on, Partial badge colour, 44 px targets. Decisions and deviations are in
 `log/2026-10-06-mobile-redesign.md`. Add new pages to `MENU` in
 `js/site-chrome.js`.
+
+## Navigation redesign (2026-10-23)
+
+Built from the approved brief and mockup (`docs/nav-redesign-brief.md`, `docs/nav-mockup.html`,
+"menu panel" view). `MENU` in `js/site-chrome.js` has four groups (Methods, Blindfolded, Practice,
+Other puzzles) of sections; a section is one page or up to 6. Three tiers, all built by
+`js/site-chrome.js` from `MENU`:
+
+1. Header: Menu button, brand, "› <section>". The menu is a 340 px panel on the left over a scrim
+   from **900 px**, a full-screen accordion below (multi-page sections open with +/−).
+2. Section row: under the title on pages of multi-page sections, plus a kicker with the section name
+   above the h1 (the h1 is the page name). Replaces the old `nav.tabs` bars.
+3. On this page: from `h2.section-heading` (and `section.step[id]` on steps pages); a sticky control
+   on phones, a right-hand column from 900 px; only with 3+ entries; picks up headings added by page
+   scripts. Replaces the step bar and the old `js/page-jump.js` "Jump to" bars.
+
+Breadcrumbs and the inline wide-screen nav are gone. Rejected and not built: search, hide-on-scroll
+header, recent/pinned pages, bottom bar, new prev/next links, picture index as table of contents,
+keyboard shortcuts. Details: `log/2026-10-23-nav-redesign.md`.
 
 ## Deploy
 
