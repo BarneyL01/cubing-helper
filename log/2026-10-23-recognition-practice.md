@@ -1,0 +1,14 @@
+# 2026-10-23 — Recognition practice page
+
+Owner's idea (from a YouTuber): a 3D cube shows a case for a set time, then changes, for recognition
+practice. Owner's answers: sets 2-look OLL + 2-look PLL + Roux CMLL (checkboxes, all three), random
+top-layer turn, solution = name + algorithm + mnemonic (Libby's line on OLL/PLL), shown for a
+configurable time (default 3 s, optional), a general practice entry (menu item + home row under 3x3).
+
+- `3x3/practice/recognition.html`: settings (sets, case time default 30 s, show solution + its time,
+  random turn), Start/Stop, Next case now, Keep screen on, timer bar. Cases drawn from a shuffled bag (no
+  repeat back to back). Settings hidden while running so the cube is near the top on a phone.
+- 3D: cubing.js loaded with the page, yellow on top (setup `z2`, as on the case cards); picture fallback
+  if it fails. `control-panel="none"` left the cube undrawn in testing; `bottom-row` works.
+- Check: `log/2026-10-23-recognition-check.mjs` — every case x every top-layer turn: the position shown
+  is solved by the solution shown. 84 combinations, all OK.
