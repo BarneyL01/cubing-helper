@@ -1,0 +1,386 @@
+<title>Cubing Helper Navigation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a control strip, then the mocked site in a phone frame or a scaled 1280px desktop frame, then notes. */
+:root {
+  --bg: #f7f7f9;
+  --surface: #ffffff;
+  --text: #1a1a1e;
+  --muted: #5b5b66;
+  --border: #e2e2e8;
+  --accent: #2f6fed;
+  --accent-contrast: #ffffff;
+  --accent-soft: #e8efff;
+  --code-bg: #eef0f6;
+  --frame: #c9ccd6;
+  --partial: #8a6408;
+  --partial-contrast: #ffffff;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14151a; --surface: #1d1e25; --text: #eeeef2; --muted: #a3a3ad; --border: #2c2d36;
+    --accent: #6c9bff; --accent-contrast: #0c1220; --accent-soft: #1e2a45; --code-bg: #262733; --frame: #3a3c48;
+    --partial: #f0c14b; --partial-contrast: #1a1a1e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14151a; --surface: #1d1e25; --text: #eeeef2; --muted: #a3a3ad; --border: #2c2d36;
+  --accent: #6c9bff; --accent-contrast: #0c1220; --accent-soft: #1e2a45; --code-bg: #262733; --frame: #3a3c48;
+  --partial: #f0c14b; --partial-contrast: #1a1a1e; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+.wrap > * { min-width: 0; }
+.wrap { grid-template-columns: minmax(0, 1fr); max-width: 1320px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; display: grid; gap: 20px; }
+h1.doc { margin: 0; font-size: 1.5rem; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 65ch; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.seg button { font: inherit; border: 0; background: transparent; color: var(--text); padding: 8px 16px; min-height: 40px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-contrast); font-weight: 600; }
+.controls label { display: inline-flex; gap: 8px; align-items: center; }
+.controls select { font: inherit; padding: 6px 8px; min-height: 40px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+button:focus-visible, a:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* frames */
+.stage { display: flex; justify-content: center; }
+.phone { width: min(390px, 100%); height: 760px; border: 10px solid var(--frame); border-radius: 36px; overflow: hidden; position: relative; background: var(--bg); }
+.desk-outer { width: 100%; overflow: hidden; border: 1px solid var(--frame); border-radius: 12px; background: var(--bg); position: relative; }
+.desk { width: 1280px; height: 780px; transform-origin: 0 0; position: absolute; top: 0; left: 0; }
+.screen { height: 100%; overflow-y: auto; position: relative; }
+
+/* ---- mocked site ---- */
+.s-header { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--border); }
+.s-bar { display: flex; align-items: center; gap: 16px; padding: 10px 16px; min-height: 56px; }
+.s-brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--text); text-decoration: none; white-space: nowrap; cursor: pointer; }
+.s-logo { width: 26px; height: 26px; border-radius: 6px; background: var(--accent); display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 3px; }
+.s-logo i { background: rgba(255,255,255,.85); border-radius: 1px; }
+.s-menu-btn { margin-left: auto; font: inherit; font-weight: 600; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 999px; padding: 0 16px; min-height: 44px; cursor: pointer; }
+
+/* global nav (desktop): the most prominent navigation */
+.g-nav { display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; }
+.g-sep { width: 1px; height: 22px; background: var(--border); margin: 0 6px; }
+.g-item { position: relative; }
+.g-link { font: inherit; font-weight: 650; font-size: 15px; color: var(--text); background: transparent; border: 0; padding: 8px 10px; border-radius: 8px; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; min-height: 40px; }
+.g-link:hover { background: var(--code-bg); }
+.g-link[aria-current="true"] { background: var(--accent); color: var(--accent-contrast); }
+.g-link .chev { font-size: 11px; opacity: .8; }
+.g-drop { position: absolute; top: calc(100% + 6px); left: 0; min-width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.14); padding: 6px; display: grid; z-index: 6; }
+.g-drop a { padding: 8px 10px; border-radius: 6px; color: var(--text); text-decoration: none; cursor: pointer; }
+.g-drop a:hover, .g-drop a[aria-current="page"] { background: var(--accent-soft); }
+.badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; background: var(--partial); color: var(--partial-contrast); border-radius: 999px; padding: 1px 6px; margin-left: 4px; }
+
+/* page */
+.s-main { padding: 18px 16px 60px; }
+.desk .s-main { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 40px; padding: 24px 24px 80px; }
+.s-title { margin: 0 0 4px; font-size: 1.6rem; line-height: 1.2; text-wrap: balance; }
+.desk .s-title { font-size: 2rem; }
+.s-kicker { margin: 0 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+.s-sub { margin: 0 0 14px; color: var(--muted); }
+
+/* section row: visible, but quieter than the global nav */
+.sec-row { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 8px 0 12px; overflow-x: auto; scrollbar-width: none; }
+.sec-row a { padding: 8px 10px 9px; font-size: 14px; color: var(--muted); text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; }
+.sec-row a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.sec-row a:hover { color: var(--text); }
+
+/* on this page: phone = one compact sticky control */
+.otp { position: sticky; top: 64px; z-index: 4; margin: 0 -16px 12px; padding: 6px 16px; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); }
+.otp button { font: inherit; font-size: 14px; display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); cursor: pointer; }
+.otp button span:first-child { color: var(--muted); }
+.otp-list { margin-top: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px; display: grid; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+.otp-list a, .toc a { padding: 8px 10px; border-radius: 6px; color: var(--text); text-decoration: none; font-size: 14px; cursor: pointer; }
+.otp-list a[aria-current="true"], .toc a[aria-current="true"] { color: var(--accent); font-weight: 600; }
+/* on this page: desktop = right column */
+.toc { position: sticky; top: 90px; align-self: start; display: grid; gap: 2px; border-left: 1px solid var(--border); padding-left: 12px; }
+.toc p { margin: 0 0 6px; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+.switch { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin: 4px 0 14px; }
+.switch span { padding: 6px 14px; font-size: 14px; }
+.switch span.on { background: var(--accent); color: var(--accent-contrast); font-weight: 600; }
+
+.s-h2 { font-size: 1.2rem; margin: 26px 0 8px; }
+.ph { display: grid; gap: 8px; }
+.ph i { display: block; height: 10px; border-radius: 4px; background: var(--code-bg); }
+.ph i:nth-child(3n) { width: 70%; }
+.ph i:nth-child(3n+2) { width: 88%; }
+.card { margin-top: 10px; height: 90px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+
+/* phone menu: accordion */
+.m-panel { position: absolute; inset: 0; z-index: 10; background: var(--surface); display: flex; flex-direction: column; }
+.m-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); min-height: 56px; }
+.m-list { overflow-y: auto; padding: 8px 8px 30px; }
+.m-group { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; padding: 14px 10px 4px; }
+.m-row { display: flex; width: 100%; align-items: center; justify-content: space-between; font: inherit; font-size: 17px; font-weight: 650; background: transparent; border: 0; color: var(--text); padding: 0 10px; min-height: 48px; border-radius: 8px; cursor: pointer; text-align: left; }
+.m-row[aria-current="true"] { color: var(--accent); }
+.m-row .plus { font-size: 20px; color: var(--muted); width: 24px; text-align: center; }
+.m-sub { display: grid; padding: 0 0 6px 18px; border-left: 2px solid var(--border); margin-left: 14px; }
+.m-sub a { font-size: 15px; padding: 0 10px; min-height: 44px; display: flex; align-items: center; color: var(--text); text-decoration: none; border-radius: 6px; cursor: pointer; }
+.m-sub a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+/* desktop menu panel (opened from the Menu button) */
+.d-menu-btn { font: inherit; font-weight: 650; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); border-radius: 999px; padding: 0 16px 0 12px; min-height: 44px; cursor: pointer; }
+.d-menu-btn .bars { display: grid; gap: 3px; } .d-menu-btn .bars i { display: block; width: 16px; height: 2px; background: currentColor; border-radius: 1px; }
+.d-where { font-weight: 650; color: var(--muted); }
+.d-where b { color: var(--text); }
+.scrim { position: absolute; inset: 0; background: rgba(10, 12, 20, .35); z-index: 9; }
+.drawer { position: absolute; top: 0; left: 0; bottom: 0; width: 340px; z-index: 10; background: var(--surface); border-right: 1px solid var(--border); box-shadow: 8px 0 30px rgba(0,0,0,.18); display: flex; flex-direction: column; }
+.drawer .m-head { min-height: 56px; }
+.d-list { overflow-y: auto; padding: 4px 16px 30px; }
+.d-group { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; padding: 18px 0 6px; border-top: 1px solid var(--border); margin-top: 10px; }
+.d-group:first-of-type { border-top: 0; margin-top: 0; }
+.d-sec { display: block; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; padding: 7px 10px; border-radius: 8px; cursor: pointer; }
+a.d-sec:hover { background: var(--code-bg); }
+.d-sec[aria-current="page"] { background: var(--accent); color: var(--accent-contrast); }
+.d-sec.label { cursor: default; padding-bottom: 2px; }
+.d-pages { display: grid; margin: 0 0 6px 10px; padding-left: 10px; border-left: 2px solid var(--border); }
+.d-pages a { font-size: 14.5px; color: var(--text); text-decoration: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.d-pages a:hover { background: var(--code-bg); }
+.d-pages a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) { .drawer { animation: slide .16s ease-out; } @keyframes slide { from { transform: translateX(-24px); opacity: .6; } } }
+
+/* notes */
+.notes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.note { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.note h2 { margin: 0 0 6px; font-size: 1rem; }
+.note p, .note li { margin: 0; color: var(--muted); font-size: 14px; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.tier { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.tree { overflow-x: auto; }
+.tree table { border-collapse: collapse; font-size: 14px; width: 100%; }
+.tree th, .tree td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.tree th { color: var(--muted); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) { .g-drop, .otp-list { animation: pop .12s ease-out; } @keyframes pop { from { opacity: 0; transform: translateY(-4px); } } }
+</style>
+
+<div class="wrap">
+  <h1 class="doc">Cubing Helper navigation mockup</h1>
+  <p class="lede">A clickable mockup of the proposed navigation: a Menu button that opens every section and page, a quiet row for the pages inside a section, and one "On this page" control. Click anything in the mocked site, or pick a page below to jump straight to it. "Desktop · top bar" is the earlier version, kept for comparison.</p>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Screen size">
+      <button type="button" id="v-phone" aria-pressed="true">Phone</button>
+      <button type="button" id="v-drawer" aria-pressed="false">Desktop · menu panel</button>
+      <button type="button" id="v-desk" aria-pressed="false">Desktop · top bar</button>
+    </div>
+    <label for="page-pick">Page <select id="page-pick"></select></label>
+  </div>
+
+  <div class="stage" id="stage"></div>
+
+  <div class="notes">
+    <div class="note"><span class="tier">Tier 1 · sections</span><h2>Top menu</h2><p>Phone: the Menu button opens an accordion; one-page sections are plain links, others open with + and the current one starts open. Desktop (menu panel): the same Menu button opens a vertical panel with every section and page listed at once, grouped; one-page sections are single bold links, sections with several pages show their pages indented beneath. The header shows which section you are in. The top-bar version is kept for comparison.</p></div>
+    <div class="note"><span class="tier">Tier 2 · pages in a section</span><h2>Section row</h2><p>Only in sections with more than one page (CFOP, Roux, Blind, Commutators, Practice). Smaller and greyer than the top menu so it never reads as the main menu. At most 6 labels.</p></div>
+    <div class="note"><span class="tier">Tier 3 · this page</span><h2>On this page</h2><p>Phone: one compact control that stays under the header and opens the headings list. Desktop: a quiet list in the right column. It replaces today's pill bars, step bars and "Jump to" bars. Breadcrumbs go: the filled-in section and the section row already show where you are.</p></div>
+  </div>
+
+  <div class="note tree">
+    <span class="tier">New structure</span>
+    <table>
+      <thead><tr><th>Section</th><th>Pages</th><th>Comes from</th></tr></thead>
+      <tbody id="tree-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const S = [
+  { id: 'cfop', label: 'CFOP', group: 'Methods', pages: [
+    { id: 'hub', label: 'Overview', sub: 'Cross, F2L, then the last layer in two looks each.', toc: ['The steps', '2-look OLL', '2-look PLL', 'F2L'], from: 'CFOP page' },
+    { id: 'oll', label: '2-look OLL', sub: 'Orient the edges, then the corners. 8 cases.', toc: ['Picture index', 'Edges', 'Corners'], from: '2-look OLL' },
+    { id: 'pll', label: '2-look PLL', sub: 'Permute the corners, then the edges. 6 cases.', toc: ['Picture index', 'Corners', 'Edges'], from: '2-look PLL' },
+    { id: 'f2l', label: 'F2L map', sub: 'All 41 cases and the steps between them.', toc: ['Find a case', 'Basic inserts', 'Corner in slot', 'Edge in slot', 'Both in top'], from: 'F2L map' } ] },
+  { id: 'roux', label: 'Roux', badge: 'Partial', group: 'Methods', pages: [
+    { id: 'ref', label: 'Reference', sub: 'Blocks, CMLL, then the last six edges.', toc: ['Blocks', 'CMLL', '4a Orient edges', '4b UL and UR', '4c M slice', 'DFDB'], from: 'Roux page' },
+    { id: 'lse', label: 'LSE map', sub: "Repeat U' M' until an arrow, then finish it.", toc: ['How to read', 'Oriented', 'F Arrow', 'D-Line', '6 Flip', 'Cross', 'V', '1+1'], from: 'LSE map' } ] },
+  { id: 'beg', label: "Beginner's", group: 'Methods', pages: [
+    { id: 'page', label: "Beginner's", sub: 'All seven steps, white cross to last corner.', toc: ['1 White cross', '2 White corners', '3 Middle edges', '4 Yellow cross', '5 Yellow edges', '6 Corner places', '7 Corner twists'], from: "Beginner's" } ] },
+  { id: '8355', label: '8355', group: 'Methods', pages: [
+    { id: 'page', label: '8355', sub: 'A beginner method built on Sassy, with a keyhole.', toc: ['1 Cross', '2 Three corners', '3 Three middle edges', '4 Remaining edges', '5 Last five corners', 'Example solve', 'Getting faster'], from: '8355' } ] },
+  { id: 'heise', label: 'Heise', badge: 'Partial', group: 'Methods', pages: [
+    { id: 'page', label: 'Heise', sub: 'Four squares, then edges, then the last three corners.', toc: ['1 Squares', '2 Edges', '3 Edges + two corners', '4 Last three corners', 'Not on this page yet'], from: 'Heise' } ] },
+  { id: 'marshall', label: 'Marshall', badge: 'Partial', group: 'Methods', pages: [
+    { id: 'page', label: 'Marshall', sub: 'Edges first, then corners, with two short series.', toc: ['The two series', '1 Cross', '2 Middle edges', '3 Top edges', '4 Corners', '5 Twists'], from: 'Marshall' } ] },
+  { id: 'blind', label: 'Blind', group: 'Blindfolded', pages: [
+    { id: 'hub', label: 'Overview', sub: 'Letters, memo and the order of a blind solve.', toc: ['Speffz letters', 'Memo', 'Order of a solve', 'Parity'], from: 'Blindfolded Reference (first half)' },
+    { id: 'm2', label: 'M2 edges', sub: 'Setup, M2, undo, for every edge letter.', toc: ['Setups', 'C, W, I, S and Q', 'Every second target', 'Parity'], from: 'Blindfolded Reference (edges)' },
+    { id: 'op', label: 'Old Pochmann', sub: 'Setup, corner swap, undo, for every corner letter.', toc: ['Setups', 'The corner swap', 'Parity'], from: 'Blindfolded Reference (corners)' } ] },
+  { id: 'comm', label: 'Commutators', group: 'Blindfolded', pages: [
+    { id: 'basics', label: 'Basics', sub: 'Insertion and interchange, and how to build one.', toc: ['What a commutator does', 'Changing the turn', 'Building one', 'Exercises'], from: 'Commutators tab' },
+    { id: 'cycles', label: 'Corner cycles', sub: 'Every corner pair from three base commutators.', toc: ['Scramble to cycles', 'Early close', 'The three bases', 'How it works', 'Work it out', 'Look up a pair', 'Learn first', 'Exercises'], from: 'Corner cycles tab' },
+    { id: 'table', label: 'Corner table', sub: 'One shortest commutator for each of 378 pairs.', toc: ['Easiest', 'Setup moves', 'How to use', 'Look up', 'Exercises'], from: 'Corner table tab' },
+    { id: 'after', label: 'After 8355', sub: 'The pairs left after 8355, with or without L and B.', toc: ['Corners left', 'Setups', 'Place, then twist', 'Every pair'], from: 'After 8355 + After 8355 (L/B), merged', switch: true },
+    { id: 'twists', label: 'Twists & parity', sub: 'Twisted corners and an odd number of letters.', toc: ['Twisted corners', 'Two corners with Sassy', 'Odd count', 'Exercises'], from: 'Twists & parity tab' },
+    { id: 'edges', label: 'Edge cycles', sub: 'Every edge pair with buffer UF.', toc: ['Easiest', 'Setup moves', 'Flips', 'Odd count', 'Look up', 'Exercises'], from: 'Edge cycles tab' } ] },
+  { id: 'practice', label: 'Practice', group: 'Practice', pages: [
+    { id: 'rec', label: 'Recognition', sub: 'A timed case every few seconds: OLL, PLL, CMLL.', toc: ['Settings', 'The cube'], from: 'Recognition practice' },
+    { id: 'memo', label: 'Blind memo', sub: 'A scramble, its memo and every move.', toc: ['Scramble', 'Memo', 'Moves'], from: 'Blindfolded Practice tab' } ] },
+  { id: '2x2', label: '2x2', group: 'Other puzzles', pages: [
+    { id: 'page', label: '2x2', sub: 'Ortega: orient, then permute both layers.', toc: ['Picture index', 'OLL', 'PBL'], from: '2x2 Ortega' } ] },
+  { id: 'mega', label: 'Megaminx', badge: 'Partial', group: 'Other puzzles', pages: [
+    { id: 'page', label: 'Megaminx', sub: 'Last-layer notes.', toc: ['Star', 'Align', 'Corners'], from: 'Megaminx' } ] },
+];
+const sec = (id) => S.find((s) => s.id === id);
+let state = { view: 'drawer', s: 'comm', p: 'cycles', menu: false, open: null, drop: null, otp: false, toc: 0 };
+try { const v = localStorage.getItem('nav-mockup-view2'); if (v) state.view = v; } catch {}
+
+const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const badge = (s) => (s.badge ? `<span class="badge">${s.badge}</span>` : '');
+const logo = '<span class="s-logo" aria-hidden="true">' + '<i></i>'.repeat(9) + '</span>';
+
+function page() {
+  const s = sec(state.s);
+  const p = s.pages.find((x) => x.id === state.p) || s.pages[0];
+  return { s, p };
+}
+function body(p) {
+  const blocks = p.toc.map((h, i) => `<h2 class="s-h2" id="h${i}">${esc(h)}</h2><div class="ph"><i></i><i></i><i></i>${i % 2 ? '' : '<i></i><i></i>'}</div>${i === 1 ? '<div class="card"></div>' : ''}`).join('');
+  return blocks;
+}
+function sectionRow(s) {
+  if (s.pages.length < 2) return '';
+  return `<nav class="sec-row" aria-label="${esc(s.label)} pages">${s.pages.map((x) => `<a data-go="${s.id}/${x.id}" ${x.id === state.p ? 'aria-current="page"' : ''}>${esc(x.label)}</a>`).join('')}</nav>`;
+}
+function titleBlock(s, p) {
+  const multi = s.pages.length > 1;
+  return `${multi ? `<p class="s-kicker">${esc(s.label)}</p>` : ''}<h1 class="s-title">${esc(multi ? p.label : s.label)}${multi ? '' : badge(s)}</h1><p class="s-sub">${esc(p.sub)}</p>`;
+}
+function phoneSite() {
+  const { s, p } = page();
+  const menu = state.menu ? phoneMenu() : '';
+  return `<div class="screen" id="screen">
+    <header class="s-header"><div class="s-bar"><a class="s-brand" data-go="home">${logo}Cubing Helper</a><button class="s-menu-btn" data-act="menu">Menu</button></div></header>
+    <main class="s-main">
+      ${titleBlock(s, p)}
+      ${sectionRow(s)}
+      ${p.switch ? '<div class="switch"><span class="on">Setups R U F D</span><span>Any face (L, B)</span></div>' : ''}
+      <div class="otp"><button data-act="otp" aria-expanded="${state.otp}"><span>On this page</span><span>${esc(p.toc[state.toc] || '')} ▾</span></button>
+        ${state.otp ? `<div class="otp-list">${p.toc.map((h, i) => `<a data-toc="${i}" ${i === state.toc ? 'aria-current="true"' : ''}>${esc(h)}</a>`).join('')}</div>` : ''}</div>
+      ${body(p)}
+    </main>${menu}</div>`;
+}
+function phoneMenu() {
+  let html = `<div class="m-panel"><div class="m-head"><span class="s-brand">${logo}Cubing Helper</span><button class="s-menu-btn" data-act="menu">Close</button></div><div class="m-list"><button class="m-row" data-go="home">Home</button>`;
+  let group = '';
+  for (const s of S) {
+    if (s.group !== group) { group = s.group; html += `<div class="m-group">${esc(group)}</div>`; }
+    const here = s.id === state.s;
+    if (s.pages.length === 1) {
+      html += `<button class="m-row" data-go="${s.id}/${s.pages[0].id}" ${here ? 'aria-current="true"' : ''}><span>${esc(s.label)}${badge(s)}</span></button>`;
+    } else {
+      const open = state.open === s.id;
+      html += `<button class="m-row" data-act="acc" data-s="${s.id}" aria-expanded="${open}" ${here ? 'aria-current="true"' : ''}><span>${esc(s.label)}${badge(s)}</span><span class="plus" aria-hidden="true">${open ? '−' : '+'}</span></button>`;
+      if (open) html += `<div class="m-sub">${s.pages.map((x) => `<a data-go="${s.id}/${x.id}" ${here && x.id === state.p ? 'aria-current="page"' : ''}>${esc(x.label)}</a>`).join('')}</div>`;
+    }
+  }
+  return html + '</div></div>';
+}
+function deskSite() {
+  const { s, p } = page();
+  let nav = '';
+  let group = '';
+  for (const x of S) {
+    if (group && x.group !== group) nav += '<span class="g-sep" aria-hidden="true"></span>';
+    group = x.group;
+    const here = x.id === state.s;
+    const multi = x.pages.length > 1;
+    nav += `<div class="g-item"><button class="g-link" ${multi ? `data-act="drop" data-s="${x.id}" aria-expanded="${state.drop === x.id}"` : `data-go="${x.id}/${x.pages[0].id}"`} aria-current="${here}">${esc(x.label)}${multi ? '<span class="chev">▾</span>' : ''}</button>`;
+    if (multi && state.drop === x.id) nav += `<div class="g-drop">${x.pages.map((pg) => `<a data-go="${x.id}/${pg.id}" ${here && pg.id === state.p ? 'aria-current="page"' : ''}>${esc(pg.label)}</a>`).join('')}</div>`;
+    nav += '</div>';
+  }
+  return `<div class="screen" id="screen">
+    <header class="s-header"><div class="s-bar"><a class="s-brand" data-go="home">${logo}Cubing Helper</a><nav class="g-nav" aria-label="Sections">${nav}</nav></div></header>
+    <main class="s-main"><div>
+      ${titleBlock(s, p)}
+      ${sectionRow(s)}
+      ${p.switch ? '<div class="switch"><span class="on">Setups R U F D</span><span>Any face (L, B)</span></div>' : ''}
+      ${body(p)}</div>
+      <nav class="toc" aria-label="On this page"><p>On this page</p>${p.toc.map((h, i) => `<a data-toc="${i}" ${i === state.toc ? 'aria-current="true"' : ''}>${esc(h)}</a>`).join('')}</nav>
+    </main></div>`;
+}
+
+function drawerSite() {
+  const { s, p } = page();
+  let list = '<a class="d-sec" data-go="home">Home</a>';
+  let group = '';
+  for (const x of S) {
+    if (x.group !== group) { group = x.group; list += `<div class="d-group">${esc(group)}</div>`; }
+    const here = x.id === state.s;
+    if (x.pages.length === 1) {
+      list += `<a class="d-sec" data-go="${x.id}/${x.pages[0].id}" ${here ? 'aria-current="page"' : ''}>${esc(x.label)}${badge(x)}</a>`;
+    } else {
+      list += `<span class="d-sec label">${esc(x.label)}${badge(x)}</span><div class="d-pages">${x.pages.map((pg) => `<a data-go="${x.id}/${pg.id}" ${here && pg.id === state.p ? 'aria-current="page"' : ''}>${esc(pg.label)}</a>`).join('')}</div>`;
+    }
+  }
+  const panel = state.menu ? `<div class="scrim" data-act="menu"></div><nav class="drawer" aria-label="All pages"><div class="m-head"><span class="s-brand">${logo}Cubing Helper</span><button class="s-menu-btn" data-act="menu">Close</button></div><div class="d-list">${list}</div></nav>` : '';
+  return `<div class="screen" id="screen">
+    <header class="s-header"><div class="s-bar"><button class="d-menu-btn" data-act="menu" aria-expanded="${state.menu}"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Menu</button><a class="s-brand" data-go="home">${logo}Cubing Helper</a><span class="d-where">› <b>${esc(s.label)}</b></span></div></header>
+    <main class="s-main"><div>
+      ${titleBlock(s, p)}
+      ${sectionRow(s)}
+      ${p.switch ? '<div class="switch"><span class="on">Setups R U F D</span><span>Any face (L, B)</span></div>' : ''}
+      ${body(p)}</div>
+      <nav class="toc" aria-label="On this page"><p>On this page</p>${p.toc.map((h, i) => `<a data-toc="${i}" ${i === state.toc ? 'aria-current="true"' : ''}>${esc(h)}</a>`).join('')}</nav>
+    </main>${panel}</div>`;
+}
+
+const stage = document.getElementById('stage');
+function render() {
+  document.getElementById('v-phone').setAttribute('aria-pressed', String(state.view === 'phone'));
+  document.getElementById('v-desk').setAttribute('aria-pressed', String(state.view === 'desk'));
+  document.getElementById('v-drawer').setAttribute('aria-pressed', String(state.view === 'drawer'));
+  if (state.view === 'phone') {
+    stage.innerHTML = `<div class="phone">${phoneSite()}</div>`;
+  } else {
+    stage.innerHTML = `<div class="desk-outer" id="desk-outer"><div class="desk" id="desk">${state.view === 'drawer' ? drawerSite() : deskSite()}</div></div>`;
+    fit();
+  }
+  document.getElementById('page-pick').value = `${state.s}/${state.p}`;
+}
+function fit() {
+  const outer = document.getElementById('desk-outer');
+  const desk = document.getElementById('desk');
+  if (!outer || !desk) return;
+  const k = Math.min(1, outer.clientWidth / 1280);
+  desk.style.transform = `scale(${k})`;
+  outer.style.height = `${780 * k}px`;
+}
+window.addEventListener('resize', fit);
+
+stage.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-go],[data-act],[data-toc]');
+  if (!t) { if (state.drop) { state.drop = null; render(); } return; }
+  if (t.dataset.go) {
+    const go = t.dataset.go === 'home' ? 'comm/cycles' : t.dataset.go;
+    const [s, p] = go.split('/');
+    Object.assign(state, { s, p, menu: false, drop: null, otp: false, toc: 0, open: s });
+  } else if (t.dataset.toc) {
+    state.toc = Number(t.dataset.toc); state.otp = false;
+    render();
+    const h = document.getElementById(`h${state.toc}`);
+    const scr = document.getElementById('screen');
+    if (h && scr) scr.scrollTop = h.offsetTop - (state.view === 'phone' ? 130 : 90);
+    return;
+  } else if (t.dataset.act === 'menu') {
+    state.menu = !state.menu; state.open = state.s;
+  } else if (t.dataset.act === 'acc') {
+    state.open = state.open === t.dataset.s ? null : t.dataset.s;
+  } else if (t.dataset.act === 'drop') {
+    state.drop = state.drop === t.dataset.s ? null : t.dataset.s;
+  } else if (t.dataset.act === 'otp') {
+    state.otp = !state.otp;
+  }
+  render();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && (state.menu || state.drop || state.otp)) { state.menu = false; state.drop = null; state.otp = false; render(); } });
+for (const [id, v] of [['v-phone', 'phone'], ['v-drawer', 'drawer'], ['v-desk', 'desk']]) {
+  document.getElementById(id).addEventListener('click', () => { state.view = v; state.menu = false; state.drop = null; try { localStorage.setItem('nav-mockup-view2', v); } catch {} render(); });
+}
+const pick = document.getElementById('page-pick');
+pick.innerHTML = S.map((s) => `<optgroup label="${esc(s.label)}">${s.pages.map((p) => `<option value="${s.id}/${p.id}">${esc(s.pages.length > 1 ? `${s.label} › ${p.label}` : s.label)}</option>`).join('')}</optgroup>`).join('');
+pick.addEventListener('change', () => { const [s, p] = pick.value.split('/'); Object.assign(state, { s, p, menu: false, drop: null, otp: false, toc: 0, open: s }); render(); });
+document.getElementById('tree-body').innerHTML = S.map((s) => `<tr><th>${esc(s.label)}</th><td>${s.pages.length > 1 ? s.pages.map((p) => esc(p.label)).join(' · ') : '(one page)'}</td><td>${[...new Set(s.pages.map((p) => esc(p.from)))].join('; ')}</td></tr>`).join('');
+render();
+</script>
