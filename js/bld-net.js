@@ -6,7 +6,8 @@ const NET_POS = { U: [1, 0], L: [0, 1], F: [1, 1], R: [2, 1], B: [3, 1], D: [1, 
 const CORNER_CELLS = [[0, 0], [2, 0], [2, 2], [0, 2]];
 const EDGE_CELLS = [[1, 0], [2, 1], [1, 2], [0, 1]];
 
-export function bldNet(kind, { buffers = [], marked = [] } = {}) {
+// `letters: false` leaves the letters off (for the letter-scheme drill).
+export function bldNet(kind, { buffers = [], marked = [], letters = true } = {}) {
   const cells = kind === 'edges' ? EDGE_CELLS : CORNER_CELLS;
   const S = 10;
   const parts = [];
@@ -24,7 +25,7 @@ export function bldNet(kind, { buffers = [], marked = [] } = {}) {
       const letter = String.fromCharCode(65 + f * 4 + i);
       const cls = buffers.includes(letter) ? ' net-buffer' : marked.includes(letter) ? ' net-marked' : '';
       parts.push(`<rect class="net-cell${cls}" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"/>`);
-      parts.push(`<text class="net-letter${cls}" x="${ox + (c + 0.5) * S}" y="${oy + (r + 0.5) * S}">${letter}</text>`);
+      if (letters) parts.push(`<text class="net-letter${cls}" x="${ox + (c + 0.5) * S}" y="${oy + (r + 0.5) * S}">${letter}</text>`);
     });
   });
   return `<svg class="bld-net" viewBox="-0.5 -0.5 121 91" role="img" aria-label="Speffz ${kind} letters on an unfolded cube">${parts.join('')}</svg>`;

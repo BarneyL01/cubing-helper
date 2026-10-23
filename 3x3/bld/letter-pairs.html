@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Letter pairs — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=3" />
+  <link rel="stylesheet" href="../../css/drills.css?v=1" />
+  <script type="module" src="../../js/site-chrome.js"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Letter pairs</h1>
+    <p class="subtitle">
+      One word for every pair of memo letters: picture the word instead of saying two letters. X is said
+      “sh”. Each word starts with the first letter and has the second letter after it.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own list, made for this site (2026-10-23): 552 pairs (24 letters × 23). Words were picked to be easy to
+        picture, and no two share a stem or mean nearly the same thing, so two pairs don't blur together. Where no
+        good single word fits, there is a two-word phrase. Swap any word for one that works better for you.
+        Checked by <code>log/2026-10-23-letter-pairs-check.mjs</code>.
+      </p>
+    </div>
+    <p>Practise them in <a href="../practice/blind-drills.html">Blind drills</a> → Memo, with “Show the letter-pair words” ticked.</p>
+    <div id="pairs"></div>
+  </main>
+
+  <script type="module">
+    import { letterPairs } from '../../data/letter-pairs.js?v=1';
+    const host = document.getElementById('pairs');
+    const L = 'ABCDEFGHIJKLMNOPQRSTUVWX';
+    for (const a of L) {
+      const h = document.createElement('h2');
+      h.className = 'section-heading';
+      h.id = `pairs-${a}`;
+      h.dataset.short = a;
+      h.textContent = a === 'X' ? 'X (sh) …' : `${a} …`;
+      const ul = document.createElement('ul');
+      ul.className = 'pair-grid';
+      for (const b of L) {
+        if (a === b) continue;
+        const li = document.createElement('li');
+        const k = document.createElement('b');
+        k.textContent = a + b;
+        li.append(k, letterPairs[a + b]);
+        ul.appendChild(li);
+      }
+      host.append(h, ul);
+    }
+  </script>
+</body>
+</html>

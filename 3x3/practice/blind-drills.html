@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blind drills — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=3" />
+  <link rel="stylesheet" href="../../css/drills.css?v=1" />
+  <script type="module" src="../../js/site-chrome.js"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Blind drills</h1>
+    <p class="subtitle">
+      Short drills for one skill at a time: the letter scheme, tracing, holding the memo, and small solves you can
+      check. Answers stay hidden until you tap.
+    </p>
+    <div class="source-note">
+      <p>
+        Letters are Speffz, memo as on the M2 / Old Pochmann page (edges from DF, corners from UBL). The drill
+        scrambles are made from the Corner cycles and Edge cycles tables: commutators, twists and flips combined until
+        exactly the chosen pieces are unsolved, then reversed. Every scramble is checked on the simulated cube; the
+        whole generator is checked by <code>log/2026-10-23-bld-drill-check.mjs</code> (1,900 scrambles, each solved by
+        the M2 / Old Pochmann moves). Nothing is scored or recorded. Settings and the current drill are kept in this
+        browser.
+      </p>
+    </div>
+
+    <div class="drill-modes" role="group" aria-label="Drill">
+      <button type="button" class="drill-mode" data-mode="letters">Letters</button>
+      <button type="button" class="drill-mode" data-mode="trace">Tracing</button>
+      <button type="button" class="drill-mode" data-mode="memo">Memo</button>
+      <button type="button" class="drill-mode" data-mode="solve">Small solves</button>
+    </div>
+
+    <!-- 1. Letter scheme -->
+    <section class="drill" id="drill-letters" hidden>
+      <h2 class="section-heading" id="letters">Letter scheme</h2>
+      <p class="drill-how">Say the letter of the marked sticker (or find the sticker for the letter), then tap to check.</p>
+      <form class="rec-settings" onsubmit="return false">
+        <fieldset>
+          <legend>Pieces</legend>
+          <label><input type="radio" name="l-kind" value="corners" checked /> Corners</label>
+          <label><input type="radio" name="l-kind" value="edges" /> Edges</label>
+          <label><input type="radio" name="l-kind" value="both" /> Both</label>
+        </fieldset>
+        <fieldset>
+          <legend>Direction</legend>
+          <label><input type="radio" name="l-dir" value="sticker" checked /> Sticker → letter</label>
+          <label><input type="radio" name="l-dir" value="letter" /> Letter → sticker</label>
+        </fieldset>
+      </form>
+      <div class="drill-stage">
+        <p class="drill-kind" id="l-kind-label"></p>
+        <p class="drill-big" id="l-letter"></p>
+        <div class="drill-net" id="l-net"></div>
+        <p class="drill-answer" id="l-answer" hidden></p>
+      </div>
+      <div class="rec-controls">
+        <button type="button" class="rec-btn rec-btn-primary" id="l-show">Show answer</button>
+        <button type="button" class="rec-btn" id="l-next">Next</button>
+      </div>
+    </section>
+
+    <!-- 2. Tracing and 5. Small solves share the scramble settings -->
+    <section class="drill" id="drill-scramble" hidden>
+      <h2 class="section-heading" id="scramble-drill"><span id="s-title">Tracing</span></h2>
+      <p class="drill-how" id="s-how"></p>
+      <form class="rec-settings" onsubmit="return false">
+        <fieldset>
+          <legend>Unsolved pieces</legend>
+          <label>Corners <select id="s-corners"></select></label>
+          <label>Edges <select id="s-edges"></select></label>
+        </fieldset>
+      </form>
+      <p class="drill-error" id="s-error" role="status"></p>
+      <div class="rec-controls">
+        <button type="button" class="rec-btn rec-btn-primary" id="s-new">New scramble</button>
+      </div>
+      <div class="drill-stage">
+        <p class="drill-label">Scramble <span class="bld-muted" id="s-length"></span></p>
+        <p class="scramble-text"><code id="s-scramble"></code></p>
+        <div class="drill-net" id="s-net"></div>
+      </div>
+      <div class="rec-controls">
+        <button type="button" class="rec-btn" id="s-show-memo">Show targets</button>
+        <button type="button" class="rec-btn" id="s-show-moves">Show moves</button>
+      </div>
+      <div id="s-memo" hidden>
+        <h3>Edges <span class="bld-muted" id="s-edge-count"></span></h3>
+        <p class="memo-letters" id="s-edge-letters"></p>
+        <h3>Corners <span class="bld-muted" id="s-corner-count"></span></h3>
+        <p class="memo-letters" id="s-corner-letters"></p>
+        <p class="bld-note" id="s-parity"></p>
+        <p class="bld-note">Underlined letter: start of a new cycle.</p>
+      </div>
+      <div id="s-moves" hidden>
+        <div class="table-wrap"><table class="bld-table" id="s-edge-moves"></table></div>
+        <div class="table-wrap"><table class="bld-table" id="s-corner-moves"></table></div>
+      </div>
+    </section>
+
+    <!-- 3. Memo -->
+    <section class="drill" id="drill-memo" hidden>
+      <h2 class="section-heading" id="memo">Holding the memo</h2>
+      <p class="drill-how">The letters show for a few seconds, then hide. Say them back (or write them down), then tap to check.</p>
+      <form class="rec-settings" onsubmit="return false">
+        <fieldset>
+          <legend>Letters</legend>
+          <label>How many <input type="number" id="m-count" min="2" max="24" step="2" value="8" inputmode="numeric" /></label>
+          <label>Shown for <input type="number" id="m-time" min="1" max="120" step="1" value="10" inputmode="numeric" /> seconds</label>
+          <label><input type="checkbox" id="m-words" /> Show the letter-pair words</label>
+        </fieldset>
+      </form>
+      <div class="rec-controls">
+        <button type="button" class="rec-btn rec-btn-primary" id="m-start">Start</button>
+        <button type="button" class="rec-btn" id="m-show" disabled>Show letters</button>
+      </div>
+      <div class="drill-stage">
+        <div class="rec-timer"><div class="rec-timer-bar" id="m-bar"></div></div>
+        <p class="drill-label" id="m-phase">Press Start.</p>
+        <div class="memo-words" id="m-letters"></div>
+      </div>
+      <p class="bld-note">The words are on the <a href="../bld/letter-pairs.html">Letter pairs</a> page.</p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { bldNet, colourNet } from '../../js/bld-net.js';
+    import { bldPlan } from '../../js/bld-memo.js';
+    import { drillScramble, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES } from '../../js/bld-drill.js';
+    import { letterPairs } from '../../data/letter-pairs.js?v=1';
+    import { bldEdges, bldCorners, BLD_PARITY } from '../../data/bld.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    const KEY = 'cubing-helper:blind-drills';
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
+    const COLOURS = { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' };
+    const PIECE = {
+      edges: Object.fromEntries(bldEdges.map((r) => [r.letter, r.piece])),
+      corners: Object.fromEntries(bldCorners.map((r) => [r.letter, r.piece])),
+    };
+    const radio = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
+    const setRadio = (name, v) => { const r = document.querySelector(`input[name="${name}"][value="${v}"]`); if (r) r.checked = true; };
+
+    // ---- mode switch
+    const SECTIONS = { letters: 'drill-letters', trace: 'drill-scramble', memo: 'drill-memo', solve: 'drill-scramble' };
+    function setMode(mode) {
+      saved.mode = mode;
+      save();
+      document.querySelectorAll('.drill-mode').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+      Object.values(SECTIONS).forEach((id) => ($(id).hidden = true));
+      $(SECTIONS[mode]).hidden = false;
+      if (mode === 'trace' || mode === 'solve') showScramble();
+    }
+    document.querySelectorAll('.drill-mode').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+    // ---- 1. letter scheme
+    function showLetter() {
+      const item = saved.letter;
+      const kindWord = item.kind === 'edges' ? 'Edge' : 'Corner';
+      $('l-kind-label').textContent = `${kindWord} sticker`;
+      $('l-answer').hidden = true;
+      $('l-show').disabled = false;
+      if (item.dir === 'sticker') {
+        $('l-letter').textContent = '';
+        $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: false });
+      } else {
+        $('l-letter').textContent = item.letter;
+        $('l-net').innerHTML = bldNet(item.kind, { letters: false });
+      }
+      $('l-answer').textContent = `${item.letter}: the ${item.kind === 'edges' ? 'edge' : 'corner'} ${PIECE[item.kind][item.letter]}, ${PIECE[item.kind][item.letter][0]} sticker`;
+    }
+    function nextLetter() {
+      const r = randomLetter(radio('l-kind'), Math.random, saved.letter?.letter);
+      saved.letter = { ...r, dir: radio('l-dir') };
+      save();
+      showLetter();
+    }
+    $('l-show').addEventListener('click', () => {
+      const item = saved.letter;
+      $('l-letter').textContent = item.letter;
+      $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter] });
+      $('l-answer').hidden = false;
+      $('l-show').disabled = true;
+    });
+    $('l-next').addEventListener('click', nextLetter);
+    document.querySelectorAll('input[name="l-kind"], input[name="l-dir"]').forEach((i) => i.addEventListener('change', () => {
+      saved.letterKind = radio('l-kind');
+      saved.letterDir = radio('l-dir');
+      nextLetter();
+    }));
+
+    // ---- 2. tracing and 5. small solves
+    const fill = (sel, max, value) => {
+      for (let n = 0; n <= max; n++) if (n !== 1) sel.appendChild(el('option', null, String(n)));
+      sel.value = String(value);
+    };
+    fill($('s-corners'), MAX_CORNERS, saved.corners ?? 3);
+    fill($('s-edges'), MAX_EDGES, saved.edges ?? 0);
+
+    function lettersInto(target, targets) {
+      target.replaceChildren();
+      if (!targets.length) { target.appendChild(el('span', 'memo-none', 'None.')); return; }
+      for (let i = 0; i < targets.length; i += 2) {
+        const pair = el('span', 'memo-pair');
+        for (const t of targets.slice(i, i + 2)) pair.appendChild(el('span', `memo-letter${t.cycleBreak ? ' cycle-break' : ''}`, t.letter));
+        target.appendChild(pair);
+      }
+    }
+    function movesTable(id, title, targets, parityRow) {
+      const table = $(id);
+      table.replaceChildren();
+      table.createCaption().textContent = title;
+      const head = table.createTHead().insertRow();
+      ['#', 'Letter', 'Piece', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      targets.forEach((t, i) => {
+        const tr = body.insertRow();
+        tr.appendChild(el('td', 'bld-muted', String(i + 1)));
+        const th = el('th', 'bld-letter', t.doLetter);
+        if (t.doLetter !== t.letter) th.appendChild(el('div', 'bld-note bld-swapped', `memo ${t.letter}, 2nd target`));
+        tr.appendChild(th);
+        tr.appendChild(el('td', 'bld-piece', t.piece));
+        const td = el('td');
+        if (t.special) td.append(el('code', null, t.special));
+        else {
+          if (t.setup) td.append(el('code', null, t.setup), ' ');
+          td.append(el('strong', null, t.core));
+          if (t.undo) td.append(' ', el('code', null, t.undo));
+        }
+        tr.appendChild(td);
+      });
+      if (parityRow) {
+        const tr = body.insertRow();
+        tr.append(el('td'), el('th', 'bld-letter', 'Parity'), el('td', 'bld-muted', 'odd edges'));
+        const td = el('td');
+        td.append(el('code', null, BLD_PARITY[0]));
+        tr.appendChild(td);
+      }
+    }
+
+    function showScramble() {
+      const solve = saved.mode === 'solve';
+      $('s-title').textContent = solve ? 'Small solves' : 'Tracing';
+      $('s-how').textContent = solve
+        ? 'Do the scramble on your cube (white on top, green in front), memo it, solve it blind, then check it is solved. The targets and moves are there to find a mistake.'
+        : 'Trace the targets from the picture (or your cube) without memorising: say each letter, the new cycles and any parity. Then tap to check.';
+      $('s-net').hidden = solve;
+      if (!saved.scramble) newScramble();
+      const plan = bldPlan(saved.scramble);
+      $('s-scramble').textContent = saved.scramble;
+      $('s-length').textContent = `(${saved.scramble.split(' ').length} moves)`;
+      $('s-net').innerHTML = colourNet(plan.state, COLOURS);
+      lettersInto($('s-edge-letters'), plan.edges);
+      lettersInto($('s-corner-letters'), plan.corners);
+      $('s-edge-count').textContent = `${plan.edges.length} targets`;
+      $('s-corner-count').textContent = `${plan.corners.length} targets`;
+      $('s-parity').textContent = plan.parity ? 'Odd number of edge targets: parity after the edges.' : 'Even number of edge targets: no parity.';
+      movesTable('s-edge-moves', 'Edges', plan.edges, plan.parity);
+      movesTable('s-corner-moves', 'Corners', plan.corners, false);
+      $('s-memo').hidden = !saved.showMemo;
+      $('s-moves').hidden = !saved.showMoves;
+      $('s-show-memo').textContent = saved.showMemo ? 'Hide targets' : 'Show targets';
+      $('s-show-moves').textContent = saved.showMoves ? 'Hide moves' : 'Show moves';
+    }
+    function newScramble() {
+      const corners = Number($('s-corners').value);
+      const edges = Number($('s-edges').value);
+      $('s-error').textContent = '';
+      if (!possible(corners, edges)) { $('s-error').textContent = 'Choose at least one piece.'; return; }
+      try {
+        saved.scramble = drillScramble({ corners, edges }).scramble;
+      } catch (e) { $('s-error').textContent = e.message; return; }
+      saved.corners = corners;
+      saved.edges = edges;
+      saved.showMemo = false;
+      saved.showMoves = false;
+      save();
+    }
+    $('s-new').addEventListener('click', () => { newScramble(); showScramble(); });
+    $('s-show-memo').addEventListener('click', () => { saved.showMemo = !saved.showMemo; save(); showScramble(); });
+    $('s-show-moves').addEventListener('click', () => { saved.showMoves = !saved.showMoves; save(); showScramble(); });
+
+    // ---- 3. memo
+    let memoTimer = null;
+    let memoEnd = 0;
+    let memoLength = 1;
+    let raf = null;
+    function drawLetters(letters) {
+      const box = $('m-letters');
+      box.replaceChildren();
+      const words = $('m-words').checked;
+      for (let i = 0; i < letters.length; i += 2) {
+        const pair = letters.slice(i, i + 2).join('');
+        const item = el('span', 'memo-word');
+        item.appendChild(el('span', 'memo-word-pair', pair));
+        if (words && pair.length === 2) item.appendChild(el('span', 'memo-word-text', letterPairs[pair]));
+        box.appendChild(item);
+      }
+    }
+    function memoTick() {
+      const left = Math.max(0, memoEnd - Date.now());
+      $('m-bar').style.width = `${(100 * left) / memoLength}%`;
+      if (left > 0) { $('m-phase').textContent = `Memorise: ${Math.ceil(left / 1000)} s`; raf = requestAnimationFrame(memoTick); }
+    }
+    $('m-start').addEventListener('click', () => {
+      clearTimeout(memoTimer);
+      cancelAnimationFrame(raf);
+      const n = Math.min(24, Math.max(2, Number($('m-count').value) || 8));
+      const secs = Math.min(120, Math.max(1, Number($('m-time').value) || 10));
+      saved.memo = { count: n, time: secs, words: $('m-words').checked };
+      save();
+      const letters = randomLetters(n);
+      drawLetters(letters);
+      memoLength = secs * 1000;
+      memoEnd = Date.now() + memoLength;
+      $('m-show').disabled = true;
+      memoTick();
+      memoTimer = setTimeout(() => {
+        $('m-letters').classList.add('memo-hidden');
+        $('m-phase').textContent = 'Say them back, then tap Show letters.';
+        $('m-show').disabled = false;
+      }, memoLength);
+      $('m-letters').classList.remove('memo-hidden');
+    });
+    $('m-show').addEventListener('click', () => {
+      $('m-letters').classList.remove('memo-hidden');
+      $('m-phase').textContent = 'Press Start for new letters.';
+      $('m-show').disabled = true;
+    });
+
+    // ---- restore
+    if (saved.memo) {
+      $('m-count').value = saved.memo.count;
+      $('m-time').value = saved.memo.time;
+      $('m-words').checked = !!saved.memo.words;
+    }
+    if (saved.letterKind) setRadio('l-kind', saved.letterKind);
+    if (saved.letterDir) setRadio('l-dir', saved.letterDir);
+    if (saved.letter) showLetter(); else nextLetter();
+    setMode(SECTIONS[saved.mode] ? saved.mode : 'letters');
+  </script>
+</body>
+</html>
