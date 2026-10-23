@@ -22,7 +22,22 @@ import { cornerOrientationCases } from './corner-orientation.js';
 // This is a simplified, 2-look-style CMLL: these 7 cases only orient the
 // corners. Full Roux CMLL (42 cases, orient+permute together) isn't
 // recorded here — add it later if it's actually needed.
-export const rouxCmllCases = cornerOrientationCases;
+// On the Roux pages H uses F Sassy×3 G as its main algorithm (owner's choice, 2026-10-23); the
+// 2x2 Ortega page keeps the shared data as it is. The other algorithm stays on the card as the alternative.
+// Both solve the same H (up/down) pattern of top corners (checked by simulation).
+export const rouxCmllCases = cornerOrientationCases.map((c) =>
+  c.id === 'h'
+    ? {
+        ...c,
+        alg: c.altAlg,
+        mnemonicChunks: c.altMnemonicChunks,
+        story: undefined,
+        altAlg: c.alg,
+        altMnemonicChunks: c.mnemonicChunks,
+        altNote: `The other algorithm: ${c.story}`,
+      }
+    : c,
+);
 
 export const lseFacts = [
   ['Moves', 'Only M and U (M2 and U2 included)'],
