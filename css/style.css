@@ -7,6 +7,7 @@
   --accent: #2f6fed;
   --accent-contrast: #ffffff;
   --code-bg: #eef0f6;
+  --accent-soft: #e8efff;
   --radius: 10px;
   --partial: #8a6408;
   --partial-contrast: #ffffff;
@@ -22,6 +23,7 @@
     --accent: #6c9bff;
     --accent-contrast: #0c1220;
     --code-bg: #262733;
+    --accent-soft: #1e2a45;
     --partial: #f0c14b;
     --partial-contrast: #1a1a1e;
   }
@@ -1339,7 +1341,7 @@ text.net-marked {
   border: 0;
 }
 
-/* Header: one line on phones, with a Menu button; the inline nav on wide screens. */
+/* Header: Menu button, brand, "› <current section>" — the same at every width. */
 .site-header {
   position: sticky;
   top: 0;
@@ -1351,10 +1353,8 @@ text.net-marked {
 .header-bar {
   display: flex;
   align-items: center;
-  gap: 0.25rem 1rem;
-  max-width: 960px;
+  gap: 0.75rem;
   height: 56px;
-  margin: 0 auto;
   padding: 0 1rem;
 }
 
@@ -1364,8 +1364,10 @@ text.net-marked {
   align-items: center;
   gap: 0.55rem;
   min-height: 44px;
+  flex: none;
   font-weight: 700;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .site-header .brand:hover,
@@ -1380,12 +1382,43 @@ text.net-marked {
   border-radius: 6px;
 }
 
+.header-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  min-height: 44px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.header-section-sep {
+  color: var(--text-muted);
+}
+
+.header-section-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-section:hover {
+  text-decoration: none;
+}
+
+.header-section:hover .header-section-name {
+  text-decoration: underline;
+}
+
 .menu-button {
-  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
   font: inherit;
   font-weight: 600;
   min-height: 44px;
-  padding: 0 1.1rem;
+  padding: 0 1rem;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--bg);
@@ -1393,12 +1426,25 @@ text.net-marked {
   cursor: pointer;
 }
 
+.menu-open-button {
+  padding-left: 0.75rem;
+}
+
 .menu-button:hover {
   border-color: var(--accent);
 }
 
-.site-nav {
-  display: none;
+.menu-bars {
+  display: grid;
+  gap: 3px;
+}
+
+.menu-bars i {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
 }
 
 .menu-badge {
@@ -1414,78 +1460,7 @@ text.net-marked {
   vertical-align: middle;
 }
 
-@media (min-width: 1280px) {
-  .header-bar {
-    max-width: none;
-    height: auto;
-    min-height: 56px;
-    flex-wrap: wrap;
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
-  }
-
-  .menu-open-button {
-    display: none;
-  }
-
-  .site-nav {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.1rem 0.6rem;
-    margin-left: auto;
-  }
-
-  .nav-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.1rem 0.55rem;
-    padding-left: 0.6rem;
-    border-left: 1px solid var(--border);
-  }
-
-  .nav-group-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-  }
-
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    min-height: 32px;
-    color: var(--text-muted);
-    font-size: 0.88rem;
-  }
-
-  .nav-sub {
-    font-size: 0.8rem;
-  }
-
-  .site-nav .menu-badge {
-    padding: 0 0.35rem;
-    font-size: 0.6rem;
-  }
-
-  .site-nav > .nav-link {
-    display: none; /* Home: the brand already links there */
-  }
-
-  .nav-link:hover,
-  .nav-link[aria-current="page"] {
-    color: var(--accent);
-  }
-
-  .nav-link[aria-current="page"] {
-    font-weight: 600;
-  }
-}
-
-/* Full-screen menu panel (phones) */
+/* The menu. Phones: a full-screen accordion. From 900px: a panel on the left over a scrim. */
 html.menu-open {
   overflow: hidden;
 }
@@ -1494,110 +1469,205 @@ html.menu-open {
   position: fixed;
   inset: 0;
   z-index: 40;
+}
+
+.menu-scrim {
+  display: none;
+}
+
+.menu-drawer {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  background: var(--bg);
+  background: var(--surface);
 }
 
 .menu-panel-bar {
-  position: sticky;
-  top: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   height: 56px;
   flex: none;
   padding: 0 1rem;
-  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
 .menu-list {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   width: 100%;
   max-width: 560px;
   margin: 0 auto;
-  padding: 0.5rem 1rem 3rem;
+  padding: 0.5rem 0.5rem 3rem;
 }
 
 .menu-group-label {
-  margin: 1.25rem 0 0.25rem;
-  padding-left: 0.75rem;
-  font-size: 0.75rem;
+  margin: 0;
+  padding: 0.9rem 0.65rem 0.25rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
-.menu-row {
+.menu-sec {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  width: 100%;
   min-height: 48px;
-  padding: 0 0.75rem;
+  padding: 0 0.65rem;
+  border: 0;
   border-radius: 8px;
+  background: transparent;
   color: var(--text);
+  font: inherit;
   font-size: 1.05rem;
+  font-weight: 650;
+  text-align: left;
 }
 
-.menu-row:hover {
-  background: var(--surface);
+a.menu-sec:hover,
+.menu-sec-toggle:hover {
+  background: var(--code-bg);
   text-decoration: none;
 }
 
-.menu-row[aria-current="page"] {
-  background: var(--surface);
+a.menu-sec[aria-current="page"],
+.menu-section.is-current > .menu-sec {
   color: var(--accent);
-  font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--accent);
 }
 
-.menu-sub {
-  margin: 0 0 0.25rem 1.1rem;
-  padding-left: 0.5rem;
+.menu-sec-label {
+  display: none;
+}
+
+.menu-sec-toggle {
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.menu-plus {
+  width: 24px;
+  font-size: 1.25rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.menu-pages {
+  display: none;
+  margin: 0 0 0.4rem 0.9rem;
+  padding-left: 0.6rem;
   border-left: 2px solid var(--border);
 }
 
-.menu-sub .menu-row {
-  font-size: 1rem;
-  color: var(--text-muted);
+.menu-section.is-open > .menu-pages {
+  display: grid;
 }
 
-.menu-sub .menu-row[aria-current="page"] {
-  color: var(--accent);
-}
-
-/* Breadcrumbs */
-.breadcrumbs {
-  margin: -1.25rem 0 0.25rem;
-}
-
-.breadcrumbs ol {
+.menu-page {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.breadcrumbs li + li::before {
-  content: '›';
-  margin: 0 0.45rem;
-}
-
-.breadcrumbs a {
-  display: inline-flex;
   align-items: center;
   min-height: 44px;
+  padding: 0 0.65rem;
+  border-radius: 6px;
+  color: var(--text);
 }
 
-.breadcrumbs [aria-current="page"] {
-  color: var(--text);
+.menu-page:hover {
+  background: var(--code-bg);
+  text-decoration: none;
+}
+
+.menu-page[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent);
   font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .menu-scrim {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 12, 20, 0.35);
+  }
+
+  .menu-drawer {
+    inset: 0 auto 0 0;
+    width: 340px;
+    max-width: 100%;
+    border-right: 1px solid var(--border);
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.18);
+  }
+
+  .menu-list {
+    max-width: none;
+    padding: 0.25rem 1rem 2rem;
+  }
+
+  .menu-group-label {
+    margin-top: 0.6rem;
+    padding: 0.9rem 0 0.35rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .menu-list > .menu-group-label:first-of-type {
+    margin-top: 0.25rem;
+  }
+
+  .menu-sec {
+    min-height: 40px;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  a.menu-sec[aria-current="page"] {
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .menu-sec-toggle {
+    display: none;
+  }
+
+  .menu-sec-label {
+    display: flex;
+    min-height: 32px;
+  }
+
+  .menu-section.is-current > .menu-sec {
+    color: var(--text);
+  }
+
+  .menu-pages,
+  .menu-section.is-open > .menu-pages {
+    display: grid;
+    margin: 0 0 0.4rem 0.65rem;
+  }
+
+  .menu-page {
+    min-height: 36px;
+    font-size: 0.93rem;
+  }
+}
+
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .menu-drawer {
+    animation: menu-slide 0.16s ease-out;
+  }
+
+  @keyframes menu-slide {
+    from {
+      transform: translateX(-24px);
+      opacity: 0.6;
+    }
+  }
 }
 
 /* "About this page": source and attribution notes, collapsed at the bottom */

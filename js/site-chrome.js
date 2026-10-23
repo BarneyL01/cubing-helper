@@ -1,24 +1,36 @@
-// The parts every page shares: the header, the grouped menu (a full-screen
-// panel on phones, an inline nav on wide screens), breadcrumbs on sub-pages,
-// and the collapsed "About this page" that source notes are moved into.
+// The parts every page shares, all built from MENU below:
+// - the header: a Menu button, the brand (home) and "› <current section>";
+// - the menu: a panel on the left over a scrim on wide screens, a full-screen
+//   accordion on phones (see MENU_WIDE);
+// - the section row (the pages of the current section, under the title) and a
+//   small kicker with the section name above the h1;
+// - "On this page", built from the page's h2.section-heading[id] headings (and
+//   the steps of a steps page): a sticky control on phones, a list in the right
+//   column on wide screens;
+// - the collapsed "About this page" that source notes are moved into.
 //
 // Pages carry only `<header class="site-header" id="site-header">` with a plain
 // link to the home page inside (the no-JavaScript fallback); this module builds
-// the rest. Add a page to the menu by adding it to MENU below.
+// the rest. Add a page by adding it to MENU.
 const ROOT = new URL('../', import.meta.url);
 const url = (path) => new URL(path, ROOT);
 
-// Paths are relative to the site root. `badge` shows next to the name.
+// Width from which the menu is a panel on the left and "On this page" is a
+// right-hand column. Keep in step with the @media (min-width: 900px) rules in
+// css/style.css.
+const MENU_WIDE = '(min-width: 900px)';
+
+// Four groups of sections. A section is one page ({ label, path }) or several
+// ({ label, pages: [{ label, path }] }, at most 6). Paths are relative to the
+// site root. `badge` shows next to the section's name.
 const MENU = [
-  { label: 'Home', path: 'index.html' },
   {
-    group: '3x3',
-    id: 'puzzle-3x3',
-    items: [
+    group: 'Methods',
+    sections: [
       {
         label: 'CFOP',
-        path: '3x3/cfop/index.html',
-        children: [
+        pages: [
+          { label: 'Overview', path: '3x3/cfop/index.html' },
           { label: '2-look OLL', path: '3x3/cfop/oll.html' },
           { label: '2-look PLL', path: '3x3/cfop/pll.html' },
           { label: 'F2L map', path: '3x3/cfop/f2l.html' },
@@ -26,36 +38,62 @@ const MENU = [
       },
       {
         label: 'Roux',
-        path: '3x3/roux/index.html',
         badge: 'Partial',
-        children: [{ label: 'LSE map', path: '3x3/roux/lse-map.html' }],
+        pages: [
+          { label: 'Reference', path: '3x3/roux/index.html' },
+          { label: 'LSE map', path: '3x3/roux/lse-map.html' },
+        ],
       },
       { label: "Beginner's", path: '3x3/beginners/index.html' },
       { label: '8355', path: '3x3/8355/index.html' },
       { label: 'Heise', path: '3x3/heise/index.html', badge: 'Partial' },
       { label: 'Marshall', path: '3x3/marshall/index.html', badge: 'Partial' },
-      { label: 'Recognition practice', path: '3x3/practice/recognition.html' },
+    ],
+  },
+  {
+    group: 'Blindfolded',
+    sections: [
       {
-        label: 'Blindfolded',
-        path: '3x3/bld/index.html',
-        children: [
-          { label: 'Practice', path: '3x3/bld/practice.html' },
-          { label: 'Commutators', path: '3x3/bld/commutators.html' },
+        label: 'Blind',
+        pages: [
+          { label: 'Overview', path: '3x3/bld/index.html' },
+          { label: 'M2 edges', path: '3x3/bld/m2.html' },
+          { label: 'Old Pochmann', path: '3x3/bld/old-pochmann.html' },
+          { label: 'Letter pairs', path: '3x3/bld/letter-pairs.html' },
+        ],
+      },
+      {
+        label: 'Commutators',
+        pages: [
+          { label: 'Basics', path: '3x3/bld/commutators.html' },
           { label: 'Corner cycles', path: '3x3/bld/corner-cycles.html' },
           { label: 'Corner table', path: '3x3/bld/corner-table.html' },
           { label: 'After 8355', path: '3x3/bld/corner-8355.html' },
-          { label: 'After 8355 (L/B)', path: '3x3/bld/corner-8355-lb.html' },
           { label: 'Twists & parity', path: '3x3/bld/corner-twists.html' },
           { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],
       },
     ],
   },
-  { group: '2x2', id: 'puzzle-2x2', items: [{ label: 'Ortega', path: '2x2/index.html' }] },
   {
-    group: 'Megaminx',
-    id: 'puzzle-megaminx',
-    items: [{ label: 'Last layer', path: 'megaminx/index.html', badge: 'Partial' }],
+    group: 'Practice',
+    sections: [
+      {
+        label: 'Practice',
+        pages: [
+          { label: 'Recognition', path: '3x3/practice/recognition.html' },
+          { label: 'Blind drills', path: '3x3/practice/blind-drills.html' },
+          { label: 'Blind memo', path: '3x3/bld/practice.html' },
+        ],
+      },
+    ],
+  },
+  {
+    group: 'Other puzzles',
+    sections: [
+      { label: '2x2', path: '2x2/index.html' },
+      { label: 'Megaminx', path: 'megaminx/index.html', badge: 'Partial' },
+    ],
   },
 ];
 
@@ -73,61 +111,39 @@ const normal = (p) => p.replace(/index\.html$/, '').replace(/\/$/, '');
 const here = normal(location.pathname);
 const isHere = (path) => normal(url(path).pathname) === here;
 
-// Every page in the menu, with the trail of ancestors that leads to it.
-function pages() {
-  const out = [];
-  for (const entry of MENU) {
-    if (!entry.group) {
-      out.push({ ...entry, trail: [] });
-      continue;
-    }
-    const groupCrumb = { label: entry.group, path: `index.html#${entry.id}` };
-    for (const item of entry.items) {
-      out.push({ ...item, trail: [groupCrumb] });
-      for (const child of item.children || []) out.push({ ...child, trail: [groupCrumb, item] });
-    }
-  }
-  return out;
-}
+const pagesOf = (section) => section.pages || [{ label: section.label, path: section.path }];
+const currentSection = MENU.flatMap((g) => g.sections).find((s) => pagesOf(s).some((p) => isHere(p.path)));
+const currentPage = currentSection && pagesOf(currentSection).find((p) => isHere(p.path));
 
 function badge(text) {
   return el('span', 'menu-badge', text);
 }
 
-function link(item, cls) {
-  const a = el('a', cls, item.label);
-  a.href = url(item.path).href;
-  if (isHere(item.path)) a.setAttribute('aria-current', 'page');
-  if (item.badge) a.append(' ', badge(item.badge));
+function link(label, path, cls, badgeText) {
+  const a = el('a', cls, label);
+  a.href = url(path).href;
+  if (isHere(path)) a.setAttribute('aria-current', 'page');
+  if (badgeText) a.append(' ', badge(badgeText));
   return a;
 }
 
-function buildNav() {
-  const nav = el('nav', 'site-nav');
-  nav.setAttribute('aria-label', 'Main');
-  for (const entry of MENU) {
-    if (!entry.group) {
-      nav.appendChild(link(entry, 'nav-link'));
-      continue;
-    }
-    const group = el('div', 'nav-group');
-    group.appendChild(el('span', 'nav-group-label', entry.group));
-    for (const item of entry.items) {
-      group.appendChild(link(item, 'nav-link'));
-      for (const child of item.children || []) group.appendChild(link(child, 'nav-link nav-sub'));
-    }
-    nav.appendChild(group);
-  }
-  return nav;
-}
+const visible = (n) => n.getClientRects().length > 0;
 
+// The menu: every group and section. Wide screens show every section's pages
+// (a bold label with its pages indented); phones show an accordion where a
+// section with several pages opens with +/− and the current one starts open.
 function buildPanel(onClose) {
   const panel = el('div', 'menu-panel');
   panel.id = 'site-menu';
-  panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-modal', 'true');
-  panel.setAttribute('aria-label', 'Site menu');
   panel.hidden = true;
+
+  const scrim = el('div', 'menu-scrim');
+  scrim.addEventListener('click', onClose);
+
+  const drawer = el('div', 'menu-drawer');
+  drawer.setAttribute('role', 'dialog');
+  drawer.setAttribute('aria-modal', 'true');
+  drawer.setAttribute('aria-label', 'Site menu');
 
   const bar = el('div', 'menu-panel-bar');
   const brand = el('a', 'brand');
@@ -138,23 +154,50 @@ function buildPanel(onClose) {
   close.addEventListener('click', onClose);
   bar.append(brand, close);
 
-  const list = el('div', 'menu-list');
-  for (const entry of MENU) {
-    if (!entry.group) {
-      list.appendChild(link(entry, 'menu-row'));
-      continue;
-    }
-    list.appendChild(el('p', 'menu-group-label', entry.group));
-    for (const item of entry.items) {
-      list.appendChild(link(item, 'menu-row'));
-      if (item.children) {
-        const sub = el('div', 'menu-sub');
-        for (const child of item.children) sub.appendChild(link(child, 'menu-row'));
-        list.appendChild(sub);
+  const nav = el('nav', 'menu-list');
+  nav.setAttribute('aria-label', 'All pages');
+  nav.appendChild(link('Home', 'index.html', 'menu-sec'));
+  let n = 0;
+  for (const group of MENU) {
+    nav.appendChild(el('p', 'menu-group-label', group.group));
+    for (const section of group.sections) {
+      if (!section.pages) {
+        nav.appendChild(link(section.label, section.path, 'menu-sec', section.badge));
+        continue;
       }
+      const isCurrent = section === currentSection;
+      const box = el('div', `menu-section${isCurrent ? ' is-open is-current' : ''}`);
+      const pagesId = `menu-pages-${++n}`;
+
+      const label = el('span', 'menu-sec menu-sec-label', section.label);
+      if (section.badge) label.append(' ', badge(section.badge));
+
+      const toggle = el('button', 'menu-sec menu-sec-toggle');
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', String(isCurrent));
+      toggle.setAttribute('aria-controls', pagesId);
+      const name = el('span', null, section.label);
+      if (section.badge) name.append(' ', badge(section.badge));
+      const plus = el('span', 'menu-plus', isCurrent ? '−' : '+');
+      plus.setAttribute('aria-hidden', 'true');
+      toggle.append(name, plus);
+      toggle.addEventListener('click', () => {
+        const open = !box.classList.contains('is-open');
+        box.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        plus.textContent = open ? '−' : '+';
+      });
+
+      const list = el('div', 'menu-pages');
+      list.id = pagesId;
+      for (const page of section.pages) list.appendChild(link(page.label, page.path, 'menu-page'));
+      box.append(label, toggle, list);
+      nav.appendChild(box);
     }
   }
-  panel.append(bar, list);
+
+  drawer.append(bar, nav);
+  panel.append(scrim, drawer);
   return panel;
 }
 
@@ -164,14 +207,21 @@ function mountHeader() {
   header.textContent = '';
 
   const bar = el('div', 'header-bar');
+  const button = el('button', 'menu-button menu-open-button');
+  button.type = 'button';
+  button.innerHTML = '<span class="menu-bars" aria-hidden="true"><i></i><i></i><i></i></span>Menu';
+  button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', 'site-menu');
   const brand = el('a', 'brand');
   brand.href = url('index.html').href;
   brand.innerHTML = `${LOGO}<span>Cubing Helper</span>`;
-  const button = el('button', 'menu-button menu-open-button', 'Menu');
-  button.type = 'button';
-  button.setAttribute('aria-expanded', 'false');
-  button.setAttribute('aria-controls', 'site-menu');
-  bar.append(brand, buildNav(), button);
+  bar.append(button, brand);
+  if (currentSection) {
+    const where = el('a', 'header-section');
+    where.href = url(pagesOf(currentSection)[0].path).href;
+    where.append(el('span', 'header-section-sep', '›'), el('span', 'header-section-name', currentSection.label));
+    bar.appendChild(where);
+  }
   header.appendChild(bar);
 
   const panel = buildPanel(() => setOpen(false));
@@ -181,8 +231,13 @@ function mountHeader() {
     panel.hidden = !open;
     button.setAttribute('aria-expanded', String(open));
     document.documentElement.classList.toggle('menu-open', open);
-    if (open) panel.querySelector('.menu-close').focus();
-    else button.focus({ preventScroll: true });
+    if (open) {
+      // Show the current page's row without scrolling the page itself.
+      const list = panel.querySelector('.menu-list');
+      const mark = [...panel.querySelectorAll('[aria-current="page"]')].find(visible);
+      if (mark) list.scrollTop = Math.max(0, mark.offsetTop - list.clientHeight / 2);
+      panel.querySelector('.menu-close').focus();
+    } else button.focus({ preventScroll: true });
   }
   button.addEventListener('click', () => setOpen(true));
 
@@ -192,8 +247,8 @@ function mountHeader() {
       return;
     }
     if (e.key !== 'Tab') return;
-    // Keep Tab inside the open panel.
-    const focusable = [...panel.querySelectorAll('a, button')];
+    // Keep Tab inside the open menu (only what this width shows).
+    const focusable = [...panel.querySelectorAll('a, button')].filter(visible);
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (e.shiftKey && document.activeElement === first) {
@@ -204,33 +259,6 @@ function mountHeader() {
       first.focus();
     }
   });
-
-  // The panel is for phones; if the window grows wide while it is open, close it.
-  matchMedia('(min-width: 1280px)').addEventListener('change', (e) => {
-    if (e.matches && !panel.hidden) setOpen(false);
-  });
-}
-
-function mountBreadcrumbs() {
-  const main = document.querySelector('main');
-  const page = pages().find((p) => isHere(p.path));
-  if (!main || !page || page.path === 'index.html') return;
-
-  const nav = el('nav', 'breadcrumbs');
-  nav.setAttribute('aria-label', 'Breadcrumb');
-  const list = el('ol');
-  for (const crumb of page.trail) {
-    const li = el('li');
-    const a = el('a', null, crumb.label);
-    a.href = url(crumb.path).href;
-    li.appendChild(a);
-    list.appendChild(li);
-  }
-  const current = el('li', null, page.label);
-  current.setAttribute('aria-current', 'page');
-  list.appendChild(current);
-  nav.appendChild(list);
-  main.prepend(nav);
 }
 
 // Source and attribution notes are for reading once, not mid-solve: gather
@@ -262,17 +290,6 @@ function trackHeaderHeight() {
   addEventListener('resize', set);
 }
 
-// The tab bar of a section (five Blindfolded tabs) scrolls sideways on a phone;
-// bring the current tab into view without scrolling the page.
-function showActiveTab() {
-  const tabs = document.querySelector('nav.tabs');
-  const active = tabs?.querySelector('.active');
-  if (!tabs || !active || tabs.scrollWidth <= tabs.clientWidth) return;
-  tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
-}
-
 mountHeader();
 trackHeaderHeight();
-mountBreadcrumbs();
 mountAbout();
-showActiveTab();
