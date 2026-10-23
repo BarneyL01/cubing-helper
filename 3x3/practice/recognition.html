@@ -192,7 +192,9 @@
       $('show').disabled = true;
       form.hidden = false;
       $('phase').dataset.mode = '';
-      $('phase').textContent = 'Stopped. Press Start to go again.';
+      // keep the last case on screen and show its solution
+      if (last) $('solution').hidden = false;
+      $('phase').textContent = last ? 'Stopped. The solution for this case is below.' : 'Stopped. Press Start to go again.';
       $('timer-bar').style.width = '0%';
     }
     $('start').addEventListener('click', async () => {
