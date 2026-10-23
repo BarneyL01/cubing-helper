@@ -9,7 +9,8 @@ const EDGE_CELLS = [[1, 0], [2, 1], [1, 2], [0, 1]];
 // `letters`: true (all), false (none) or a list of the letters to show.
 // `colours` (face -> CSS colour) draws a coloured cube, with marked stickers outlined
 // instead of filled (the letter-scheme drill).
-export function bldNet(kind, { buffers = [], marked = [], letters = true, colours = null } = {}) {
+// `faces: false` leaves the face names (U, L, F, …) off the centres.
+export function bldNet(kind, { buffers = [], marked = [], letters = true, colours = null, faces = true } = {}) {
   const showLetter = (l) => (Array.isArray(letters) ? letters.includes(l) : letters);
   const cells = kind === 'edges' ? EDGE_CELLS : CORNER_CELLS;
   const S = 10;
@@ -24,7 +25,7 @@ export function bldNet(kind, { buffers = [], marked = [], letters = true, colour
         parts.push(`<rect class="net-cell${colours ? ' net-coloured' : ''}" x="${ox + c * S + 0.4}" y="${oy + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1"${fill}/>`);
       }
     }
-    parts.push(`<text class="net-face${colours ? ' net-letter-on-colour' : ''}" x="${ox + 1.5 * S}" y="${oy + 1.5 * S}">${face}</text>`);
+    if (faces) parts.push(`<text class="net-face${colours ? ' net-letter-on-colour' : ''}" x="${ox + 1.5 * S}" y="${oy + 1.5 * S}">${face}</text>`);
     cells.forEach(([c, r], i) => {
       const letter = String.fromCharCode(65 + f * 4 + i);
       const cls = buffers.includes(letter) ? ' net-buffer' : marked.includes(letter) ? ' net-marked' : '';

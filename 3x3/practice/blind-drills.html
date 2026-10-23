@@ -54,6 +54,10 @@
           <label><input type="radio" name="l-dir" value="sticker" checked /> Sticker → letter</label>
           <label><input type="radio" name="l-dir" value="letter" /> Letter → sticker</label>
         </fieldset>
+        <fieldset>
+          <legend>Picture</legend>
+          <label><input type="checkbox" id="l-faces" /> Face names on the centres (U, F, R…)</label>
+        </fieldset>
       </form>
       <div class="drill-stage">
         <p class="drill-kind" id="l-kind-label"></p>
@@ -131,7 +135,7 @@
   </main>
 
   <script type="module">
-    import { bldNet, colourNet } from '../../js/bld-net.js?v=3';
+    import { bldNet, colourNet } from '../../js/bld-net.js?v=4';
     import { bldPlan } from '../../js/bld-memo.js';
     import { drillScramble, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES } from '../../js/bld-drill.js';
     import { letterPairs } from '../../data/letter-pairs.js?v=1';
@@ -177,10 +181,10 @@
       $('l-show').disabled = false;
       if (item.dir === 'sticker') {
         $('l-letter').textContent = '';
-        $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: false, colours: COLOURS });
+        $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: false, colours: COLOURS, faces: $('l-faces').checked });
       } else {
         $('l-letter').textContent = item.letter;
-        $('l-net').innerHTML = bldNet(item.kind, { letters: false, colours: COLOURS });
+        $('l-net').innerHTML = bldNet(item.kind, { letters: false, colours: COLOURS, faces: $('l-faces').checked });
       }
       $('l-answer').textContent = `${item.letter}: the ${item.kind === 'edges' ? 'edge' : 'corner'} ${PIECE[item.kind][item.letter]}, ${PIECE[item.kind][item.letter][0]} sticker`;
     }
@@ -193,7 +197,7 @@
     $('l-show').addEventListener('click', () => {
       const item = saved.letter;
       $('l-letter').textContent = item.letter;
-      $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: [item.letter], colours: COLOURS });
+      $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: [item.letter], colours: COLOURS, faces: $('l-faces').checked });
       $('l-answer').hidden = false;
       $('l-show').disabled = true;
     });
@@ -351,6 +355,15 @@
     }
     if (saved.letterKind) setRadio('l-kind', saved.letterKind);
     if (saved.letterDir) setRadio('l-dir', saved.letterDir);
+    $('l-faces').checked = !!saved.faceLabels; // off unless turned on
+    $('l-faces').addEventListener('change', () => {
+      saved.faceLabels = $('l-faces').checked;
+      save();
+      // redraw the same sticker, keeping the answer shown if it was
+      const shown = !$('l-answer').hidden;
+      showLetter();
+      if (shown) $('l-show').click();
+    });
     if (saved.letter) showLetter(); else nextLetter();
     setMode(SECTIONS[saved.mode] ? saved.mode : 'letters');
   </script>
