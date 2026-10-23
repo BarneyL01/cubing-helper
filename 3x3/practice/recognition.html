@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recognition practice — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script type="module" src="../../js/site-chrome.js"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Recognition practice</h1>
+    <p class="subtitle">
+      A 3D cube shows a last-layer case. Recognise it and do its algorithm on your own cube before the time runs
+      out; then (if you like) the solution shows for a few seconds and the next case comes up.
+    </p>
+    <div class="source-note">
+      <p>
+        The cases and algorithms are the ones on the 2-look OLL, 2-look PLL and Roux CMLL pages (your notes). Each
+        case is shown with a random turn of the top layer, as you would meet it in a solve; the solution starts
+        with the top-layer turn to make first. Nothing is recorded: there is no way to check your cube, so this is
+        for recognising cases and getting the moves into your hands. Settings are kept in this browser.
+      </p>
+    </div>
+
+    <form class="rec-settings" id="settings" onsubmit="return false">
+      <fieldset>
+        <legend>Cases</legend>
+        <label><input type="checkbox" name="set" value="oll" checked /> 2-look OLL (8)</label>
+        <label><input type="checkbox" name="set" value="pll" checked /> 2-look PLL (6)</label>
+        <label><input type="checkbox" name="set" value="cmll" /> Roux CMLL corners (7)</label>
+      </fieldset>
+      <fieldset>
+        <legend>Timing</legend>
+        <label>Time per case <input type="number" id="case-time" min="2" max="600" step="1" value="30" inputmode="numeric" /> seconds</label>
+        <label><input type="checkbox" id="show-solution" checked /> Then show the solution for</label>
+        <label class="indent"><input type="number" id="solution-time" min="1" max="60" step="1" value="3" inputmode="numeric" /> seconds</label>
+        <label><input type="checkbox" id="random-turn" checked /> Random top-layer turn</label>
+      </fieldset>
+    </form>
+
+    <div class="rec-controls">
+      <button type="button" class="applet-button" id="start">Start</button>
+      <button type="button" class="applet-button" id="next" disabled>Next case now</button>
+      <span id="status" role="status"></span>
+    </div>
+    <div class="view-toggle" id="view-toggle"></div>
+
+    <section class="rec-stage" aria-live="polite">
+      <div class="rec-timer"><div class="rec-timer-bar" id="timer-bar"></div></div>
+      <p class="rec-phase" id="phase">Press Start.</p>
+      <div id="cube-slot" class="rec-cube"></div>
+      <div id="solution" class="rec-solution" hidden>
+        <h2 id="sol-name"></h2>
+        <p class="case-alg"><code id="sol-alg"></code></p>
+        <p class="case-mnemonic-line" id="sol-mnemonic"></p>
+        <p class="case-libby" id="sol-libby"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { ollCases } from '../../data/oll.js';
+    import { pllCornerCases, pllEdgeCases } from '../../data/pll.js';
+    import { cornerOrientationCases } from '../../data/corner-orientation.js';
+    import { invertAlg } from '../../js/algs.js';
+    import { startHold } from '../../js/cube-sim.js';
+    import { caseDiagram } from '../../js/cube-diagram.js';
+    import { libbyNotation } from '../../js/libby.js';
+    import { mountViewToggle } from '../../js/view-toggle.js';
+
+    const $ = (id) => document.getElementById(id);
+    const KEY = 'cubing-helper:recognition';
+    const SETS = {
+      oll: { label: '2-look OLL', cases: ollCases, libby: true, stickering: 'oll' },
+      pll: { label: '2-look PLL', cases: [...pllCornerCases, ...pllEdgeCases], libby: true, stickering: 'full' },
+      cmll: { label: 'Roux CMLL', cases: cornerOrientationCases, libby: false, stickering: 'cmll' },
+    };
+    const TURNS = ['', 'U', 'U2', "U'"];
+    const UNDO = { U: "U'", U2: 'U2', "U'": 'U' };
+
+    // ---- settings (kept in localStorage)
+    const form = $('settings');
+    const setBoxes = [...form.querySelectorAll('input[name="set"]')];
+    function load() {
+      let s = {};
+      try { s = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
+      if (Array.isArray(s.sets)) setBoxes.forEach((b) => (b.checked = s.sets.includes(b.value)));
+      if (s.caseTime) $('case-time').value = s.caseTime;
+      if (s.solutionTime) $('solution-time').value = s.solutionTime;
+      if (typeof s.showSolution === 'boolean') $('show-solution').checked = s.showSolution;
+      if (typeof s.randomTurn === 'boolean') $('random-turn').checked = s.randomTurn;
+    }
+    function settings() {
+      const num = (id, lo, hi, d) => Math.min(hi, Math.max(lo, Number($(id).value) || d));
+      return {
+        sets: setBoxes.filter((b) => b.checked).map((b) => b.value),
+        caseTime: num('case-time', 2, 600, 30),
+        solutionTime: num('solution-time', 1, 60, 3),
+        showSolution: $('show-solution').checked,
+        randomTurn: $('random-turn').checked,
+      };
+    }
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify(settings())); } catch {}
+    }
+    load();
+    form.addEventListener('change', save);
+
+    // ---- the cube: a 3D player (loaded with the page) with a picture as fallback
+    const slot = $('cube-slot');
+    let player = null;
+    const TWISTY = '../../js/vendor/cubing/twisty.js';
+    $('status').textContent = 'Loading 3D…';
+    const ready = import(TWISTY)
+      .then(() => {
+        player = document.createElement('twisty-player');
+        player.setAttribute('puzzle', '3x3x3');
+        player.setAttribute('background', 'none');
+        // 'none' stops cubing.js drawing the cube here, so keep its small control bar (it also has full screen)
+        player.setAttribute('control-panel', 'bottom-row');
+        player.setAttribute('experimental-setup-alg', 'z2');
+        player.className = 'rec-player';
+        slot.replaceChildren(player);
+        $('status').textContent = '';
+      })
+      .catch(() => { $('status').textContent = "3D couldn't load: showing pictures instead."; });
+
+    // ---- picking cases: shuffle all chosen cases, go through them, reshuffle (never the same twice in a row)
+    let bag = [];
+    let last = null;
+    function pool() {
+      return settings().sets.flatMap((k) => SETS[k].cases.map((c) => ({ set: k, c })));
+    }
+    function nextCase() {
+      if (!bag.length) {
+        bag = pool().sort(() => Math.random() - 0.5);
+        if (bag.length > 1 && last && bag.at(-1).c === last.c) bag.unshift(bag.pop());
+      }
+      last = bag.pop();
+      return last;
+    }
+
+    function show(item, turn) {
+      const alg = item.c.alg || item.c.altAlg;
+      const hold = item.c.hold ?? startHold(alg);
+      // the case: solved cube, inverse of the algorithm, then a turn of the top layer
+      const setup = [hold, invertAlg(alg), turn].filter(Boolean).join(' ');
+      if (player) {
+        player.setAttribute('experimental-setup-alg', `z2 ${setup}`);
+        player.setAttribute('alg', '');
+      } else {
+        slot.replaceChildren(caseDiagram([turn ? UNDO[turn] : '', alg].filter(Boolean).join(' '), { stickering: SETS[item.set].stickering, views: ['U'], hold }));
+      }
+    }
+    function fillSolution(item, turn) {
+      const alg = item.c.alg || item.c.altAlg;
+      $('sol-name').textContent = `${SETS[item.set].label}: ${item.c.name}`;
+      $('sol-alg').textContent = turn ? `(${UNDO[turn]})  ${alg}` : alg;
+      const chunks = item.c.alg ? item.c.mnemonicChunks : item.c.altMnemonicChunks;
+      $('sol-mnemonic').textContent = chunks?.length ? chunks.map((k) => k.word).join('-') : '';
+      $('sol-libby').textContent = SETS[item.set].libby && chunks?.length ? `Libby's: ${libbyNotation(alg, chunks)}` : '';
+    }
+
+    // ---- the run loop
+    let running = false;
+    let timer = null;
+    let phaseEnd = 0;
+    let phaseLength = 1;
+    let raf = null;
+    function tick() {
+      const left = Math.max(0, phaseEnd - Date.now());
+      $('timer-bar').style.width = `${(100 * left) / phaseLength}%`;
+      const p = $('phase');
+      if (p.dataset.mode === 'case') p.textContent = `Your case: ${Math.ceil(left / 1000)} s`;
+      if (p.dataset.mode === 'solution') p.textContent = `Solution: next case in ${Math.ceil(left / 1000)} s`;
+      if (running) raf = requestAnimationFrame(tick);
+    }
+    function phase(mode, seconds, then) {
+      clearTimeout(timer);
+      $('phase').dataset.mode = mode;
+      phaseLength = seconds * 1000;
+      phaseEnd = Date.now() + phaseLength;
+      timer = setTimeout(then, phaseLength);
+    }
+    function runCase() {
+      const s = settings();
+      const item = nextCase();
+      const turn = s.randomTurn ? TURNS[Math.floor(Math.random() * 4)] : '';
+      $('solution').hidden = true;
+      show(item, turn);
+      fillSolution(item, turn);
+      phase('case', s.caseTime, () => {
+        if (settings().showSolution) {
+          $('solution').hidden = false;
+          phase('solution', settings().solutionTime, runCase);
+        } else runCase();
+      });
+    }
+    function stop() {
+      running = false;
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      $('start').textContent = 'Start';
+      $('next').disabled = true;
+      form.hidden = false;
+      $('phase').dataset.mode = '';
+      $('phase').textContent = 'Stopped. Press Start to go again.';
+      $('timer-bar').style.width = '0%';
+    }
+    $('start').addEventListener('click', async () => {
+      if (running) return stop();
+      if (!pool().length) { $('status').textContent = 'Tick at least one set of cases.'; return; }
+      $('status').textContent = '';
+      await ready;
+      running = true;
+      bag = [];
+      form.hidden = true;
+      document.querySelector('.rec-stage').scrollIntoView({ block: 'start' });
+      $('start').textContent = 'Stop';
+      $('next').disabled = false;
+      runCase();
+      tick();
+    });
+    $('next').addEventListener('click', () => { if (running) runCase(); });
+    // changing the sets while running takes effect from the next shuffle
+    form.addEventListener('change', () => { bag = []; });
+
+    // Keep screen on (no Pictures / 3D switch: this page is always 3D when it can be)
+    mountViewToggle($('view-toggle'), { view: false });
+  </script>
+</body>
+</html>

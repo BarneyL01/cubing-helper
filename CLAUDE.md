@@ -155,6 +155,13 @@ built ahead of being asked for. As of 2026-10-03:
   out. The whole chain (align centres → 4a → 4b → align centres → 4c) solves
   all 46,080 legal LSE positions; the checker is in the log entry — re-run it
   if anything in `data/roux.js` changes.
+- **Recognition practice (2026-10-23, `3x3/practice/recognition.html`):** a timed practice page — a 3D cube
+  (cubing.js, loaded with the page; picture fallback) shows a random 2-look OLL, 2-look PLL and/or Roux CMLL case
+  with a random top-layer turn; after the case time (default 30 s) the solution (name, U turn + algorithm,
+  mnemonic, Libby's line for OLL/PLL) shows for the solution time (default 3 s, can be switched off), then the
+  next case. Settings in localStorage `cubing-helper:recognition`; Keep screen on. Every case and turn checked by
+  `log/2026-10-23-recognition-check.mjs` (84 combinations). Menu item and home row under 3x3. Note: cubing.js
+  `control-panel="none"` stopped the cube drawing here, so the player keeps `bottom-row`.
 - **3x3 Marshall Method** — Philip Marshall's edges-first method ("The Ultimate Solution to Rubik's Cube"),
   from his own page (helm.lu/cube/MarshallPhilipp, read 2026-10-22), **not from the user's notes** (the page says
   so and credits him). Two series (`F R' F' R`, `U R U' L' U R' U' L` and its mirror) with checked picture strips,

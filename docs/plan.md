@@ -166,3 +166,4 @@ with an embedded `<twisty-player>`), `data/oll.js` + `data/pll.js` (decoded
 algorithm data), the CFOP OLL/PLL pages, and placeholder pages for Roux,
 Beginner's, 2x2, and Megaminx.
 - `3x3/roux/lse-map.html` — "LSE map" tab (2026-10-22): edge orientation by repeating U' M' until an arrow; data `data/lse-map.js` from `log/2026-10-22-lse-eo-map.mjs --write`.
+- `3x3/practice/recognition.html` — Recognition practice (2026-10-23): timed 3D OLL / PLL / CMLL cases with the solution shown afterwards.
