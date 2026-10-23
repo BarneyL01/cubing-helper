@@ -14,3 +14,4 @@ configurable time (default 3 s, optional), a general practice entry (menu item +
   is solved by the solution shown. 84 combinations, all OK.
 - Fix (owner saw no 3D on their device): a fresh twisty-player for every case instead of changing one player's attributes (that did not redraw reliably), and a solved cube shown as soon as 3D has loaded, before Start.
 - Second fix: still no 3D on the owner's phone, so the page no longer uses cubing.js. New `js/cube-3d.js` draws a still isometric picture (top, front, right faces, shaded) as SVG from the simulator state; the page shows a solved cube before Start.
+- Added: mirrors of the hidden left and back faces (floating out beyond the cube, as cubing.js shows them) in `js/cube-3d.js` (`mirrors` option, on by default); a "Show solution" button (shows it until the next case); big buttons (Start/Stop full width, red when running; Show solution and Next case side by side, 60 px tall).
