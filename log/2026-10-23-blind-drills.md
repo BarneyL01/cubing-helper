@@ -24,3 +24,14 @@ number of unsolved corners/edges); tap to reveal; no score; a separate page of l
   552 pairs listed.
 - Not done yet: menu entries (Practice → Blind drills, Blind → Letter pairs) and home links, waiting
   for the navigation redesign.
+
+## Later the same day (owner's requests)
+
+- Letters: the net is coloured (white top, green front) with the target outlined; face names on the
+  centres are an option, off by default (`bldNet(kind, { colours, faces })`).
+- Tracing: a rotatable 3D cube instead of the net by default ("3D cube / Net" switch, kept in
+  `cubing-helper:blind-drills`). `js/cube-rotatable.js` is our own SVG (orthographic, only faces turned
+  to the viewer are drawn, so no depth sorting): drag to turn; y / y' / x2 / Reset buttons. Not cubing.js,
+  which did not show on the owner's phone. Checked in headless Chromium at 390 px: start view white top,
+  green front, red right; y brings red to the front; x2 puts yellow on top with blue in front; no page
+  scroll while dragging (`touch-action: none`), no console errors.

@@ -86,3 +86,31 @@ text.net-letter-on-colour {
   paint-order: stroke;
   font-weight: 800;
 }
+
+/* Tracing: 3D cube / net switch and the rotatable cube */
+.drill-pic-switch { display: inline-flex; gap: 0.4rem; margin: 0.25rem 0 0.6rem; }
+.drill-pic-switch[hidden] { display: none; }
+.drill-pic-switch button,
+.cube-rot-buttons button {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.drill-pic-switch button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.drill-cube[hidden] { display: none; }
+.cube-rot-stage {
+  width: min(82vw, 360px);
+  margin: 0 auto;
+  touch-action: none; /* dragging turns the cube instead of scrolling the page */
+  cursor: grab;
+  user-select: none;
+}
+.cube-rot-stage:active { cursor: grabbing; }
+.cube-rot-svg { display: block; width: 100%; height: auto; }
+.cube-rot-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }

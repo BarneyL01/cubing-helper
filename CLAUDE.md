@@ -267,6 +267,12 @@ built ahead of being asked for. As of 2026-10-03:
   Cycle breaks start at the first unsolved piece in letter order. Checked:
   running every listed move solves 2,000 random scrambles; re-run if the
   memo code or any setup changes.
+  **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
+  net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
+  `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves.
+  Scrambles with N corners / M edges unsolved come from `js/bld-drill.js` (commutators reversed; no solver),
+  checked by `log/2026-10-23-bld-drill-check.mjs`. Letter-pair words: `data/letter-pairs.js`, X = "sh",
+  checked by `log/2026-10-23-letter-pairs-check.mjs`. See `log/2026-10-23-blind-drills.md`.
   The **Commutators** section (2026-10-23): Basics, Corner cycles, Corner table, After 8355,
   Twists & parity, Edge cycles. Basics (`3x3/bld/commutators.html`, `data/commutators.js`)
   explains commutators (insertion + interchange), the effect of changing the
