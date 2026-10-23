@@ -16,3 +16,4 @@ configurable time (default 3 s, optional), a general practice entry (menu item +
 - Second fix: still no 3D on the owner's phone, so the page no longer uses cubing.js. New `js/cube-3d.js` draws a still isometric picture (top, front, right faces, shaded) as SVG from the simulator state; the page shows a solved cube before Start.
 - Added: mirrors of the hidden left and back faces (floating out beyond the cube, as cubing.js shows them) in `js/cube-3d.js` (`mirrors` option, on by default); a "Show solution" button (shows it until the next case); big buttons (Start/Stop full width, red when running; Show solution and Next case side by side, 60 px tall).
 - Cache: the page imports `js/cube-3d.js?v=2` and `css/style.css?v=2` (owner still saw the old picture without mirrors). Bump the number when either changes.
+- Stop now leaves the last case on screen and shows its solution (hidden again on Start).
