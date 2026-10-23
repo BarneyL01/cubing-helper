@@ -15,17 +15,33 @@
 
   <main>
     <h1>After 8355</h1>
-
-
-    <p class="subtitle">
+    <p class="subtitle" data-for-setups="rufd">
       The cycles to learn after 8355 has solved the first two layers. Only pairs among the unsolved
       corners; setups never turn L or B.
     </p>
-    <div class="source-note">
+    <p class="subtitle" data-for-setups="lb" hidden>
+      The same 108 pairs, with setups that may turn L and B too. They are shorter: at most 3 moves.
+    </p>
+    <div class="view-toggle page-switch">
+      <span class="view-toggle-label" id="setups-label">Setups:</span>
+      <span class="view-toggle-buttons" role="group" aria-labelledby="setups-label">
+        <button type="button" data-setups="rufd" aria-pressed="true">R U F D only</button>
+        <button type="button" data-setups="lb" aria-pressed="false">Any face (L, B too)</button>
+      </span>
+    </div>
+
+    <div class="source-note" data-for-setups="rufd">
       <p>
         Not from your notes. Generated and checked in the simulator by
         <code>log/2026-10-21-bld-8355-corners.mjs</code>. The unsolved corners are the top-layer A, B, C, D
         and the buffer DFR (V).
+      </p>
+    </div>
+    <div class="source-note" data-for-setups="lb" hidden>
+      <p>
+        Not from your notes. Generated and checked in the simulator by
+        <code>log/2026-10-21-bld-8355-corners.mjs --lb</code>. After 8355 step 4 leaves the top-layer
+        corners (A, B, C, D) and the buffer DFR (V), each possibly twisted.
       </p>
     </div>
 
@@ -40,9 +56,13 @@
     </p>
 
     <h2 class="section-heading" id="setups" data-short="Setups">2. The setups, simplest first</h2>
-    <p>
+    <p data-for-setups="rufd">
       Every pair is one of the three bases plus a setup of R, U, F and D turns only. Setups are in orange.
       The table compares with setups that may turn any face.
+    </p>
+    <p data-for-setups="lb" hidden>
+      Every pair is one of the three bases plus a setup of any faces. Setups are in orange. The table
+      counts pairs by setup length, against R, U, F, D only.
     </p>
     <div class="table-wrap"><table class="bld-table" id="count-table"></table></div>
     <p>
@@ -50,7 +70,22 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="setup-table"></table></div>
 
-    <h2 class="section-heading" id="list" data-short="All pairs">3. Every pair</h2>
+    <h2 class="section-heading" id="place" data-short="Place, then twist">3. Easiest: put the corners in place, twist later</h2>
+    <p>
+      If corners may end up twisted, you need one commutator per pair of <strong>corners</strong> (12, not
+      108). Fix the twists at the end.
+    </p>
+    <ol class="step-how">
+      <li><strong>Memo by corners.</strong> Find where the buffer's piece belongs, then the piece in that corner, and so on. If the chain returns to the buffer early, start again from the first corner still out of place.</li>
+      <li><strong>Pair them up.</strong> Each card sends the buffer's piece to the first corner and that corner's piece to the second. Orientation can wait.</li>
+      <li><strong>Twist.</strong> Every corner is in place, some twisted. Fix them with <code>(R' D' R D)×2 U (D' R' D R)×2 U'</code> (U2 or U' for the other top corners; R before and R' after to include the buffer). Or see the Twists &amp; parity tab.</li>
+    </ol>
+    <p class="step-note" id="place-stats"></p>
+    <p class="step-note" data-for-setups="rufd">These cards are the same for both setup choices: two of them use L2.</p>
+    <div class="view-toggle" id="view-toggle"></div>
+    <div id="place-cards" class="case-grid"></div>
+
+    <h2 class="section-heading" id="list" data-short="All pairs">4. Every pair</h2>
     <p>
       <label for="first-filter">Show pairs that start with </label>
       <select id="first-filter"></select>
@@ -65,7 +100,12 @@
   <script type="module">
     import { bldCorners } from '../../data/bld.js';
     import { corner8355Rows } from '../../data/corner-8355.js?v=1';
+    import { corner8355LbRows } from '../../data/corner-8355-lb.js?v=1';
+    import { corner8355Place } from '../../data/corner-8355-place.js?v=1';
     import { notationEl, setupSpan } from '../../js/move-format.js';
+    import { renderCases } from '../../js/render-cases.js';
+    import { mountViewToggle } from '../../js/view-toggle.js';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -76,11 +116,38 @@
     };
     const code = (child) => { const c = el('code'); c.append(child); return c; };
     const header = (table, cols) => { const h = table.createTHead().insertRow(); cols.forEach((c) => h.appendChild(el('th', null, c))); return table.createTBody(); };
-    const rows = corner8355Rows;
     const cornerOf = (l) => [...bldCorners.find((r) => r.letter === l).piece].join('');
+    const store = {
+      get(key) { try { return localStorage.getItem(key); } catch { return null; } },
+      set(key, value) { try { localStorage.setItem(key, value); } catch {} },
+    };
+
+    // The two setup choices (were two pages: corner-8355.html and corner-8355-lb.html).
+    // rufd: setups of R, U, F, D only; lb: setups of any face.
+    const RUFD = Object.fromEntries(corner8355Rows.map((r) => [r.first + r.second, r]));
+    const without = (r) => RUFD[r.first + r.second].setupMoves;
+    const MODES = {
+      rufd: {
+        rows: corner8355Rows,
+        countCols: ['Setup moves', 'Pairs (R U F D only)', 'Pairs (any face)'],
+        other: (r) => r.fullSetupMoves,
+        firstKey: 'cubing-helper:bld-8355-first',
+      },
+      lb: {
+        rows: corner8355LbRows,
+        countCols: ['Setup moves', 'Pairs (L and B allowed)', 'Pairs (R U F D only)'],
+        other: without,
+        firstKey: 'cubing-helper:bld-8355-lb-first',
+      },
+    };
+    const MODE_KEY = 'cubing-helper:corner-8355';
+    const fromUrl = new URLSearchParams(location.search).get('setups');
+    let mode = fromUrl === 'lb' || fromUrl === 'rufd' ? fromUrl : store.get(MODE_KEY) === 'lb' ? 'lb' : 'rufd';
 
     try {
+      // 1: the corners that are left (the same 108 pairs either way)
       {
+        const rows = corner8355Rows;
         const body = header($('left-table'), ['Corner', 'Letters']);
         const groups = new Map();
         for (const l of [...new Set(rows.map((r) => r.first))].sort()) {
@@ -96,65 +163,106 @@
         tr.appendChild(el('th', 'bld-letter', 'DFR (buffer)'));
         tr.appendChild(el('td', null, 'V K P'));
       }
-      {
-        const body = header($('count-table'), ['Setup moves', 'Pairs (R U F D only)', 'Pairs (any face)']);
-        for (const n of [1, 2, 3, 4]) {
+      const sel = $('first-filter');
+      sel.appendChild(new Option('any letter', ''));
+      for (const l of [...new Set(corner8355Rows.map((r) => r.first))]) sel.appendChild(new Option(l, l));
+
+      const drawPairs = () => {
+        const { rows, firstKey } = MODES[mode];
+        const t = $('pair-table');
+        t.replaceChildren();
+        const body = header(t, ['Pair', 'Commutator', 'Moves', 'Length']);
+        for (const r of rows.filter((x) => !sel.value || x.first === sel.value)) {
           const tr = body.insertRow();
-          tr.appendChild(el('th', 'bld-letter', String(n)));
-          tr.appendChild(el('td', null, String(rows.filter((r) => r.setupMoves === n).length)));
-          tr.appendChild(el('td', null, String(rows.filter((r) => r.fullSetupMoves === n).length)));
+          tr.appendChild(el('th', 'bld-letter', r.first + r.second));
+          tr.appendChild(el('td')).appendChild(code(notationEl(r.notation, r.setup)));
+          tr.appendChild(el('td')).appendChild(code(r.moves));
+          tr.appendChild(el('td', null, String(r.length)));
         }
-        const mean = (f) => (rows.reduce((a, r) => a + f(r), 0) / rows.length).toFixed(2);
-        const tr = body.insertRow();
-        tr.appendChild(el('th', 'bld-letter', 'Mean'));
-        tr.appendChild(el('td', null, mean((r) => r.setupMoves)));
-        tr.appendChild(el('td', null, mean((r) => r.fullSetupMoves)));
-      }
-      {
-        const body = header($('setup-table'), ['Setup', 'Pairs and commutators']);
-        const bySetup = new Map();
-        for (const r of rows) (bySetup.get(r.setup) ?? bySetup.set(r.setup, []).get(r.setup)).push(r);
-        const list = [...bySetup.entries()].sort((a, b) => b[1].length - a[1].length || a[0].split(' ').length - b[0].split(' ').length);
-        for (const [setup, rs] of list.slice(0, 12)) {
-          const tr = body.insertRow();
-          const th = el('th', 'bld-letter');
-          th.appendChild(setupSpan(setup));
-          tr.appendChild(th);
-          const td = el('td');
-          rs.forEach((r) => {
-            const line = el('div');
-            line.append(`${r.first}${r.second} `);
-            line.appendChild(code(notationEl(r.notation, r.setup)));
-            td.appendChild(line);
-          });
-          tr.appendChild(td);
-        }
-      }
-      {
-        const sel = $('first-filter');
-        sel.appendChild(new Option('any letter', ''));
-        for (const l of [...new Set(rows.map((r) => r.first))]) sel.appendChild(new Option(l, l));
-        const saved = (() => { try { return localStorage.getItem('cubing-helper:bld-8355-first') || ''; } catch { return ''; } })();
-        sel.value = [...sel.options].some((o) => o.value === saved) ? saved : '';
-        const draw = () => {
-          const t = $('pair-table');
+        store.set(firstKey, sel.value);
+      };
+      sel.addEventListener('change', drawPairs);
+
+      // 2 and 4: everything that depends on the setup choice
+      const draw = () => {
+        const { rows, countCols, other, firstKey } = MODES[mode];
+        {
+          const t = $('count-table');
           t.replaceChildren();
-          const body = header(t, ['Pair', 'Commutator', 'Moves', 'Length']);
-          for (const r of rows.filter((x) => !sel.value || x.first === sel.value)) {
+          const body = header(t, countCols);
+          for (const n of [1, 2, 3, 4]) {
             const tr = body.insertRow();
-            tr.appendChild(el('th', 'bld-letter', r.first + r.second));
-            tr.appendChild(el('td')).appendChild(code(notationEl(r.notation, r.setup)));
-            tr.appendChild(el('td')).appendChild(code(r.moves));
-            tr.appendChild(el('td', null, String(r.length)));
+            tr.appendChild(el('th', 'bld-letter', String(n)));
+            tr.appendChild(el('td', null, String(rows.filter((r) => r.setupMoves === n).length)));
+            tr.appendChild(el('td', null, String(rows.filter((r) => other(r) === n).length)));
           }
-          try { localStorage.setItem('cubing-helper:bld-8355-first', sel.value); } catch {}
-        };
-        sel.addEventListener('change', draw);
+          const mean = (f) => (rows.reduce((a, r) => a + f(r), 0) / rows.length).toFixed(2);
+          const tr = body.insertRow();
+          tr.appendChild(el('th', 'bld-letter', 'Mean'));
+          tr.appendChild(el('td', null, mean((r) => r.setupMoves)));
+          tr.appendChild(el('td', null, mean(other)));
+        }
+        {
+          const t = $('setup-table');
+          t.replaceChildren();
+          const body = header(t, ['Setup', 'Pairs and commutators']);
+          const bySetup = new Map();
+          for (const r of rows) (bySetup.get(r.setup) ?? bySetup.set(r.setup, []).get(r.setup)).push(r);
+          const list = [...bySetup.entries()].sort((a, b) => b[1].length - a[1].length || a[0].split(' ').length - b[0].split(' ').length);
+          for (const [setup, rs] of list.slice(0, 12)) {
+            const tr = body.insertRow();
+            const th = el('th', 'bld-letter');
+            th.appendChild(setupSpan(setup));
+            tr.appendChild(th);
+            const td = el('td');
+            rs.forEach((r) => {
+              const line = el('div');
+              line.append(`${r.first}${r.second} `);
+              line.appendChild(code(notationEl(r.notation, r.setup)));
+              td.appendChild(line);
+            });
+            tr.appendChild(td);
+          }
+        }
+        const saved = store.get(firstKey) || '';
+        sel.value = [...sel.options].some((o) => o.value === saved) ? saved : '';
+        drawPairs();
+      };
+
+      const setMode = (next, { save = true } = {}) => {
+        mode = next;
+        for (const b of document.querySelectorAll('[data-setups]')) b.setAttribute('aria-pressed', String(b.dataset.setups === mode));
+        for (const n of document.querySelectorAll('[data-for-setups]')) n.hidden = n.dataset.forSetups !== mode;
+        if (save) {
+          store.set(MODE_KEY, mode);
+          const u = new URL(location.href);
+          if (mode === 'lb') u.searchParams.set('setups', 'lb');
+          else u.searchParams.delete('setups');
+          history.replaceState(null, '', u);
+        }
         draw();
-      }
+      };
+      for (const b of document.querySelectorAll('[data-setups]')) b.addEventListener('click', () => setMode(b.dataset.setups));
+      setMode(mode, { save: Boolean(fromUrl) });
     } catch (e) {
       const p = el('p', 'step-note', `This page could not load its table: ${e.message}`);
       document.querySelector('main').appendChild(p);
+    }
+    // ---- 3: place, then twist (checked by log/2026-10-22-8355-placing.mjs on all 4860 positions)
+    {
+      $('place-stats').textContent = 'Checked on all 4,860 positions of these five corners: at most 3 pairs (1.8 on average), then at most 3 twists (1.9 on average). Pictures show corners only; use 3D above to play one.';
+      renderCases('place-cards', corner8355Place.map((p) => ({
+        name: `Buffer → ${p.from} → ${p.to}`,
+        orientation: `Setup ${p.setup} (${p.setupMoves} move${p.setupMoves === 1 ? '' : 's'}), ${p.length} turns in all. Letters ${p.first}${p.second}; the shortest of ${p.options} sticker versions.`,
+        alg: p.moves,
+        displayAlg: p.notation,
+        extraAlgs: [{ label: 'Every move', alg: p.moves }],
+        stickering: 'corners',
+        diagramViews: ['U', 'D'],
+        palette: WHITE_TOP,
+        hold: '',
+      })));
+      mountViewToggle($('view-toggle'));
     }
   </script>
 </body>

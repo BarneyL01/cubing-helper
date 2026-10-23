@@ -2227,6 +2227,11 @@ a.menu-sec[aria-current="page"],
   font-weight: 600;
 }
 
+/* A page-wide switch under the title (After 8355: which setups) */
+.page-switch {
+  margin: 0.25rem 0 0.75rem;
+}
+
 /* On this page. Phones: one compact sticky control with a solid background. */
 .otp {
   position: sticky;

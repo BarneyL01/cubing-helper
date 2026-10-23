@@ -292,13 +292,14 @@ function trackHeaderHeight() {
 
 // Title (tier 2): on a page of a section with several pages, a small kicker
 // with the section's name above the h1 and a quiet row of the section's pages
-// under the title (after the subtitle that follows the h1, if there is one).
+// under the title (after the subtitles that follow the h1, if there are any).
 // Returns the element that "On this page" goes after.
 function mountTitle() {
   const main = document.querySelector('main');
   const h1 = main?.querySelector('h1');
   if (!main || !h1) return null;
-  let anchor = h1.nextElementSibling?.classList.contains('subtitle') ? h1.nextElementSibling : h1;
+  let anchor = h1;
+  while (anchor.nextElementSibling?.classList.contains('subtitle')) anchor = anchor.nextElementSibling;
   if (!currentSection?.pages) return anchor;
 
   h1.before(el('p', 'page-kicker', currentSection.label));
@@ -350,6 +351,8 @@ function mountOnThisPage(after) {
   const list = el('div', 'otp-list');
   list.id = 'otp-list';
   box.append(title, button, list);
+  // A page-wide switch right under the title (After 8355) stays above it.
+  while (after?.nextElementSibling?.classList.contains('page-switch')) after = after.nextElementSibling;
   if (after) after.after(box);
   else main.prepend(box);
 
