@@ -12,3 +12,4 @@ configurable time (default 3 s, optional), a general practice entry (menu item +
   if it fails. `control-panel="none"` left the cube undrawn in testing; `bottom-row` works.
 - Check: `log/2026-10-23-recognition-check.mjs` — every case x every top-layer turn: the position shown
   is solved by the solution shown. 84 combinations, all OK.
+- Fix (owner saw no 3D on their device): a fresh twisty-player for every case instead of changing one player's attributes (that did not redraw reliably), and a solved cube shown as soon as 3D has loaded, before Start.
