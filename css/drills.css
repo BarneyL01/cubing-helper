@@ -77,8 +77,8 @@
 
 /* Coloured net (letter drill): marked sticker outlined, letters readable on any colour */
 .net-cell.net-coloured { stroke: #1f2937; stroke-width: 0.5; }
-.net-target-outer { fill: none; stroke: #111827; stroke-width: 1.4; }
-.net-target-inner { fill: none; stroke: #ffffff; stroke-width: 0.7; }
+.net-target-outer { fill: none; stroke: #ff1fa6; stroke-width: 2.2; }
+.net-target-inner { fill: none; stroke: #111827; stroke-width: 0.45; }
 text.net-letter-on-colour {
   fill: #111827;
   stroke: #ffffff;
