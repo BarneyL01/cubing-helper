@@ -2428,3 +2428,8 @@ a.menu-sec[aria-current="page"],
 }
 .ex-tabs button[aria-selected="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); }
 .ex-tabs button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); }
+/* Orozco page: a net per base, and a small net per letter */
+.orz-net { margin: 0.25rem 0 0.75rem; max-width: 360px; }
+.orz-net figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem; }
+.orz-mini { width: 112px; margin-top: 0.3rem; }
+.orz-mini .bld-net { width: 112px; }

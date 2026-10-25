@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orozco corners — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=6" />
+  <link rel="stylesheet" href="../../css/style.css?v=8" />
   <script type="module" src="../../js/site-chrome.js?v=3"></script>
 </head>
 <body>
@@ -141,7 +141,14 @@
         const tr = body.insertRow();
         tr.id = `corner-${r.letter}`;
         tr.appendChild(el('th', 'bld-letter', r.letter));
-        tr.appendChild(el('td', 'bld-piece', r.piece));
+        const pc = el('td', 'bld-piece', r.piece);
+        if (!withBase) {
+          // a small net with just this letter marked (buffer C and helper B in blue)
+          const mini = el('div', 'orz-mini');
+          mini.innerHTML = bldNet('corners', { buffers: ['C', 'B'], marked: [r.letter], letters: [r.letter] });
+          pc.appendChild(mini);
+        }
+        tr.appendChild(pc);
         if (withBase) tr.appendChild(el('td', 'bld-piece', r.base));
         const c = el('td');
         c.appendChild(notationEl(r.notation, r.setup));
@@ -174,7 +181,12 @@
         const rows = orozcoCorners.filter((r) => r.base === base.id);
         const h = el('h3', null, '');
         h.append('Base ', el('code', null, base.notation), ` (${rows.length} letters)`);
-        host.append(h, commTable(rows, false));
+        // where this base's letters are: all of them marked on one net
+        const fig = el('figure', 'orz-net');
+        fig.innerHTML = bldNet('corners', { buffers: ['C', 'B'], marked: rows.map((r) => r.letter) });
+        const none = rows.filter((r) => !r.setup).map((r) => r.letter);
+        fig.appendChild(el('figcaption', null, `Gold: this base's letters (${rows.map((r) => r.letter).join(' ')}). Blue: buffer C, helper B. No setup: ${none.join(' ') || 'none'}.`));
+        host.append(h, fig, commTable(rows, false));
       }
     }
     let order = 'base';
