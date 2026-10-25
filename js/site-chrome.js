@@ -59,6 +59,7 @@ const MENU = [
           { label: 'Overview', path: '3x3/bld/index.html' },
           { label: 'M2 edges', path: '3x3/bld/m2.html' },
           { label: 'Old Pochmann', path: '3x3/bld/old-pochmann.html' },
+          { label: 'Orozco', path: '3x3/bld/orozco.html' },
           { label: 'Letter pairs', path: '3x3/bld/letter-pairs.html' },
         ],
       },

@@ -246,7 +246,7 @@ built ahead of being asked for. As of 2026-10-03:
   `data/bld.js`, letter nets from `js/bld-net.js`. **Split 2026-10-23** into the Blind section:
   Overview (`3x3/bld/index.html`: order and letters, links to the two pages below and Blind memo),
   M2 edges (`m2.html`: edge setup table + parity) and Old Pochmann (`old-pochmann.html`: tips, swap,
-  corner setup table), plus Letter pairs (`letter-pairs.html`). A small script on index.html sends
+  corner setup table), Orozco (`orozco.html`), plus Letter pairs (`letter-pairs.html`). A small script on index.html sends
   old anchors (`#edge-*`, `#corner-*`, `#bld-edges`, `#bld-parity`, `#bld-tips`, `#bld-swap`,
   `#bld-corners`, `#edges-m2`, `#corners-old-pochmann`) to the new pages.
   Verified by simulating 500 full blind solves (memo from the scramble →
@@ -267,6 +267,13 @@ built ahead of being asked for. As of 2026-10-03:
   Cycle breaks start at the first unsolved piece in letter order. Checked:
   running every listed move solves 2,000 random scrambles; re-run if the
   memo code or any setup changes.
+  **Orozco corners** (`3x3/bld/orozco.html`, Blind section, 2026-10-25; not from the user's notes): buffer UFR
+  (memo from C), helper UBR; 1st of each pair forwards, 2nd backwards (from cubinghistory.com /
+  speedsolving.com, which the build environment could not read in full). Worked out here: 18 commutators,
+  all `[R D R', U']`, `[R D' R', U']` or `[R D2 R', U']` with a 0-2 move D/L setup (`data/orozco-corners.js`,
+  generated); helper letters B skip, N twist / twist backwards, Q the reverse (the owner's twist algorithm,
+  which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped). `js/orozco.js`
+  plans a solve. `log/2026-10-25-orozco-corners.mjs` (`--write`) checks 3,000 full solves (M2 edges then Orozco).
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves.

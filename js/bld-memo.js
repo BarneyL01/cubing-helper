@@ -85,6 +85,11 @@ function memo(state, stickers, ref) {
   return targets;
 }
 
+// Corner memo traced from any buffer sticker (Orozco uses C, the U sticker of UFR).
+export function cornerMemoFrom(state, ref) {
+  return memo(state, CORNER, ref);
+}
+
 // "(U' M')×3" -> "U' M' U' M' U' M'"
 const expand = (alg) =>
   alg
