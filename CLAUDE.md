@@ -277,6 +277,7 @@ built ahead of being asked for. As of 2026-10-03:
   Research (`docs/orozco-research-notes.md`, from cubinghistory.com and Riu's note.com tutorial) confirmed memo from C,
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
+  Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`).
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).

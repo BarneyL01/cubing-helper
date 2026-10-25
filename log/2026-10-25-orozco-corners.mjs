@@ -163,5 +163,19 @@ try {
   check('js/orozco.js plans solve', same === 300, `${same}/300`);
   console.log(`js/orozco.js: ${same}/300 solves`);
 } catch (e) { check('js/orozco.js loads', false, e.message); }
+// ---------- the page's worked examples ----------
+{
+  const { orozcoExamples } = await import('../data/orozco-examples.js');
+  const { orozcoStepsForMemo } = await import('../js/orozco.js');
+  const { scrambledState } = await import('../js/bld-memo.js');
+  for (const ex of orozcoExamples) {
+    const solve = orozcoStepsForMemo(ex.memo).map((x) => x.moves).join(' ');
+    const st = scrambledState(cancelMoves(invertAlg(solve)));
+    const memo = cornerMemoFrom(st, BUFFER).map((t) => t.letter).join(' ');
+    check(`example ${ex.id} memos as ${ex.memo.join(' ')}`, memo === ex.memo.join(' '), memo);
+    check(`example ${ex.id} solves`, applyAlg(st, solve).every((s) => s.home === key(s)));
+  }
+  console.log(`examples: ${orozcoExamples.length} checked`);
+}
 console.log(failures.length ? `${failures.length} FAILED\n${failures.slice(0, 10).join('\n')}` : 'ALL OK');
 process.exitCode = failures.length ? 1 : 0;

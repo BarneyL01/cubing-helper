@@ -34,3 +34,12 @@ Simulated every published algorithm (Riu, note.com):
   (Eka snippet) swaps UF/UR. With M2 edges the leftover is UL/UB, so the Ra-perm stays.
 Page: published algorithm shown under ours where different; helper and parity notes; the worked example now writes out
 the scramble (`R D2 R' U' R D' R' U R D' R'`) and every move. `data/orozco-published.js` checked by the generator.
+
+## Examples and alternatives (owner's requests)
+
+- The published algorithms are labelled "Alternative (published)" under ours; ours stay the ones to learn.
+- Examples are now five tabs (`data/orozco-examples.js`, choice kept in localStorage `cubing-helper:orozco-example`):
+  O L (D2 base backwards), H O (D base backwards: D and D' swap, shown next to the forwards moves), K E (setups),
+  T N (helper letter as 2nd: twist backwards), G P X A (two pairs). Each shows the scramble, memo, every step and a
+  picture after each step. `js/orozco.js` gained `orozcoStepsForMemo(letters)`. The checker confirms every example
+  scramble memos as its letters and is solved by its steps. (A first try, G S X A, was wrong: S and X are on one corner.)

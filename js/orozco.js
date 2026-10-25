@@ -31,3 +31,20 @@ export function orozcoCornerPlan(state) {
   const parity = targets.length % 2 === 1;
   return { targets, steps, parity, parityAlg: OROZCO_PARITY };
 }
+
+// The steps for a given memo (letters in order), by the same rules: used for the page's examples.
+// Returns [{ letter, first, how, notation, moves }].
+export function orozcoStepsForMemo(letters) {
+  return letters.map((letter, i) => {
+    const first = i % 2 === 0;
+    const h = HELPER[letter];
+    if (h) {
+      const how = first ? h.odd : h.even;
+      return { letter, first, how, notation: TWISTS[how], moves: expandBrackets(TWISTS[how]) };
+    }
+    const r = ROW[letter];
+    return first
+      ? { letter, first, how: 'forwards', notation: r.notation, moves: r.moves }
+      : { letter, first, how: 'backwards', notation: `${r.notation}'`, moves: invertAlg(r.moves), forwards: r.moves };
+  });
+}

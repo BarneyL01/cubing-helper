@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orozco corners — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=4" />
+  <link rel="stylesheet" href="../../css/style.css?v=5" />
   <script type="module" src="../../js/site-chrome.js?v=3"></script>
 </head>
 <body>
@@ -50,17 +50,26 @@
       Together the helper's piece goes out and comes back: the net effect is buffer → X → Y.
     </p>
 
-    <h2 class="section-heading" id="example" data-short="Example">Example: the pair O, L</h2>
-    <p>Hold white on top, green in front. Scramble:</p>
-    <p class="case-alg"><code id="example-scramble"></code></p>
-    <p>Memo from C: <strong>O L</strong>. Solve:</p>
-    <ol class="step-how" id="example-moves"></ol>
-    <div class="case-grid" id="example-card"></div>
+    <h2 class="section-heading" id="example" data-short="Examples">Examples</h2>
+    <p>
+      <strong>Backwards</strong> means the moves in reverse order, each one turned the other way: R becomes R', D becomes D',
+      U' becomes U. Half turns (D2, R2) stay the same.
+    </p>
+    <div class="ex-tabs" role="tablist" aria-label="Examples" id="ex-tabs"></div>
+    <div id="ex-panel" role="tabpanel">
+      <p class="bld-note" id="ex-note"></p>
+      <p>Hold white on top, green in front. Scramble:</p>
+      <p class="case-alg"><code id="example-scramble"></code></p>
+      <p>Memo from C: <strong id="ex-memo"></strong>. Solve:</p>
+      <ol class="step-how" id="example-moves"></ol>
+      <div class="case-grid" id="example-card"></div>
+    </div>
 
     <h2 class="section-heading" id="commutators" data-short="Commutators">The 18 commutators</h2>
     <p>
-      Grouped by base. Setup moves in orange; do the setup, the base, then undo the setup. Where the published list
-      (Riu, note.com) has a different algorithm for the same letter, it is shown under ours; both do the same thing.
+      Grouped by base. Setup moves in orange; do the setup, the base, then undo the setup. Learn these. Where the
+      published list (Riu, note.com) has a different algorithm for the same letter, it is shown under ours as an
+      alternative: it does the same thing.
     </p>
     <div id="groups"></div>
 
@@ -95,6 +104,8 @@
     import { renderCases } from '../../js/render-cases.js';
     import { WHITE_TOP } from '../../js/cube-diagram.js';
     import { invertAlg, cancelMoves, expandBrackets } from '../../js/algs.js';
+    import { orozcoStepsForMemo } from '../../js/orozco.js?v=2';
+    import { orozcoExamples } from '../../data/orozco-examples.js?v=1';
     import { orozcoPublished, OROZCO_PUBLISHED_HELPER, OROZCO_PUBLISHED_PARITY } from '../../data/orozco-published.js?v=1';
     const PUB = Object.fromEntries(orozcoPublished.map((r) => [r.letter, r.notation]));
 
@@ -140,7 +151,7 @@
         const pub = PUB[r.letter];
         if (pub && cancelMoves(expandBrackets(pub)) !== r.moves) {
           const n = cancelMoves(expandBrackets(pub)).split(' ').length;
-          c.appendChild(el('div', 'bld-note', `Published: ${pub} (${n} moves)`));
+          c.appendChild(el('div', 'bld-note', `Alternative (published): ${pub} (${n} moves)`));
         }
       }
       wrap.appendChild(t);
@@ -162,37 +173,47 @@
       }
     }
 
-    // worked example: the pair O (forwards) then L (backwards)
-    const O = orozcoCorners.find((r) => r.letter === 'O');
-    const L = orozcoCorners.find((r) => r.letter === 'L');
-    const solve = `${O.moves} ${invertAlg(L.moves)}`;
-    $('example-scramble').textContent = cancelMoves(invertAlg(solve));
-    for (const [what, notation, moves] of [
-      ['O forwards', O.notation, O.moves],
-      ['L backwards', `${L.notation}'`, invertAlg(L.moves)],
-    ]) {
-      const li = el('li');
-      li.append(el('strong', null, `${what}: `), el('code', null, notation), el('br'), el('code', null, moves));
-      $('example-moves').appendChild(li);
-    }
-    renderCases('example-card', [{
-      name: 'Memo: O L',
-      orientation: 'O forwards, then L backwards',
-      displayAlg: `${O.notation}  ${L.notation}'`,
-      alg: solve,
-      noViewer: true,
-      filmstrip: {
+    // worked examples, one tab each: scramble, memo, every step, and a picture after each step
+    const HOW_SAY = { forwards: 'forwards', backwards: 'backwards', skip: 'helper: nothing', twist: 'helper: twist', 'twist-rev': 'helper: twist backwards' };
+    const EX_KEY = 'cubing-helper:orozco-example';
+    function showExample(ex) {
+      document.querySelectorAll('#ex-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.id === ex.id)));
+      try { localStorage.setItem(EX_KEY, ex.id); } catch {}
+      const steps = orozcoStepsForMemo(ex.memo);
+      const solve = steps.map((x) => x.moves).join(' ');
+      $('ex-note').textContent = ex.note;
+      $('example-scramble').textContent = cancelMoves(invertAlg(solve));
+      $('ex-memo').textContent = ex.memo.join(' ');
+      const list = $('example-moves');
+      list.replaceChildren();
+      for (const st of steps) {
+        const li = el('li');
+        li.append(el('strong', null, `${st.letter} ${HOW_SAY[st.how]}: `), el('code', null, st.notation), el('br'), el('code', null, st.moves));
+        if (st.forwards) li.append(el('div', 'bld-note', `(forwards would be ${st.forwards})`));
+        list.appendChild(li);
+      }
+      const frames = [{ after: '', label: 'Start' }, ...steps.map((st) => ({ after: st.moves, label: `${st.letter} ${HOW_SAY[st.how]}` }))];
+      $('example-card').replaceChildren();
+      renderCases('example-card', [{
+        name: `Memo: ${ex.memo.join(' ')}`,
+        orientation: steps.map((st) => `${st.letter} ${HOW_SAY[st.how]}`).join(', then '),
+        displayAlg: steps.map((st) => st.notation).join('  '),
         alg: solve,
-        stickering: 'corners',
-        views: ['U', 'D'],
-        palette: WHITE_TOP,
-        frames: [
-          { after: '', label: 'Start', caption: 'Buffer piece belongs at O, O\'s piece at L.' },
-          { after: O.moves, label: 'O forwards', caption: 'Buffer piece home at O; O\'s piece in the helper.' },
-          { after: invertAlg(L.moves), label: 'L backwards', caption: 'Helper piece home at L: solved.' },
-        ],
-      },
-    }]);
+        noViewer: true,
+        filmstrip: { alg: solve, stickering: 'corners', views: ['U', 'D'], palette: WHITE_TOP, frames },
+      }]);
+    }
+    let savedEx = null;
+    try { savedEx = localStorage.getItem(EX_KEY); } catch {}
+    for (const ex of orozcoExamples) {
+      const b = el('button', null, ex.memo.join(' '));
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.dataset.id = ex.id;
+      b.addEventListener('click', () => showExample(ex));
+      $('ex-tabs').appendChild(b);
+    }
+    showExample(orozcoExamples.find((x) => x.id === savedEx) || orozcoExamples[0]);
   </script>
 </body>
 </html>
