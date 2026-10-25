@@ -43,3 +43,4 @@ the scramble (`R D2 R' U' R D' R' U R D' R'`) and every move. `data/orozco-publi
   T N (helper letter as 2nd: twist backwards), G P X A (two pairs). Each shows the scramble, memo, every step and a
   picture after each step. `js/orozco.js` gained `orozcoStepsForMemo(letters)`. The checker confirms every example
   scramble memos as its letters and is solved by its steps. (A first try, G S X A, was wrong: S and X are on one corner.)
+- Commutator tables: "By base / By letter" switch (localStorage `cubing-helper:orozco-order`); by letter is one A-X table with a Base column. Links to #corner-X still land on the row.

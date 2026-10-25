@@ -2427,3 +2427,4 @@ a.menu-sec[aria-current="page"],
   cursor: pointer;
 }
 .ex-tabs button[aria-selected="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); }
+.ex-tabs button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-contrast); }
