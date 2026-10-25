@@ -274,6 +274,9 @@ built ahead of being asked for. As of 2026-10-03:
   generated); helper letters B skip, N twist / twist backwards, Q the reverse (the owner's twist algorithm,
   which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped). `js/orozco.js`
   plans a solve. `log/2026-10-25-orozco-corners.mjs` (`--write`) checks 3,000 full solves (M2 edges then Orozco).
+  Research (`docs/orozco-research-notes.md`, from cubinghistory.com and Riu's note.com tutorial) confirmed memo from C,
+  the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
+  under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).

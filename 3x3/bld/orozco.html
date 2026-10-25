@@ -21,12 +21,16 @@
     </p>
     <div class="source-note">
       <p>
-        Orozco is Gabriel Alejandro Orozco Casillas's method (2013). From the sources: buffer UFR, helper UBR, and the
-        rule that odd targets cycle buffer → target → helper and even targets buffer → helper → target
-        (cubinghistory.com, speedsolving.com forum). Not from your notes. Worked out here, not from those sources
-        (they could not be read in full from the build environment): the 18 commutators, the rule for the helper's
-        letters B, N and Q, and the parity fix. Checked by <code>log/2026-10-25-orozco-corners.mjs</code>: 3,000
-        random scrambles solved by M2 edges (with your M2 parity) and then these corners.
+        Orozco is Gabriel Alejandro Orozco Casillas's method (2013). Not from your notes. From the sources
+        (cubinghistory.com; Riu's tutorial on note.com, https://note.com/cuber1u/n/n396edec5a495, read in translation):
+        buffer UFR, helper UBR, 1st target of a pair forwards and 2nd backwards, the published corner list, the
+        helper algorithms and their parity. Notes in <code>docs/orozco-research-notes.md</code>.
+      </p>
+      <p>
+        Ours: the three-base list (every letter checked to do exactly what the published one does), using your twist
+        algorithm for N and Q (the same effect as the published ones), and the Ra-perm for parity after M2 edges.
+        Checked by <code>log/2026-10-25-orozco-corners.mjs</code>: every published algorithm, and 3,000 random scrambles
+        solved by M2 edges then these corners. Speedsolving.com and Orozco's video could not be read.
       </p>
     </div>
 
@@ -47,10 +51,17 @@
     </p>
 
     <h2 class="section-heading" id="example" data-short="Example">Example: the pair O, L</h2>
+    <p>Hold white on top, green in front. Scramble:</p>
+    <p class="case-alg"><code id="example-scramble"></code></p>
+    <p>Memo from C: <strong>O L</strong>. Solve:</p>
+    <ol class="step-how" id="example-moves"></ol>
     <div class="case-grid" id="example-card"></div>
 
     <h2 class="section-heading" id="commutators" data-short="Commutators">The 18 commutators</h2>
-    <p>Grouped by base. Setup moves in orange; do the setup, the base, then undo the setup.</p>
+    <p>
+      Grouped by base. Setup moves in orange; do the setup, the base, then undo the setup. Where the published list
+      (Riu, note.com) has a different algorithm for the same letter, it is shown under ours; both do the same thing.
+    </p>
     <div id="groups"></div>
 
     <h2 class="section-heading" id="helper" data-short="Helper">The helper's letters: B, N, Q</h2>
@@ -60,6 +71,10 @@
     </p>
     <div class="table-wrap"><table class="bld-table" id="helper-table"></table></div>
     <p class="bld-note">Twist: <code id="twist"></code><br />Backwards: <code id="twist-rev"></code></p>
+    <p class="bld-note">
+      The published version uses two shorter algorithms with the same effect (14 moves each, checked):
+      N <code id="pub-n"></code>, Q <code id="pub-q"></code>, each done backwards as the 2nd of a pair. The same rule as above.
+    </p>
 
     <h2 class="section-heading" id="parity" data-short="Parity">Odd number of corner letters</h2>
     <p>
@@ -67,6 +82,10 @@
       (your M2 parity algorithm leaves those two edges swapped, as for Old Pochmann). One algorithm fixes both, the Ra-perm:
     </p>
     <p class="case-alg"><code id="parity-alg"></code></p>
+    <p class="bld-note">
+      The published parity, <code id="pub-parity"></code>, swaps UF and UB instead: it is for Orozco edges (buffer UF,
+      helper UB). With M2 edges, use the Ra-perm above.
+    </p>
   </main>
 
   <script type="module">
@@ -75,7 +94,9 @@
     import { notationEl } from '../../js/move-format.js';
     import { renderCases } from '../../js/render-cases.js';
     import { WHITE_TOP } from '../../js/cube-diagram.js';
-    import { invertAlg } from '../../js/algs.js';
+    import { invertAlg, cancelMoves, expandBrackets } from '../../js/algs.js';
+    import { orozcoPublished, OROZCO_PUBLISHED_HELPER, OROZCO_PUBLISHED_PARITY } from '../../data/orozco-published.js?v=1';
+    const PUB = Object.fromEntries(orozcoPublished.map((r) => [r.letter, r.notation]));
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -89,6 +110,9 @@
     $('twist').textContent = OROZCO_TWIST;
     $('twist-rev').textContent = OROZCO_TWIST_REV;
     $('parity-alg').textContent = OROZCO_PARITY;
+    $('pub-n').textContent = OROZCO_PUBLISHED_HELPER.N;
+    $('pub-q').textContent = OROZCO_PUBLISHED_HELPER.Q;
+    $('pub-parity').textContent = OROZCO_PUBLISHED_PARITY;
 
     // the commutators, one table per base
     for (const base of OROZCO_BASES) {
@@ -112,6 +136,12 @@
         const m = el('td');
         m.append(el('code', null, r.moves), el('div', 'bld-note', `${r.length} moves`));
         tr.appendChild(m);
+        // the published version, when it is a different algorithm
+        const pub = PUB[r.letter];
+        if (pub && cancelMoves(expandBrackets(pub)) !== r.moves) {
+          const n = cancelMoves(expandBrackets(pub)).split(' ').length;
+          c.appendChild(el('div', 'bld-note', `Published: ${pub} (${n} moves)`));
+        }
       }
       wrap.appendChild(t);
       $('groups').appendChild(wrap);
@@ -136,6 +166,15 @@
     const O = orozcoCorners.find((r) => r.letter === 'O');
     const L = orozcoCorners.find((r) => r.letter === 'L');
     const solve = `${O.moves} ${invertAlg(L.moves)}`;
+    $('example-scramble').textContent = cancelMoves(invertAlg(solve));
+    for (const [what, notation, moves] of [
+      ['O forwards', O.notation, O.moves],
+      ['L backwards', `${L.notation}'`, invertAlg(L.moves)],
+    ]) {
+      const li = el('li');
+      li.append(el('strong', null, `${what}: `), el('code', null, notation), el('br'), el('code', null, moves));
+      $('example-moves').appendChild(li);
+    }
     renderCases('example-card', [{
       name: 'Memo: O L',
       orientation: 'O forwards, then L backwards',

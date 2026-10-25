@@ -112,6 +112,24 @@ for (let n = 0; n < 3000; n++) {
 console.log(`commutators: ${rows.length} (setup moves 0/1/2/3: ${[0, 1, 2, 3].map((k) => rows.filter((r) => (r.setup ? r.setup.split(' ').length : 0) === k).length).join('/')}, lengths ${Math.min(...rows.map((r) => r.length))}-${Math.max(...rows.map((r) => r.length))})`);
 console.log(`full solves: ${counts.solves}/3000 (odd corner count ${counts.odd}, a helper letter ${counts.helper}, a cycle break ${counts.breaks})`);
 
+// ---------- the published list (note.com) ----------
+{
+  const { orozcoPublished, OROZCO_PUBLISHED_HELPER, OROZCO_PUBLISHED_PARITY } = await import('../data/orozco-published.js');
+  check('published list: 18 letters', orozcoPublished.length === 18 && new Set(orozcoPublished.map((r) => r.letter)).size === 18);
+  for (const r of orozcoPublished) {
+    const p = permOf(cancelMoves(expandBrackets(r.notation)));
+    const moved = p.filter((x, i) => x !== i).length;
+    check(`published ${r.letter} cycles buffer -> ${r.letter} -> helper, nothing else`, p[SPOT[BUFFER]] === SPOT[r.letter] && p[SPOT[r.letter]] === SPOT[HELPER] && p[SPOT[HELPER]] === SPOT[BUFFER] && moved === 9, r.notation);
+  }
+  const same = (a, b) => permOf(a).every((x, i) => x === permOf(b)[i]);
+  check('published N = twist', same(OROZCO_PUBLISHED_HELPER.N, expandBrackets(TWIST)));
+  check('published Q = twist backwards', same(OROZCO_PUBLISHED_HELPER.Q, expandBrackets(TWIST_REV)));
+  // their parity: UFR <-> UBR and UF <-> UB; ours (Ra): UFR <-> UBR and UL <-> UB
+  const pp = permOf(OROZCO_PUBLISHED_PARITY);
+  check('published parity swaps the buffer and helper corners', pp[SPOT.C] === SPOT.B && pp[SPOT.B] === SPOT.C);
+  console.log(`published list: ${orozcoPublished.length} checked, helper algorithms and parity checked`);
+}
+
 // ---------- write ----------
 if (WRITE) {
   const path = 'data/orozco-corners.js';
