@@ -22,7 +22,7 @@
     </p>
     <div class="source-note">
       <p>
-        Letters are Speffz, memo as on the M2 / Old Pochmann page (edges from DF, corners from UBL). The drill
+        Letters are Speffz, memo as on the M2 and Old Pochmann pages (edges from DF, corners from UBL), or from UFR when Orozco is chosen for corners. The drill
         scrambles are made from the Corner cycles and Edge cycles tables: commutators, twists and flips combined until
         exactly the chosen pieces are unsolved, then reversed. Every scramble is checked on the simulated cube; the
         whole generator is checked by <code>log/2026-10-23-bld-drill-check.mjs</code> (1,900 scrambles, each solved by
@@ -81,6 +81,11 @@
           <label>Corners <select id="s-corners"></select></label>
           <label>Edges <select id="s-edges"></select></label>
         </fieldset>
+        <fieldset>
+          <legend>Corners solved with</legend>
+          <label><input type="radio" name="s-method" value="op" checked /> Old Pochmann</label>
+          <label><input type="radio" name="s-method" value="orozco" /> Orozco</label>
+        </fieldset>
       </form>
       <p class="drill-error" id="s-error" role="status"></p>
       <div class="rec-controls">
@@ -104,6 +109,7 @@
         <h3>Edges <span class="bld-muted" id="s-edge-count"></span></h3>
         <p class="memo-letters" id="s-edge-letters"></p>
         <h3>Corners <span class="bld-muted" id="s-corner-count"></span></h3>
+        <p class="bld-note" id="s-corner-from"></p>
         <p class="memo-letters" id="s-corner-letters"></p>
         <p class="bld-note" id="s-parity"></p>
         <p class="bld-note">Underlined letter: start of a new cycle.</p>
@@ -143,6 +149,7 @@
     import { bldNet, colourNet } from '../../js/bld-net.js?v=4';
     import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
     import { bldPlan } from '../../js/bld-memo.js';
+    import { orozcoCornerPlan } from '../../js/orozco.js?v=1';
     import { drillScramble, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES } from '../../js/bld-drill.js';
     import { letterPairs } from '../../data/letter-pairs.js?v=1';
     import { bldEdges, bldCorners, BLD_PARITY } from '../../data/bld.js';
@@ -263,6 +270,38 @@
       }
     }
 
+    // Orozco corner moves: one commutator per letter (forwards / backwards), helper letters, parity.
+    const HOW = { forwards: 'forwards', backwards: 'backwards', skip: 'helper: nothing', twist: 'helper: twist', 'twist-rev': 'helper: twist backwards' };
+    function orozcoTable(id, oz) {
+      const table = $(id);
+      table.replaceChildren();
+      table.createCaption().textContent = 'Corners (Orozco)';
+      const head = table.createTHead().insertRow();
+      ['#', 'Letter', 'How', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      oz.steps.forEach((t, i) => {
+        const tr = body.insertRow();
+        tr.appendChild(el('td', 'bld-muted', String(i + 1)));
+        const th = el('th', 'bld-letter');
+        const a = el('a', null, t.letter);
+        if (!'BNQ'.includes(t.letter)) a.href = `../bld/orozco.html#corner-${t.letter}`;
+        th.appendChild(a);
+        tr.appendChild(th);
+        tr.appendChild(el('td', 'bld-piece', HOW[t.how]));
+        const td = el('td');
+        if (t.notation) td.append(el('code', null, t.notation));
+        if (t.moves && t.moves !== t.notation) td.append(el('div', 'bld-note', t.moves));
+        tr.appendChild(td);
+      });
+      if (oz.parity) {
+        const tr = body.insertRow();
+        tr.append(el('td'), el('th', 'bld-letter', 'Parity'), el('td', 'bld-muted', 'odd corners'));
+        const td = el('td');
+        td.append(el('code', null, oz.parityAlg));
+        tr.appendChild(td);
+      }
+    }
+
     let cube3d = null;
     function showScramble() {
       const solve = saved.mode === 'solve';
@@ -286,12 +325,19 @@
         $('s-cube').appendChild(cube3d.element);
       } else cube3d.update(plan.state);
       lettersInto($('s-edge-letters'), plan.edges);
-      lettersInto($('s-corner-letters'), plan.corners);
+      const orozco = saved.cornerMethod === 'orozco';
+      const oz = orozco ? orozcoCornerPlan(plan.state) : null;
+      const cornerTargets = orozco ? oz.targets : plan.corners;
+      lettersInto($('s-corner-letters'), cornerTargets);
+      $('s-corner-from').textContent = orozco
+        ? `Orozco: memo from C (UFR); B, N, Q are the helper.${oz.parity ? ' Odd number: Ra-perm at the end.' : ''}`
+        : 'Old Pochmann: memo from E (UBL).';
       $('s-edge-count').textContent = `${plan.edges.length} targets`;
-      $('s-corner-count').textContent = `${plan.corners.length} targets`;
+      $('s-corner-count').textContent = `${cornerTargets.length} targets`;
       $('s-parity').textContent = plan.parity ? 'Odd number of edge targets: parity after the edges.' : 'Even number of edge targets: no parity.';
       movesTable('s-edge-moves', 'Edges', plan.edges, plan.parity);
-      movesTable('s-corner-moves', 'Corners', plan.corners, false);
+      if (orozco) orozcoTable('s-corner-moves', oz);
+      else movesTable('s-corner-moves', 'Corners (Old Pochmann)', plan.corners, false);
       $('s-memo').hidden = !saved.showMemo;
       $('s-moves').hidden = !saved.showMoves;
       $('s-show-memo').textContent = saved.showMemo ? 'Hide targets' : 'Show targets';
@@ -314,6 +360,12 @@
     $('s-new').addEventListener('click', () => { newScramble(); showScramble(); cube3d?.reset(); });
     document.querySelectorAll('#s-pic-switch button').forEach((b) => b.addEventListener('click', () => {
       saved.tracePic = b.dataset.pic;
+      save();
+      showScramble();
+    }));
+    setRadio('s-method', saved.cornerMethod === 'orozco' ? 'orozco' : 'op');
+    document.querySelectorAll('input[name="s-method"]').forEach((r) => r.addEventListener('change', () => {
+      saved.cornerMethod = radio('s-method');
       save();
       showScramble();
     }));

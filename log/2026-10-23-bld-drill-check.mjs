@@ -1,10 +1,12 @@
 // Checks js/bld-drill.js: for every possible pair of counts (corners 0, 2-8; edges 0, 2-12),
 // 20 seeded scrambles each must leave exactly those pieces unsolved (centres solved), and
-// the M2 / Old Pochmann solution from js/bld-memo.js must solve each one.
+// the M2 / Old Pochmann solution from js/bld-memo.js must solve each one, and so must M2 + Orozco corners.
 //   node log/2026-10-23-bld-drill-check.mjs        prints ALL OK and scramble lengths
 import { drillScramble, possible, unsolvedCounts, MAX_CORNERS, MAX_EDGES } from '../js/bld-drill.js';
 import { bldPlan, scrambledState } from '../js/bld-memo.js';
 import { applyAlg, isSolved } from '../js/cube-sim.js';
+import { orozcoCornerPlan } from '../js/orozco.js';
+import { BLD_PARITY } from '../data/bld.js';
 
 let seed = 20261023;
 const rnd = () => {
@@ -29,6 +31,10 @@ for (let c = 0; c <= MAX_CORNERS; c++) {
       if (got.corners !== c || got.edges !== e || got.centres) fails.push(`${c}/${e}: got ${got.corners}/${got.edges} ${r.scramble}`);
       const plan = bldPlan(r.scramble);
       if (!isSolved(applyAlg(plan.state, plan.solution))) fails.push(`${c}/${e}: M2/OP does not solve ${r.scramble}`);
+      // the same scramble with Orozco corners (the drill's other corner choice)
+      const oz = orozcoCornerPlan(plan.state);
+      const ozMoves = [...plan.edges.map((x) => x.moves), plan.parity ? BLD_PARITY[0] : '', ...oz.steps.map((x) => x.moves), oz.parity ? oz.parityAlg : ''].filter(Boolean).join(' ');
+      if (!isSolved(applyAlg(plan.state, ozMoves))) fails.push(`${c}/${e}: M2/Orozco does not solve ${r.scramble}`);
       lens.push(r.scramble.split(' ').length);
     }
     lengths[`${c}/${e}`] = Math.round(lens.reduce((a, b) => a + b, 0) / lens.length);

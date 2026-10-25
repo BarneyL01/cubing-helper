@@ -276,7 +276,7 @@ built ahead of being asked for. As of 2026-10-03:
   plans a solve. `log/2026-10-25-orozco-corners.mjs` (`--write`) checks 3,000 full solves (M2 edges then Orozco).
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
-  `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves.
+  `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).
   Scrambles with N corners / M edges unsolved come from `js/bld-drill.js` (commutators reversed; no solver),
   checked by `log/2026-10-23-bld-drill-check.mjs`. Letter-pair words: `data/letter-pairs.js`, X = "sh",
   checked by `log/2026-10-23-letter-pairs-check.mjs`. See `log/2026-10-23-blind-drills.md`.

@@ -35,3 +35,4 @@ number of unsolved corners/edges); tap to reveal; no score; a separate page of l
   which did not show on the owner's phone. Checked in headless Chromium at 390 px: start view white top,
   green front, red right; y brings red to the front; x2 puts yellow on top with blue in front; no page
   scroll while dragging (`touch-action: none`), no console errors.
+- 2026-10-25: Tracing and Small solves got a corner method switch (Old Pochmann / Orozco). The drill checker now also solves every drill scramble with M2 + Orozco corners (1,900, ALL OK).
