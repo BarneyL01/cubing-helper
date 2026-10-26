@@ -25,7 +25,7 @@ for (let c = 0; c <= MAX_CORNERS; c++) {
     const lens = [];
     for (let i = 0; i < 20; i++) {
       let r;
-      try { r = drillScramble({ corners: c, edges: e, rnd }); } catch (err) { fails.push(`${c}/${e}: ${err.message}`); continue; }
+      try { r = drillScramble({ corners: c, edges: e, rnd, budgetMs: 0 }); } catch (err) { fails.push(`${c}/${e}: ${err.message}`); continue; }
       n++;
       const got = unsolvedCounts(scrambledState(r.scramble));
       if (got.corners !== c || got.edges !== e || got.centres) fails.push(`${c}/${e}: got ${got.corners}/${got.edges} ${r.scramble}`);
@@ -43,4 +43,19 @@ for (let c = 0; c <= MAX_CORNERS; c++) {
 const show = (cs, es) => cs.map((c) => `${c}c: ` + es.map((e) => lengths[`${c}/${e}`] ?? '-').join(' ')).join('\n');
 console.log(`mean scramble length (rows corners, columns edges 0 2 3 4 6 8 12):\n${show([0, 2, 3, 4, 6, 8], [0, 2, 3, 4, 6, 8, 12])}`);
 console.log(`${n} scrambles in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+// With the page's real setting (shortest of ~0.15 s of tries): typical lengths, also checked.
+{
+  const rows = [];
+  for (const [c, e] of [[2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [0, 4], [3, 3], [4, 4]]) {
+    const lens = [];
+    for (let i = 0; i < 8; i++) {
+      const r = drillScramble({ corners: c, edges: e, rnd });
+      const got = unsolvedCounts(scrambledState(r.scramble));
+      if (got.corners !== c || got.edges !== e || got.centres) fails.push(`page setting ${c}/${e}: got ${got.corners}/${got.edges}`);
+      lens.push(r.scramble.split(' ').length);
+    }
+    rows.push(`${c}/${e}: ${Math.round(lens.reduce((a, b) => a + b, 0) / lens.length)} (${Math.min(...lens)}-${Math.max(...lens)})`);
+  }
+  console.log(`page setting, mean (min-max) moves: ${rows.join(', ')}`);
+}
 if (fails.length) { console.log(`${fails.length} FAILED\n${fails.slice(0, 10).join('\n')}`); process.exitCode = 1; } else console.log('ALL OK');

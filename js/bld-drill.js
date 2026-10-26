@@ -1,19 +1,17 @@
 // Blindfolded drills: scrambles with a chosen number of unsolved corners and edges.
-// There is no 3x3 solver on the site, so a scramble is made the other way round:
-// random commutators, twists and flips from the Corner/Edge cycles tables are
-// combined until exactly the asked-for pieces are unsolved, and the scramble is
-// those moves reversed. Every scramble is checked on the simulated cube before it
-// is returned. Checked under Node by log/2026-10-23-bld-drill-check.mjs.
+// There is no 3x3 solver on the site, so a scramble is made the other way round: short pure
+// algorithms (data/drill-pieces.js: 8-move corner 3-cycles, 4-8 move edge 3-cycles, 14-move twists,
+// flips and odd swaps) are combined until exactly the asked-for pieces are unsolved, and the
+// scramble is those moves reversed. Many such scrambles are made for a short time and the shortest
+// is kept. Every scramble is checked on the simulated cube before it is returned. Checked under
+// Node by log/2026-10-23-bld-drill-check.mjs.
 import { cancelMoves, invertAlg } from './algs.js';
 import { randomScramble, scrambledState } from './bld-memo.js';
-import { cornerComms, cornerTwists, cornerParity } from '../data/corner-cycles.js';
-import { edgeComms, edgeFlips } from '../data/edge-cycles.js';
+import { DRILL_PIECES } from '../data/drill-pieces.js';
 
 export const MAX_CORNERS = 8;
 export const MAX_EDGES = 12;
 
-// Edge commutators with E or S slice turns are awkward to do by hand; M is fine (M2 uses it).
-const EDGE_ROWS = edgeComms.filter((r) => !/[ES]/.test(r.moves));
 const key = (s) => `${s.p.join()}|${s.n.join()}`;
 
 // How many corners and edges are not solved (moved, or twisted/flipped in place).
@@ -36,57 +34,49 @@ export function possible(corners, edges) {
 }
 
 const pick = (xs, rnd) => xs[Math.floor(rnd() * xs.length)];
+const length = (alg) => (alg ? alg.split(' ').length : 0);
 
-// Adds random steps until `count(moves)` equals `target`, or gives up (null).
-function walk(start, steps, target, count, rnd, limit) {
-  let moves = start;
-  for (let i = 0; i < limit; i++) {
-    moves = `${moves} ${steps()}`.trim();
-    const n = count(moves);
-    // stop on the target most of the time, sometimes carry on (more varied cycles)
-    if (n === target && rnd() < 0.7) return moves;
-  }
-  return count(moves) === target ? moves : null;
+// One try: random pieces until the counts match (or null). Corners first, then edges; half the time
+// (when both kinds are there) an odd swap first, as a real scramble can have.
+function attempt(corners, edges, rnd) {
+  const counts = (m) => unsolvedCounts(scrambledState(invertAlg(m)));
+  let moves = corners >= 2 && edges >= 2 && rnd() < 0.5 ? pick(DRILL_PIECES.swap, rnd) : '';
+  const phase = (target, kind, step, limit) => {
+    for (let i = 0; i < limit; i++) {
+      // stop on the target most of the time, sometimes carry on (more varied cycles)
+      if (counts(moves)[kind] === target && (i > 0 || target === 0) && rnd() < 0.7) return true;
+      moves = cancelMoves(`${moves} ${step()}`);
+    }
+    return counts(moves)[kind] === target;
+  };
+  if (!phase(corners, 'corners', () => pick(rnd() < 0.85 ? DRILL_PIECES.corner3 : DRILL_PIECES.twist2, rnd), corners + 2)) return null;
+  if (!phase(edges, 'edges', () => pick(rnd() < 0.85 ? DRILL_PIECES.edge3 : DRILL_PIECES.flip2, rnd), edges + 2)) return null;
+  const scramble = cancelMoves(invertAlg(moves));
+  const got = unsolvedCounts(scrambledState(scramble));
+  return got.corners === corners && got.edges === edges && !got.centres ? scramble : null;
 }
 
-// { scramble, corners, edges } or throws if the counts are impossible.
-export function drillScramble({ corners = 4, edges = 0, rnd = Math.random } = {}) {
+// { scramble, corners, edges } or throws if the counts are impossible. Keeps trying for `budgetMs`
+// (at least one success) and returns the shortest scramble found.
+export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budgetMs = 150 } = {}) {
   if (!possible(corners, edges)) throw new Error(`No cube has exactly ${corners} corners and ${edges} edges unsolved.`);
-  const counts = (moves) => unsolvedCounts(scrambledState(invertAlg(moves)));
-  const cornerStep = () => (rnd() < 0.88 ? pick(cornerComms, rnd) : pick(cornerTwists, rnd)).moves;
-  const edgeStep = () => (rnd() < 0.85 ? pick(EDGE_ROWS, rnd) : pick(edgeFlips, rnd)).moves;
-  for (let attempt = 0; attempt < 400; attempt++) {
-    // Half the time (when both kinds are there) an odd number of swaps: the corner
-    // parity step swaps two corners and two edges, as a real scramble can.
-    const odd = corners >= 2 && edges >= 2 && rnd() < 0.5;
-    let moves = odd ? pick(cornerParity, rnd).moves : '';
-    if (corners) {
-      moves = walk(moves, cornerStep, corners, (m) => counts(m).corners, rnd, corners + 3);
-      if (moves === null) continue;
-    } else if (counts(moves).corners) continue;
-    if (edges) {
-      const done = walk(moves, edgeStep, edges, (m) => counts(m).edges, rnd, edges + 3);
-      if (done === null) continue;
-      moves = done;
-    } else if (counts(moves).edges) continue;
-    const scramble = cancelMoves(invertAlg(moves));
-    const got = unsolvedCounts(scrambledState(scramble));
-    if (got.corners === corners && got.edges === edges && !got.centres) return shorter({ scramble, corners, edges }, rnd);
+  const t0 = Date.now();
+  let best = null;
+  for (let tries = 0; tries < 20000; tries++) {
+    const s = attempt(corners, edges, rnd);
+    if (s && (!best || length(s) < length(best))) best = s;
+    if (best && Date.now() - t0 >= budgetMs) break;
   }
-  throw new Error('Could not make that scramble; try again.');
-}
-
-// With many unsolved pieces, a plain random-move scramble is often just as good and much
-// shorter: try some and keep one that has exactly the asked-for counts.
-function shorter(found, rnd) {
-  const length = found.scramble.split(' ').length;
-  if (length <= 25 || found.corners + found.edges < 16) return found;
-  for (let i = 0; i < 300; i++) {
-    const scramble = randomScramble(i < 150 ? 20 : 25, rnd);
-    const got = unsolvedCounts(scrambledState(scramble));
-    if (got.corners === found.corners && got.edges === found.edges) return { ...found, scramble };
+  if (!best) throw new Error('Could not make that scramble; try again.');
+  // nearly every piece unsolved: a plain random-move scramble with the same counts can be shorter
+  if (corners + edges >= 16 && length(best) > 20) {
+    for (let i = 0; i < 300; i++) {
+      const s = randomScramble(i < 150 ? 20 : 25, rnd);
+      const got = unsolvedCounts(scrambledState(s));
+      if (got.corners === corners && got.edges === edges) { if (length(s) < length(best)) best = s; break; }
+    }
   }
-  return found;
+  return { scramble: best, corners, edges };
 }
 
 // Letter-scheme drill: a random sticker of the chosen kind (Speffz letter A-X).
