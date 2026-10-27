@@ -2433,3 +2433,23 @@ a.menu-sec[aria-current="page"],
 .orz-net figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem; }
 .orz-mini { width: 112px; margin-top: 0.3rem; }
 .orz-mini .bld-net { width: 112px; }
+
+/* How Orozco works page */
+.orz-pieces { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.orz-pic { width: min(100%, 300px); }
+.orz-pic .cube-3d { width: 100%; height: auto; display: block; }
+.orz-legend { margin: 0; padding-left: 1.2rem; }
+.orz-legend li { margin: 0.25rem 0; }
+.orz-steps { display: grid; gap: 1rem; }
+.orz-step { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem; }
+.orz-step .orz-pic { width: min(100%, 220px); }
+.orz-step > div:last-child { flex: 1 1 220px; }
+.orz-step h3 { margin: 0 0 0.3rem; font-size: 1.05rem; }
+.orz-step p { margin: 0; }
+.orz-moves { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; margin: 0.6rem 0 0.2rem; }
+.orz-moves span { padding: 0.1rem 0.3rem; border-radius: 4px; }
+.orz-done { color: var(--text-muted); }
+.orz-next { background: var(--accent); color: var(--accent-contrast); font-weight: 700; }
+.orz-sep { color: var(--text-muted); }
+.orz-run-controls .rec-btn-primary { grid-column: auto; }
+.orz-grey { display: flex; gap: 0.5rem; align-items: center; min-height: 44px; }

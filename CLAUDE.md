@@ -246,7 +246,7 @@ built ahead of being asked for. As of 2026-10-03:
   `data/bld.js`, letter nets from `js/bld-net.js`. **Split 2026-10-23** into the Blind section:
   Overview (`3x3/bld/index.html`: order and letters, links to the two pages below and Blind memo),
   M2 edges (`m2.html`: edge setup table + parity) and Old Pochmann (`old-pochmann.html`: tips, swap,
-  corner setup table), Orozco (`orozco.html`), plus Letter pairs (`letter-pairs.html`). A small script on index.html sends
+  corner setup table), Orozco (`orozco.html`), How Orozco works (`orozco-explained.html`), plus Letter pairs (`letter-pairs.html`). A small script on index.html sends
   old anchors (`#edge-*`, `#corner-*`, `#bld-edges`, `#bld-parity`, `#bld-tips`, `#bld-swap`,
   `#bld-corners`, `#edges-m2`, `#corners-old-pochmann`) to the new pages.
   Verified by simulating 500 full blind solves (memo from the scramble →
@@ -278,6 +278,9 @@ built ahead of being asked for. As of 2026-10-03:
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
+  **How Orozco works** (`3x3/bld/orozco-explained.html`, Blind section, 2026-10-27): the base `[R D R', U']` taken apart for
+  learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
+  runner (rotatable cube, Back/Next/Play, from solved or from the case). `log/2026-10-27-orozco-explained.md`.
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).

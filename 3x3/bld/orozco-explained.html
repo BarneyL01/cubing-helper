@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How Orozco works — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=9" />
+  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <script type="module" src="../../js/site-chrome.js?v=4"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>How Orozco works</h1>
+    <p class="subtitle">
+      One commutator, <code>[R D R', U']</code>, taken apart: what each part does, and why only three corners end up moved.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own explanation of the Orozco base commutator for the letter O (see the Orozco page). Every picture and the
+        step runner come from the simulator, so they always match the moves. Where each piece is after each part was
+        traced by simulation (<code>log/2026-10-27-orozco-explained.md</code>).
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="idea" data-short="Idea">The idea</h2>
+    <p>A commutator is four parts: <strong>X</strong>, <strong>Y</strong>, <strong>undo X</strong>, <strong>undo Y</strong>. Here:</p>
+    <ul class="bld-tips">
+      <li><strong>X</strong> = <code>R D R'</code> (the <em>insertion</em>): swaps one top-layer corner with a bottom-layer corner.</li>
+      <li><strong>Y</strong> = <code>U'</code> (the <em>interchange</em>): turns the top layer, so a different corner sits in that spot.</li>
+      <li><strong>Undo X</strong> = <code>R D' R'</code>, <strong>undo Y</strong> = <code>U</code>.</li>
+    </ul>
+    <p>All 8 moves: <code>R D R' U' R D' R' U</code>.</p>
+
+    <h2 class="section-heading" id="pieces" data-short="Pieces">The three corners</h2>
+    <p>Hold white on top, green in front. Only these three corners are coloured in the pictures; everything else is grey.</p>
+    <div class="orz-pieces">
+      <div class="orz-pic" id="pic-start"></div>
+      <ul class="orz-legend">
+        <li><strong>Buffer</strong> (UFR): white, green, red</li>
+        <li><strong>Helper</strong> (UBR): white, red, blue</li>
+        <li><strong>O</strong> (the corner RDB): yellow, red, blue</li>
+      </ul>
+    </div>
+    <p class="bld-note">The faded squares around the cube show the back and left sides, as if in a mirror.</p>
+
+    <h2 class="section-heading" id="parts" data-short="Parts">Part by part</h2>
+    <p>Starting from a solved cube, so you can follow where each corner goes.</p>
+    <div class="orz-steps" id="parts-list"></div>
+
+    <h2 class="section-heading" id="why" data-short="Why">Why only three corners move</h2>
+    <ul class="bld-tips">
+      <li><strong>X changes only one spot in the top layer</strong>: the helper spot. The rest of the top layer is untouched.</li>
+      <li><strong>Y puts a different corner into that spot</strong> (the buffer piece).</li>
+      <li><strong>Undo X</strong> reverses X for that spot, but the corner it sends down is now the buffer piece, not the one that came up.
+        Everything else X moved goes back.</li>
+      <li><strong>Undo Y</strong> turns the top layer back.</li>
+    </ul>
+    <p>
+      So: buffer piece → O's spot, O piece → helper spot, helper piece → buffer spot. Every other piece, edges included, is
+      back where it started. Halfway through (after Y) the cube looks badly broken; that is normal.
+    </p>
+
+    <h2 class="section-heading" id="run" data-short="Run it">Run it</h2>
+    <p>Step through the moves one at a time, or press Play. Drag the cube to look at any side.</p>
+    <div class="ex-tabs" role="group" aria-label="Start from" id="run-start">
+      <button type="button" data-start="solved">From solved</button>
+      <button type="button" data-start="case">From the case it solves</button>
+    </div>
+    <p class="bld-note" id="run-start-note"></p>
+    <div class="drill-stage">
+      <p class="drill-label" id="run-part"></p>
+      <div id="run-cube"></div>
+      <p class="orz-moves" id="run-moves"></p>
+      <p id="run-caption"></p>
+    </div>
+    <div class="rec-controls orz-run-controls">
+      <button type="button" class="rec-btn" id="run-back">◀ Back</button>
+      <button type="button" class="rec-btn" id="run-next">Next ▶</button>
+      <button type="button" class="rec-btn rec-btn-primary" id="run-play">Play</button>
+      <button type="button" class="rec-btn" id="run-reset">Reset</button>
+    </div>
+    <label class="orz-grey"><input type="checkbox" id="run-grey" checked /> Grey out the other pieces</label>
+
+    <h2 class="section-heading" id="same-shape" data-short="Other letters">Same shape, other letters</h2>
+    <ul class="bld-tips">
+      <li>Change the D turn: <code>[R D' R', U']</code> brings up a different bottom corner and solves H; <code>[R D2 R', U']</code> solves L.</li>
+      <li>Every other Orozco letter is one of these three with a setup first (D or L turns) to bring its corner to where the base expects it. See <a href="orozco.html#commutators">the Orozco page, By base</a>.</li>
+      <li>Done backwards (the 2nd letter of a pair), the same three corners move the other way round.</li>
+    </ul>
+  </main>
+
+  <script type="module">
+    import { applyAlg, solvedCube } from '../../js/cube-sim.js';
+    import { invertAlg } from '../../js/algs.js';
+    import { cube3dSvg } from '../../js/cube-3d.js?v=2';
+    import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
+    // the three corners, by where they start on a solved cube
+    const KEEP = new Set(['1,1,1', '1,1,-1', '1,-1,-1']);
+    const START = solvedCube().map((s) => ({ ...s, home: s.p.join() }));
+    // colour only the three corners (grey = 'X') when asked
+    const shown = (state, grey = true) => state.map((s) => ({ ...s, colour: !grey || KEEP.has(s.home) ? s.colour : 'X' }));
+    const picture = (state, label) => cube3dSvg(shown(state), { palette: PALETTE, label, mirrors: true });
+
+    const PARTS = [
+      { name: 'X', moves: "R D R'", text: 'The helper piece drops into the bottom layer; the O piece comes up into the helper spot. The rest of the top layer is as it was.' },
+      { name: 'Y', moves: "U'", text: 'Turn the top layer: the buffer piece moves into the helper spot, and the O piece moves on to the back left (UBL). The helper piece waits below.' },
+      { name: 'Undo X', moves: "R D' R'", text: "The reverse of X, for the same spot: the corner there now (the buffer piece) goes down, into O's old spot; the helper piece comes back up." },
+      { name: 'Undo Y', moves: 'U', text: 'Turn the top layer back: the helper piece lands in the buffer spot, the O piece in the helper spot. Everything else is back.' },
+    ];
+
+    // start picture and the part-by-part pictures
+    $('pic-start').innerHTML = picture(START, 'Solved cube: the three corners in colour');
+    {
+      let st = START;
+      PARTS.forEach((p, i) => {
+        st = applyAlg(st, p.moves);
+        const card = el('div', 'orz-step');
+        const pic = el('div', 'orz-pic');
+        pic.innerHTML = picture(st, `After ${p.name}`);
+        const body = el('div');
+        const h = el('h3', null, `${i + 1}. ${p.name}: `);
+        h.appendChild(el('code', null, p.moves));
+        body.append(h, el('p', null, p.text));
+        card.append(pic, body);
+        $('parts-list').appendChild(card);
+      });
+    }
+
+    // the step runner: one move at a time
+    const ALL = PARTS.flatMap((p, pi) => p.moves.split(' ').map((m) => ({ move: m, part: pi })));
+    const KEY = 'cubing-helper:orozco-explained';
+    let startFrom = 'solved';
+    try { if (localStorage.getItem(KEY) === 'case') startFrom = 'case'; } catch {}
+    let pos = 0;
+    let timer = null;
+    const base = () => (startFrom === 'case' ? applyAlg(START, invertAlg(ALL.map((a) => a.move).join(' '))) : START);
+    const cube = rotatableCube(shown(base()), { palette: PALETTE, label: 'Cube after the moves so far; drag to turn it' });
+    $('run-cube').appendChild(cube.element);
+    function draw() {
+      const done = ALL.slice(0, pos).map((a) => a.move).join(' ');
+      cube.update(shown(applyAlg(base(), done), $('run-grey').checked));
+      // moves, with the ones done so far marked
+      const line = $('run-moves');
+      line.replaceChildren();
+      ALL.forEach((a, i) => {
+        if (i && ALL[i - 1].part !== a.part) line.append(el('span', 'orz-sep', '·'));
+        line.append(el('span', i < pos ? 'orz-done' : i === pos ? 'orz-next' : 'orz-todo', a.move));
+      });
+      if (pos === 0) {
+        $('run-part').textContent = 'Start';
+        $('run-caption').textContent = startFrom === 'case'
+          ? 'The buffer piece belongs at O, O\'s piece at the helper, the helper piece at the buffer.'
+          : 'Solved cube. Press Next or Play.';
+      } else {
+        const p = PARTS[ALL[pos - 1].part];
+        const partDone = pos === ALL.length || ALL[pos].part !== ALL[pos - 1].part;
+        $('run-part').textContent = `${p.name} (${p.moves})${partDone ? ' done' : ''} — move ${pos} of ${ALL.length}`;
+        $('run-caption').textContent = partDone ? p.text : '';
+        if (pos === ALL.length) $('run-caption').textContent = startFrom === 'case' ? 'Solved.' : 'Done: only the three corners have moved.';
+      }
+      $('run-back').disabled = pos === 0;
+      $('run-next').disabled = pos === ALL.length;
+      document.querySelectorAll('#run-start button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.start === startFrom)));
+      $('run-start-note').textContent = startFrom === 'case'
+        ? 'The cube starts with these three corners out of place; the 8 moves solve it.'
+        : 'The cube starts solved; watch where the three corners go.';
+    }
+    function stop() { clearInterval(timer); timer = null; $('run-play').textContent = 'Play'; }
+    $('run-next').addEventListener('click', () => { stop(); if (pos < ALL.length) pos++; draw(); });
+    $('run-back').addEventListener('click', () => { stop(); if (pos > 0) pos--; draw(); });
+    $('run-reset').addEventListener('click', () => { stop(); pos = 0; cube.reset(); draw(); });
+    $('run-play').addEventListener('click', () => {
+      if (timer) return stop();
+      if (pos === ALL.length) pos = 0;
+      $('run-play').textContent = 'Pause';
+      draw();
+      timer = setInterval(() => { pos++; draw(); if (pos >= ALL.length) stop(); }, 900);
+    });
+    $('run-grey').addEventListener('change', draw);
+    document.querySelectorAll('#run-start button').forEach((b) => b.addEventListener('click', () => {
+      stop();
+      startFrom = b.dataset.start;
+      try { localStorage.setItem(KEY, startFrom); } catch {}
+      pos = 0;
+      draw();
+    }));
+    draw();
+  </script>
+</body>
+</html>
