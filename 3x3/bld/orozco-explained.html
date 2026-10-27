@@ -17,34 +17,30 @@
   <main>
     <h1>How Orozco works</h1>
     <p class="subtitle">
-      One commutator, <code>[R D R', U']</code>, taken apart: what each part does, and why only three corners end up moved.
+      One Orozco commutator taken apart: what each part does, and why only three corners end up moved. Pick a letter;
+      everything below follows it.
     </p>
     <div class="source-note">
       <p>
-        Our own explanation of the Orozco base commutator for the letter O (see the Orozco page). Every picture and the
-        step runner come from the simulator, so they always match the moves. Where each piece is after each part was
-        traced by simulation (<code>log/2026-10-27-orozco-explained.md</code>).
+        Our own explanation of the Orozco commutators (see the Orozco page). Every picture, every "goes to" in the text
+        and the step runner come from the simulator, so they always match the moves. Traced and checked as described in
+        <code>log/2026-10-27-orozco-explained.md</code>.
       </p>
     </div>
 
+    <div class="ex-tabs" role="tablist" aria-label="Example letter" id="ex-tabs"></div>
+    <p class="bld-note" id="ex-about"></p>
+
     <h2 class="section-heading" id="idea" data-short="Idea">The idea</h2>
     <p>A commutator is four parts: <strong>X</strong>, <strong>Y</strong>, <strong>undo X</strong>, <strong>undo Y</strong>. Here:</p>
-    <ul class="bld-tips">
-      <li><strong>X</strong> = <code>R D R'</code> (the <em>insertion</em>): swaps one top-layer corner with a bottom-layer corner.</li>
-      <li><strong>Y</strong> = <code>U'</code> (the <em>interchange</em>): turns the top layer, so a different corner sits in that spot.</li>
-      <li><strong>Undo X</strong> = <code>R D' R'</code>, <strong>undo Y</strong> = <code>U</code>.</li>
-    </ul>
-    <p>All 8 moves: <code>R D R' U' R D' R' U</code>.</p>
+    <ul class="bld-tips" id="idea-list"></ul>
+    <p>All the moves: <code id="idea-moves"></code></p>
 
     <h2 class="section-heading" id="pieces" data-short="Pieces">The three corners</h2>
     <p>Hold white on top, green in front. Only these three corners are coloured in the pictures; everything else is grey.</p>
     <div class="orz-pieces">
       <div class="orz-pic" id="pic-start"></div>
-      <ul class="orz-legend">
-        <li><strong>Buffer</strong> (UFR): white, green, red</li>
-        <li><strong>Helper</strong> (UBR): white, red, blue</li>
-        <li><strong>O</strong> (the corner RDB): yellow, red, blue</li>
-      </ul>
+      <ul class="orz-legend" id="legend"></ul>
     </div>
     <p class="bld-note">The faded squares around the cube show the back and left sides, as if in a mirror.</p>
 
@@ -59,14 +55,13 @@
       <li><strong>Undo X</strong> reverses X for that spot, but the corner it sends down is now the buffer piece, not the one that came up.
         Everything else X moved goes back.</li>
       <li><strong>Undo Y</strong> turns the top layer back.</li>
+      <li>With a <strong>setup</strong>, the same happens with the target's corner moved first to where the base expects it, and moved back at the end.</li>
     </ul>
-    <p>
-      So: buffer piece → O's spot, O piece → helper spot, helper piece → buffer spot. Every other piece, edges included, is
-      back where it started. Halfway through (after Y) the cube looks badly broken; that is normal.
-    </p>
+    <p id="why-net"></p>
+    <p class="bld-note">Halfway through (after Y) the cube looks badly broken; that is normal.</p>
 
     <h2 class="section-heading" id="run" data-short="Run it">Run it</h2>
-    <p>Step through the moves one at a time, or press Play. Drag the cube to look at any side.</p>
+    <p>Step through the moves one at a time, or press Play: each layer turns on screen. Drag the cube to look at any side.</p>
     <div class="ex-tabs" role="group" aria-label="Start from" id="run-start">
       <button type="button" data-start="solved">From solved</button>
       <button type="button" data-start="case">From the case it solves</button>
@@ -85,11 +80,19 @@
       <button type="button" class="rec-btn" id="run-reset">Reset</button>
     </div>
     <label class="orz-grey"><input type="checkbox" id="run-grey" checked /> Grey out the other pieces</label>
+    <label class="orz-grey">Speed
+      <select id="run-speed">
+        <option value="slow">Slow</option>
+        <option value="normal" selected>Normal</option>
+        <option value="fast">Fast</option>
+      </select>
+    </label>
 
-    <h2 class="section-heading" id="same-shape" data-short="Other letters">Same shape, other letters</h2>
+    <h2 class="section-heading" id="same-shape" data-short="Other letters">The other letters</h2>
     <ul class="bld-tips">
-      <li>Change the D turn: <code>[R D' R', U']</code> brings up a different bottom corner and solves H; <code>[R D2 R', U']</code> solves L.</li>
-      <li>Every other Orozco letter is one of these three with a setup first (D or L turns) to bring its corner to where the base expects it. See <a href="orozco.html#commutators">the Orozco page, By base</a>.</li>
+      <li>O, H and L are the three bases with no setup: only the D turn inside X changes (D, D', D2), which picks a different bottom corner.</li>
+      <li>K shows a setup: one D turn first brings K's corner to where the base expects it, and it is undone at the end.</li>
+      <li>Every other Orozco letter works the same way: see <a href="orozco.html#commutators">the Orozco page, By base</a>.</li>
       <li>Done backwards (the 2nd letter of a pair), the same three corners move the other way round.</li>
     </ul>
   </main>
@@ -98,8 +101,9 @@
     import { applyAlg, solvedCube } from '../../js/cube-sim.js';
     import { invertAlg } from '../../js/algs.js';
     import { cube3dSvg } from '../../js/cube-3d.js?v=2';
-    import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
+    import { rotatableCube } from '../../js/cube-rotatable.js?v=2';
     import { WHITE_TOP } from '../../js/cube-diagram.js';
+    import { orozcoCorners } from '../../data/orozco-corners.js?v=1';
 
     const $ = (id) => document.getElementById(id);
     const el = (tag, cls, text) => {
@@ -109,52 +113,110 @@
       return n;
     };
     const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
-    // the three corners, by where they start on a solved cube
-    const KEEP = new Set(['1,1,1', '1,1,-1', '1,-1,-1']);
+    const COLOUR_NAME = { U: 'white', D: 'yellow', F: 'green', B: 'blue', R: 'red', L: 'orange' };
+    const SPOT = { '1,1,1': 'UFR', '1,1,-1': 'UBR', '-1,1,-1': 'UBL', '-1,1,1': 'UFL', '1,-1,1': 'DFR', '1,-1,-1': 'DBR', '-1,-1,-1': 'DBL', '-1,-1,1': 'DFL' };
+    const POS = Object.fromEntries(Object.entries(SPOT).map(([p, n]) => [n, p]));
+    const BUF = '1,1,1';
+    const HEL = '1,1,-1';
     const START = solvedCube().map((s) => ({ ...s, home: s.p.join() }));
+    const KEY = 'cubing-helper:orozco-explained';
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { saved = {}; }
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
+
+    // The examples: three bases with no setup, and one with a setup. All from data/orozco-corners.js.
+    const ROW = Object.fromEntries(orozcoCorners.map((r) => [r.letter, r]));
+    const EXAMPLES = ['O', 'H', 'L', 'K'].map((letter) => {
+      const r = ROW[letter];
+      const x = `R ${r.base} R'`;
+      const undoX = invertAlg(x);
+      const parts = [];
+      if (r.setup) parts.push({ name: 'Setup', moves: r.setup, kind: 'setup' });
+      parts.push({ name: 'X', moves: x, kind: 'x' }, { name: 'Y', moves: "U'", kind: 'y' }, { name: 'Undo X', moves: undoX, kind: 'undo-x' }, { name: 'Undo Y', moves: 'U', kind: 'undo-y' });
+      if (r.setup) parts.push({ name: 'Undo setup', moves: invertAlg(r.setup), kind: 'undo-setup' });
+      return { letter, row: r, target: POS[r.piece === 'RDB' ? 'DBR' : r.piece === 'LDB' ? 'DBL' : r.piece === 'FDL' ? 'DFL' : r.piece === 'FDR' ? 'DFR' : r.piece], x, parts };
+    });
+    const GENERAL = {
+      setup: (ex) => `Brings ${ex.letter}'s corner to where the base expects it. Only the bottom layer turns; the top layer is untouched.`,
+      x: () => 'X changes only one spot in the top layer: the helper spot. The rest of the top layer is as it was.',
+      y: () => 'Turn the top layer: a different corner (the buffer piece) is now in the helper spot.',
+      'undo-x': () => 'The reverse of X for the same spot: the corner there now goes down, and the corner X took down comes back up.',
+      'undo-y': () => 'Turn the top layer back.',
+      'undo-setup': () => 'Turn the bottom layer back.',
+    };
+
+    let ex = EXAMPLES.find((e) => e.letter === saved.letter) || EXAMPLES[0];
+    const keep = () => new Set([BUF, HEL, ex.target]);
     // colour only the three corners (grey = 'X') when asked
-    const shown = (state, grey = true) => state.map((s) => ({ ...s, colour: !grey || KEEP.has(s.home) ? s.colour : 'X' }));
+    const shown = (state, grey = true) => { const k = keep(); return state.map((s) => ({ ...s, colour: !grey || k.has(s.home) ? s.colour : 'X' })); };
     const picture = (state, label) => cube3dSvg(shown(state), { palette: PALETTE, label, mirrors: true });
+    const pieceName = (home) => (home === BUF ? 'buffer piece' : home === HEL ? 'helper piece' : `${ex.letter} piece`);
+    const spotName = (pos) => (pos === BUF ? 'the buffer spot (UFR)' : pos === HEL ? 'the helper spot (UBR)' : pos === ex.target ? `${ex.letter}'s spot (${SPOT[pos]})` : SPOT[pos]);
+    const where = (state) => Object.fromEntries([...keep()].map((h) => [h, state.find((s) => s.home === h && s.p.filter((v) => v).length === 3).p.join()]));
+    const colours = (home) => START.filter((s) => s.home === home).map((s) => COLOUR_NAME[s.colour]).join(', ');
+    const allMoves = () => ex.parts.map((p) => p.moves).join(' ');
 
-    const PARTS = [
-      { name: 'X', moves: "R D R'", text: 'The helper piece drops into the bottom layer; the O piece comes up into the helper spot. The rest of the top layer is as it was.' },
-      { name: 'Y', moves: "U'", text: 'Turn the top layer: the buffer piece moves into the helper spot, and the O piece moves on to the back left (UBL). The helper piece waits below.' },
-      { name: 'Undo X', moves: "R D' R'", text: "The reverse of X, for the same spot: the corner there now (the buffer piece) goes down, into O's old spot; the helper piece comes back up." },
-      { name: 'Undo Y', moves: 'U', text: 'Turn the top layer back: the helper piece lands in the buffer spot, the O piece in the helper spot. Everything else is back.' },
-    ];
-
-    // start picture and the part-by-part pictures
-    $('pic-start').innerHTML = picture(START, 'Solved cube: the three corners in colour');
-    {
+    function showExample() {
+      document.querySelectorAll('#ex-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.letter === ex.letter)));
+      const r = ex.row;
+      $('ex-about').textContent = r.setup
+        ? `${ex.letter}: ${r.notation}, the base [R ${r.base} R', U'] with the setup ${r.setup}.`
+        : `${ex.letter}: ${r.notation}, a base with no setup.`;
+      // the idea
+      const list = $('idea-list');
+      list.replaceChildren();
+      const li = (html) => { const n = el('li'); n.innerHTML = html; list.appendChild(n); };
+      if (r.setup) li(`<strong>Setup</strong> = <code>${r.setup}</code>, undone at the end with <code>${invertAlg(r.setup)}</code>.`);
+      li(`<strong>X</strong> = <code>${ex.x}</code> (the <em>insertion</em>): swaps one top-layer corner with a bottom-layer corner.`);
+      li('<strong>Y</strong> = <code>U\'</code> (the <em>interchange</em>): turns the top layer, so a different corner sits in that spot.');
+      li(`<strong>Undo X</strong> = <code>${invertAlg(ex.x)}</code>, <strong>undo Y</strong> = <code>U</code>.`);
+      $('idea-moves').textContent = allMoves();
+      // the pieces
+      $('pic-start').innerHTML = picture(START, 'Solved cube: the three corners in colour');
+      const legend = $('legend');
+      legend.replaceChildren();
+      for (const [label, home] of [['Buffer', BUF], ['Helper', HEL], [ex.letter, ex.target]]) {
+        const item = el('li');
+        item.append(el('strong', null, label), ` (${home === ex.target ? `the corner ${r.piece}` : SPOT[home]}): ${colours(home)}`);
+        legend.appendChild(item);
+      }
+      // part by part, with what moved worked out from the simulator
+      const host = $('parts-list');
+      host.replaceChildren();
       let st = START;
-      PARTS.forEach((p, i) => {
+      ex.parts.forEach((p, i) => {
+        const before = where(st);
         st = applyAlg(st, p.moves);
+        const after = where(st);
+        const moved = [...keep()].filter((h) => before[h] !== after[h]).map((h) => `${pieceName(h)} → ${spotName(after[h])}`);
         const card = el('div', 'orz-step');
         const pic = el('div', 'orz-pic');
         pic.innerHTML = picture(st, `After ${p.name}`);
         const body = el('div');
         const h = el('h3', null, `${i + 1}. ${p.name}: `);
         h.appendChild(el('code', null, p.moves));
-        body.append(h, el('p', null, p.text));
+        body.append(h, el('p', null, GENERAL[p.kind](ex)));
+        if (moved.length) body.append(el('p', 'bld-note', moved.join('; ') + '.'));
         card.append(pic, body);
-        $('parts-list').appendChild(card);
+        host.appendChild(card);
       });
+      const end = where(st);
+      $('why-net').textContent = `Net result: ${[BUF, ex.target, HEL].map((h) => `${pieceName(h)} → ${spotName(end[h])}`).join(', ')}. Every other piece, edges included, is back where it started.`;
+      resetRunner();
     }
 
-    // the step runner: one move at a time
-    const ALL = PARTS.flatMap((p, pi) => p.moves.split(' ').map((m) => ({ move: m, part: pi })));
-    const KEY = 'cubing-helper:orozco-explained';
-    let startFrom = 'solved';
-    try { if (localStorage.getItem(KEY) === 'case') startFrom = 'case'; } catch {}
+    // ---- the step runner: one move at a time, each turning on screen
+    let ALL = [];
     let pos = 0;
-    let timer = null;
-    const base = () => (startFrom === 'case' ? applyAlg(START, invertAlg(ALL.map((a) => a.move).join(' '))) : START);
-    const cube = rotatableCube(shown(base()), { palette: PALETTE, label: 'Cube after the moves so far; drag to turn it' });
+    let playing = false;
+    let busy = false;
+    let startFrom = saved.start === 'case' ? 'case' : 'solved';
+    const SPEED = { slow: 700, normal: 380, fast: 200 };
+    const base = () => (startFrom === 'case' ? applyAlg(START, invertAlg(allMoves())) : START);
+    const stateAt = (n) => applyAlg(base(), ALL.slice(0, n).map((a) => a.move).join(' '));
+    const cube = rotatableCube(shown(START), { palette: PALETTE, label: 'Cube after the moves so far; drag to turn it' });
     $('run-cube').appendChild(cube.element);
-    function draw() {
-      const done = ALL.slice(0, pos).map((a) => a.move).join(' ');
-      cube.update(shown(applyAlg(base(), done), $('run-grey').checked));
-      // moves, with the ones done so far marked
+    function label() {
       const line = $('run-moves');
       line.replaceChildren();
       ALL.forEach((a, i) => {
@@ -164,42 +226,78 @@
       if (pos === 0) {
         $('run-part').textContent = 'Start';
         $('run-caption').textContent = startFrom === 'case'
-          ? 'The buffer piece belongs at O, O\'s piece at the helper, the helper piece at the buffer.'
+          ? `The buffer piece belongs at ${ex.letter}'s spot, ${ex.letter}'s piece at the helper spot, the helper piece at the buffer spot.`
           : 'Solved cube. Press Next or Play.';
       } else {
-        const p = PARTS[ALL[pos - 1].part];
+        const p = ex.parts[ALL[pos - 1].part];
         const partDone = pos === ALL.length || ALL[pos].part !== ALL[pos - 1].part;
-        $('run-part').textContent = `${p.name} (${p.moves})${partDone ? ' done' : ''} — move ${pos} of ${ALL.length}`;
-        $('run-caption').textContent = partDone ? p.text : '';
+        $('run-part').textContent = `${p.name} (${p.moves})${partDone ? ' done' : ''}: move ${pos} of ${ALL.length}`;
+        $('run-caption').textContent = partDone ? GENERAL[p.kind](ex) : '';
         if (pos === ALL.length) $('run-caption').textContent = startFrom === 'case' ? 'Solved.' : 'Done: only the three corners have moved.';
       }
       $('run-back').disabled = pos === 0;
       $('run-next').disabled = pos === ALL.length;
       document.querySelectorAll('#run-start button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.start === startFrom)));
       $('run-start-note').textContent = startFrom === 'case'
-        ? 'The cube starts with these three corners out of place; the 8 moves solve it.'
+        ? 'The cube starts with these three corners out of place; the moves solve it.'
         : 'The cube starts solved; watch where the three corners go.';
+      $('run-play').textContent = playing ? 'Pause' : 'Play';
     }
-    function stop() { clearInterval(timer); timer = null; $('run-play').textContent = 'Play'; }
-    $('run-next').addEventListener('click', () => { stop(); if (pos < ALL.length) pos++; draw(); });
-    $('run-back').addEventListener('click', () => { stop(); if (pos > 0) pos--; draw(); });
-    $('run-reset').addEventListener('click', () => { stop(); pos = 0; cube.reset(); draw(); });
-    $('run-play').addEventListener('click', () => {
-      if (timer) return stop();
-      if (pos === ALL.length) pos = 0;
-      $('run-play').textContent = 'Pause';
-      draw();
-      timer = setInterval(() => { pos++; draw(); if (pos >= ALL.length) stop(); }, 900);
-    });
-    $('run-grey').addEventListener('change', draw);
-    document.querySelectorAll('#run-start button').forEach((b) => b.addEventListener('click', () => {
-      stop();
-      startFrom = b.dataset.start;
-      try { localStorage.setItem(KEY, startFrom); } catch {}
+    const grey = () => $('run-grey').checked;
+    function drawStill() { cube.update(shown(stateAt(pos), grey())); label(); }
+    async function step(dir) {
+      if (busy) return;
+      if ((dir > 0 && pos >= ALL.length) || (dir < 0 && pos <= 0)) return;
+      busy = true;
+      const from = stateAt(pos);
+      const move = dir > 0 ? ALL[pos].move : invertAlg(ALL[pos - 1].move);
+      pos += dir;
+      label();
+      await cube.animate(shown(from, grey()), shown(stateAt(pos), grey()), move, SPEED[$('run-speed').value]);
+      busy = false;
+    }
+    async function play() {
+      if (playing) { playing = false; label(); return; }
+      if (pos === ALL.length) { pos = 0; drawStill(); }
+      playing = true;
+      label();
+      while (playing && pos < ALL.length) {
+        await step(1);
+        await new Promise((r) => setTimeout(r, 150));
+      }
+      playing = false;
+      label();
+    }
+    function resetRunner() {
+      playing = false;
+      ALL = ex.parts.flatMap((p, pi) => p.moves.split(' ').map((m) => ({ move: m, part: pi })));
       pos = 0;
-      draw();
+      cube.reset();
+      drawStill();
+    }
+    $('run-next').addEventListener('click', () => { playing = false; step(1); });
+    $('run-back').addEventListener('click', () => { playing = false; step(-1); });
+    $('run-reset').addEventListener('click', () => { if (!busy) resetRunner(); });
+    $('run-play').addEventListener('click', play);
+    $('run-grey').addEventListener('change', () => { if (!busy) drawStill(); });
+    document.querySelectorAll('#run-start button').forEach((b) => b.addEventListener('click', () => {
+      if (busy) return;
+      startFrom = b.dataset.start;
+      saved.start = startFrom;
+      save();
+      resetRunner();
     }));
-    draw();
+
+    // tabs
+    for (const e of EXAMPLES) {
+      const b = el('button', null, e.row.setup ? `${e.letter} (setup)` : e.letter);
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.dataset.letter = e.letter;
+      b.addEventListener('click', () => { if (busy) return; ex = e; saved.letter = e.letter; save(); showExample(); });
+      $('ex-tabs').appendChild(b);
+    }
+    showExample();
   </script>
 </body>
 </html>

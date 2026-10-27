@@ -24,3 +24,17 @@ pieces grey), part by part (picture after each part + one sentence), why only th
 case it solves, grey-out switch; choice in `cubing-helper:orozco-explained`), and "same shape, other letters".
 Headless Chromium 390/1280: no errors, no horizontal scroll, 5 pictures, runner ends "only the three corners have
 moved" from solved and "Solved." from the case; section row shows the page.
+
+## Other letters and animation (same day, owner's request)
+
+- Tabs for four examples from `data/orozco-corners.js`: O, H, L (the three bases, no setup) and K (base D with
+  setup D). Every section follows the tab. The "goes to" lines under each part are worked out by the simulator
+  on the page; the general sentence per part kind (setup, X, Y, undo X, undo Y, undo setup) is fixed text.
+  Checked: each example's moves equal the Orozco table's, move only the three corners from solved, and solve
+  the case. (Choice in `cubing-helper:orozco-explained`, now JSON {letter, start}.)
+- Step runner animates each move: `js/cube-rotatable.js` gained `animate(from, to, move, ms)`. During a turn the
+  cube is drawn as 26 cubies (black faces, stickers on outer faces), the turning layer rotated, faces painted back
+  to front; the still view is unchanged (Blind drills keeps the same picture). Move table copied from
+  `js/cube-sim.js` (same axes and directions); the end of each turn shows the simulator's state. Speed: slow /
+  normal / fast. Back animates the reverse move. Headless: mid-turn frame drawn (105 polygons vs 30 still),
+  Back returns to Start, Play from the case ends "Solved."; no errors at 390 / 1280.

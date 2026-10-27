@@ -58,8 +58,63 @@ function draw(stickers, view, palette, label) {
   return `<svg class="cube-rot-svg" viewBox="${-R} ${-R} ${2 * R} ${2 * R}" role="img" aria-label="${label}">${polys.join('')}</svg>`;
 }
 
+// One frame of a layer turn: every cubie drawn as a small cube (black faces, stickers on its outer
+// faces), the turning layer rotated by `turn.angle` about `turn.axis`, faces painted back to front.
+// Turned-away faces are skipped; with convex cubies on a grid that ordering is enough.
+const NORMALS = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
+const rotAxis = (axis, t) => {
+  const c = Math.cos(t), s = Math.sin(t);
+  if (axis === 0) return [[1, 0, 0], [0, c, -s], [0, s, c]];
+  if (axis === 1) return [[c, 0, s], [0, 1, 0], [-s, 0, c]];
+  return [[c, -s, 0], [s, c, 0], [0, 0, 1]];
+};
+function drawTurning(stickers, view, palette, label, turn) {
+  const light = [0.35, 0.8, 0.5];
+  const at = new Map(stickers.map((s) => [`${s.p.join()}|${s.n.join()}`, s]));
+  const spin = rotAxis(turn.axis, turn.angle);
+  const faces = [];
+  for (const x of [-1, 0, 1]) for (const y of [-1, 0, 1]) for (const z of [-1, 0, 1]) {
+    if (!x && !y && !z) continue;
+    const p = [x, y, z];
+    const m = turn.layers.includes(p[turn.axis]) ? mul(view, spin) : view;
+    for (const n of NORMALS) {
+      const vn = apply(m, n);
+      if (vn[2] <= 0.001) continue;
+      const [a, b] = inPlane(n);
+      const c = p.map((v, i) => v + n[i] * 0.5);
+      const quad = (h) => [[-h, -h], [h, -h], [h, h], [-h, h]].map(([da, db]) => apply(m, c.map((v, i) => v + a[i] * da + b[i] * db)));
+      const depth = apply(m, c)[2];
+      const s = at.get(`${p.join()}|${n.join()}`);
+      const k = 0.84 + 0.16 * Math.max(0, vn[0] * light[0] + vn[1] * light[1] + vn[2] * light[2]);
+      faces.push({ depth, body: quad(0.5), sticker: s ? { pts: quad(STICKER), fill: shade(palette[s.colour], k) } : null });
+    }
+  }
+  faces.sort((f, g) => f.depth - g.depth);
+  const pts = (q) => q.map(([px, py]) => `${px.toFixed(3)},${(-py).toFixed(3)}`).join(' ');
+  const polys = faces.map((f) => `<polygon points="${pts(f.body)}" fill="${BODY}" stroke="${BODY}" stroke-width="0.04" stroke-linejoin="round"/>`
+    + (f.sticker ? `<polygon points="${pts(f.sticker.pts)}" fill="${f.sticker.fill}" stroke="rgba(0,0,0,0.25)" stroke-width="0.03" stroke-linejoin="round"/>` : ''));
+  const R = 2.75;
+  return `<svg class="cube-rot-svg" viewBox="${-R} ${-R} ${2 * R} ${2 * R}" role="img" aria-label="${label}">${polys.join('')}</svg>`;
+}
+
+// Which layers a move turns, about which axis, and by how much (radians, right-hand rule), as in
+// js/cube-sim.js: one turn there is a quarter turn of `dir` quarter-turns about the positive axis.
+const MOVE = {
+  R: [0, [1], -1], L: [0, [-1], 1], M: [0, [0], 1], r: [0, [0, 1], -1], l: [0, [-1, 0], 1], x: [0, [-1, 0, 1], -1],
+  U: [1, [1], -1], D: [1, [-1], 1], E: [1, [0], 1], u: [1, [0, 1], -1], d: [1, [-1, 0], 1], y: [1, [-1, 0, 1], -1],
+  F: [2, [1], -1], B: [2, [-1], 1], S: [2, [0], -1], f: [2, [0, 1], -1], b: [2, [-1, 0], 1], z: [2, [-1, 0, 1], -1],
+};
+function turnOf(move) {
+  const m = move.match(/^([RLUDFBMESxyzrludfb])(w?)(\d*)('?)$/);
+  if (!m) return null;
+  const [, f, wide, count, prime] = m;
+  const [axis, layers, dir] = MOVE[wide ? f.toLowerCase() : f];
+  const amount = (count ? Number(count) : 1) * (prime ? -1 : 1);
+  return { axis, layers, angle: dir * amount * (Math.PI / 2) };
+}
+
 // stickers: the simulator's sticker list; palette: home face -> colour.
-// Returns { element, update(stickers), reset() }.
+// Returns { element, update(stickers), reset(), animate(from, to, move, ms) }.
 export function rotatableCube(stickers, { palette, label = 'Cube; drag to turn it' } = {}) {
   let view = START;
   let current = stickers;
@@ -68,7 +123,8 @@ export function rotatableCube(stickers, { palette, label = 'Cube; drag to turn i
   const stage = document.createElement('div');
   stage.className = 'cube-rot-stage';
   wrap.appendChild(stage);
-  const render = () => { stage.innerHTML = draw(current, view, palette, label); };
+  let turning = false; // while a move is animating, its frames do the drawing
+  const render = () => { if (!turning) stage.innerHTML = draw(current, view, palette, label); };
 
   // drag: sideways turns about the screen's up axis, up/down about its sideways axis
   let last = null;
@@ -111,5 +167,24 @@ export function rotatableCube(stickers, { palette, label = 'Cube; drag to turn i
     element: wrap,
     update(next) { current = next; render(); },
     reset() { view = START; render(); },
+    // Shows one move turning, from the stickers before it (`from`) to the stickers after it (`to`,
+    // from the simulator). Resolves when done. Dragging still works during the turn.
+    animate(from, to, move, ms = 350) {
+      const t = turnOf(move);
+      if (!t || ms <= 0) { current = to; render(); return Promise.resolve(); }
+      return new Promise((resolve) => {
+        turning = true;
+        const t0 = performance.now();
+        const frame = (now) => {
+          const f = Math.min(1, (now - t0) / ms);
+          const ease = f < 0.5 ? 2 * f * f : 1 - 2 * (1 - f) * (1 - f);
+          if (f < 1) {
+            stage.innerHTML = drawTurning(from, view, palette, label, { ...t, angle: t.angle * ease });
+            requestAnimationFrame(frame);
+          } else { turning = false; current = to; render(); resolve(); }
+        };
+        requestAnimationFrame(frame);
+      });
+    },
   };
 }
