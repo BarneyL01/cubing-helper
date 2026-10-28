@@ -6,7 +6,7 @@
   <title>2-look OLL — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css?v=4" />
-  <script type="module" src="../../js/site-chrome.js?v=5"></script>
+  <script type="module" src="../../js/site-chrome.js?v=6"></script>
 </head>
 <body>
   <header class="site-header" id="site-header">
@@ -16,8 +16,8 @@
   <main>
     <h1>2-look OLL</h1>
     <p class="subtitle">
-      Each card shows the case (yellow facing up), the algorithm and your mnemonic breakdown. The full
-      list below has standard notation only.
+      Each card shows the case (yellow facing up), the algorithm and your mnemonic breakdown. All 57 cases are on
+      <a href="oll-full.html">Full OLL</a>.
     </p>
     <p class="libby-key">
       <strong>Libby's:</strong> the moves as digits: R = 1, U = 2, R' = 3, U' = 4, so Sassy is
@@ -29,24 +29,20 @@
 
     <div id="oll-cases" class="case-grid"></div>
 
-    <h2 class="section-heading" id="full-oll">Full OLL (57 cases)</h2>
-    <p class="subtitle">
-      All 57 OLL cases, one standard algorithm each. Standard notation only: no mnemonics, no Libby's digits.
-    </p>
-    <div id="full-oll-cases" class="case-grid"></div>
   </main>
 
+  <script>
+    // the full list moved to its own page; old links to it go there
+    if (location.hash === '#full-oll') location.replace('oll-full.html');
+  </script>
   <script type="module">
     import { ollCases } from '../../data/oll.js';
-    import { ollFullCases } from '../../data/oll-full.js';
     import { renderCases, renderPictureIndex } from '../../js/render-cases.js';
     import { mountViewToggle } from '../../js/view-toggle.js';
     mountViewToggle(document.getElementById('view-toggle'));
     renderCases('oll-cases', ollCases, { libby: true });
-    renderCases('full-oll-cases', ollFullCases);
     renderPictureIndex('picture-index', [
       { title: '2-look OLL', container: 'oll-cases' },
-      { title: 'Full OLL', container: 'full-oll-cases' },
     ]);
   </script>
 </body>

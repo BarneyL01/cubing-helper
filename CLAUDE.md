@@ -123,8 +123,8 @@ built ahead of being asked for. As of 2026-10-03:
 - **3x3 CFOP** — 2-look OLL (8 cases) and PLL (6 cases) from the user's
   original notes. `data/oll.js`, `data/pll.js` (both reachable straight
   from the home page since 2026-10-06, as well as via the CFOP page). Also
-  the **full OLL (57) and full PLL (21)** lists, added 2026-10-23 as sections on
-  the same two pages: standard J Perm algorithms (`data/oll-full.js`,
+  the **full OLL (57) and full PLL (21)** lists, added 2026-10-23, on their own pages since 2026-10-28
+  (`3x3/cfop/oll-full.html`, `pll-full.html`, CFOP section; `oll.html#full-oll` / `pll.html#full-pll` forward there): standard J Perm algorithms (`data/oll-full.js`,
   `data/pll-full.js`), standard names only. Plus an **F2L map**
   (`data/f2l.js`, `3x3/cfop/f2l.html`): all 41 cases + 7 in-between steps,
   each step leading to another case. **Not our original work** — it's a

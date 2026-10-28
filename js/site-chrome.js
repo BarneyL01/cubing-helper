@@ -33,6 +33,8 @@ const MENU = [
           { label: 'Overview', path: '3x3/cfop/index.html' },
           { label: '2-look OLL', path: '3x3/cfop/oll.html' },
           { label: '2-look PLL', path: '3x3/cfop/pll.html' },
+          { label: 'Full OLL', path: '3x3/cfop/oll-full.html' },
+          { label: 'Full PLL', path: '3x3/cfop/pll-full.html' },
           { label: 'F2L map', path: '3x3/cfop/f2l.html' },
         ],
       },
