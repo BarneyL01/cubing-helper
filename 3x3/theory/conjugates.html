@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conjugates — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=12" />
+  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <script type="module" src="../../js/site-chrome.js?v=5"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Conjugates</h1>
+    <p class="subtitle">
+      <code>A B A'</code>: do a setup A, do an algorithm B, undo the setup. B does its usual job, but on different pieces.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own explanation of standard cube theory. What each algorithm changes is worked out by the simulator on the
+        page; the examples are checked by <code>log/2026-10-28-theory-check.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="idea" data-short="Idea">The idea</h2>
+    <ol class="step-how">
+      <li><strong>A</strong> (the setup) moves the pieces you want into the places B works on.</li>
+      <li><strong>B</strong> does its job on those places.</li>
+      <li><strong>A'</strong> (A undone, moves in reverse order, each turned the other way) puts everything A moved back, except that the pieces B changed stay changed.</li>
+    </ol>
+    <p>
+      So a conjugate never needs a new algorithm: it reuses B. Written <code>[A: B]</code>. Every setup move in Old Pochmann,
+      M2 and Orozco is the A of a conjugate.
+    </p>
+
+    <h2 class="section-heading" id="examples" data-short="Examples">Examples</h2>
+    <div class="ex-tabs" role="tablist" aria-label="Example" id="ex-tabs"></div>
+    <p id="ex-intro"></p>
+    <div class="th-compare">
+      <div class="orz-step"><div class="orz-pic" id="pic-b"></div><div><h3>B alone: <code id="b-moves"></code></h3><p class="bld-note" id="b-note"></p></div></div>
+      <div class="orz-step"><div class="orz-pic" id="pic-abc"></div><div><h3>A B A': <code id="abc-moves"></code></h3><p class="bld-note" id="abc-note"></p></div></div>
+    </div>
+    <p id="ex-point"></p>
+
+    <h2 class="section-heading" id="run" data-short="Run it">Run it</h2>
+    <p>The example above, move by move: setup, algorithm, setup undone. Only the pieces it changes are in colour.</p>
+    <div id="runner"></div>
+
+    <h2 class="section-heading" id="make" data-short="Make one">Making your own</h2>
+    <ol class="step-how">
+      <li>Find an algorithm B that does what you want, on some pieces.</li>
+      <li>Find moves A that bring your pieces to where B works. Anything else A moves doesn't matter: A' will put it back.</li>
+      <li>Do A, then B, then A'.</li>
+    </ol>
+    <p class="bld-note">Keep A short, one or two moves, as in the Orozco and Old Pochmann setups.</p>
+  </main>
+
+  <script type="module">
+    import { expandBrackets, invertAlg, cancelMoves } from '../../js/algs.js';
+    import { cube3dSvg } from '../../js/cube-3d.js?v=2';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
+    import { pieces, tracked, trackedSolved, slotName } from '../../js/cube-laws.js?v=1';
+    import { createMoveRunner } from '../../js/move-runner.js?v=1';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
+    const name = (s) => slotName(s.split(',').map(Number));
+    const TW = ['', 'clockwise', 'anticlockwise'];
+    const T_PERM = "R U R' U' R' F R2 U' R' U' R U R' F'";
+    const EXAMPLES = [
+      { id: 'k', label: "Orozco K", a: 'D', b: "R D R' U' R D' R' U",
+        intro: "Orozco's letter K: the O commutator with the setup D.",
+        point: "B cycles the buffer, the helper and the corner at DBR. D first brings K's corner (DFR) to DBR, so the same commutator cycles K's corner instead. D' then turns the bottom layer back." },
+      { id: 'f', label: 'F Sassy F\'', a: 'F', b: "R U R' U'",
+        intro: "The 2-look OLL algorithm F R U R' U' F' is Sassy with the setup F.",
+        point: 'Sassy on its own also moves the front-right middle edge (FR) and the bottom front-right corner (DFR). With F first, top-layer pieces are in those places instead, and F\' afterwards returns the first two layers to solved: only the top layer changes.' },
+      { id: 't', label: 'T-perm from U', a: 'U', b: T_PERM,
+        intro: 'A T-perm with the setup U: the same swap, on different pieces.',
+        point: 'B swaps two corners and two edges. U first turns the top layer, so different corners and edges are in B\'s places; U\' turns it back. Same kind of swap, different pieces: the way you use one PLL from any side.' },
+    ];
+    function changes(alg) {
+      const { corners, edges } = pieces(tracked(alg));
+      const out = [];
+      const tw = corners.filter((c) => c.slot === c.piece && c.twist).map((c) => `${name(c.slot)} ${TW[c.twist]}`);
+      const fl = edges.filter((e) => e.slot === e.piece && e.flip).map((e) => name(e.slot));
+      const mc = corners.filter((c) => c.slot !== c.piece).map((c) => `${name(c.piece)} → ${name(c.slot)}`);
+      const me = edges.filter((e) => e.slot !== e.piece).map((e) => `${name(e.piece)} → ${name(e.slot)}`);
+      if (mc.length) out.push(`corners ${mc.join(', ')}`);
+      if (me.length) out.push(`edges ${me.join(', ')}`);
+      if (tw.length) out.push(`twisted in place: ${tw.join(', ')}`);
+      if (fl.length) out.push(`flipped in place: ${fl.join(', ')}`);
+      return out.length ? `Changes: ${out.join('; ')}.` : 'Changes nothing.';
+    }
+    const keepSet = (alg) => {
+      const { corners, edges } = pieces(tracked(alg));
+      return new Set([...corners, ...edges].filter((x) => x.slot !== x.piece || x.twist || x.flip).flatMap((x) => [x.slot, x.piece]));
+    };
+    const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) ? s.colour : 'X' }));
+    const pic = (alg) => cube3dSvg(greyed(tracked(alg), keepSet(alg)), { palette: PALETTE, mirrors: true, label: `After ${alg}` });
+
+    const runner = createMoveRunner($('runner'), { palette: PALETTE });
+    const KEY = 'cubing-helper:theory-conjugates';
+    function show(ex) {
+      document.querySelectorAll('#ex-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.id === ex.id)));
+      try { localStorage.setItem(KEY, ex.id); } catch {}
+      const whole = cancelMoves(`${ex.a} ${ex.b} ${invertAlg(ex.a)}`);
+      $('ex-intro').textContent = ex.intro;
+      $('b-moves').textContent = ex.b;
+      $('abc-moves').textContent = `${ex.a} · ${ex.b} · ${invertAlg(ex.a)}`;
+      $('pic-b').innerHTML = pic(ex.b);
+      $('pic-abc').innerHTML = pic(whole);
+      $('b-note').textContent = changes(ex.b);
+      $('abc-note').textContent = changes(whole);
+      $('ex-point').textContent = ex.point;
+      const keep = keepSet(whole);
+      runner.set({
+        parts: [
+          { name: 'A (setup)', moves: ex.a, text: 'The setup moves the wanted pieces into B\'s places.' },
+          { name: 'B', moves: ex.b, text: 'B does its usual job, on whatever is in its places now.' },
+          { name: "A' (undo setup)", moves: invertAlg(ex.a), text: 'The setup is undone. Only the pieces B changed stay changed.' },
+        ],
+        start: trackedSolved(),
+        shown: (st) => greyed(st, keep),
+        startText: 'Solved cube. Press Next or Play.',
+      });
+    }
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch {}
+    for (const ex of EXAMPLES) { const b = el('button', null, ex.label); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.id = ex.id; b.addEventListener('click', () => { if (!runner.busy) show(ex); }); $('ex-tabs').appendChild(b); }
+    show(EXAMPLES.find((e) => e.id === saved) || EXAMPLES[0]);
+  </script>
+</body>
+</html>

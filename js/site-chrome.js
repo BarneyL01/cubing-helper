@@ -48,6 +48,15 @@ const MENU = [
       { label: '8355', path: '3x3/8355/index.html' },
       { label: 'Heise', path: '3x3/heise/index.html', badge: 'Partial' },
       { label: 'Marshall', path: '3x3/marshall/index.html', badge: 'Partial' },
+      {
+        label: 'Cube theory',
+        pages: [
+          { label: 'Overview', path: '3x3/theory/index.html' },
+          { label: 'Laws', path: '3x3/theory/laws.html' },
+          { label: 'Conjugates', path: '3x3/theory/conjugates.html' },
+          { label: 'Order', path: '3x3/theory/order.html' },
+        ],
+      },
     ],
   },
   {

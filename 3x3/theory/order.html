@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Order of an algorithm — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=12" />
+  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <script type="module" src="../../js/site-chrome.js?v=5"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Order of an algorithm</h1>
+    <p class="subtitle">
+      Do any algorithm again and again and the cube always comes back to solved. The number of times is the algorithm's
+      <strong>order</strong>: Sassy's is 6.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own explanation of standard cube theory. Every order, cycle and picture on this page is worked out by the
+        simulator (<code>js/cube-laws.js</code>); the order found from the cycles was checked against repeating the
+        moves until solved, by <code>log/2026-10-28-theory-check.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="why" data-short="Why">Why it comes back</h2>
+    <ol class="step-how">
+      <li>One go of an algorithm moves pieces round in <strong>cycles</strong>: A goes to B's place, B to C's, C back to A's.</li>
+      <li>A cycle of 3 pieces is back after 3 goes; a cycle of 2 after 2.</li>
+      <li>If a corner cycle also twists (a third of a turn per go), it needs 3 times as many goes; an edge cycle that flips needs twice as many.</li>
+      <li>The whole cube is back when every cycle is back at the same time: the smallest number that all the cycles' numbers divide into.</li>
+    </ol>
+
+    <h2 class="section-heading" id="sassy" data-short="Sassy">Sassy, one go at a time</h2>
+    <p id="sassy-cycles"></p>
+    <div class="th-strip" id="sassy-strip"></div>
+    <p>
+      That is why repeated Sassy is useful in the 8355 last corners: after 3 goes the edges are back and only corners have
+      changed; after 2 every corner is back in its place, just twisted.
+    </p>
+
+    <h2 class="section-heading" id="table" data-short="Table">Some orders</h2>
+    <div class="table-wrap"><table class="bld-table th-table" id="order-table"></table></div>
+
+    <h2 class="section-heading" id="run" data-short="Run it">Run it</h2>
+    <p>Each go of the algorithm is one part; watch the cube come back. Pieces the algorithm never touches are grey.</p>
+    <div class="ex-tabs" role="tablist" aria-label="Algorithm" id="run-tabs"></div>
+    <div id="runner"></div>
+
+    <h2 class="section-heading" id="own" data-short="Your own">Try your own</h2>
+    <p>Type any moves. The page finds the order and the cycles; up to 12 goes are shown as pictures.</p>
+    <form class="th-form" onsubmit="return false">
+      <input type="text" id="own-moves" aria-label="Moves" autocomplete="off" spellcheck="false" />
+    </form>
+    <p class="drill-error" id="own-error" role="status"></p>
+    <p id="own-result"></p>
+    <ul class="bld-tips" id="own-cycles"></ul>
+    <div class="th-strip" id="own-strip"></div>
+  </main>
+
+  <script type="module">
+    import { applyAlg } from '../../js/cube-sim.js';
+    import { expandBrackets } from '../../js/algs.js';
+    import { cube3dSvg } from '../../js/cube-3d.js?v=2';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
+    import { cycles, order, pieces, tracked, trackedSolved, lcm } from '../../js/cube-laws.js?v=1';
+    import { createMoveRunner } from '../../js/move-runner.js?v=1';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
+    const SASSY = "R U R' U'";
+    const TWISTWORD = ['', 'a third of a turn', 'two thirds of a turn'];
+    const cycleText = (c, kind) => {
+      const path = c.length === 1 ? `${c.slots[0]} stays in place` : `${c.slots.join(' → ')} → ${c.slots[0]}`;
+      const extra = kind === 'corner' ? (c.twist ? `, twisting ${TWISTWORD[c.twist]} per go` : '') : (c.flip ? ', flipping each go' : '');
+      return `${kind === 'corner' ? 'Corners' : 'Edges'}: ${path}${extra}: back after ${c.returnsAfter} go${c.returnsAfter === 1 ? '' : 'es'}.`;
+    };
+    const repeated = (alg, n) => Array(n).fill(alg).join(' ');
+    // what n goes leave, in words
+    function after(alg, n) {
+      const { corners, edges } = pieces(tracked(repeated(alg, n)));
+      const mc = corners.filter((c) => c.slot !== c.piece).length;
+      const tc = corners.filter((c) => c.slot === c.piece && c.twist).length;
+      const me = edges.filter((e) => e.slot !== e.piece).length;
+      const fe = edges.filter((e) => e.slot === e.piece && e.flip).length;
+      const parts = [];
+      if (mc) parts.push(`${mc} corners moved`);
+      if (tc) parts.push(`${tc} corners twisted in place`);
+      if (me) parts.push(`${me} edges moved`);
+      if (fe) parts.push(`${fe} edges flipped in place`);
+      return parts.length ? parts.join(', ') : 'solved';
+    }
+    const touched = (alg) => { const { corners, edges } = pieces(tracked(alg)); return new Set([...corners, ...edges].filter((x) => x.slot !== x.piece || x.twist || x.flip).flatMap((x) => [x.slot, x.piece])); };
+    const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) || s.p.filter((v) => v).length === 1 ? s.colour : 'X' }));
+    function strip(host, alg, n) {
+      host.replaceChildren();
+      const keep = touched(alg);
+      for (let k = 1; k <= n; k++) {
+        const f = el('figure', 'th-frame');
+        const pic = el('div', 'orz-pic');
+        pic.innerHTML = cube3dSvg(greyed(tracked(repeated(alg, k)), keep), { palette: PALETTE, mirrors: false, label: `After ${k} goes` });
+        f.append(pic, el('figcaption', null, `×${k}: ${after(alg, k)}`));
+        host.appendChild(f);
+      }
+    }
+
+    // Sassy
+    {
+      const c = cycles(SASSY);
+      $('sassy-cycles').textContent = [...c.corners.map((x) => cycleText(x, 'corner')), ...c.edges.map((x) => cycleText(x, 'edge'))].join(' ')
+        + ` Everything is back at the same time after ${[...c.corners, ...c.edges].map((x) => x.returnsAfter).reduce(lcm, 1)} goes.`;
+      strip($('sassy-strip'), SASSY, 6);
+    }
+
+    // table
+    const LIST = [
+      ['U', 'U'], ['Sassy', SASSY], ['Sune', "R U R' U R U2 R'"], ['F Sassy F\'', "F R U R' U' F'"], ['R U', 'R U'], ['R U2', 'R U2'], ['R2 U2', 'R2 U2'],
+      ['T-perm', "R U R' U' R' F R2 U' R' U' R U R' F'"], ['Orozco O', "R D R' U' R D' R' U"], ['Twist algorithm', expandBrackets("(R' D' R D)×2 U (D' R' D R)×2 U'")],
+    ];
+    {
+      const t = $('order-table');
+      const head = t.createTHead().insertRow();
+      ['Algorithm', 'Order', 'Moves', 'Why'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = t.createTBody();
+      for (const [nm, alg] of LIST) {
+        const c = cycles(alg);
+        const tr = body.insertRow();
+        tr.appendChild(el('th', null, nm));
+        tr.appendChild(el('td', 'bld-letter', String(order(alg))));
+        const m = el('td'); m.appendChild(el('code', null, alg)); tr.appendChild(m);
+        const why = [...c.corners, ...c.edges].map((x) => `${x.length > 1 ? `${x.length}-cycle` : 'twist in place'}${x.twist ? ' + twist' : ''}${x.flip ? ' + flip' : ''} (${x.returnsAfter})`);
+        tr.appendChild(el('td', 'bld-note', why.join(', ')));
+      }
+    }
+
+    // runner
+    const runner = createMoveRunner($('runner'), { palette: PALETTE });
+    const RUNS = [['Sassy', SASSY], ['Sune', "R U R' U R U2 R'"], ['Orozco O', "R D R' U' R D' R' U"], ['T-perm', "R U R' U' R' F R2 U' R' U' R U R' F'"]];
+    function show([nm, alg]) {
+      document.querySelectorAll('#run-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.id === nm)));
+      const n = order(alg);
+      const keep = touched(alg);
+      runner.set({
+        parts: Array.from({ length: n }, (_, i) => ({ name: `Go ${i + 1}`, moves: alg, text: `After ${i + 1} go${i ? 'es' : ''}: ${after(alg, i + 1)}.` })),
+        start: trackedSolved(),
+        shown: (st) => greyed(st, keep),
+        startText: `${nm} has order ${n}: press Play to watch ${n} goes.`,
+        doneText: `Solved again after ${n} goes.`,
+      });
+    }
+    for (const r of RUNS) { const b = el('button', null, r[0]); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.id = r[0]; b.addEventListener('click', () => { if (!runner.busy) show(r); }); $('run-tabs').appendChild(b); }
+    show(RUNS[0]);
+
+    // your own
+    const KEY = 'cubing-helper:theory-order';
+    function own(text) {
+      $('own-error').textContent = '';
+      let alg;
+      try { alg = expandBrackets(text.trim()); applyAlg(trackedSolved(), alg); } catch { $('own-error').textContent = 'Could not read those moves.'; return; }
+      if (!alg) { $('own-result').textContent = ''; $('own-cycles').replaceChildren(); $('own-strip').replaceChildren(); return; }
+      try { localStorage.setItem(KEY, text); } catch {}
+      const n = order(alg);
+      $('own-result').textContent = n ? `Order ${n}: after ${n} goes the cube is solved again.` : 'Order more than 1260 (this should not happen on a 3x3).';
+      const c = cycles(alg);
+      const list = $('own-cycles');
+      list.replaceChildren();
+      for (const x of c.corners) list.appendChild(el('li', null, cycleText(x, 'corner')));
+      for (const x of c.edges) list.appendChild(el('li', null, cycleText(x, 'edge')));
+      if (/[MESxyzrludfb]/.test(alg)) list.appendChild(el('li', null, 'Slice moves or rotations also move the centres; the order counts them too.'));
+      if (n && n <= 12) strip($('own-strip'), alg, n); else $('own-strip').replaceChildren();
+    }
+    let saved = '';
+    try { saved = localStorage.getItem(KEY) || ''; } catch {}
+    $('own-moves').value = saved || "R U2 R' U'";
+    $('own-moves').addEventListener('input', () => own($('own-moves').value));
+    own($('own-moves').value);
+  </script>
+</body>
+</html>

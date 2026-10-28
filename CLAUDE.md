@@ -227,6 +227,10 @@ built ahead of being asked for. As of 2026-10-03:
   criss/cross and free-column moves, the pair 3-cycles (v1 to v3) and conjugations, the two edge 3-cycle
   varieties, and a worked scramble-to-solution example. Do not invent them; ask for the details. Corrected
   2026-10-20: the orientation-preserving group is R, L, U, D and half turns of F and B (not "two opposite faces").
+- **Cube theory** (2026-10-28, `3x3/theory/`, Methods group): Overview (built ideas + ideas still to explore),
+  Laws of the cube, Conjugates, Order of an algorithm. Our own explanations; every number and "what changed" is worked
+  out on the page by `js/cube-laws.js`; animated runner `js/move-runner.js` (shared). Checked by
+  `log/2026-10-28-theory-check.mjs`. See `log/2026-10-28-cube-theory.md`.
 - **3x3 Beginner's Method** — all 7 steps, one data file
   (`data/beginners.js`, `beginnerSteps`: per step a title, short bar label,
   source, goal, numbered "how", and cases). `js/steps-page.js` builds a

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cube theory — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=12" />
+  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <script type="module" src="../../js/site-chrome.js?v=5"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Overview</h1>
+    <p class="subtitle">
+      The ideas behind algorithms and methods, not the algorithms themselves. Each page takes one idea and shows it on
+      the cube.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own summary (2026-10-28), written to decide what to explore next. Pages marked "Page" are built; the rest
+        are listed so we can pick one to look at further. Everything on the built pages is worked out by the simulator
+        and checked by <code>log/2026-10-28-theory-check.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="built" data-short="Built">Built so far</h2>
+    <div class="table-wrap">
+      <table class="bld-table th-table">
+        <thead><tr><th>Idea</th><th>In one line</th><th>Where it shows up</th></tr></thead>
+        <tbody>
+          <tr><th><a href="laws.html">Laws of the cube</a></th><td>Three rules every position obeys: twists add up to whole turns, flips come in pairs, corner and edge swaps are both even or both odd.</td><td>Why one corner can't twist alone, why the Orozco helper twist needs a partner, why parity algorithms exist.</td></tr>
+          <tr><th><a href="conjugates.html">Conjugates</a></th><td><code>A B A'</code>: a setup, an algorithm, the setup undone. The algorithm's effect lands on different pieces.</td><td>Every setup move in Old Pochmann, M2 and Orozco; using an algorithm from a different angle.</td></tr>
+          <tr><th><a href="order.html">Order of an algorithm</a></th><td>Repeat any algorithm enough times and the cube comes back to solved. How many times depends on the cycles it makes.</td><td>Repeated Sassy (6 times), the 8355 last corners, why some repeats twist and others swap.</td></tr>
+          <tr><th><a href="../bld/commutators.html">Commutators</a></th><td><code>X Y X' Y'</code>: moves exactly three pieces when X and Y overlap on one piece.</td><td>The Commutators section and <a href="../bld/orozco-explained.html">How Orozco works</a>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-heading" id="more" data-short="To explore">Still to explore</h2>
+    <div class="table-wrap">
+      <table class="bld-table th-table">
+        <thead><tr><th>Idea</th><th>What it is</th><th>Where it shows up</th><th>A page could show</th></tr></thead>
+        <tbody>
+          <tr><th>Restricted move sets</th><td>Once the cube is in certain states, a few kinds of move are enough: only <code>R U</code>, only <code>U M</code>, or <code>R U L D</code> once every edge is oriented.</td><td>Roux last six edges (<code>U M</code>), smooth 2-gen algorithms, the ZZ method, Heise's later steps.</td><td>Which pieces each move set can and cannot reach, and why <code>R U</code> algorithms never flip edges.</td></tr>
+          <tr><th>Orientation as a concept</th><td>"Good" and "bad" edges measured against one axis, and corner twist measured against top and bottom.</td><td>Roux EO, Heise, ZZ; why F and B quarter turns flip edges and R, L, U, D do not.</td><td>Spotting bad edges on any cube, and which moves change them.</td></tr>
+          <tr><th>Pair and insert</th><td>Join two pieces into a pair, then put the pair in with a move that leaves solved parts alone.</td><td>F2L, the 8355 middle layer, Roux blocks.</td><td>The few ways a pair can be joined, as a rule instead of a list of cases.</td></tr>
+          <tr><th>Fewest-moves theory</th><td>Find a short partial solution, then insert commutators into it; solve the scramble and its inverse together (NISS); first reduce to a restricted move set (domino reduction).</td><td>The "fewest moves" competition event.</td><td>Inserting a commutator into a skeleton, with cancelling moves shown.</td></tr>
+          <tr><th>Computer theory</th><td>How a solver finds solutions (two-phase search) and God's number: every position can be solved in 20 moves or fewer.</td><td>Background only; the site has no solver.</td><td>How many positions there are, and how the 20-move result was found.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

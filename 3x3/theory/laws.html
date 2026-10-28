@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laws of the cube — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=12" />
+  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <script type="module" src="../../js/site-chrome.js?v=5"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Laws of the cube</h1>
+    <p class="subtitle">
+      Three rules every position obeys, however it was scrambled. They explain why some things can never be done
+      alone, and why algorithms that twist, flip or swap always do it to two pieces.
+    </p>
+    <div class="source-note">
+      <p>
+        Our own explanation of standard cube theory. Every number on this page is measured by the simulator on the
+        moves shown (<code>js/cube-laws.js</code>), and the laws were checked on thousands of random scrambles by
+        <code>log/2026-10-28-theory-check.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="twist" data-short="Twists">1. Corner twists add up to whole turns</h2>
+    <p>
+      A corner is <strong>twisted</strong> when its white or yellow sticker is not on the top or bottom. It can be a third of
+      a turn clockwise or anticlockwise. Count the corners twisted clockwise and those twisted anticlockwise: the difference
+      is always 0, 3 or 6. (The same thing said another way: all the twists add up to whole turns.)
+    </p>
+    <ul class="bld-tips">
+      <li>So <strong>one corner can never be twisted on its own</strong>: two corners twisted opposite ways, or three the same way.</li>
+      <li>Your twist algorithm twists two corners, one each way.</li>
+    </ul>
+    <div class="orz-step"><div class="orz-pic" id="pic-twist"></div><div><h3>Your twist algorithm</h3><p><code id="alg-twist"></code></p><p class="bld-note" id="note-twist"></p></div></div>
+
+    <h2 class="section-heading" id="flip" data-short="Flips">2. Edge flips come in pairs</h2>
+    <p>
+      An edge is <strong>flipped</strong> when it is in a slot the wrong way round. The number of flipped edges is always even.
+    </p>
+    <ul class="bld-tips">
+      <li>So <strong>one edge can never be flipped on its own</strong>: flip algorithms always flip two (or four).</li>
+    </ul>
+    <div class="orz-step"><div class="orz-pic" id="pic-flip"></div><div><h3>An edge flip algorithm</h3><p><code id="alg-flip"></code></p><p class="bld-note" id="note-flip"></p></div></div>
+
+    <h2 class="section-heading" id="swap" data-short="Swaps">3. Corner and edge swaps match</h2>
+    <p>
+      Count how many swaps of two pieces it would take to put every corner back in its place, ignoring twists. Do the same
+      for edges. The two counts are <strong>both even or both odd</strong>, always.
+    </p>
+    <ul class="bld-tips">
+      <li>Why: one quarter turn moves four corners round in a cycle (3 swaps) and four edges round (3 swaps). Each turn adds an odd number to both counts, so they stay matched.</li>
+      <li>So <strong>you can't swap just two corners</strong> (or just two edges): two corners swapped always comes with two edges swapped. Your Old Pochmann swap swaps two corners and the edges UL and UB.</li>
+      <li>A 3-cycle is two swaps (even), so commutators are always allowed on their own.</li>
+    </ul>
+    <div class="orz-step"><div class="orz-pic" id="pic-swap"></div><div><h3>Your Old Pochmann swap</h3><p><code id="alg-swap"></code></p><p class="bld-note" id="note-swap"></p></div></div>
+
+    <h2 class="section-heading" id="turns" data-short="One turn">What one turn does</h2>
+    <p>Measured on a solved cube after one move.</p>
+    <div class="table-wrap"><table class="bld-table th-table" id="turn-table"></table></div>
+    <p class="bld-note">
+      Slice moves (M, E, S) also move the centres, so on their own they seem to break law 3. M is the same as R and L' plus
+      turning the whole cube, so measured against the centres, the laws still hold.
+    </p>
+
+    <h2 class="section-heading" id="check" data-short="Check">Check any position</h2>
+    <p>Type face turns (R L U D F B, with ' or 2), or make a random scramble. The laws are measured on the result.</p>
+    <form class="th-form" id="check-form" onsubmit="return false">
+      <input type="text" id="check-moves" aria-label="Moves" autocomplete="off" spellcheck="false" />
+      <button type="button" class="rec-btn" id="check-random">Random</button>
+    </form>
+    <p class="drill-error" id="check-error" role="status"></p>
+    <div class="orz-pieces">
+      <div class="orz-pic" id="pic-check"></div>
+      <div class="table-wrap"><table class="bld-table th-table" id="check-table"></table></div>
+    </div>
+
+    <h2 class="section-heading" id="why" data-short="Why it matters">Why it matters</h2>
+    <div class="table-wrap">
+      <table class="bld-table th-table">
+        <thead><tr><th>Where</th><th>The law behind it</th></tr></thead>
+        <tbody>
+          <tr><td>Orozco: helper letters N and Q use your twist algorithm</td><td>1: a twist always needs a second corner; it twists the buffer and the helper together.</td></tr>
+          <tr><td>M2 and Old Pochmann: the parity algorithm for an odd number of edge targets</td><td>3: an odd number of edge swaps means an odd number of corner swaps too.</td></tr>
+          <tr><td>Orozco after M2: the Ra-perm for an odd number of corners</td><td>3: it swaps two corners and two edges together.</td></tr>
+          <tr><td>Commutators move three pieces, never two</td><td>3: a 3-cycle is two swaps, so it is always allowed.</td></tr>
+          <tr><td>A cube taken apart and put back at random</td><td>All three: only 1 in 12 can be solved (3 for twist × 2 for flips × 2 for swaps).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-heading" id="run" data-short="Run it">Run it</h2>
+    <p>Watch each algorithm move by move. Only the pieces it changes are in colour.</p>
+    <div class="ex-tabs" role="tablist" aria-label="Algorithm" id="run-tabs"></div>
+    <div id="runner"></div>
+  </main>
+
+  <script type="module">
+    import { applyAlg } from '../../js/cube-sim.js';
+    import { expandBrackets } from '../../js/algs.js';
+    import { cube3dSvg } from '../../js/cube-3d.js?v=2';
+    import { WHITE_TOP } from '../../js/cube-diagram.js';
+    import { BLD_CORNER_SWAP } from '../../data/bld.js';
+    import { laws, pieces, tracked, trackedSolved, slotName } from '../../js/cube-laws.js?v=1';
+    import { randomScramble } from '../../js/bld-memo.js';
+    import { createMoveRunner } from '../../js/move-runner.js?v=1';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
+    const TWIST = "(R' D' R D)×2 U (D' R' D R)×2 U'";
+    const FLIP = "M' U M' U M' U2 M U M U M U2";
+    const name = (s) => slotName(s.split(',').map(Number));
+    const TW = ['', 'clockwise', 'anticlockwise'];
+    // what an algorithm changed, in words, from the simulator
+    function changes(alg) {
+      const { corners, edges } = pieces(tracked(expandBrackets(alg)));
+      const out = [];
+      const twisted = corners.filter((c) => c.slot === c.piece && c.twist).map((c) => `${name(c.slot)} ${TW[c.twist]}`);
+      const flipped = edges.filter((e) => e.slot === e.piece && e.flip).map((e) => name(e.slot));
+      const movedC = corners.filter((c) => c.slot !== c.piece).map((c) => name(c.slot));
+      const movedE = edges.filter((e) => e.slot !== e.piece).map((e) => name(e.slot));
+      if (twisted.length) out.push(`twisted: ${twisted.join(', ')}`);
+      if (flipped.length) out.push(`flipped: ${flipped.join(', ')}`);
+      if (movedC.length) out.push(`corners moved: ${movedC.join(', ')}`);
+      if (movedE.length) out.push(`edges moved: ${movedE.join(', ')}`);
+      return `Changes ${out.join('; ')}. Nothing else.`;
+    }
+    const keepSet = (alg) => {
+      const { corners, edges } = pieces(tracked(expandBrackets(alg)));
+      return new Set([...corners, ...edges].filter((x) => x.slot !== x.piece || x.twist || x.flip).flatMap((x) => [x.slot, x.piece]));
+    };
+    const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) ? s.colour : 'X' }));
+    const pic = (alg) => cube3dSvg(greyed(tracked(expandBrackets(alg)), keepSet(alg)), { palette: PALETTE, mirrors: true, label: `After ${alg}` });
+
+    for (const [id, alg] of [['twist', TWIST], ['flip', FLIP], ['swap', BLD_CORNER_SWAP]]) {
+      $(`alg-${id}`).textContent = alg;
+      $(`pic-${id}`).innerHTML = pic(alg);
+      $(`note-${id}`).textContent = changes(alg);
+    }
+
+    // one turn of each kind
+    {
+      const t = $('turn-table');
+      const head = t.createTHead().insertRow();
+      ['Move', 'Corners twisted', 'Edges flipped', 'Corner swaps', 'Edge swaps'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = t.createTBody();
+      for (const m of ['U', 'D', 'R', 'L', 'F', 'B', 'U2', 'R2']) {
+        const l = laws(tracked(m));
+        const tr = body.insertRow();
+        tr.appendChild(el('th', 'bld-letter', m));
+        [String(l.twisted), String(l.flips), l.cornerParity ? 'odd' : 'even', l.edgeParity ? 'odd' : 'even'].forEach((v) => tr.appendChild(el('td', null, v)));
+      }
+    }
+
+    // check any position
+    const KEY = 'cubing-helper:theory-laws';
+    function check(moves) {
+      $('check-error').textContent = '';
+      const clean = moves.trim().split(/\s+/).filter(Boolean).join(' ');
+      if (clean && !/^([RLUDFB](2|')?\s*)*$/.test(clean)) { $('check-error').textContent = 'Face turns only: R L U D F B, each with nothing, \' or 2.'; return; }
+      let st;
+      try { st = applyAlg(trackedSolved(), clean); } catch { $('check-error').textContent = 'Could not read those moves.'; return; }
+      try { localStorage.setItem(KEY, clean); } catch {}
+      const l = laws(st);
+      $('pic-check').innerHTML = cube3dSvg(st, { palette: PALETTE, mirrors: true, label: 'The position' });
+      const t = $('check-table');
+      t.replaceChildren();
+      const body = t.createTBody();
+      const row = (law, value, ok) => { const tr = body.insertRow(); tr.appendChild(el('th', null, law)); tr.appendChild(el('td', null, value)); tr.appendChild(el('td', null, ok ? '✓ holds' : '✗')); };
+      const { corners } = pieces(st);
+      const cw = corners.filter((c) => c.twist === 1).length;
+      const acw = corners.filter((c) => c.twist === 2).length;
+      row('1. Corner twists', l.twisted ? `${cw} clockwise, ${acw} anticlockwise: the difference (${Math.abs(cw - acw)}) is a multiple of 3` : 'no corners twisted', l.twistTotal % 3 === 0);
+      row('2. Edge flips', `${l.flips} edges flipped`, l.flips % 2 === 0);
+      row('3. Swaps', `corners ${l.cornerParity ? 'odd' : 'even'}, edges ${l.edgeParity ? 'odd' : 'even'}`, l.cornerParity === l.edgeParity);
+    }
+    $('check-moves').addEventListener('input', () => check($('check-moves').value));
+    $('check-random').addEventListener('click', () => { $('check-moves').value = randomScramble(20); check($('check-moves').value); });
+    let start = '';
+    try { start = localStorage.getItem(KEY) || ''; } catch {}
+    $('check-moves').value = start || "R U R' U'";
+    check($('check-moves').value);
+
+    // runner
+    const runner = createMoveRunner($('runner'), { palette: PALETTE });
+    const RUNS = [
+      { label: 'Twist', alg: TWIST, parts: [{ name: "(R' D' R D)×2", moves: expandBrackets("(R' D' R D)×2"), text: 'Twists the corner at UFR (and mixes the bottom layer).' }, { name: 'U', moves: 'U', text: 'A different corner comes to UFR.' }, { name: "(D' R' D R)×2", moves: expandBrackets("(D' R' D R)×2"), text: 'Twists that corner the other way and puts the bottom layer back.' }, { name: "U'", moves: "U'", text: 'Two corners twisted, one each way: the total is a whole turn.' }] },
+      { label: 'Flip', alg: FLIP, parts: [{ name: 'Flip', moves: FLIP, text: 'Two edges flipped: an even number.' }] },
+      { label: 'Swap', alg: BLD_CORNER_SWAP, parts: [{ name: 'Swap', moves: BLD_CORNER_SWAP, text: 'Two corners and two edges swapped: one swap each, both odd.' }] },
+    ];
+    function show(r) {
+      document.querySelectorAll('#run-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.id === r.label)));
+      const keep = keepSet(r.alg);
+      runner.set({ parts: r.parts, start: trackedSolved(), shown: (st) => greyed(st, keep), startText: 'Solved cube. Press Next or Play.', doneText: r.parts.at(-1).text });
+    }
+    for (const r of RUNS) { const b = el('button', null, r.label); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.id = r.label; b.addEventListener('click', () => { if (!runner.busy) show(r); }); $('run-tabs').appendChild(b); }
+    show(RUNS[0]);
+  </script>
+</body>
+</html>
