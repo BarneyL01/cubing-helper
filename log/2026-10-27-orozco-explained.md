@@ -48,3 +48,4 @@ moved" from solved and "Solved." from the case; section row shows the page.
   them, and the part label and text have a fixed minimum height. Headless: the Next button stays at one position
   and the page height does not change through all steps (O and K, 390 and 1280). Runner "Reset" renamed
   "Start again" (the cube's own Reset resets the view).
+- Phone fit (2026-10-28): runner made compact so cube, buttons and text fit one screen: moves line above the cube, cube min(62vw, 250px) (320 px from 900 px wide), the four buttons in one row, smaller view buttons, "Start again" -> "Restart". Headless: whole runner incl. text visible at 390x700 and 360x640 (runner ~530 px tall); Next button still does not move.

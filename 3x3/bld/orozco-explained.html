@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>How Orozco works — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=10" />
+  <link rel="stylesheet" href="../../css/style.css?v=11" />
   <link rel="stylesheet" href="../../css/drills.css?v=4" />
   <script type="module" src="../../js/site-chrome.js?v=4"></script>
 </head>
@@ -71,16 +71,16 @@
       <button type="button" data-start="case">From the case it solves</button>
     </div>
     <p class="bld-note" id="run-start-note"></p>
-    <div class="drill-stage">
+    <div class="drill-stage orz-runner">
       <p class="drill-label orz-run-part" id="run-part"></p>
+      <p class="orz-moves" id="run-moves"></p>
       <div id="run-cube"></div>
       <div class="rec-controls orz-run-controls">
         <button type="button" class="rec-btn" id="run-back">◀ Back</button>
         <button type="button" class="rec-btn" id="run-next">Next ▶</button>
         <button type="button" class="rec-btn rec-btn-primary" id="run-play">Play</button>
-        <button type="button" class="rec-btn" id="run-reset">Start again</button>
+        <button type="button" class="rec-btn" id="run-reset">Restart</button>
       </div>
-      <p class="orz-moves" id="run-moves"></p>
       <p class="orz-run-caption" id="run-caption"></p>
     </div>
     <label class="orz-grey">Speed
