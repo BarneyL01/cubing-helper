@@ -6,7 +6,7 @@
   <title>Blind drills — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css?v=4" />
-  <link rel="stylesheet" href="../../css/drills.css?v=4" />
+  <link rel="stylesheet" href="../../css/drills.css?v=5" />
   <script type="module" src="../../js/site-chrome.js?v=5"></script>
 </head>
 <body>
@@ -77,7 +77,11 @@
       <p class="drill-how" id="s-how"></p>
       <form class="rec-settings" onsubmit="return false">
         <fieldset>
-          <legend>Unsolved pieces</legend>
+          <legend id="s-count-legend">Unsolved pieces</legend>
+          <div class="th-count" role="group" aria-label="Count">
+            <label><input type="radio" name="s-count" value="pieces" checked /> Pieces out of place</label>
+            <label><input type="radio" name="s-count" value="letters" /> Letters to solve</label>
+          </div>
           <label>Corners <select id="s-corners"></select></label>
           <label>Edges <select id="s-edges"></select></label>
         </fieldset>
@@ -150,7 +154,7 @@
     import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
     import { bldPlan } from '../../js/bld-memo.js';
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
-    import { drillScramble, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES } from '../../js/bld-drill.js?v=2';
+    import { drillScramble, drillScrambleLetters, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=3';
     import { letterPairs } from '../../data/letter-pairs.js?v=1';
     import { bldEdges, bldCorners, BLD_PARITY } from '../../data/bld.js';
 
@@ -222,12 +226,32 @@
     }));
 
     // ---- 2. tracing and 5. small solves
-    const fill = (sel, max, value) => {
-      for (let n = 0; n <= max; n++) if (n !== 1) sel.appendChild(el('option', null, String(n)));
+    // Count by pieces out of place (buffer included) or by letters in the memo (for the chosen corner method)
+    const byLetters = () => saved.count === 'letters';
+    const fill = (sel, max, value, skipOne) => {
+      sel.replaceChildren();
+      for (let n = 0; n <= max; n++) if (!(skipOne && n === 1)) sel.appendChild(el('option', null, String(n)));
       sel.value = String(value);
+      if (sel.value !== String(value)) sel.value = '0';
     };
-    fill($('s-corners'), MAX_CORNERS, saved.corners ?? 3);
-    fill($('s-edges'), MAX_EDGES, saved.edges ?? 0);
+    function fillCounts() {
+      if (byLetters()) {
+        fill($('s-corners'), MAX_CORNER_LETTERS, saved.cornerLetters ?? 4, false);
+        fill($('s-edges'), MAX_EDGE_LETTERS, saved.edgeLetters ?? 0, false);
+        $('s-count-legend').textContent = 'Letters to solve';
+      } else {
+        fill($('s-corners'), MAX_CORNERS, saved.corners ?? 3, true);
+        fill($('s-edges'), MAX_EDGES, saved.edges ?? 0, true);
+        $('s-count-legend').textContent = 'Unsolved pieces';
+      }
+      setRadio('s-count', byLetters() ? 'letters' : 'pieces');
+    }
+    fillCounts();
+    document.querySelectorAll('input[name="s-count"]').forEach((r) => r.addEventListener('change', () => {
+      saved.count = radio('s-count');
+      save();
+      fillCounts();
+    }));
 
     function lettersInto(target, targets) {
       target.replaceChildren();
@@ -347,12 +371,20 @@
       const corners = Number($('s-corners').value);
       const edges = Number($('s-edges').value);
       $('s-error').textContent = '';
-      if (!possible(corners, edges)) { $('s-error').textContent = 'Choose at least one piece.'; return; }
-      try {
-        saved.scramble = drillScramble({ corners, edges }).scramble;
-      } catch (e) { $('s-error').textContent = e.message; return; }
-      saved.corners = corners;
-      saved.edges = edges;
+      if (byLetters()) {
+        try {
+          saved.scramble = drillScrambleLetters({ cornerLetters: corners, edgeLetters: edges, method: saved.cornerMethod === 'orozco' ? 'orozco' : 'op' }).scramble;
+        } catch (e) { $('s-error').textContent = e.message; return; }
+        saved.cornerLetters = corners;
+        saved.edgeLetters = edges;
+      } else {
+        if (!possible(corners, edges)) { $('s-error').textContent = 'Choose at least one piece.'; return; }
+        try {
+          saved.scramble = drillScramble({ corners, edges }).scramble;
+        } catch (e) { $('s-error').textContent = e.message; return; }
+        saved.corners = corners;
+        saved.edges = edges;
+      }
       saved.showMemo = false;
       saved.showMoves = false;
       save();

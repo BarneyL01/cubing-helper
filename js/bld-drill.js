@@ -58,7 +58,7 @@ function attempt(corners, edges, rnd) {
 
 // { scramble, corners, edges } or throws if the counts are impossible. Keeps trying for `budgetMs`
 // (at least one success) and returns the shortest scramble found.
-export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budgetMs = 150 } = {}) {
+export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budgetMs = 150, maxMs = 5000 } = {}) {
   if (!possible(corners, edges)) throw new Error(`No cube has exactly ${corners} corners and ${edges} edges unsolved.`);
   const t0 = Date.now();
   let best = null;
@@ -66,6 +66,7 @@ export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budge
     const s = attempt(corners, edges, rnd);
     if (s && (!best || length(s) < length(best))) best = s;
     if (best && Date.now() - t0 >= budgetMs) break;
+    if (Date.now() - t0 >= maxMs) break;
   }
   if (!best) throw new Error('Could not make that scramble; try again.');
   // nearly every piece unsolved: a plain random-move scramble with the same counts can be shorter
@@ -95,4 +96,58 @@ export function randomLetters(n, rnd = Math.random) {
     if (l !== out.at(-1)) out.push(l);
   }
   return out;
+}
+
+// ---- By letters: scrambles whose memo has exactly the asked-for number of letters.
+// Corner letters follow the chosen corner method ('op': Old Pochmann, memo from UBL; 'orozco': memo
+// from UFR); edge letters are the M2 memo (from DF). Made by trying piece counts near the letter counts
+// and keeping scrambles whose memo matches; the shortest found in `budgetMs` is returned.
+import { bldPlan } from './bld-memo.js';
+import { orozcoCornerPlan } from './orozco.js';
+
+export const MAX_CORNER_LETTERS = 10;
+export const MAX_EDGE_LETTERS = 14;
+
+export function letterCounts(scramble, method = 'op') {
+  const plan = bldPlan(scramble);
+  const corners = method === 'orozco' ? orozcoCornerPlan(plan.state).targets.length : plan.corners.length;
+  return { corners, edges: plan.edges.length };
+}
+
+// One try: pieces added until the corner letters, then the edge letters, are right (corner pieces never
+// change edges and edge pieces never change corners). Odd counts start with an odd swap.
+function attemptLetters(cl, el, method, rnd) {
+  const letters = (m) => letterCounts(cancelMoves(invertAlg(m)) || '', method);
+  let moves = cl % 2 === 1 ? pick(DRILL_PIECES.swap, rnd) : '';
+  const phase = (target, kind, step, limit) => {
+    for (let i = 0; i < limit; i++) {
+      const n = letters(moves)[kind];
+      if (n === target && (i > 0 || target === 0 || moves) && rnd() < 0.75) return true;
+      moves = cancelMoves(`${moves} ${step()}`);
+    }
+    return letters(moves)[kind] === target;
+  };
+  if (!phase(cl, 'corners', () => pick(rnd() < 0.85 ? DRILL_PIECES.corner3 : DRILL_PIECES.twist2, rnd), Math.ceil(cl / 2) + 3)) return null;
+  if (!phase(el, 'edges', () => pick(rnd() < 0.85 ? DRILL_PIECES.edge3 : DRILL_PIECES.flip2, rnd), Math.ceil(el / 2) + 3)) return null;
+  const scramble = cancelMoves(invertAlg(moves));
+  const got = letterCounts(scramble, method);
+  return got.corners === cl && got.edges === el ? scramble : null;
+}
+
+export function drillScrambleLetters({ cornerLetters = 4, edgeLetters = 0, method = 'op', rnd = Math.random, budgetMs = 200 } = {}) {
+  if (cornerLetters + edgeLetters === 0) throw new Error('Choose at least one letter.');
+  if (cornerLetters % 2 !== edgeLetters % 2) {
+    // an odd number of corner letters means an odd number of corner swaps, and corner and edge swaps always match
+    throw new Error('Corner and edge letters must be both even or both odd (corner and edge swaps always match).');
+  }
+  const t0 = Date.now();
+  let best = null;
+  for (let tries = 0; tries < 20000; tries++) {
+    const s = attemptLetters(cornerLetters, edgeLetters, method, rnd);
+    if (s && (!best || length(s) < length(best))) best = s;
+    if (best && Date.now() - t0 >= budgetMs) break;
+    if (!best && Date.now() - t0 >= 3000) break;
+  }
+  if (!best) throw new Error('No scramble found with exactly those letters; try other numbers.');
+  return { scramble: best, cornerLetters, edgeLetters };
 }

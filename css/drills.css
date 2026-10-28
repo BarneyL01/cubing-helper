@@ -114,3 +114,4 @@ text.net-letter-on-colour {
 .cube-rot-stage:active { cursor: grabbing; }
 .cube-rot-svg { display: block; width: 100%; height: auto; }
 .cube-rot-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.th-count { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; width: 100%; }

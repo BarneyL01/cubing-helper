@@ -2,7 +2,7 @@
 // 20 seeded scrambles each must leave exactly those pieces unsolved (centres solved), and
 // the M2 / Old Pochmann solution from js/bld-memo.js must solve each one, and so must M2 + Orozco corners.
 //   node log/2026-10-23-bld-drill-check.mjs        prints ALL OK and scramble lengths
-import { drillScramble, possible, unsolvedCounts, MAX_CORNERS, MAX_EDGES } from '../js/bld-drill.js';
+import { drillScramble, drillScrambleLetters, letterCounts, possible, unsolvedCounts, MAX_CORNERS, MAX_EDGES } from '../js/bld-drill.js';
 import { bldPlan, scrambledState } from '../js/bld-memo.js';
 import { applyAlg, isSolved } from '../js/cube-sim.js';
 import { orozcoCornerPlan } from '../js/orozco.js';
@@ -57,5 +57,23 @@ console.log(`${n} scrambles in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
     rows.push(`${c}/${e}: ${Math.round(lens.reduce((a, b) => a + b, 0) / lens.length)} (${Math.min(...lens)}-${Math.max(...lens)})`);
   }
   console.log(`page setting, mean (min-max) moves: ${rows.join(', ')}`);
+}
+// By letters: the memo has exactly the asked-for letters, for each corner method, and both solves still work.
+{
+  const rows = [];
+  for (const [c, e] of [[2, 0], [4, 0], [6, 0], [0, 4], [2, 2], [4, 4], [3, 1], [8, 0]]) for (const method of ['op', 'orozco']) {
+    for (let i = 0; i < 3; i++) {
+      const r = drillScrambleLetters({ cornerLetters: c, edgeLetters: e, method, rnd, budgetMs: 50 });
+      const got = letterCounts(r.scramble, method);
+      if (got.corners !== c || got.edges !== e) fails.push(`letters ${c}/${e} ${method}: got ${got.corners}/${got.edges}`);
+      const plan = bldPlan(r.scramble);
+      if (!isSolved(applyAlg(plan.state, plan.solution))) fails.push(`letters ${c}/${e}: M2/OP does not solve ${r.scramble}`);
+      const oz = orozcoCornerPlan(plan.state);
+      const ozMoves = [...plan.edges.map((x) => x.moves), plan.parity ? BLD_PARITY[0] : '', ...oz.steps.map((x) => x.moves), oz.parity ? oz.parityAlg : ''].filter(Boolean).join(' ');
+      if (!isSolved(applyAlg(plan.state, ozMoves))) fails.push(`letters ${c}/${e}: M2/Orozco does not solve ${r.scramble}`);
+    }
+    rows.push(`${c}/${e} ${method}`);
+  }
+  console.log(`by letters: ${rows.length} combinations x 3 checked`);
 }
 if (fails.length) { console.log(`${fails.length} FAILED\n${fails.slice(0, 10).join('\n')}`); process.exitCode = 1; } else console.log('ALL OK');
