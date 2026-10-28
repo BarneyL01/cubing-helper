@@ -38,3 +38,13 @@ moved" from solved and "Solved." from the case; section row shows the page.
   `js/cube-sim.js` (same axes and directions); the end of each turn shows the simulator's state. Speed: slow /
   normal / fast. Back animates the reverse move. Headless: mid-turn frame drawn (105 polygons vs 30 still),
   Back returns to Start, Play from the case ends "Solved."; no errors at 390 / 1280.
+
+## Colours and steady buttons (2026-10-28, owner's request)
+
+- One switch under the letter tabs: "Colour only the three corners" / "Whole cube in colour" (saved as
+  `colours` in `cubing-helper:orozco-explained`); it applies to every picture and the runner (replaces the runner's
+  grey-out checkbox).
+- Runner layout: Back / Next / Play / Start again sit right under the cube; the moves line and the text are below
+  them, and the part label and text have a fixed minimum height. Headless: the Next button stays at one position
+  and the page height does not change through all steps (O and K, 390 and 1280). Runner "Reset" renamed
+  "Start again" (the cube's own Reset resets the view).

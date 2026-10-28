@@ -280,7 +280,7 @@ built ahead of being asked for. As of 2026-10-03:
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
   **How Orozco works** (`3x3/bld/orozco-explained.html`, Blind section, 2026-10-27): the base `[R D R', U']` taken apart for
   learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
-  runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup). `log/2026-10-27-orozco-explained.md`.
+  runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup); switch for three corners / whole cube in colour. `log/2026-10-27-orozco-explained.md`.
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
   net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>How Orozco works — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=9" />
+  <link rel="stylesheet" href="../../css/style.css?v=10" />
   <link rel="stylesheet" href="../../css/drills.css?v=4" />
   <script type="module" src="../../js/site-chrome.js?v=4"></script>
 </head>
@@ -30,6 +30,10 @@
 
     <div class="ex-tabs" role="tablist" aria-label="Example letter" id="ex-tabs"></div>
     <p class="bld-note" id="ex-about"></p>
+    <div class="ex-tabs" role="group" aria-label="Colours" id="colour-switch">
+      <button type="button" data-colours="three">Colour only the three corners</button>
+      <button type="button" data-colours="all">Whole cube in colour</button>
+    </div>
 
     <h2 class="section-heading" id="idea" data-short="Idea">The idea</h2>
     <p>A commutator is four parts: <strong>X</strong>, <strong>Y</strong>, <strong>undo X</strong>, <strong>undo Y</strong>. Here:</p>
@@ -37,7 +41,7 @@
     <p>All the moves: <code id="idea-moves"></code></p>
 
     <h2 class="section-heading" id="pieces" data-short="Pieces">The three corners</h2>
-    <p>Hold white on top, green in front. Only these three corners are coloured in the pictures; everything else is grey.</p>
+    <p>Hold white on top, green in front. With "Colour only the three corners" (above), everything else is grey.</p>
     <div class="orz-pieces">
       <div class="orz-pic" id="pic-start"></div>
       <ul class="orz-legend" id="legend"></ul>
@@ -68,18 +72,17 @@
     </div>
     <p class="bld-note" id="run-start-note"></p>
     <div class="drill-stage">
-      <p class="drill-label" id="run-part"></p>
+      <p class="drill-label orz-run-part" id="run-part"></p>
       <div id="run-cube"></div>
+      <div class="rec-controls orz-run-controls">
+        <button type="button" class="rec-btn" id="run-back">◀ Back</button>
+        <button type="button" class="rec-btn" id="run-next">Next ▶</button>
+        <button type="button" class="rec-btn rec-btn-primary" id="run-play">Play</button>
+        <button type="button" class="rec-btn" id="run-reset">Start again</button>
+      </div>
       <p class="orz-moves" id="run-moves"></p>
-      <p id="run-caption"></p>
+      <p class="orz-run-caption" id="run-caption"></p>
     </div>
-    <div class="rec-controls orz-run-controls">
-      <button type="button" class="rec-btn" id="run-back">◀ Back</button>
-      <button type="button" class="rec-btn" id="run-next">Next ▶</button>
-      <button type="button" class="rec-btn rec-btn-primary" id="run-play">Play</button>
-      <button type="button" class="rec-btn" id="run-reset">Reset</button>
-    </div>
-    <label class="orz-grey"><input type="checkbox" id="run-grey" checked /> Grey out the other pieces</label>
     <label class="orz-grey">Speed
       <select id="run-speed">
         <option value="slow">Slow</option>
@@ -148,12 +151,13 @@
     let ex = EXAMPLES.find((e) => e.letter === saved.letter) || EXAMPLES[0];
     const keep = () => new Set([BUF, HEL, ex.target]);
     // colour only the three corners (grey = 'X') when asked
-    const shown = (state, grey = true) => { const k = keep(); return state.map((s) => ({ ...s, colour: !grey || k.has(s.home) ? s.colour : 'X' })); };
+    let colours = saved.colours === 'all' ? 'all' : 'three';
+    const shown = (state) => { if (colours === 'all') return state; const k = keep(); return state.map((s) => ({ ...s, colour: k.has(s.home) ? s.colour : 'X' })); };
     const picture = (state, label) => cube3dSvg(shown(state), { palette: PALETTE, label, mirrors: true });
     const pieceName = (home) => (home === BUF ? 'buffer piece' : home === HEL ? 'helper piece' : `${ex.letter} piece`);
     const spotName = (pos) => (pos === BUF ? 'the buffer spot (UFR)' : pos === HEL ? 'the helper spot (UBR)' : pos === ex.target ? `${ex.letter}'s spot (${SPOT[pos]})` : SPOT[pos]);
     const where = (state) => Object.fromEntries([...keep()].map((h) => [h, state.find((s) => s.home === h && s.p.filter((v) => v).length === 3).p.join()]));
-    const colours = (home) => START.filter((s) => s.home === home).map((s) => COLOUR_NAME[s.colour]).join(', ');
+    const colourNames = (home) => START.filter((s) => s.home === home).map((s) => COLOUR_NAME[s.colour]).join(', ');
     const allMoves = () => ex.parts.map((p) => p.moves).join(' ');
 
     function showExample() {
@@ -177,7 +181,7 @@
       legend.replaceChildren();
       for (const [label, home] of [['Buffer', BUF], ['Helper', HEL], [ex.letter, ex.target]]) {
         const item = el('li');
-        item.append(el('strong', null, label), ` (${home === ex.target ? `the corner ${r.piece}` : SPOT[home]}): ${colours(home)}`);
+        item.append(el('strong', null, label), ` (${home === ex.target ? `the corner ${r.piece}` : SPOT[home]}): ${colourNames(home)}`);
         legend.appendChild(item);
       }
       // part by part, with what moved worked out from the simulator
@@ -243,8 +247,7 @@
         : 'The cube starts solved; watch where the three corners go.';
       $('run-play').textContent = playing ? 'Pause' : 'Play';
     }
-    const grey = () => $('run-grey').checked;
-    function drawStill() { cube.update(shown(stateAt(pos), grey())); label(); }
+    function drawStill() { cube.update(shown(stateAt(pos))); label(); }
     async function step(dir) {
       if (busy) return;
       if ((dir > 0 && pos >= ALL.length) || (dir < 0 && pos <= 0)) return;
@@ -253,7 +256,7 @@
       const move = dir > 0 ? ALL[pos].move : invertAlg(ALL[pos - 1].move);
       pos += dir;
       label();
-      await cube.animate(shown(from, grey()), shown(stateAt(pos), grey()), move, SPEED[$('run-speed').value]);
+      await cube.animate(shown(from), shown(stateAt(pos)), move, SPEED[$('run-speed').value]);
       busy = false;
     }
     async function play() {
@@ -279,7 +282,22 @@
     $('run-back').addEventListener('click', () => { playing = false; step(-1); });
     $('run-reset').addEventListener('click', () => { if (!busy) resetRunner(); });
     $('run-play').addEventListener('click', play);
-    $('run-grey').addEventListener('change', () => { if (!busy) drawStill(); });
+    // colour switch: redraws every picture and the runner (keeps the runner's place)
+    function showColours() {
+      document.querySelectorAll('#colour-switch button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.colours === colours)));
+    }
+    document.querySelectorAll('#colour-switch button').forEach((b) => b.addEventListener('click', () => {
+      if (busy) return;
+      colours = b.dataset.colours;
+      saved.colours = colours;
+      save();
+      const keepPos = pos;
+      showExample();
+      pos = keepPos;
+      drawStill();
+      showColours();
+    }));
+    showColours();
     document.querySelectorAll('#run-start button').forEach((b) => b.addEventListener('click', () => {
       if (busy) return;
       startFrom = b.dataset.start;

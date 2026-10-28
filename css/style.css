@@ -2453,3 +2453,7 @@ a.menu-sec[aria-current="page"],
 .orz-sep { color: var(--text-muted); }
 .orz-run-controls .rec-btn-primary { grid-column: auto; }
 .orz-grey { display: flex; gap: 0.5rem; align-items: center; min-height: 44px; }
+/* How Orozco works runner: buttons right under the cube; the text below keeps a fixed height so nothing jumps */
+.orz-run-controls { margin: 0.6rem 0 0.2rem; }
+.orz-run-part { min-height: 2.6em; display: flex; align-items: center; justify-content: center; }
+.orz-run-caption { min-height: 5.2em; margin: 0.4rem 0 0; }
