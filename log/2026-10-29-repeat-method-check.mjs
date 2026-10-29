@@ -8,7 +8,7 @@
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { invertAlg, cancelMoves } from '../js/algs.js';
 import { randomScramble } from '../js/bld-memo.js';
-import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT, CORNER_CYCLE_BACK, REVERSE_SASSY } from '../data/repeat-method.js';
+import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT, CORNER_CYCLE_BACK, REVERSE_SASSY, DROP_SETUPS, BAD_SETUPS } from '../data/repeat-method.js';
 const SETS = { drop: { drops: DROPS, top: TOP_MAIN.alg }, short: { drops: Object.fromEntries(Object.entries(DROPS).map(([k, d]) => [k, { ...d, alg: SHORT[k] }])), top: SHORT.topCycle } };
 let TOP_CYCLE = { alg: TOP_MAIN.alg };
 
@@ -68,6 +68,23 @@ const sameSet = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b
   check('reverse Sassy = Sassy x5', permOf(REVERSE_SASSY).join() === permOf(Array(5).fill(S).join(' ')).join());
   check('reverse Sassy x2 = Sassy x4', permOf(`${REVERSE_SASSY} ${REVERSE_SASSY}`).join() === permOf(Array(4).fill(S).join(' ')).join());
   check('reverse Sassy is Urvop', REVERSE_SASSY === "U R U' R'");
+}
+// The setups table: each fills its slot from its spot, top sticker onto the face named, nothing else below the top.
+for (const d of DROP_SETUPS) {
+  check(`setup ${d.setup} undo`, invertAlg(d.setup || '') === (d.undo || ''), d.undo);
+  const alg = [d.setup, DROP, d.undo].filter(Boolean).join(' ');
+  const p = permOf(alg);
+  const off = moved(alg).filter((n) => n[0] !== 'U');
+  check(`setup ${d.setup} only its slot`, sameSet(off, [d.slot]), off.join());
+  check(`setup ${d.setup} corners/centres`, [...CORNERS, ...CENTRES].every((k) => pieceSolved(p, k)));
+  const src = STICKERS.get(BY_NAME[d.from]);
+  check(`setup ${d.setup} from ${d.from}`, src.every((i) => piece(p[i]) === BY_NAME[d.slot]));
+  check(`setup ${d.setup} top sticker`, faceOf(p[src.find((i) => faceOf(i) === 'U')]) === d.up);
+}
+for (const d of BAD_SETUPS) {
+  const alg = `${d.setup} ${DROP} ${invertAlg(d.setup)}`;
+  if (d.same) check(`bad ${d.setup} same as drop`, permOf(alg).join() === permOf(DROP).join());
+  else check(`bad ${d.setup} touches`, sameSet(moved(alg), d.touches), moved(alg).join());
 }
 // Drop: UF -> DF -> UB, nothing else, centres included.
 {

@@ -44,6 +44,24 @@ export const SHORT = {
   topCycle: `R2 D'  ${COMM}  D R2`,
 };
 
+// Setups for the drop, as listed on the page (each checked by the checker): the edge
+// at `from` (top sticker onto face `up`) goes into `slot`; the setup moves nothing else below the top.
+export const DROP_SETUPS = [
+  { setup: '', undo: '', slot: 'DF', from: 'UF', up: 'D', card: 1 },
+  { setup: "D'", undo: 'D', slot: 'DR', from: 'UF', up: 'D'},
+  { setup: 'D2', undo: 'D2', slot: 'DB', from: 'UF', up: 'D'},
+  { setup: 'D', undo: "D'", slot: 'DL', from: 'UF', up: 'D'},
+  { setup: "F R' F'", undo: "F R F'", slot: 'DF', from: 'UR', up: 'F', card: 2, dir: 'white facing right' },
+  { setup: "R' D'", undo: 'D R', slot: 'FR', from: 'UF', up: 'F', card: 3, dir: 'top colour = front centre' },
+  { setup: 'F U R2', undo: "R2 U' F'", slot: 'FR', from: 'UR', up: 'R', card: 4, dir: 'top colour = right centre' },
+];
+// Setups that do not work in step 4, and why (checked too).
+export const BAD_SETUPS = [
+  { setup: "F'", touches: ['FL', 'FR', 'UB'], why: 'F\' brings the front-left slot to the bottom front and the front-right edge to the top front: two middle slots change, so a solved edge gets broken.' },
+  { setup: 'R2', same: true, why: 'R2 does not touch the top front, bottom front or top back, so with its undo it changes nothing: the same as no setup.' },
+];
+const SLOT_NAME = { DF: 'bottom front', DR: 'bottom right', DB: 'bottom back', DL: 'bottom left', FR: 'front-right', UF: 'top front', UR: 'top right' };
+
 export const facts = [
   ['Designed', 'Here, 2026-10-29, by computer search, then checked on whole solves'],
   ['Type', 'Beginner method: corners first, then edges'],
@@ -304,6 +322,38 @@ export const repeatSteps = [
         note: 'Written out in full, the moves cancel a little. No mnemonic word for the whole thing.',
       },
     ],
+  },
+  {
+    id: 'setups',
+    title: 'Setup moves for the drop',
+    short: 'Setups',
+    extra: true,
+    mark: '?',
+    intro: "Any moves can be a setup, as long as you undo them straight after the drop, in reverse order. What matters is where the setup puts things, because the drop always works on the same three spots: top front → bottom front → top back → top front.",
+    how: [
+      { title: 'What a setup does:', text: 'whatever the setup brings to the top front drops into whatever it brings to the bottom front. The undo takes that slot back to where it came from, and puts back every other piece the setup moved (corners and centres included).' },
+      { title: 'A setup works in step 4 when, after doing it:', text: '1) the edge you are placing is at the top front, as in card 1 (white up for a bottom edge; for a middle edge, the colour that should end up facing down is on top); 2) its slot is at the bottom front; 3) the top back holds a top-layer edge, not a solved one.' },
+      { title: 'Free moves are not setups:', text: 'turning the whole cube, and turning the top before a card, need no undo in step 4. A U turn as a setup only changes which top spot feeds the slot.' },
+      { title: 'Making your own:', text: 'turn the slot to the bottom front with D or R turns, or turn the edge to the top front, then check the three points above. The table lists the ones on this page; each was checked in the simulator.' },
+    ],
+    custom(section) {
+      const el = (tag, text) => { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; return n; };
+      const table = (caption, head, rows, codeCols) => {
+        const wrap = el('div'); wrap.className = 'table-wrap';
+        const t = el('table'); t.className = 'bld-table';
+        t.createCaption().textContent = caption;
+        const h = t.createTHead().insertRow(); head.forEach((x) => h.appendChild(el('th', x)));
+        const b = t.createTBody();
+        for (const r of rows) { const tr = b.insertRow(); r.forEach((x, i) => { const td = el('td'); if (codeCols.includes(i) && x !== '—') td.appendChild(el('code', x)); else td.textContent = x; tr.appendChild(td); }); }
+        wrap.appendChild(t); return wrap;
+      };
+      const card = (d) => (d.card ? ` (card ${d.card})` : '');
+      section.append(
+        table('Setups that work', ['Setup', 'Undo', 'Fills', 'Edge from'],
+          DROP_SETUPS.map((d) => [d.setup || '—', d.undo || '—', SLOT_NAME[d.slot] + card(d), SLOT_NAME[d.from] + (d.dir ? `, ${d.dir}` : d.up === 'D' ? ', white up' : '')]), [0, 1]),
+        table('Setups that do not work here', ['Setup', 'Why'], BAD_SETUPS.map((d) => [d.setup, d.why]), [0]),
+      );
+    },
   },
   {
     id: 'step-5',
