@@ -8,7 +8,7 @@
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { invertAlg, cancelMoves } from '../js/algs.js';
 import { randomScramble } from '../js/bld-memo.js';
-import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT, CORNER_CYCLE_BACK, REVERSE_SASSY, DROP_SETUPS, BAD_SETUPS } from '../data/repeat-method.js';
+import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT, CORNER_CYCLE_BACK, REVERSE_SASSY, DROP_SETUPS, BAD_SETUPS, UA, UB } from '../data/repeat-method.js';
 const SETS = { drop: { drops: DROPS, top: TOP_MAIN.alg }, short: { drops: Object.fromEntries(Object.entries(DROPS).map(([k, d]) => [k, { ...d, alg: SHORT[k] }])), top: SHORT.topCycle } };
 let TOP_CYCLE = { alg: TOP_MAIN.alg };
 
@@ -85,6 +85,14 @@ for (const d of BAD_SETUPS) {
   const alg = `${d.setup} ${DROP} ${invertAlg(d.setup)}`;
   if (d.same) check(`bad ${d.setup} same as drop`, permOf(alg).join() === permOf(DROP).join());
   else check(`bad ${d.setup} touches`, sameSet(moved(alg), d.touches), moved(alg).join());
+}
+// Ua / Ub: keep UB, cycle the other three top edges as the page says, yellow stays up, nothing else moves.
+for (const [name, alg, path] of [['Ua', UA, [['UF', 'UR'], ['UR', 'UL'], ['UL', 'UF']]], ['Ub', UB, [['UF', 'UL'], ['UL', 'UR'], ['UR', 'UF']]]]) {
+  const p = permOf(alg);
+  check(`${name} moves three top edges`, sameSet(moved(alg), ['UF', 'UR', 'UL']), moved(alg).join());
+  check(`${name} path`, path.every(([a, b]) => piece(p[STICKERS.get(BY_NAME[a])[0]]) === BY_NAME[b]));
+  const ups = EDGES.filter(isTop).map((k) => STICKERS.get(k).find((i) => faceOf(i) === 'U'));
+  check(`${name} yellow up`, ups.every((i) => faceOf(p[i]) === 'U'));
 }
 // Drop: UF -> DF -> UB, nothing else, centres included.
 {

@@ -29,6 +29,9 @@ export const DROPS = {
 
 // Top layer (step 5).
 export const TOP_CYCLE = { alg: `R2 D' ${DROP} D R2`, display: "R2 D'  (R2 U2 R2 F2)×2  D R2" }; // UR -> UB -> UF, UL stays
+// M and U only: the owner's Ua and Ub perms (2-look PLL page). Keep the back edge; move the other three.
+export const UA = "M2 U M U2 M' U M2"; // front -> right -> left -> front
+export const UB = "M2 U' M U2 M' U' M2"; // front -> left -> right -> front
 export const FLIP_SIDES = { alg: `${FLIP} U' ${FLIP}`, display: "(U' M')×4  U'  (U' M')×4" }; // flips UL and UR
 export const FLIP_ALL = { alg: `${FLIP} U2 ${FLIP}`, display: "(U' M')×4  U2  (U' M')×4" }; // flips all four
 
@@ -367,6 +370,7 @@ export const repeatSteps = [
       { title: 'Two, opposite:', text: 'turn the top so they are at the left and right. Do the flip pair (card 2).' },
       'Then put them in order. Turn the top so the corners line up with the centres again (the corners are solved). An edge is right when it matches its centre.',
       'Turn the whole cube so a right edge is at the left. Do the top cycle once or twice. If no edge is right, do the top cycle once from anywhere and look again.',
+      { title: 'With M and U only:', text: 'use your U-perms instead of the top cycle. Hold the right edge at the back. Front edge needs to go right: Ua. Front edge needs to go left: Ub. No right edge: do either one, then look again.' },
     ],
     cases: [
       {
@@ -375,7 +379,11 @@ export const repeatSteps = [
         orientation: 'Keeps the left edge. The other three top edges move: right → back → front → right. Yellow stays up.',
         alg: TOP_CYCLE.alg,
         displayAlg: TOP_CYCLE.display,
-        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.topCycle }],
+        extraAlgs: [
+          { label: SHORT_LABEL, alg: SHORT.topCycle },
+          { label: 'M and U only, your Ua (NUM-U2-KUN): keeps the back edge; front → right → left → front', alg: UA },
+          { label: 'M and U only, your Ub (NVM-U2-KVN): keeps the back edge; front → left → right → front', alg: UB },
+        ],
         diagramViews: ['U', 'cube'],
         note: "Setup R2 D' takes the top right edge down to the bottom front, the drop moves it and two top edges round, and D R2 brings it back up. No mnemonic: your letter code has no D.",
       },

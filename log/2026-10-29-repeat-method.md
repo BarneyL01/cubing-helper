@@ -45,3 +45,5 @@ drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 
 - New section 'Setup moves for the drop' after step 4 (owner asked which setups are valid): any moves, undone in reverse; valid in step 4 when the edge ends at top front (card 1 way round), its slot at bottom front, a top-layer edge at top back. Table of 7 working setups (incl. D', D2, D for the other bottom slots) and 2 that don't (F', R2), all checked by the checker. ALL OK.
 
 - Card 4 setup F U R2 → F U (owner asked what the R2 was for: nothing; R2 misses all three drop spots, it was kept by the search only because it cancels in writing). 1,000 solves each set ALL OK; means 237.8 (drop) / 195.8 (M).
+
+- Step 5 top cycle: M/U-only alternative = the owner's own Ua/Ub perms (data/pll.js), keeping the back edge (owner asked for a setup without R2 D'). Searched M/U setups around M' U2 M U2: 7 moves at best, the U-perms. Checker verifies their paths. ALL OK.
