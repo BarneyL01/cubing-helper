@@ -37,3 +37,5 @@ drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 
 - Step 2 wording (owner hit it): 'at least one corner in its spot' failed when two are right and two swapped. Now: exactly one (or all four); two right + two swapped → turn the top a quarter turn first. Checker unchanged (it already tried every top turn); ALL OK.
 
 - Reverse corner cycle `(F2 U' R2)×4` on the step 2 card (owner asked); reverse Sassy `U R U' R'` (Urvop) explained in The idea and offered on step 1 (instead of Sassy ×5) and step 3 (×2 instead of Sassy ×4). Checker: reverse cycle path and = cycle twice; reverse Sassy = Sassy ×5, ×2 = Sassy ×4. ALL OK.
+
+- Step 4: a wrong edge in a lower slot (owner: white edge in the middle) — leave it, the drop for that slot sends it up; lift by hand only when no top edge belongs below.

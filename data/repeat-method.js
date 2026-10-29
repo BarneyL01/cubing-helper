@@ -234,7 +234,8 @@ export const repeatSteps = [
       'Find any top edge with white, or with no yellow. It belongs in the bottom or the middle layer.',
       'Turn the whole cube so its slot is at the bottom front (white edges) or the front-right (middle edges).',
       'Turn the top to the spot the card names, then do that card. The card depends on which way the edge faces.',
-      'No top edge belongs below, but a lower slot holds a wrong edge: hold that slot at the bottom front (or front-right) and do card 1 (or 3) to lift it out.',
+      { title: 'A wrong edge in a lower slot', text: '(for example a white edge in the middle layer): leave it at first. When you drop that slot\'s own edge in, the drop sends the wrong one up to the top (the blue edge in the pictures), and you place it later.' },
+      'No top edge belongs below, but a lower slot still holds a wrong edge: hold that slot at the bottom front (or front-right) and do card 1 (or 3). The wrong edge comes up to the top; place it with the cards.',
       'Check after each one: one more lower edge is solved, nothing else in the lower layers changed, and every corner is as it was (only the top layer may be turned).',
     ],
     cases: [
