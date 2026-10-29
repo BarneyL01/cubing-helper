@@ -35,19 +35,20 @@ export const FLIP_ALL = { alg: `${FLIP} U2 ${FLIP}`, display: "(U' M')×4  U2  (
 // Shorter versions of the same cards (same starting spot, same result), built on the
 // commutator M' U2 M U2 instead of the drop. Not a repeat, and it uses M; about 40 moves less per solve.
 export const COMM = "M' U2 M U2"; // UF -> DF -> UB, like the drop
+// Same setups as the drop cards: M' U2 M U2 does exactly what the drop does (checked on every sticker).
 export const SHORT = {
   downGood: COMM,
-  downBad: "M U' M U2 M' U' M'",
-  midGood: "R' D U2 M U2 M' D' R",
-  midBad: "F U M' U2 M U F'",
-  topCycle: "R2 D U2 M U2 M' D' R2",
+  downBad: `F R' F'  ${COMM}  F R F'`,
+  midGood: `R' D'  ${COMM}  D R`,
+  midBad: `F U R2  ${COMM}  R2 U' F'`,
+  topCycle: `R2 D'  ${COMM}  D R2`,
 };
 
 export const facts = [
   ['Designed', 'Here, 2026-10-29, by computer search, then checked on whole solves'],
   ['Type', 'Beginner method: corners first, then edges'],
   ['Repeats to learn', "4: Sassy, (R2 U F2)×4, (R2 U2 R2 F2)×2, (U' M')×4"],
-  ['Average moves', 'About 235 on the simulator (corners about 100, edges about 135); about 190 with the shorter M versions'],
+  ['Average moves', 'About 235 on the simulator (corners about 100, edges about 135); about 200 with the shorter M versions'],
   ['Hard moves', "No L and no M. M' only in the flip (8 per flip)."],
   ['Path', 'Bottom corners → top corners in place → twist corners → bottom and middle edges → top edges'],
 ];
@@ -55,7 +56,7 @@ export const facts = [
 const CORNERS = 'corners';
 const mn = (word, moves) => [{ word, moves }];
 
-const SHORT_LABEL = 'Shorter, with M (about 45 moves less per solve)';
+const SHORT_LABEL = "Shorter, with M: same setup, M' U2 M U2 instead of the drop";
 // A picture strip for a card: the edge being placed (pink) and the edge first in its slot (blue).
 const strip = (alg, frames, pink, blue, pinkText, blueText) => ({
   alg,
@@ -92,7 +93,7 @@ export const repeatSteps = [
       },
       {
         title: 'Shorter, with M:',
-        text: "M' U2 M U2 (KU2MU2, 4 moves) does exactly what the drop does: top front → bottom front → top back. It is not a repeat (three in a row bring the cube back), and it uses M. Each edge card shows a version built on it under the main algorithm; same starting spot, same result, about 45 moves less per solve.",
+        text: "M' U2 M U2 (KU2MU2, 4 moves) does exactly what the drop does: top front → bottom front → top back. It is not a repeat (three in a row bring the cube back), and it uses M. Each edge card shows it under the main algorithm with the same setup moves: just swap the drop for M' U2 M U2. About 35 moves less per solve.",
       },
     ],
     cases: [
@@ -324,7 +325,7 @@ export const repeatSteps = [
         orientation: 'Keeps the left edge. The other three top edges move: right → back → front → right. Yellow stays up.',
         alg: TOP_CYCLE.alg,
         displayAlg: TOP_CYCLE.display,
-        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.topCycle }],
+        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.topCycle }],
         diagramViews: ['U', 'cube'],
         note: "Setup R2 D' takes the top right edge down to the bottom front, the drop moves it and two top edges round, and D R2 brings it back up. No mnemonic: your letter code has no D.",
       },

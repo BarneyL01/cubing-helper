@@ -39,3 +39,5 @@ drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 
 - Reverse corner cycle `(F2 U' R2)×4` on the step 2 card (owner asked); reverse Sassy `U R U' R'` (Urvop) explained in The idea and offered on step 1 (instead of Sassy ×5) and step 3 (×2 instead of Sassy ×4). Checker: reverse cycle path and = cycle twice; reverse Sassy = Sassy ×5, ×2 = Sassy ×4. ALL OK.
 
 - Step 4: a wrong edge in a lower slot (owner: white edge in the middle) — leave it, the drop for that slot sends it up; lift by hand only when no top edge belongs below.
+
+- Short M versions now use the same setups as the drop cards (owner asked why they differed): M' U2 M U2 equals the drop on every sticker, so setup + M' U2 M U2 + undo. Cards 2 and 4 are 3 moves longer than the search's best (10 vs 7); whole solve with short cards now 201.5 mean (worst 279). Checker checks equality and same setups. ALL OK.

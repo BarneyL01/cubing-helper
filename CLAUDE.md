@@ -230,7 +230,7 @@ built ahead of being asked for. As of 2026-10-03:
 - **3x3 Repeat Method** (2026-10-29, `3x3/repeat/index.html`, `data/repeat-method.js`, menu "Repeat"): our own
   corners-first beginner method, every step a repeat like Sassy (owner asked; no L, no M — M' only in the flip).
   Corners: Sassy, `(R2 U F2)×4`, Sassy×2 twists; edges: the drop `(R2 U2 R2 F2)×2` with four setups, top cycle,
-  `(U' M')×4` flips (owner's U' M' pairing); each edge card also shows a shorter version on `M' U2 M U2` (`SHORT`, ~190 vs ~235 moves). Checked by `log/2026-10-29-repeat-method-check.mjs` (1,000 whole solves per card set).
+  `(U' M')×4` flips (owner's U' M' pairing); each edge card also shows a shorter version on `M' U2 M U2` (`SHORT`, same setups as the drop cards, ~200 vs ~235 moves). Checked by `log/2026-10-29-repeat-method-check.mjs` (1,000 whole solves per card set).
 - **Cube theory** (2026-10-28, `3x3/theory/`, Methods group): Overview (built ideas + ideas still to explore),
   Laws of the cube, Conjugates, Order of an algorithm. Our own explanations; every number and "what changed" is worked
   out on the page by `js/cube-laws.js`; animated runner `js/move-runner.js` (shared). Checked by

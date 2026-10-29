@@ -116,6 +116,8 @@ for (const set of Object.values(SETS)) {
 }
 TOP_CYCLE = { alg: TOP_MAIN.alg };
 check('commutator', sameSet(moved(COMM), ['UF', 'DF', 'UB']));
+check('commutator = drop on every sticker', permOf(COMM).join() === permOf(DROP).join());
+for (const [k, d] of Object.entries(DROPS)) check(`${k} short uses the same setup`, SHORT[k].replace(/\s+/g, ' ') === d.alg.replace(DROP, COMM).replace(/\s+/g, ' '));
 
 // Helpers for the rules.
 const U_TURNS = ['', 'U', 'U2', "U'"];
