@@ -13,7 +13,7 @@ const times = (alg, n) => Array(n).fill(alg).join(' ');
 // The four repeats.
 export const CORNER_CYCLE = times('R2 U F2', 4); // three top corners: UFL -> UBL -> UBR, UFR stays
 export const DROP = times('R2 U2 R2 F2', 2); // three edges: UF -> DF -> UB (face turns only)
-export const FLIP = times("U M'", 4); // flips UF, UL, DF, DB in place
+export const FLIP = times("U' M'", 4); // flips UF, UR, DF, DB in place
 
 // Drops: each takes one edge from the top layer into the slot named, and
 // changes nothing else outside the top layer. `from` is where the edge must be;
@@ -27,8 +27,8 @@ export const DROPS = {
 
 // Top layer (step 5).
 export const TOP_CYCLE = { alg: `R2 D' ${DROP} D R2`, display: "R2 D'  (R2 U2 R2 F2)×2  D R2" }; // UR -> UB -> UF, UL stays
-export const FLIP_SIDES = { alg: `${FLIP} U ${FLIP}`, display: "(U M')×4  U  (U M')×4" }; // flips UL and UR
-export const FLIP_ALL = { alg: `${FLIP} U2 ${FLIP}`, display: "(U M')×4  U2  (U M')×4" }; // flips all four
+export const FLIP_SIDES = { alg: `${FLIP} U' ${FLIP}`, display: "(U' M')×4  U'  (U' M')×4" }; // flips UL and UR
+export const FLIP_ALL = { alg: `${FLIP} U2 ${FLIP}`, display: "(U' M')×4  U2  (U' M')×4" }; // flips all four
 
 // Shorter versions of the same cards (same starting spot, same result), built on the
 // commutator M' U2 M U2 instead of the drop. Not a repeat, and it uses M; about 40 moves less per solve.
@@ -44,7 +44,7 @@ export const SHORT = {
 export const facts = [
   ['Designed', 'Here, 2026-10-29, by computer search, then checked on whole solves'],
   ['Type', 'Beginner method: corners first, then edges'],
-  ['Repeats to learn', "4: Sassy, (R2 U F2)×4, (R2 U2 R2 F2)×2, (U M')×4"],
+  ['Repeats to learn', "4: Sassy, (R2 U F2)×4, (R2 U2 R2 F2)×2, (U' M')×4"],
   ['Average moves', 'About 235 on the simulator (corners about 100, edges about 135); about 190 with the shorter M versions'],
   ['Hard moves', "No L and no M. M' only in the flip (8 per flip)."],
   ['Path', 'Bottom corners → top corners in place → twist corners → bottom and middle edges → top edges'],
@@ -52,6 +52,17 @@ export const facts = [
 
 const CORNERS = 'corners';
 const mn = (word, moves) => [{ word, moves }];
+
+const SHORT_LABEL = 'Shorter, with M (about 45 moves less per solve)';
+// A picture strip for a card: the edge being placed (pink) and the edge first in its slot (blue).
+const strip = (alg, frames, pink, blue, pinkText, blueText) => ({
+  alg,
+  stickering: 'edges',
+  views: ['cube'],
+  marks: [{ piece: pink, colour: 'pink' }, { piece: blue, colour: 'blue' }],
+  legend: [{ colour: 'pink', text: pinkText }, { colour: 'blue', text: blueText }],
+  frames,
+});
 
 export const repeatSteps = [
   {
@@ -67,7 +78,7 @@ export const repeatSteps = [
       { title: 'Steps 4 and 5:', text: 'the corners never move again. If a corner looks wrong after a repeat, a move was missed.' },
       {
         title: 'Centres:',
-        text: "the drop uses face turns only, so the centres never move. The flip uses M', which moves centres; four M' make a whole turn, so they are back once the flip ends.",
+        text: "the drop uses face turns only, so the centres never move. The flip (U' M')×4 uses M', which moves centres; four M' make a whole turn, so they are back once the flip ends.",
       },
       {
         title: 'Turning the top is free in steps 4 and 5:',
@@ -208,7 +219,8 @@ export const repeatSteps = [
     short: 'Lower edges',
     goal: 'The eight edges of the bottom and middle layers solved. The corners stay solved.',
     how: [
-      { title: 'The drop:', text: '(R2 U2 R2 F2)×2. The top front edge goes into the bottom front slot, the bottom front edge to the top back, and the top back edge to the top front. Nothing else moves.' },
+      { title: 'The drop:', text: '(R2 U2 R2 F2)×2. Three edges swap round: top front → bottom front → top back → top front. Nothing else moves, so the drop fills the bottom front slot from the top front.' },
+      { title: 'Setup moves:', text: 'the drop only works on those three spots. When the edge or its slot is somewhere else, a short setup first moves them there: the edge to the top front, white up, and the slot to the bottom front. Do the drop, then the setup backwards. The setup moves other pieces too; undoing it puts them all back, and only the drop\'s three edges stay changed. Card 1 needs no setup; cards 2-4 show the setup, drop and undo spaced apart, with a picture after each part.' },
       'Find any top edge with white, or with no yellow. It belongs in the bottom or the middle layer.',
       'Turn the whole cube so its slot is at the bottom front (white edges) or the front-right (middle edges).',
       'Turn the top to the spot the card names, then do that card. The card depends on which way the edge faces.',
@@ -219,12 +231,17 @@ export const repeatSteps = [
       {
         anchor: 'drop-down',
         name: '1 · Bottom edge, white on top',
-        orientation: 'The edge is at the top front, white facing up. It goes into the bottom front slot.',
+        orientation: 'The edge is at the top front, white facing up. It goes into the bottom front slot. No setup needed.',
         alg: DROPS.downGood.alg,
         displayAlg: DROPS.downGood.display,
-        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.downGood }],
-        diagramViews: ['cube'],
+        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.downGood }],
         mnemonicChunks: mn('(R2U2R2F2)×2', '(R2 U2 R2 F2)×2'),
+        noViewer: true,
+        filmstrip: strip(DROPS.downGood.alg, [
+          { after: '', label: 'Start', caption: 'Pink is at the top front, white up. Blue (a top edge) sits in pink\'s slot.' },
+          { after: 'R2 U2 R2 F2', label: 'R2 U2 R2 F2 once', caption: 'Halfway: other edges have moved too. Keep going.' },
+          { after: 'R2 U2 R2 F2', label: 'Twice: the drop', caption: 'Pink is in the bottom front slot. Blue went to the top. Everything else is back.' },
+        ], 'DF', 'UB', 'white/green edge (belongs at the bottom front)', 'yellow/blue edge (a top edge in the slot)'),
       },
       {
         anchor: 'drop-down-flipped',
@@ -232,9 +249,15 @@ export const repeatSteps = [
         orientation: 'The edge is at the top right, white facing right. It goes into the bottom front slot, white down.',
         alg: DROPS.downBad.alg,
         displayAlg: DROPS.downBad.display,
-        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.downBad }],
-        diagramViews: ['cube'],
-        note: "F R' F' turns the slot so the edge drops in the right way round; F R F' undoes it. Written out in full, the moves cancel a little (F2 F = F'). No mnemonic word for the whole thing.",
+        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.downBad }],
+        noViewer: true,
+        filmstrip: strip(DROPS.downBad.alg, [
+          { after: '', label: 'Start', caption: 'Pink is at the top right, white facing right. Dropped from here it would land white side out.' },
+          { after: "F R' F'", label: "Setup: F R' F'", caption: 'Pink is now at the top front with white up: the start of card 1. The setup also moved other pieces.' },
+          { after: DROP, label: 'Drop', caption: 'Pink drops into the bottom front slot.' },
+          { after: "F R F'", label: "Undo: F R F'", caption: 'The setup backwards puts the other pieces back. Pink stays in its slot, white down.' },
+        ], 'DF', 'UB', 'white/green edge (belongs at the bottom front)', 'yellow/blue edge (a top edge in the slot)'),
+        note: "Written out in full, the moves cancel a little (F2 F = F'). No mnemonic word for the whole thing.",
       },
       {
         anchor: 'drop-middle',
@@ -242,9 +265,15 @@ export const repeatSteps = [
         orientation: "Put the edge at the top front. Its top colour matches the front centre. It goes into the front-right slot.",
         alg: DROPS.midGood.alg,
         displayAlg: DROPS.midGood.display,
-        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.midGood }],
-        diagramViews: ['cube'],
-        note: "R' D' brings the front-right slot to the bottom front; D R puts it back. No mnemonic: your letter code has no D.",
+        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.midGood }],
+        noViewer: true,
+        filmstrip: strip(DROPS.midGood.alg, [
+          { after: '', label: 'Start', caption: 'Pink is at the top front. Its slot is the front-right, where blue is.' },
+          { after: "R' D'", label: "Setup: R' D'", caption: "R' takes the front-right slot down to the bottom right; D' turns it to the bottom front, where the drop fills." },
+          { after: DROP, label: 'Drop', caption: 'Pink drops into the slot, now at the bottom front.' },
+          { after: 'D R', label: 'Undo: D R', caption: 'D R takes the slot back up to the front-right, with pink in it.' },
+        ], 'FR', 'UB', 'green/orange edge (belongs at the front-right)', 'yellow/blue edge (a top edge in the slot)'),
+        note: 'No mnemonic: your letter code has no D.',
       },
       {
         anchor: 'drop-middle-flipped',
@@ -252,9 +281,15 @@ export const repeatSteps = [
         orientation: "Put the edge at the top right. Its top colour matches the right centre. It goes into the front-right slot.",
         alg: DROPS.midBad.alg,
         displayAlg: DROPS.midBad.display,
-        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.midBad }],
-        diagramViews: ['cube'],
-        note: "F U R2 sets the edge up; R2 U' F' undoes it. Written out in full, the moves cancel a little. No mnemonic word for the whole thing.",
+        extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.midBad }],
+        noViewer: true,
+        filmstrip: strip(DROPS.midBad.alg, [
+          { after: '', label: 'Start', caption: 'Pink is at the top right. Its slot is the front-right, where blue is.' },
+          { after: 'F U R2', label: 'Setup: F U R2', caption: 'Pink is now at the top front and its slot at the bottom front: the drop can fill it.' },
+          { after: DROP, label: 'Drop', caption: 'Pink drops into the slot.' },
+          { after: "R2 U' F'", label: "Undo: R2 U' F'", caption: 'The setup backwards takes the slot back to the front-right, with pink in it.' },
+        ], 'FR', 'UL', 'green/orange edge (belongs at the front-right)', 'yellow/red edge (a top edge in the slot)'),
+        note: 'Written out in full, the moves cancel a little. No mnemonic word for the whole thing.',
       },
     ],
   },
@@ -280,21 +315,21 @@ export const repeatSteps = [
         displayAlg: TOP_CYCLE.display,
         extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.topCycle }],
         diagramViews: ['U', 'cube'],
-        note: "R2 D' moves the bottom front slot to the top right; the drop then works on three top edges; D R2 puts it back. No mnemonic: your letter code has no D.",
+        note: "Setup R2 D' takes the top right edge down to the bottom front, the drop moves it and two top edges round, and D R2 brings it back up. No mnemonic: your letter code has no D.",
       },
       {
         anchor: 'flip-sides',
         name: '2 · Flip pair (left and right)',
-        orientation: "The flip, a quarter turn of the top, the flip again. The first flip also flips the bottom front and back edges; the second flips them back.",
+        orientation: "The flip (U' M')×4, then U', then the flip again. The first flip flips the top front and right edges and the bottom front and back; U' moves two different top edges into place; the second flip flips the bottom two back.",
         alg: FLIP_SIDES.alg,
         displayAlg: FLIP_SIDES.display,
         diagramViews: ['U', 'cube'],
         mnemonicChunks: [
-          { word: '(UK)×4', moves: "(U M')×4" },
-          { word: 'U', moves: 'U' },
-          { word: '(UK)×4', moves: "(U M')×4" },
+          { word: '(VK)×4', moves: "(U' M')×4" },
+          { word: 'V', moves: "U'" },
+          { word: '(VK)×4', moves: "(U' M')×4" },
         ],
-        note: "After each (U M')×4 the centres are back home: four M' are a whole turn.",
+        note: "(U' M') is the pairing from the LSE map. After each (U' M')×4 the centres are back home: four M' are a whole turn.",
       },
       {
         anchor: 'flip-all',
@@ -304,9 +339,9 @@ export const repeatSteps = [
         displayAlg: FLIP_ALL.display,
         diagramViews: ['U', 'cube'],
         mnemonicChunks: [
-          { word: '(UK)×4', moves: "(U M')×4" },
+          { word: '(VK)×4', moves: "(U' M')×4" },
           { word: 'U2', moves: 'U2' },
-          { word: '(UK)×4', moves: "(U M')×4" },
+          { word: '(VK)×4', moves: "(U' M')×4" },
         ],
       },
     ],

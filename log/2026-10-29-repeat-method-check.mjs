@@ -74,8 +74,8 @@ const sameSet = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b
 // Flip: UF UL DF DB flipped in place, nothing else.
 {
   const p = permOf(FLIP);
-  check('flip moves four edges', sameSet(moved(FLIP), ['UF', 'UL', 'DF', 'DB']), moved(FLIP).join());
-  check('flip keeps them in place', ['UF', 'UL', 'DF', 'DB'].every((n) => placed(p, BY_NAME[n])));
+  check('flip moves four edges', sameSet(moved(FLIP), ['UF', 'UR', 'DF', 'DB']), moved(FLIP).join());
+  check('flip keeps them in place', ['UF', 'UR', 'DF', 'DB'].every((n) => placed(p, BY_NAME[n])));
   check("flip uses M' only", !/M(?!')/.test(FLIP) && !/L/.test(FLIP));
 }
 // Cards: one edge from `from` into `target`, its top sticker onto face `up`; outside the top layer nothing else changes.

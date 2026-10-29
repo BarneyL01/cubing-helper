@@ -25,3 +25,11 @@ shorter (about 132 edge moves with computer-chosen setups vs 137 by the page's r
 got a version built on the commutator `M' U2 M U2` (same start spot, same result): `SHORT` in the data file,
 shown under each card's algorithm. The checker now checks both sets of cards and runs 1,000 solves with each:
 drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 33). ALL OK.
+
+## U' M' flip and setup explanations (same day)
+
+- Flip changed to `(U' M')×4` (owner: the U' M' pairing is fast, as on the LSE map). It flips UF, UR, DF, DB;
+  flip pair is now `(U' M')×4 U' (U' M')×4` (still flips the left and right top edges), flip all uses U2.
+- Step 4 explains setups (edge to top front white up, slot to bottom front; drop; setup backwards), and every
+  drop card is a picture strip: start / setup / drop / undo, the placed edge outlined pink and the edge first
+  in its slot blue. Captions checked against the simulator. Checker updated; ALL OK (1,000 solves per card set).
