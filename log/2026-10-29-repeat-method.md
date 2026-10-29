@@ -33,3 +33,5 @@ drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 
 - Step 4 explains setups (edge to top front white up, slot to bottom front; drop; setup backwards), and every
   drop card is a picture strip: start / setup / drop / undo, the placed edge outlined pink and the edge first
   in its slot blue. Captions checked against the simulator. Checker updated; ALL OK (1,000 solves per card set).
+
+- Step 2 wording (owner hit it): 'at least one corner in its spot' failed when two are right and two swapped. Now: exactly one (or all four); two right + two swapped → turn the top a quarter turn first. Checker unchanged (it already tried every top turn); ALL OK.

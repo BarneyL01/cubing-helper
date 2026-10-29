@@ -172,7 +172,8 @@ export const repeatSteps = [
     goal: 'Each yellow corner in its own spot, even if twisted. Ignore the edges.',
     how: [
       "A corner is in its spot when its three colours match the three centres around it, in any twist.",
-      'Turn the top until at least one corner is in its spot. Hold the cube so that corner is at the top front-right.',
+      'Turn the top until exactly one corner is in its spot (or all four). Hold the cube so that corner is at the top front-right.',
+      { title: 'Two right, two swapped:', text: 'the cycle cannot fix a swap. Turn the top a quarter turn either way: then exactly one corner is in its spot.' },
       'Do the corner cycle. It moves the other three top corners round, front-left → back-left → back-right. If they are not all right yet, do it once more.',
       'No top turn puts any corner in its spot: do the corner cycle once from anywhere, then start again.',
     ],
