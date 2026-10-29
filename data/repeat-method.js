@@ -24,7 +24,7 @@ export const DROPS = {
   downGood: { target: 'DF', from: 'UF', up: 'D', alg: DROP, display: '(R2 U2 R2 F2)×2' },
   downBad: { target: 'DF', from: 'UR', up: 'F', alg: `F R' F' ${DROP} F R F'`, display: "F R' F'  (R2 U2 R2 F2)×2  F R F'" },
   midGood: { target: 'FR', from: 'UF', up: 'F', alg: `R' D' ${DROP} D R`, display: "R' D'  (R2 U2 R2 F2)×2  D R" },
-  midBad: { target: 'FR', from: 'UR', up: 'R', alg: `F U R2 ${DROP} R2 U' F'`, display: "F U R2  (R2 U2 R2 F2)×2  R2 U' F'" },
+  midBad: { target: 'FR', from: 'UR', up: 'R', alg: `F U ${DROP} U' F'`, display: "F U  (R2 U2 R2 F2)×2  U' F'" },
 };
 
 // Top layer (step 5).
@@ -40,7 +40,7 @@ export const SHORT = {
   downGood: COMM,
   downBad: `F R' F'  ${COMM}  F R F'`,
   midGood: `R' D'  ${COMM}  D R`,
-  midBad: `F U R2  ${COMM}  R2 U' F'`,
+  midBad: `F U  ${COMM}  U' F'`,
   topCycle: `R2 D'  ${COMM}  D R2`,
 };
 
@@ -53,7 +53,7 @@ export const DROP_SETUPS = [
   { setup: 'D', undo: "D'", slot: 'DL', from: 'UF', up: 'D'},
   { setup: "F R' F'", undo: "F R F'", slot: 'DF', from: 'UR', up: 'F', card: 2, dir: 'white facing right' },
   { setup: "R' D'", undo: 'D R', slot: 'FR', from: 'UF', up: 'F', card: 3, dir: 'top colour = front centre' },
-  { setup: 'F U R2', undo: "R2 U' F'", slot: 'FR', from: 'UR', up: 'R', card: 4, dir: 'top colour = right centre' },
+  { setup: 'F U', undo: "U' F'", slot: 'FR', from: 'UR', up: 'R', card: 4, dir: 'top colour = right centre' },
 ];
 // Setups that do not work in step 4, and why (checked too).
 export const BAD_SETUPS = [
@@ -315,11 +315,11 @@ export const repeatSteps = [
         noViewer: true,
         filmstrip: strip(DROPS.midBad.alg, [
           { after: '', label: 'Start', caption: 'Pink is at the top right. Its slot is the front-right, where blue is.' },
-          { after: 'F U R2', label: 'Setup: F U R2', caption: 'Pink is now at the top front and its slot at the bottom front: the drop can fill it.' },
+          { after: 'F U', label: 'Setup: F U', caption: 'F turns the front-right slot down to the bottom front; U brings pink from the top right to the top front. Now the drop can fill the slot.' },
           { after: DROP, label: 'Drop', caption: 'Pink drops into the slot.' },
-          { after: "R2 U' F'", label: "Undo: R2 U' F'", caption: 'The setup backwards takes the slot back to the front-right, with pink in it.' },
+          { after: "U' F'", label: "Undo: U' F'", caption: 'The setup backwards takes the slot back to the front-right, with pink in it.' },
         ], 'FR', 'UL', 'green/orange edge (belongs at the front-right)', 'yellow/red edge (a top edge in the slot)'),
-        note: 'Written out in full, the moves cancel a little. No mnemonic word for the whole thing.',
+        note: 'No mnemonic word for the whole thing (your letter code has F and U, but the drop has no single word).',
       },
     ],
   },
