@@ -30,11 +30,22 @@ export const TOP_CYCLE = { alg: `R2 D' ${DROP} D R2`, display: "R2 D'  (R2 U2 R2
 export const FLIP_SIDES = { alg: `${FLIP} U ${FLIP}`, display: "(U M')×4  U  (U M')×4" }; // flips UL and UR
 export const FLIP_ALL = { alg: `${FLIP} U2 ${FLIP}`, display: "(U M')×4  U2  (U M')×4" }; // flips all four
 
+// Shorter versions of the same cards (same starting spot, same result), built on the
+// commutator M' U2 M U2 instead of the drop. Not a repeat, and it uses M; about 40 moves less per solve.
+export const COMM = "M' U2 M U2"; // UF -> DF -> UB, like the drop
+export const SHORT = {
+  downGood: COMM,
+  downBad: "M U' M U2 M' U' M'",
+  midGood: "R' D U2 M U2 M' D' R",
+  midBad: "F U M' U2 M U F'",
+  topCycle: "R2 D U2 M U2 M' D' R2",
+};
+
 export const facts = [
   ['Designed', 'Here, 2026-10-29, by computer search, then checked on whole solves'],
   ['Type', 'Beginner method: corners first, then edges'],
   ['Repeats to learn', "4: Sassy, (R2 U F2)×4, (R2 U2 R2 F2)×2, (U M')×4"],
-  ['Average moves', 'About 235 on the simulator (corners about 100, edges about 135)'],
+  ['Average moves', 'About 235 on the simulator (corners about 100, edges about 135); about 190 with the shorter M versions'],
   ['Hard moves', "No L and no M. M' only in the flip (8 per flip)."],
   ['Path', 'Bottom corners → top corners in place → twist corners → bottom and middle edges → top edges'],
 ];
@@ -61,6 +72,10 @@ export const repeatSteps = [
       {
         title: 'Turning the top is free in steps 4 and 5:',
         text: 'it only changes which edge is where in the top layer. Line the top up with the centres at the very end.',
+      },
+      {
+        title: 'Shorter, with M:',
+        text: "M' U2 M U2 (KU2MU2, 4 moves) does exactly what the drop does: top front → bottom front → top back. It is not a repeat (three in a row bring the cube back), and it uses M. Each edge card shows a version built on it under the main algorithm; same starting spot, same result, about 45 moves less per solve.",
       },
     ],
     cases: [
@@ -207,6 +222,7 @@ export const repeatSteps = [
         orientation: 'The edge is at the top front, white facing up. It goes into the bottom front slot.',
         alg: DROPS.downGood.alg,
         displayAlg: DROPS.downGood.display,
+        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.downGood }],
         diagramViews: ['cube'],
         mnemonicChunks: mn('(R2U2R2F2)×2', '(R2 U2 R2 F2)×2'),
       },
@@ -216,6 +232,7 @@ export const repeatSteps = [
         orientation: 'The edge is at the top right, white facing right. It goes into the bottom front slot, white down.',
         alg: DROPS.downBad.alg,
         displayAlg: DROPS.downBad.display,
+        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.downBad }],
         diagramViews: ['cube'],
         note: "F R' F' turns the slot so the edge drops in the right way round; F R F' undoes it. Written out in full, the moves cancel a little (F2 F = F'). No mnemonic word for the whole thing.",
       },
@@ -225,6 +242,7 @@ export const repeatSteps = [
         orientation: "Put the edge at the top front. Its top colour matches the front centre. It goes into the front-right slot.",
         alg: DROPS.midGood.alg,
         displayAlg: DROPS.midGood.display,
+        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.midGood }],
         diagramViews: ['cube'],
         note: "R' D' brings the front-right slot to the bottom front; D R puts it back. No mnemonic: your letter code has no D.",
       },
@@ -234,6 +252,7 @@ export const repeatSteps = [
         orientation: "Put the edge at the top right. Its top colour matches the right centre. It goes into the front-right slot.",
         alg: DROPS.midBad.alg,
         displayAlg: DROPS.midBad.display,
+        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.midBad }],
         diagramViews: ['cube'],
         note: "F U R2 sets the edge up; R2 U' F' undoes it. Written out in full, the moves cancel a little. No mnemonic word for the whole thing.",
       },
@@ -259,6 +278,7 @@ export const repeatSteps = [
         orientation: 'Keeps the left edge. The other three top edges move: right → back → front → right. Yellow stays up.',
         alg: TOP_CYCLE.alg,
         displayAlg: TOP_CYCLE.display,
+        extraAlgs: [{ label: 'Shorter, with M (about 45 moves less per solve)', alg: SHORT.topCycle }],
         diagramViews: ['U', 'cube'],
         note: "R2 D' moves the bottom front slot to the top right; the drop then works on three top edges; D R2 puts it back. No mnemonic: your letter code has no D.",
       },

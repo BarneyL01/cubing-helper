@@ -8,7 +8,9 @@
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { invertAlg, cancelMoves } from '../js/algs.js';
 import { randomScramble } from '../js/bld-memo.js';
-import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE, FLIP_SIDES, FLIP_ALL } from '../data/repeat-method.js';
+import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT } from '../data/repeat-method.js';
+const SETS = { drop: { drops: DROPS, top: TOP_MAIN.alg }, short: { drops: Object.fromEntries(Object.entries(DROPS).map(([k, d]) => [k, { ...d, alg: SHORT[k] }])), top: SHORT.topCycle } };
+let TOP_CYCLE = { alg: TOP_MAIN.alg };
 
 const fails = [];
 const check = (name, ok, detail = '') => { if (!ok) fails.push(detail ? `${name}: ${detail}` : name); };
@@ -77,7 +79,8 @@ const sameSet = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b
   check("flip uses M' only", !/M(?!')/.test(FLIP) && !/L/.test(FLIP));
 }
 // Cards: one edge from `from` into `target`, its top sticker onto face `up`; outside the top layer nothing else changes.
-for (const [name, d] of Object.entries(DROPS)) {
+for (const [setName, set] of Object.entries(SETS)) for (const [name0, d] of Object.entries(set.drops)) {
+  const name = `${setName} ${name0}`;
   const p = permOf(d.alg);
   const off = moved(d.alg).filter((n) => n[0] !== 'U');
   check(`${name} touches only its slot below the top`, sameSet(off, [d.target]), off.join());
@@ -86,8 +89,11 @@ for (const [name, d] of Object.entries(DROPS)) {
   check(`${name} comes from ${d.from}`, src.every((i) => piece(p[i]) === BY_NAME[d.target]));
   const upSticker = src.find((i) => faceOf(i) === 'U');
   check(`${name} top sticker to ${d.up}`, faceOf(p[upSticker]) === d.up);
-  check(`${name} no L or M`, !/[LM]/.test(d.alg));
+  check(`${name} no L`, !/L/.test(d.alg));
+  if (setName === 'drop') check(`${name} no M`, !/M/.test(d.alg));
 }
+for (const set of Object.values(SETS)) {
+  TOP_CYCLE = { alg: set.top };
 {
   const p = permOf(TOP_CYCLE.alg);
   check('top cycle three top edges', sameSet(moved(TOP_CYCLE.alg), ['UR', 'UB', 'UF']), moved(TOP_CYCLE.alg).join());
@@ -96,6 +102,9 @@ for (const [name, d] of Object.entries(DROPS)) {
   const ups = EDGES.filter(isTop).map((k) => STICKERS.get(k).find((i) => faceOf(i) === 'U'));
   check('top cycle keeps yellow up', ups.every((i) => faceOf(p[i]) === 'U'));
 }
+}
+TOP_CYCLE = { alg: TOP_MAIN.alg };
+check('commutator', sameSet(moved(COMM), ['UF', 'DF', 'UB']));
 
 // Helpers for the rules.
 const U_TURNS = ['', 'U', 'U2', "U'"];
@@ -185,6 +194,8 @@ function step5(st) {
   check('step 5: 384 positions', seen.size === 384, String(seen.size));
   let bad = 0; for (const s of seen.values()) { const r = step5(s); if (!r || !allSolved(r.st)) bad++; }
   check('step 5 rules', bad === 0, `${bad} positions not solved`);
+  TOP_CYCLE = { alg: SHORT.topCycle }; let bad2 = 0; for (const s of seen.values()) { const r = step5(s); if (!r || !allSolved(r.st)) bad2++; }
+  check('step 5 rules (short)', bad2 === 0, `${bad2}`); TOP_CYCLE = { alg: TOP_MAIN.alg };
 }
 
 // 4. Whole solves.
@@ -239,11 +250,11 @@ function step3(st) {
   return null;
 }
 const LOWER = EDGES.filter((k) => !isTop(k));
-const CARDS = [];
-for (const [name, d] of Object.entries(DROPS)) for (const y of Y_TURNS) for (const u of U_TURNS) {
+let CARDS = [];
+const buildCards = (drops) => { CARDS = []; for (const [name, d] of Object.entries(drops)) for (const y of Y_TURNS) for (const u of U_TURNS) {
   const alg = `${u} ${inR(y, d.alg)}`.trim();
   CARDS.push({ name, alg, p: permOf(alg), m: len(alg) });
-}
+} };
 function step4(st) {
   let moves = 0; const used = {};
   for (let guard = 0; guard < 60; guard++) {
@@ -269,6 +280,9 @@ function step4(st) {
   return null;
 }
 const N = Number(process.argv[2]) || 400;
+for (const [setName, set] of Object.entries(SETS)) {
+seed = 29; buildCards(set.drops); TOP_CYCLE = { alg: set.top };
+console.log(`== ${setName} cards`);
 const totals = { s1: 0, s2: 0, s3: 0, s4: 0, s5: 0 }; let worst = 0; const used = {};
 let solvedCount = 0;
 for (let t = 0; t < N; t++) {
@@ -294,4 +308,5 @@ check('all solves', solvedCount === N, `${solvedCount}/${N}`);
 const mean = (x) => (x / N).toFixed(1);
 console.log(`${solvedCount}/${N} whole solves. Mean moves: step 1 ${mean(totals.s1)}, step 2 ${mean(totals.s2)}, step 3 ${mean(totals.s3)}, step 4 ${mean(totals.s4)}, step 5 ${mean(totals.s5)}; total ${mean(Object.values(totals).reduce((a, b) => a + b))}, worst ${worst}.`);
 console.log('Step 4 cards per solve:', Object.fromEntries(Object.entries(used).map(([k, v]) => [k, +(v / N).toFixed(2)])));
+}
 console.log(fails.length ? `FAIL\n${[...new Set(fails)].slice(0, 30).join('\n')}` : 'ALL OK');

@@ -17,3 +17,11 @@ Built `3x3/repeat/index.html` (Methods group, menu "Repeat"), data `data/repeat-
   384 top-edge positions, and 1,000 whole solves following the page's rules: all solved, mean 236 moves
   (steps 44.6 / 17.9 / 36.5 / 95.7 / 41.1), worst 304. Prints ALL OK.
 - site-chrome.js bumped to v7 on every page (menu changed).
+
+## Shorter M versions (same day)
+
+Owner asked for the earlier M version as an alternative. The earlier M repeats ((M U M' U2)×4, (M U)×4) were not
+shorter (about 132 edge moves with computer-chosen setups vs 137 by the page's rules), so instead each edge card
+got a version built on the commutator `M' U2 M U2` (same start spot, same result): `SHORT` in the data file,
+shown under each card's algorithm. The checker now checks both sets of cards and runs 1,000 solves with each:
+drop cards 236 moves (worst 304), short cards 191 (worst 256; step 4 59, step 5 33). ALL OK.
