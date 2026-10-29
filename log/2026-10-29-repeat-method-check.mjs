@@ -8,7 +8,7 @@
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { invertAlg, cancelMoves } from '../js/algs.js';
 import { randomScramble } from '../js/bld-memo.js';
-import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT } from '../data/repeat-method.js';
+import { CORNER_CYCLE, DROP, FLIP, DROPS, TOP_CYCLE as TOP_MAIN, FLIP_SIDES, FLIP_ALL, COMM, SHORT, CORNER_CYCLE_BACK, REVERSE_SASSY } from '../data/repeat-method.js';
 const SETS = { drop: { drops: DROPS, top: TOP_MAIN.alg }, short: { drops: Object.fromEntries(Object.entries(DROPS).map(([k, d]) => [k, { ...d, alg: SHORT[k] }])), top: SHORT.topCycle } };
 let TOP_CYCLE = { alg: TOP_MAIN.alg };
 
@@ -57,6 +57,17 @@ const sameSet = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b
   check('corner cycle path', goes('UFL', 'UBL') && goes('UBL', 'UBR') && goes('UBR', 'UFL'));
   check('corner cycle keeps the others', CORNERS.filter((k) => !pieceSolved(p, k)).length === 3);
   check('corner cycle centres', CENTRES.every((k) => pieceSolved(p, k)));
+}
+// Reverse corner cycle: UBR -> UBL -> UFL, same as the cycle twice (every piece); reverse Sassy = Sassy x5, x2 = Sassy x4.
+{
+  const p = permOf(CORNER_CYCLE_BACK);
+  const goes = (from, to) => piece(p[STICKERS.get(BY_NAME[from])[0]]) === BY_NAME[to];
+  check('reverse corner cycle path', goes('UBR', 'UBL') && goes('UBL', 'UFL') && goes('UFL', 'UBR'));
+  check('reverse = cycle twice', permOf(CORNER_CYCLE_BACK).join() === permOf(`${CORNER_CYCLE} ${CORNER_CYCLE}`).join());
+  const S = "R U R' U'";
+  check('reverse Sassy = Sassy x5', permOf(REVERSE_SASSY).join() === permOf(Array(5).fill(S).join(' ')).join());
+  check('reverse Sassy x2 = Sassy x4', permOf(`${REVERSE_SASSY} ${REVERSE_SASSY}`).join() === permOf(Array(4).fill(S).join(' ')).join());
+  check('reverse Sassy is Urvop', REVERSE_SASSY === "U R U' R'");
 }
 // Drop: UF -> DF -> UB, nothing else, centres included.
 {

@@ -12,6 +12,8 @@ const times = (alg, n) => Array(n).fill(alg).join(' ');
 
 // The four repeats.
 export const CORNER_CYCLE = times('R2 U F2', 4); // three top corners: UFL -> UBL -> UBR, UFR stays
+export const CORNER_CYCLE_BACK = times("F2 U' R2", 4); // the reverse: UBR -> UBL -> UFL
+export const REVERSE_SASSY = "U R U' R'"; // Urvop: Sassy backwards = Sassy x5
 export const DROP = times('R2 U2 R2 F2', 2); // three edges: UF -> DF -> UB (face turns only)
 export const FLIP = times("U' M'", 4); // flips UF, UR, DF, DB in place
 
@@ -85,6 +87,10 @@ export const repeatSteps = [
         text: 'it only changes which edge is where in the top layer. Line the top up with the centres at the very end.',
       },
       {
+        title: 'Reverse Sassy:',
+        text: "U R U' R' (Urvop) is Sassy done backwards: it undoes one Sassy. Sassy six times brings the cube back, so Sassy ×5 is the same as reverse Sassy once, and Sassy ×4 the same as reverse Sassy ×2. Wherever a step says Sassy ×4 or ×5, the reverse gives the same result in fewer moves.",
+      },
+      {
         title: 'Shorter, with M:',
         text: "M' U2 M U2 (KU2MU2, 4 moves) does exactly what the drop does: top front → bottom front → top back. It is not a repeat (three in a row bring the cube back), and it uses M. Each edge card shows a version built on it under the main algorithm; same starting spot, same result, about 45 moves less per solve.",
       },
@@ -129,7 +135,7 @@ export const repeatSteps = [
     how: [
       'White on the bottom. Turn the whole cube so the slot you want is at the bottom front-right.',
       'Turn the top so the corner for that slot is just above it.',
-      'Repeat Sassy until it drops in: 1, 3 or 5 times, depending on where its white sticker faces.',
+      'Repeat Sassy until it drops in: 1, 3 or 5 times, depending on where its white sticker faces. Instead of 5 Sassys, do one reverse Sassy (U R U\' R\'): same result.',
       'A white corner in the wrong bottom slot: hold it at the bottom front-right and do Sassy once to lift it into the top.',
       'There are no edges to protect, so you can also just place corners however you like.',
     ],
@@ -162,6 +168,7 @@ export const repeatSteps = [
         stickering: CORNERS,
         diagramViews: ['cube'],
         mnemonicChunks: mn('Sassy×5', `(${SASSY})×5`),
+        extraAlgs: [{ label: 'Same result, 4 moves: reverse Sassy once (Urvop)', alg: REVERSE_SASSY }],
       },
     ],
   },
@@ -174,7 +181,7 @@ export const repeatSteps = [
       "A corner is in its spot when its three colours match the three centres around it, in any twist.",
       'Turn the top until exactly one corner is in its spot (or all four). Hold the cube so that corner is at the top front-right.',
       { title: 'Two right, two swapped:', text: 'the cycle cannot fix a swap. Turn the top a quarter turn either way: then exactly one corner is in its spot.' },
-      'Do the corner cycle. It moves the other three top corners round, front-left → back-left → back-right. If they are not all right yet, do it once more.',
+      'Look where the other three corners need to go. Front-left → back-left → back-right (clockwise from the top): do the corner cycle. The other way round: do the reverse. (The cycle done twice also works, in twice the moves.)',
       'No top turn puts any corner in its spot: do the corner cycle once from anywhere, then start again.',
     ],
     cases: [
@@ -187,7 +194,8 @@ export const repeatSteps = [
         stickering: CORNERS,
         diagramViews: ['U', 'cube'],
         mnemonicChunks: mn('(Spinner F2)×4', '(R2 U F2)×4'),
-        note: 'Twelve moves, all half turns but the U. It mixes the edges; they come later.',
+        extraAlgs: [{ label: "Reverse: back-right → back-left → front-left (anticlockwise). Each group backwards: F2 U' R2", alg: '(F2 U\' R2) ×4' }],
+        note: "Twelve moves, all half turns but the U. It mixes the edges; they come later. Reverse mnemonic: (F2VR2)×4.",
       },
     ],
   },
@@ -198,7 +206,7 @@ export const repeatSteps = [
     goal: 'All eight corners solved. Ignore the edges.',
     how: [
       "Same as the Beginner's step 7. Turn the cube over so yellow is on the bottom.",
-      'Hold an unsolved corner at the bottom front-right. Repeat Sassy until its yellow faces down (2 or 4 times).',
+      'Hold an unsolved corner at the bottom front-right. Repeat Sassy until its yellow faces down (2 or 4 times). Instead of 4 Sassys, do reverse Sassy twice: same result. It is exactly the same as 4 Sassys, so the rest of the step does not change.',
       'Turn only the bottom layer to bring the next unsolved corner to the front-right.',
       'When all are done, turn the bottom to line it up. Turn the cube back over: yellow on top.',
     ],
@@ -210,6 +218,7 @@ export const repeatSteps = [
         alg: SASSY,
         displayAlg: `(${SASSY}) ×2 or ×4`,
         mnemonicChunks: mn('Sassy', SASSY),
+        extraAlgs: [{ label: 'Instead of Sassy ×4: reverse Sassy ×2 (Urvop ×2)', alg: `(${REVERSE_SASSY}) ×2` }],
         noViewer: true,
       },
     ],
