@@ -276,7 +276,7 @@ export const repeatSteps = [
       {
         anchor: 'drop-down-flipped',
         name: '2 · Bottom edge, white on the side',
-        orientation: 'The edge is at the top right, white facing right. It goes into the bottom front slot, white down.',
+        orientation: "The edge is at the top right, white facing right. It goes into the bottom front slot, white down. Edge at the top front with white facing front (or anywhere in the top with white on the side)? Turn the top until it is at the top right: white then faces right.",
         alg: DROPS.downBad.alg,
         displayAlg: DROPS.downBad.display,
         extraAlgs: [{ label: SHORT_LABEL, alg: SHORT.downBad }],
