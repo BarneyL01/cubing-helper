@@ -18,7 +18,20 @@ algorithm to the site.
 | M | M | slice move |
 | K | M' | "prime of M" |
 | N | M2 | double-M, gets its own letter since it's so common |
-| `2` suffix on R/U/F | doubles that face move | e.g. `U2` = `U U`, `R2` = `R R` — written literally in the word, not spelled out as two letters |
+| D | D | added 2026-10-30 (owner) |
+| Q | D' | added 2026-10-30. Hook: Q is an O with a tail pointing **down**, the backwards Down turn |
+| L | L | added 2026-10-30 |
+| J | L' | added 2026-10-30. Hook: the hook of a J curls to the **left** |
+| B | B | added 2026-10-30 |
+| C | B' | added 2026-10-30. Hook: the letter after B, as V follows U and G follows F |
+| `2` suffix on R/U/F/D/L/B | doubles that face move | e.g. `U2` = `U U`, `R2` = `R R` — written literally in the word, not spelled out as two letters |
+
+## Letters chosen 2026-10-30
+
+The owner chose D' = Q and asked to cover the other faces at the same time. Rules used: a face's own letter
+is the move itself (as R, U, F, M); the prime gets a free letter. Avoided: other move names (E, S, X, Y, Z),
+and vowels A, E, I, O, which the words use as fillers (Fipgar, Urvop). Still free for later: H, T, W.
+Words built from the new letters avoid the vowel u as a filler, so it never reads as a U move.
 
 ## Named chunks (words)
 
@@ -42,6 +55,13 @@ algorithm to the site.
 | Sledge | PFRG | R' F R F' |
 | Fipgar | F + PGR | F R' F' R |
 | Urvop | U + RVP | U R U' R' |
+| Ru | RU | R U |
+| Redpave | RDPV | R D R' U' (made up 2026-10-30) |
+| Reqip | RQP | R D' R' (made up 2026-10-30) |
+| Pave | PV | R' U' (made up 2026-10-30) |
+
+Orozco parity (Ra-perm, `R U' R' U' R U R D R' U' R D' R' U2 R' U'`) = **Jolly · Ru · Redpave · Reqip · U2 · Pave**.
+Redpave + Reqip is the Orozco base `[R D R', U']` without its last U.
 
 ## How this was decoded
 

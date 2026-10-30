@@ -14,6 +14,7 @@ import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { cancelMoves, expandBrackets, invertAlg } from '../js/algs.js';
 import { bldCorners, BLD_PARITY } from '../data/bld.js';
 import { bldPlan, randomScramble, cornerMemoFrom } from '../js/bld-memo.js';
+import { OROZCO_PARITY_WORDS } from '../data/orozco-mnemonics.js';
 
 const WRITE = process.argv.includes('--write');
 const failures = [];
@@ -176,6 +177,11 @@ try {
     check(`example ${ex.id} solves`, applyAlg(st, solve).every((s) => s.home === key(s)));
   }
   console.log(`examples: ${orozcoExamples.length} checked`);
+}
+// Parity mnemonic words, joined in order, are the parity algorithm.
+{
+  const PARITY_NOW = readFileSync(new URL('../data/orozco-corners.js', import.meta.url), 'utf8').match(/OROZCO_PARITY = "([^"]+)"/)[1];
+  if (OROZCO_PARITY_WORDS.map((w) => w.moves).join(' ') !== PARITY_NOW) failures.push('parity words do not spell the parity algorithm');
 }
 console.log(failures.length ? `${failures.length} FAILED\n${failures.slice(0, 10).join('\n')}` : 'ALL OK');
 process.exitCode = failures.length ? 1 : 0;

@@ -360,6 +360,8 @@ cipher (e.g. "Sassy" = RUPV = `R U R' U'`). **Always decode/encode through
 `docs/mnemonics.md`** — never invent new letter meanings without confirming
 with the user. Every algorithm shown on the site should display both the
 standard WCA notation and the user's mnemonic word breakdown.
+**Letters added 2026-10-30 (owner):** D, Q = D′, L, J = L′, B, C = B′ (2 suffix on D/L/B too); H, T, W
+still free; vowels are word fillers. Pages that say "no mnemonic: no D letter" predate this.
 
 **Exception (2026-10-23):** the full OLL (57) and full PLL (21) lists
 (`data/oll-full.js`, `data/pll-full.js`; their sections on the OLL and PLL

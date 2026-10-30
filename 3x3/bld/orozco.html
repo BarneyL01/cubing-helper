@@ -96,6 +96,8 @@
       (your M2 parity algorithm leaves those two edges swapped, as for Old Pochmann). One algorithm fixes both, the Ra-perm:
     </p>
     <p class="case-alg"><code id="parity-alg"></code></p>
+    <p class="case-mnemonic-line" id="parity-words"></p>
+    <p class="case-breakdown" id="parity-breakdown"></p>
     <p class="bld-note">
       The published parity, <code id="pub-parity"></code>, swaps UF and UB instead: it is for Orozco edges (buffer UF,
       helper UB). With M2 edges, use the Ra-perm above.
@@ -111,6 +113,7 @@
     import { invertAlg, cancelMoves, expandBrackets } from '../../js/algs.js';
     import { orozcoStepsForMemo } from '../../js/orozco.js?v=2';
     import { orozcoExamples } from '../../data/orozco-examples.js?v=1';
+    import { OROZCO_PARITY_WORDS } from '../../data/orozco-mnemonics.js?v=1';
     import { orozcoPublished, OROZCO_PUBLISHED_HELPER, OROZCO_PUBLISHED_PARITY } from '../../data/orozco-published.js?v=1';
     const PUB = Object.fromEntries(orozcoPublished.map((r) => [r.letter, r.notation]));
 
@@ -126,6 +129,8 @@
     $('twist').textContent = OROZCO_TWIST;
     $('twist-rev').textContent = OROZCO_TWIST_REV;
     $('parity-alg').textContent = OROZCO_PARITY;
+    $('parity-words').textContent = OROZCO_PARITY_WORDS.map((w) => w.word).join(' · ');
+    $('parity-breakdown').textContent = OROZCO_PARITY_WORDS.map((w) => `${w.word} = ${w.moves}`).join(' · ') + ' (Q = D′)';
     $('pub-n').textContent = OROZCO_PUBLISHED_HELPER.N;
     $('pub-q').textContent = OROZCO_PUBLISHED_HELPER.Q;
     $('pub-parity').textContent = OROZCO_PUBLISHED_PARITY;
