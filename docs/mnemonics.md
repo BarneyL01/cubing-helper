@@ -31,7 +31,6 @@ algorithm to the site.
 The owner chose D' = Q and asked to cover the other faces at the same time. Rules used: a face's own letter
 is the move itself (as R, U, F, M); the prime gets a free letter. Avoided: other move names (E, S, X, Y, Z),
 and vowels A, E, I, O, which the words use as fillers (Fipgar, Urvop). Still free for later: H, T, W.
-Words built from the new letters avoid the vowel u as a filler, so it never reads as a U move.
 
 ## Named chunks (words)
 
@@ -55,13 +54,9 @@ Words built from the new letters avoid the vowel u as a filler, so it never read
 | Sledge | PFRG | R' F R F' |
 | Fipgar | F + PGR | F R' F' R |
 | Urvop | U + RVP | U R U' R' |
-| Ru | RU | R U |
-| Redpave | RDPV | R D R' U' (made up 2026-10-30) |
-| Reqip | RQP | R D' R' (made up 2026-10-30) |
-| Pave | PV | R' U' (made up 2026-10-30) |
+Orozco parity (Ra-perm, `R U' R' U' R U R D R' U' R D' R' U2 R' U'`), grouped in fours (owner, 2026-10-30):
+**Jolly · RURD · Power Q · PU2PV** (RVPV · RURD · PVRQ · PU2PV).
 
-Orozco parity (Ra-perm, `R U' R' U' R U R D R' U' R D' R' U2 R' U'`) = **Jolly · Ru · Redpave · Reqip · U2 · Pave**.
-Redpave + Reqip is the Orozco base `[R D R', U']` without its last U.
 
 ## How this was decoded
 
