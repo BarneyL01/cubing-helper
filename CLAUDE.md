@@ -290,7 +290,7 @@ built ahead of being asked for. As of 2026-10-03:
   learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
   runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup); switch for three corners / whole cube in colour. `log/2026-10-27-orozco-explained.md`.
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
-  net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
+  net, target sticker outlined, face names optional; timer mode 2026-10-31 like Recognition: time to answer, then the answer, then the next; Keep screen on; `letterTimer` in the saved state), Tracing (a cube you can drag round,
   `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" and "Count: pieces out of place / letters to solve" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).
   Scrambles with N corners / M edges unsolved come from `js/bld-drill.js` (short pure pieces from `data/drill-pieces.js`, reversed; shortest of ~0.15 s of tries; no solver),
   checked by `log/2026-10-23-bld-drill-check.mjs`. Letter-pair words: `data/letter-pairs.js`, X = "sh",

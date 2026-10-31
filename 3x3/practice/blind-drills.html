@@ -58,8 +58,21 @@
           <legend>Picture</legend>
           <label><input type="checkbox" id="l-faces" /> Face names on the centres (U, F, R…)</label>
         </fieldset>
+        <fieldset>
+          <legend>Timer</legend>
+          <label><input type="checkbox" id="l-timer" /> Timer mode: the next sticker comes by itself</label>
+          <label class="indent">Time to answer <input type="number" id="l-time" min="1" max="60" step="1" value="5" inputmode="numeric" /> seconds</label>
+          <label class="indent"><input type="checkbox" id="l-show-ans" checked /> Then show the answer for</label>
+          <label class="indent"><input type="number" id="l-ans-time" min="1" max="30" step="1" value="2" inputmode="numeric" /> seconds</label>
+        </fieldset>
       </form>
+      <div class="rec-controls" id="l-timer-controls" hidden>
+        <button type="button" class="rec-btn rec-btn-primary" id="l-start">Start</button>
+      </div>
+      <div class="view-toggle" id="l-keep-awake" hidden></div>
       <div class="drill-stage">
+        <div class="rec-timer" id="l-timer-track" hidden><div class="rec-timer-bar" id="l-timer-bar"></div></div>
+        <p class="rec-phase" id="l-phase" hidden></p>
         <p class="drill-kind" id="l-kind-label"></p>
         <p class="drill-big" id="l-letter"></p>
         <div class="drill-net" id="l-net"></div>
@@ -152,6 +165,7 @@
   <script type="module">
     import { bldNet, colourNet } from '../../js/bld-net.js?v=4';
     import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
+    import { mountViewToggle } from '../../js/view-toggle.js';
     import { bldPlan } from '../../js/bld-memo.js';
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { drillScramble, drillScrambleLetters, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=3';
@@ -180,6 +194,7 @@
     // ---- mode switch
     const SECTIONS = { letters: 'drill-letters', trace: 'drill-scramble', memo: 'drill-memo', solve: 'drill-scramble' };
     function setMode(mode) {
+      if (mode !== 'letters' && typeof lStop === 'function') lStop();
       saved.mode = mode;
       save();
       document.querySelectorAll('.drill-mode').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
@@ -211,14 +226,76 @@
       save();
       showLetter();
     }
-    $('l-show').addEventListener('click', () => {
+    function revealLetter() {
       const item = saved.letter;
       $('l-letter').textContent = item.letter;
       $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: [item.letter], colours: COLOURS, faces: $('l-faces').checked });
       $('l-answer').hidden = false;
       $('l-show').disabled = true;
+    }
+    $('l-show').addEventListener('click', revealLetter);
+    $('l-next').addEventListener('click', () => (lRunning ? lRound() : nextLetter()));
+
+    // Timer mode (like Recognition practice): a sticker for "time to answer", then its answer, then the next.
+    const num = (id, lo, hi, d) => { const v = Math.round(Number($(id).value)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+    const lSettings = () => ({ on: $('l-timer').checked, time: num('l-time', 1, 60, 5), showAns: $('l-show-ans').checked, ansTime: num('l-ans-time', 1, 30, 2) });
+    let lRunning = false, lTimeout = null, lRaf = null, lEnd = 0, lLen = 1, lMode = '';
+    function lTick() {
+      const left = Math.max(0, lEnd - Date.now());
+      $('l-timer-bar').style.width = `${(100 * left) / lLen}%`;
+      $('l-phase').textContent = lMode === 'ask' ? `Answer: ${Math.ceil(left / 1000)} s` : `Next sticker in ${Math.ceil(left / 1000)} s`;
+      if (lRunning) lRaf = requestAnimationFrame(lTick);
+    }
+    function lPhase(mode, seconds, then) {
+      clearTimeout(lTimeout);
+      lMode = mode;
+      lLen = seconds * 1000;
+      lEnd = Date.now() + lLen;
+      lTimeout = setTimeout(then, lLen);
+    }
+    function lRound() {
+      nextLetter();
+      lPhase('ask', lSettings().time, () => {
+        const st = lSettings();
+        if (st.showAns) { revealLetter(); lPhase('answer', st.ansTime, lRound); } else lRound();
+      });
+    }
+    function lStop() {
+      if (!lRunning) return;
+      lRunning = false;
+      clearTimeout(lTimeout);
+      cancelAnimationFrame(lRaf);
+      $('l-start').textContent = 'Start';
+      $('l-start').classList.remove('rec-btn-stop');
+      document.querySelector('#drill-letters .rec-settings').hidden = false;
+      $('l-phase').textContent = 'Stopped. The answer for the last sticker is shown.';
+      $('l-timer-bar').style.width = '0%';
+      revealLetter();
+    }
+    $('l-start').addEventListener('click', () => {
+      if (lRunning) return lStop();
+      lRunning = true;
+      document.querySelector('#drill-letters .rec-settings').hidden = true;
+      $('l-start').textContent = 'Stop';
+      $('l-start').classList.add('rec-btn-stop');
+      $('l-phase').hidden = false;
+      lRound();
+      lTick();
     });
-    $('l-next').addEventListener('click', nextLetter);
+    function lTimerView() {
+      const on = $('l-timer').checked;
+      $('l-timer-controls').hidden = !on;
+      $('l-keep-awake').hidden = !on;
+      $('l-timer-track').hidden = !on;
+      $('l-phase').hidden = !on;
+      if (on && !lRunning) $('l-phase').textContent = 'Press Start.';
+    }
+    ['l-timer', 'l-time', 'l-show-ans', 'l-ans-time'].forEach((id) => $(id).addEventListener('change', () => {
+      saved.letterTimer = lSettings();
+      save();
+      mountViewToggle($('l-keep-awake'), { view: false });
+    lTimerView();
+    }));
     document.querySelectorAll('input[name="l-kind"], input[name="l-dir"]').forEach((i) => i.addEventListener('change', () => {
       saved.letterKind = radio('l-kind');
       saved.letterDir = radio('l-dir');
@@ -461,6 +538,13 @@
     if (saved.letterKind) setRadio('l-kind', saved.letterKind);
     if (saved.letterDir) setRadio('l-dir', saved.letterDir);
     $('l-faces').checked = !!saved.faceLabels; // off unless turned on
+    if (saved.letterTimer) {
+      $('l-timer').checked = !!saved.letterTimer.on;
+      $('l-time').value = saved.letterTimer.time;
+      $('l-show-ans').checked = saved.letterTimer.showAns !== false;
+      $('l-ans-time').value = saved.letterTimer.ansTime;
+    }
+    lTimerView();
     $('l-faces').addEventListener('change', () => {
       saved.faceLabels = $('l-faces').checked;
       save();

@@ -44,3 +44,11 @@ number of unsolved corners/edges); tap to reveal; no score; a separate page of l
   6 corners 43 -> 15, 4 edges 24 -> 13, 4+4 48 -> 30. Checker: 1,900 scrambles (M2/OP and M2/Orozco solve
   all) plus a page-setting run. A tap on New scramble takes about 0.2 s in headless Chromium.
 - 2026-10-28: Count switch in Tracing and Small solves: "Pieces out of place" (as before, buffer included) or "Letters to solve" (`drillScrambleLetters`: the memo has exactly that many corner letters for the chosen corner method and edge letters for M2; corner and edge parts built separately; odd counts start with a swap and must be odd on both sides). Owner had seen 3-corner scrambles give 2 letters: measured, 3 pieces give 2 letters when the buffer is one of them (about a third), else 4. Checker: letters mode 16 combinations x 3, both solves. A few odd combinations (e.g. 5/1 with Old Pochmann) are not always found in 3 s and show a message.
+
+## 2026-10-31 — Letters timer mode
+
+Owner asked for a timer like the alg trainer (Recognition practice) on the Letters drill. A "Timer" setting:
+time to answer (default 5 s), then optionally the answer (default 2 s), then the next sticker; Start/Stop, a
+countdown bar, Show answer and Next still work while running; Stop shows the last answer; settings hide while
+running; Keep screen on appears with the timer. Saved as `letterTimer` in `cubing-helper:blind-drills`.
+Checked in headless Chromium (1 s / 1 s run: phases alternate, stop, reload keeps the settings; no errors).
