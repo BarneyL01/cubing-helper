@@ -54,8 +54,10 @@ and vowels A, E, I, O, which the words use as fillers (Fipgar, Urvop). Still fre
 | Sledge | PFRG | R' F R F' |
 | Fipgar | F + PGR | F R' F' R |
 | Urvop | U + RVP | U R U' R' |
+| Rurdy | RURD | R U R D (made up 2026-10-31; filler y) |
+| Poopav | PU2PV | R' U2 R' U' (made up 2026-10-31; "oo" = U2, read from Loopy = R U2 R' — a reading, not confirmed) |
 Orozco parity (Ra-perm, `R U' R' U' R U R D R' U' R D' R' U2 R' U'`), grouped in fours (owner, 2026-10-30):
-**Jolly · RURD · Power Q · PU2PV** (RVPV · RURD · PVRQ · PU2PV).
+**Jolly · Rurdy · Power Q · Poopav** (RVPV · RURD · PVRQ · PU2PV).
 
 
 ## How this was decoded

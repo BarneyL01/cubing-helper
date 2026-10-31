@@ -6,3 +6,4 @@ Grouped in fours (owner): Jolly · RURD · Power Q · PU2PV.
 Shown under the algorithm on 3x3/bld/orozco.html
 from data/orozco-mnemonics.js; log/2026-10-25-orozco-corners.mjs checks the words spell the algorithm. ALL OK.
 Note: Q and N are also Speffz letters on the blind pages (Orozco helper letters); mnemonic Q is a different thing.
+- 2026-10-31: words for the letter groups: Rurdy (RURD), Poopav (PU2PV; 'oo' = U2 read from Loopy). Parity = Jolly · Rurdy · Power Q · Poopav.
