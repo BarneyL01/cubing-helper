@@ -61,3 +61,16 @@ setting: Flat net / 3D cube (`letterPic`). The 3D cube is `js/cube-rotatable.js`
 right) and `setMarks(marks, labels)` (pink outline like the net's, text labels for the letter and optional face
 names). Sticker → letter: turned and outlined at once; letter → sticker: starting view until the answer, then
 turned. Checked in headless Chromium on 6 stickers (corners and edges, top, bottom, back) and both directions.
+
+## 2026-11-01 — Step through the trace
+
+Owner asked for a Tracing option that follows the trace for the chosen method step by step, corners then edges,
+with Next or a timer, the cube turning to each spot. "Step through the trace" (Tracing only): step 1 the corner
+buffer sticker (E for Old Pochmann, C for Orozco; blue), then each corner target in memo order (pink), a summary,
+then the edge buffer U (DF) and each M2 edge target, then a summary. Captions say when a cycle breaks into a new
+piece and when it closes. Back / Next / Play (next step every N seconds, saved as `traceStepTime`) / End. The cube
+turns with `setView` (the sticker's face and its piece's other faces) and outlines the sticker; no letter on the
+sticker, so its colour can be read. Switching to the net, another drill, another method or a new scramble ends it.
+Checked: the page's letter → sticker position mapping against 300 random scrambles (5,173 consecutive reads: the
+sticker at each target's spot always names the next target); headless Chromium run through whole traces (OP and
+Orozco, Play, End), no errors.
