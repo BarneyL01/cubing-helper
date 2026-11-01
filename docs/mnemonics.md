@@ -58,6 +58,8 @@ and vowels A, E, I, O, which the words use as fillers (Fipgar, Urvop). Still fre
 | Poopav | PU2PV | R' U2 R' U' (made up 2026-10-31; "oo" = U2, read from Loopy = R U2 R' — a reading, not confirmed) |
 Orozco parity (Ra-perm, `R U' R' U' R U R D R' U' R D' R' U2 R' U'`), grouped in fours (owner, 2026-10-30):
 **Jolly · Rurdy · Power Q · Poopav** (RVPV · RURD · PVRQ · PU2PV).
+Same parity with R, U, F only (shown first on the page since 2026-11-01): `R U R' F' R U2 R' U2 R' F R U R U2 R' U'`
+= **Rupture · Loopy · U2 · Prefer · U · Loopy · V** (existing words only).
 
 
 ## How this was decoded

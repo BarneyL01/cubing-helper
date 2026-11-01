@@ -280,7 +280,7 @@ built ahead of being asked for. As of 2026-10-03:
   speedsolving.com, which the build environment could not read in full). Worked out here: 18 commutators,
   all `[R D R', U']`, `[R D' R', U']` or `[R D2 R', U']` with a 0-2 move D/L setup (`data/orozco-corners.js`,
   generated); helper letters B skip, N twist / twist backwards, Q the reverse (the owner's twist algorithm,
-  which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped). `js/orozco.js`
+  which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped); the page shows first the R U F Ra `R U R' F' R U2 R' U2 R' F R U R U2 R' U'` (Rupture · Loopy · U2 · Prefer · U · Loopy · V, `data/orozco-mnemonics.js`), then the D one. `js/orozco.js`
   plans a solve. `log/2026-10-25-orozco-corners.mjs` (`--write`) checks 3,000 full solves (M2 edges then Orozco).
   Research (`docs/orozco-research-notes.md`, from cubinghistory.com and Riu's note.com tutorial) confirmed memo from C,
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown

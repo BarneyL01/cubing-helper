@@ -14,7 +14,7 @@ import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { cancelMoves, expandBrackets, invertAlg } from '../js/algs.js';
 import { bldCorners, BLD_PARITY } from '../data/bld.js';
 import { bldPlan, randomScramble, cornerMemoFrom } from '../js/bld-memo.js';
-import { OROZCO_PARITY_WORDS } from '../data/orozco-mnemonics.js';
+import { OROZCO_PARITY_WORDS, OROZCO_PARITY_RUF } from '../data/orozco-mnemonics.js';
 
 const WRITE = process.argv.includes('--write');
 const failures = [];
@@ -182,6 +182,10 @@ try {
 {
   const PARITY_NOW = readFileSync(new URL('../data/orozco-corners.js', import.meta.url), 'utf8').match(/OROZCO_PARITY = "([^"]+)"/)[1];
   if (OROZCO_PARITY_WORDS.map((w) => w.moves).join(' ') !== PARITY_NOW) failures.push('parity words do not spell the parity algorithm');
+  const k = (s) => `${s.p.join()}|${s.n.join()}`;
+  const sig = (a) => JSON.stringify(applyAlg(solvedCube(), a).map((s) => [k(s), s.colour]).sort());
+  if (sig(OROZCO_PARITY_RUF) !== sig(PARITY_NOW)) failures.push('R U F parity differs from the parity algorithm');
+  if (/[DLB]/.test(OROZCO_PARITY_RUF)) failures.push('R U F parity uses other faces');
 }
 console.log(failures.length ? `${failures.length} FAILED\n${failures.slice(0, 10).join('\n')}` : 'ALL OK');
 process.exitCode = failures.length ? 1 : 0;

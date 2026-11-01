@@ -93,8 +93,14 @@
     <h2 class="section-heading" id="parity" data-short="Parity">Odd number of corner letters</h2>
     <p>
       After the last letter's commutator (forwards), the buffer and helper corners are swapped, and so are UL and UB
-      (your M2 parity algorithm leaves those two edges swapped, as for Old Pochmann). One algorithm fixes both, the Ra-perm:
+      (your M2 parity algorithm leaves those two edges swapped, as for Old Pochmann). One algorithm fixes both, an Ra-perm:
     </p>
+    <p class="case-alg"><code id="parity-ruf"></code></p>
+    <p class="case-mnemonic-line" id="parity-ruf-words"></p>
+    <p class="case-breakdown" id="parity-ruf-breakdown"></p>
+    <p class="bld-note">R, U and F only (16 moves), and every word is one you already use. Same result as the version
+      with D below, checked on every sticker; either one works.</p>
+    <p class="case-alt-label">With D (J Perm's main Ra-perm)</p>
     <p class="case-alg"><code id="parity-alg"></code></p>
     <p class="case-mnemonic-line" id="parity-words"></p>
     <p class="case-breakdown" id="parity-breakdown"></p>
@@ -113,7 +119,7 @@
     import { invertAlg, cancelMoves, expandBrackets } from '../../js/algs.js';
     import { orozcoStepsForMemo } from '../../js/orozco.js?v=2';
     import { orozcoExamples } from '../../data/orozco-examples.js?v=1';
-    import { OROZCO_PARITY_WORDS } from '../../data/orozco-mnemonics.js?v=3';
+    import { OROZCO_PARITY_WORDS, OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../../data/orozco-mnemonics.js?v=4';
     import { orozcoPublished, OROZCO_PUBLISHED_HELPER, OROZCO_PUBLISHED_PARITY } from '../../data/orozco-published.js?v=1';
     const PUB = Object.fromEntries(orozcoPublished.map((r) => [r.letter, r.notation]));
 
@@ -129,6 +135,9 @@
     $('twist').textContent = OROZCO_TWIST;
     $('twist-rev').textContent = OROZCO_TWIST_REV;
     $('parity-alg').textContent = OROZCO_PARITY;
+    $('parity-ruf').textContent = OROZCO_PARITY_RUF;
+    $('parity-ruf-words').textContent = OROZCO_PARITY_RUF_WORDS.map((w) => w.word).join(' · ');
+    $('parity-ruf-breakdown').textContent = OROZCO_PARITY_RUF_WORDS.map((w) => `${w.word} = ${w.moves}`).join(' · ');
     $('parity-words').textContent = OROZCO_PARITY_WORDS.map((w) => w.word).join(' · ');
     $('parity-breakdown').textContent = OROZCO_PARITY_WORDS.map((w) => `${w.word} = ${w.moves}`).join(' · ') + ' (Q = D′)';
     $('pub-n').textContent = OROZCO_PUBLISHED_HELPER.N;
