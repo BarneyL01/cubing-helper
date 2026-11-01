@@ -52,3 +52,12 @@ time to answer (default 5 s), then optionally the answer (default 2 s), then the
 countdown bar, Show answer and Next still work while running; Stop shows the last answer; settings hide while
 running; Keep screen on appears with the timer. Saved as `letterTimer` in `cubing-helper:blind-drills`.
 Checked in headless Chromium (1 s / 1 s run: phases alternate, stop, reload keeps the settings; no errors).
+
+## 2026-11-01 — Letters drill in 3D
+
+Owner asked for a 3D version of the Letters drill with the cube turned to show the selected side. Picture
+setting: Flat net / 3D cube (`letterPic`). The 3D cube is `js/cube-rotatable.js` (now v=3) with two additions:
+`setView(v)` / `viewFrom([±1,±1,±1])` (look from the sticker's face and the piece's other faces, else top/front/
+right) and `setMarks(marks, labels)` (pink outline like the net's, text labels for the letter and optional face
+names). Sticker → letter: turned and outlined at once; letter → sticker: starting view until the answer, then
+turned. Checked in headless Chromium on 6 stickers (corners and edges, top, bottom, back) and both directions.

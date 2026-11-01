@@ -56,6 +56,8 @@
         </fieldset>
         <fieldset>
           <legend>Picture</legend>
+          <label><input type="radio" name="l-pic" value="net" checked /> Flat net</label>
+          <label><input type="radio" name="l-pic" value="3d" /> 3D cube (turned to show the sticker; drag to look round)</label>
           <label><input type="checkbox" id="l-faces" /> Face names on the centres (U, F, R…)</label>
         </fieldset>
         <fieldset>
@@ -76,6 +78,7 @@
         <p class="drill-kind" id="l-kind-label"></p>
         <p class="drill-big" id="l-letter"></p>
         <div class="drill-net" id="l-net"></div>
+        <div class="drill-cube" id="l-cube" hidden></div>
         <p class="drill-answer" id="l-answer" hidden></p>
       </div>
       <div class="rec-controls">
@@ -164,8 +167,9 @@
 
   <script type="module">
     import { bldNet, colourNet } from '../../js/bld-net.js?v=4';
-    import { rotatableCube } from '../../js/cube-rotatable.js?v=1';
+    import { rotatableCube } from '../../js/cube-rotatable.js?v=3';
     import { mountViewToggle } from '../../js/view-toggle.js';
+    import { solvedCube } from '../../js/cube-sim.js';
     import { bldPlan } from '../../js/bld-memo.js';
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { drillScramble, drillScrambleLetters, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=3';
@@ -205,6 +209,47 @@
     document.querySelectorAll('.drill-mode').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
 
     // ---- 1. letter scheme
+    // The picture for the Letters drill: the flat net, or a 3D cube turned so the target sticker's face (and the
+    // rest of its piece) faces you. In "letter -> sticker" the cube stays in the starting view until the answer.
+    const AXIS = { R: [0, 1], L: [0, -1], U: [1, 1], D: [1, -1], F: [2, 1], B: [2, -1] };
+    function stickerKey(kind, letter) {
+      const name = PIECE[kind][letter]; // e.g. "RDF": the sticker is on the first face
+      const p = [0, 0, 0];
+      for (const f of name) p[AXIS[f][0]] = AXIS[f][1];
+      const n = [0, 0, 0];
+      n[AXIS[name[0]][0]] = AXIS[name[0]][1];
+      // look from the sticker's face, and from the piece's other faces (else from the top, front, right)
+      const v = [1, 1, 1].map((d, i) => p[i] || d);
+      return { key: `${p.join()}|${n.join()}`, view: v };
+    }
+    let letterCube = null;
+    const CENTRE_KEYS = { U: '0,1,0|0,1,0', D: '0,-1,0|0,-1,0', F: '0,0,1|0,0,1', B: '0,0,-1|0,0,-1', R: '1,0,0|1,0,0', L: '-1,0,0|-1,0,0' };
+    function drawLetterPic(item, { marked = false, label = false }) {
+      const threeD = radio('l-pic') === '3d';
+      $('l-net').hidden = threeD;
+      $('l-cube').hidden = !threeD;
+      if (!threeD) {
+        $('l-net').innerHTML = bldNet(item.kind, { marked: marked ? [item.letter] : [], letters: label ? [item.letter] : false, colours: COLOURS, faces: $('l-faces').checked });
+        return;
+      }
+      if (!letterCube) {
+        letterCube = rotatableCube(solvedCube(), { palette: COLOURS, label: 'Cube; drag to turn it' });
+        $('l-cube').appendChild(letterCube.element);
+      }
+      const t = stickerKey(item.kind, item.letter);
+      const labels = $('l-faces').checked ? Object.fromEntries(Object.entries(CENTRE_KEYS).map(([f, k]) => [k, f])) : {};
+      if (label) labels[t.key] = item.letter;
+      if (marked) letterCube.setView(t.view); else letterCube.reset();
+      letterCube.setMarks(marked ? { [t.key]: '#ff1fa6' } : {}, labels);
+    }
+    document.querySelectorAll('input[name="l-pic"]').forEach((i) => i.addEventListener('change', () => {
+      saved.letterPic = radio('l-pic');
+      save();
+      const shown = !$('l-answer').hidden;
+      showLetter();
+      if (shown) revealLetter();
+    }));
+
     function showLetter() {
       const item = saved.letter;
       const kindWord = item.kind === 'edges' ? 'Edge' : 'Corner';
@@ -213,10 +258,10 @@
       $('l-show').disabled = false;
       if (item.dir === 'sticker') {
         $('l-letter').textContent = '';
-        $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: false, colours: COLOURS, faces: $('l-faces').checked });
+        drawLetterPic(item, { marked: true });
       } else {
         $('l-letter').textContent = item.letter;
-        $('l-net').innerHTML = bldNet(item.kind, { letters: false, colours: COLOURS, faces: $('l-faces').checked });
+        drawLetterPic(item, {});
       }
       $('l-answer').textContent = `${item.letter}: the ${item.kind === 'edges' ? 'edge' : 'corner'} ${PIECE[item.kind][item.letter]}, ${PIECE[item.kind][item.letter][0]} sticker`;
     }
@@ -229,7 +274,7 @@
     function revealLetter() {
       const item = saved.letter;
       $('l-letter').textContent = item.letter;
-      $('l-net').innerHTML = bldNet(item.kind, { marked: [item.letter], letters: [item.letter], colours: COLOURS, faces: $('l-faces').checked });
+      drawLetterPic(item, { marked: true, label: true });
       $('l-answer').hidden = false;
       $('l-show').disabled = true;
     }
@@ -537,6 +582,7 @@
     }
     if (saved.letterKind) setRadio('l-kind', saved.letterKind);
     if (saved.letterDir) setRadio('l-dir', saved.letterDir);
+    if (saved.letterPic) setRadio('l-pic', saved.letterPic);
     $('l-faces').checked = !!saved.faceLabels; // off unless turned on
     if (saved.letterTimer) {
       $('l-timer').checked = !!saved.letterTimer.on;
