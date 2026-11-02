@@ -50,6 +50,7 @@ const MENU = [
       { label: '8355', path: '3x3/8355/index.html' },
       { label: 'Heise', path: '3x3/heise/index.html', badge: 'Partial' },
       { label: 'Marshall', path: '3x3/marshall/index.html', badge: 'Partial' },
+      { label: 'Repeat', path: '3x3/repeat/index.html' },
       {
         label: 'Cube theory',
         pages: [

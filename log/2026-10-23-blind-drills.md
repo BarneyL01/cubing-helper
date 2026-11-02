@@ -44,3 +44,33 @@ number of unsolved corners/edges); tap to reveal; no score; a separate page of l
   6 corners 43 -> 15, 4 edges 24 -> 13, 4+4 48 -> 30. Checker: 1,900 scrambles (M2/OP and M2/Orozco solve
   all) plus a page-setting run. A tap on New scramble takes about 0.2 s in headless Chromium.
 - 2026-10-28: Count switch in Tracing and Small solves: "Pieces out of place" (as before, buffer included) or "Letters to solve" (`drillScrambleLetters`: the memo has exactly that many corner letters for the chosen corner method and edge letters for M2; corner and edge parts built separately; odd counts start with a swap and must be odd on both sides). Owner had seen 3-corner scrambles give 2 letters: measured, 3 pieces give 2 letters when the buffer is one of them (about a third), else 4. Checker: letters mode 16 combinations x 3, both solves. A few odd combinations (e.g. 5/1 with Old Pochmann) are not always found in 3 s and show a message.
+
+## 2026-10-31 — Letters timer mode
+
+Owner asked for a timer like the alg trainer (Recognition practice) on the Letters drill. A "Timer" setting:
+time to answer (default 5 s), then optionally the answer (default 2 s), then the next sticker; Start/Stop, a
+countdown bar, Show answer and Next still work while running; Stop shows the last answer; settings hide while
+running; Keep screen on appears with the timer. Saved as `letterTimer` in `cubing-helper:blind-drills`.
+Checked in headless Chromium (1 s / 1 s run: phases alternate, stop, reload keeps the settings; no errors).
+
+## 2026-11-01 — Letters drill in 3D
+
+Owner asked for a 3D version of the Letters drill with the cube turned to show the selected side. Picture
+setting: Flat net / 3D cube (`letterPic`). The 3D cube is `js/cube-rotatable.js` (now v=3) with two additions:
+`setView(v)` / `viewFrom([±1,±1,±1])` (look from the sticker's face and the piece's other faces, else top/front/
+right) and `setMarks(marks, labels)` (pink outline like the net's, text labels for the letter and optional face
+names). Sticker → letter: turned and outlined at once; letter → sticker: starting view until the answer, then
+turned. Checked in headless Chromium on 6 stickers (corners and edges, top, bottom, back) and both directions.
+
+## 2026-11-01 — Step through the trace
+
+Owner asked for a Tracing option that follows the trace for the chosen method step by step, corners then edges,
+with Next or a timer, the cube turning to each spot. "Step through the trace" (Tracing only): step 1 the corner
+buffer sticker (E for Old Pochmann, C for Orozco; blue), then each corner target in memo order (pink), a summary,
+then the edge buffer U (DF) and each M2 edge target, then a summary. Captions say when a cycle breaks into a new
+piece and when it closes. Back / Next / Play (next step every N seconds, saved as `traceStepTime`) / End. The cube
+turns with `setView` (the sticker's face and its piece's other faces) and outlines the sticker; no letter on the
+sticker, so its colour can be read. Switching to the net, another drill, another method or a new scramble ends it.
+Checked: the page's letter → sticker position mapping against 300 random scrambles (5,173 consecutive reads: the
+sticker at each target's spot always names the next target); headless Chromium run through whole traces (OP and
+Orozco, Play, End), no errors.

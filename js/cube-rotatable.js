@@ -14,6 +14,9 @@ const rotY = (t) => [[Math.cos(t), 0, Math.sin(t)], [0, 1, 0], [-Math.sin(t), 0,
 // Start: looking down at the front-right corner (top, front and right faces showing).
 const START = mul(rotX(Math.atan(1 / Math.SQRT2)), rotY(-Math.PI / 4));
 const AXES = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+// The view from direction v = [x, y, z] (each +1 or -1): the faces whose outward normals share a sign
+// with v face the viewer, the cube upright (U up when y > 0, D showing when y < 0).
+export const viewFrom = ([x, y, z]) => mul(rotX(Math.sign(y || 1) * Math.atan(1 / Math.SQRT2)), rotY(-Math.atan2(x, z)));
 
 function shade(hex, k) {
   const n = parseInt(hex.slice(1), 16);
@@ -26,9 +29,10 @@ function inPlane(n) {
   return others;
 }
 
-function draw(stickers, view, palette, label) {
+function draw(stickers, view, palette, label, marks = {}, labels = {}) {
   const light = [0.35, 0.8, 0.5];
   const polys = [];
+  const overlay = [];
   const pt = (v) => {
     const [x, y] = apply(view, v);
     return `${x.toFixed(3)},${(-y).toFixed(3)}`;
@@ -52,8 +56,20 @@ function draw(stickers, view, palette, label) {
     const [a, b] = inPlane(s.n);
     const c = s.p.map((v, i) => (s.n[i] ? s.n[i] * H : v));
     const corner = (da, db) => c.map((v, i) => v + a[i] * da + b[i] * db);
-    polys.push(`<polygon points="${[corner(-STICKER, -STICKER), corner(STICKER, -STICKER), corner(STICKER, STICKER), corner(-STICKER, STICKER)].map(pt).join(' ')}" fill="${shade(palette[s.colour], k)}" stroke="rgba(0,0,0,0.25)" stroke-width="0.03" stroke-linejoin="round"/>`);
+    const quad = [corner(-STICKER, -STICKER), corner(STICKER, -STICKER), corner(STICKER, STICKER), corner(-STICKER, STICKER)].map(pt).join(' ');
+    polys.push(`<polygon points="${quad}" fill="${shade(palette[s.colour], k)}" stroke="rgba(0,0,0,0.25)" stroke-width="0.03" stroke-linejoin="round"/>`);
+    const key = `${s.p.join()}|${s.n.join()}`;
+    if (marks[key]) {
+      // outlined like the flat net's target: a wide coloured ring with a thin dark edge inside it
+      overlay.push(`<polygon points="${quad}" fill="none" stroke="${marks[key]}" stroke-width="0.13" stroke-linejoin="round"/>`);
+      overlay.push(`<polygon points="${quad}" fill="none" stroke="#111827" stroke-width="0.025" stroke-linejoin="round"/>`);
+    }
+    if (labels[key]) {
+      const [x, y] = pt(c).split(',').map(Number);
+      overlay.push(`<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="0.5" font-weight="700" font-family="system-ui, sans-serif" fill="#111827" stroke="#ffffff" stroke-width="0.09" paint-order="stroke">${labels[key]}</text>`);
+    }
   }
+  polys.push(...overlay);
   const R = 2.75; // covers the cube from any side (half its diagonal is 2.6)
   return `<svg class="cube-rot-svg" viewBox="${-R} ${-R} ${2 * R} ${2 * R}" role="img" aria-label="${label}">${polys.join('')}</svg>`;
 }
@@ -124,7 +140,9 @@ export function rotatableCube(stickers, { palette, label = 'Cube; drag to turn i
   stage.className = 'cube-rot-stage';
   wrap.appendChild(stage);
   let turning = false; // while a move is animating, its frames do the drawing
-  const render = () => { if (!turning) stage.innerHTML = draw(current, view, palette, label); };
+  let marks = {};
+  let labels = {};
+  const render = () => { if (!turning) stage.innerHTML = draw(current, view, palette, label, marks, labels); };
 
   // drag: sideways turns about the screen's up axis, up/down about its sideways axis
   let last = null;
@@ -166,6 +184,10 @@ export function rotatableCube(stickers, { palette, label = 'Cube; drag to turn i
   return {
     element: wrap,
     update(next) { current = next; render(); },
+    // marks: { 'x,y,z|nx,ny,nz': colour } outlines those stickers; labels: same keys -> short text on them
+    setMarks(m = {}, l = {}) { marks = m; labels = l; render(); },
+    // turn the whole cube to the view from direction v (see viewFrom); drag and buttons work from there
+    setView(v) { view = viewFrom(v); render(); },
     reset() { view = START; render(); },
     // Shows one move turning, from the stickers before it (`from`) to the stickers after it (`to`,
     // from the simulator). Resolves when done. Dragging still works during the turn.

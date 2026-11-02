@@ -115,3 +115,13 @@ text.net-letter-on-colour {
 .cube-rot-svg { display: block; width: 100%; height: auto; }
 .cube-rot-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
 .th-count { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; width: 100%; }
+
+/* Tracing: step through the trace (corners, then edges) on the 3D cube */
+.trace-steps { margin: 0.5rem 0; }
+.trace-steps > .rec-btn { width: 100%; min-height: 48px; }
+.trace-count { margin: 0.2rem 0; font-size: 0.9rem; color: var(--muted, #5b6170); }
+.trace-caption { min-height: 4.2em; margin: 0.2rem 0 0.4rem; font-weight: 600; }
+.trace-buttons { grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin: 0.3rem 0; }
+.trace-buttons .rec-btn, .trace-buttons .rec-btn-primary { grid-column: auto; min-height: 48px; padding: 0 0.3rem; font-size: 1rem; }
+.trace-time { display: flex; align-items: center; gap: 0.4rem; min-height: 44px; font-size: 0.95rem; }
+.trace-time input { width: 4em; }

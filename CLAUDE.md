@@ -227,6 +227,10 @@ built ahead of being asked for. As of 2026-10-03:
   criss/cross and free-column moves, the pair 3-cycles (v1 to v3) and conjugations, the two edge 3-cycle
   varieties, and a worked scramble-to-solution example. Do not invent them; ask for the details. Corrected
   2026-10-20: the orientation-preserving group is R, L, U, D and half turns of F and B (not "two opposite faces").
+- **3x3 Repeat Method** (2026-10-29, `3x3/repeat/index.html`, `data/repeat-method.js`, menu "Repeat"): our own
+  corners-first beginner method, every step a repeat like Sassy (owner asked; no L, no M — M' only in the flip).
+  Corners: Sassy, `(R2 U F2)×4`, Sassy×2 twists; edges: the drop `(R2 U2 R2 F2)×2` with four setups, top cycle,
+  `(U' M')×4` flips (owner's U' M' pairing); each edge card also shows a shorter version on `M' U2 M U2` (`SHORT`, same setups as the drop cards, ~200 vs ~235 moves). Checked by `log/2026-10-29-repeat-method-check.mjs` (1,000 whole solves per card set).
 - **Cube theory** (2026-10-28, `3x3/theory/`, Methods group): Overview (built ideas + ideas still to explore),
   Laws of the cube, Conjugates, Order of an algorithm. Our own explanations; every number and "what changed" is worked
   out on the page by `js/cube-laws.js`; animated runner `js/move-runner.js` (shared). Checked by
@@ -276,7 +280,7 @@ built ahead of being asked for. As of 2026-10-03:
   speedsolving.com, which the build environment could not read in full). Worked out here: 18 commutators,
   all `[R D R', U']`, `[R D' R', U']` or `[R D2 R', U']` with a 0-2 move D/L setup (`data/orozco-corners.js`,
   generated); helper letters B skip, N twist / twist backwards, Q the reverse (the owner's twist algorithm,
-  which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped). `js/orozco.js`
+  which twists UFR and UBR); odd count: Ra-perm at the end (M2 parity leaves UL/UB swapped); the page shows first the R U F Ra `R U R' F' R U2 R' U2 R' F R U R U2 R' U'` (Rupture · Loopy · U2 · Prefer · U · Loopy · V, `data/orozco-mnemonics.js`), then the D one. `js/orozco.js`
   plans a solve. `log/2026-10-25-orozco-corners.mjs` (`--write`) checks 3,000 full solves (M2 edges then Orozco).
   Research (`docs/orozco-research-notes.md`, from cubinghistory.com and Riu's note.com tutorial) confirmed memo from C,
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
@@ -286,8 +290,8 @@ built ahead of being asked for. As of 2026-10-03:
   learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
   runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup); switch for three corners / whole cube in colour. `log/2026-10-27-orozco-explained.md`.
   **Blind drills** (`3x3/practice/blind-drills.html`, Practice section, 2026-10-23): Letters (coloured
-  net, target sticker outlined, face names optional), Tracing (a cube you can drag round,
-  `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" and "Count: pieces out of place / letters to solve" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).
+  net, target sticker outlined, face names optional; timer mode 2026-10-31 like Recognition: time to answer, then the answer, then the next; Keep screen on; `letterTimer` in the saved state; picture Flat net / 3D cube 2026-11-01: `rotatableCube` with `setView(viewFrom(v))` turned so the sticker's piece faces you, `setMarks` outlines it pink and labels it; `letterPic` saved), Tracing (a cube you can drag round,
+  `js/cube-rotatable.js`, our own SVG with y / y' / x2 / Reset buttons; or the flat net), Memo, Small solves. Tracing has "Step through the trace" (2026-11-01): corners (chosen method, from E or C) then M2 edges (from U), one sticker per step on the 3D cube, turned to it and outlined (buffer blue, targets pink), with captions for cycle breaks/closes; Back/Next/Play (every N s, `traceStepTime`)/End. Tracing and Small solves have "Corners solved with: Old Pochmann / Orozco" and "Count: pieces out of place / letters to solve" (memo from UBL or UFR; moves from `js/bld-memo.js` or `js/orozco.js`).
   Scrambles with N corners / M edges unsolved come from `js/bld-drill.js` (short pure pieces from `data/drill-pieces.js`, reversed; shortest of ~0.15 s of tries; no solver),
   checked by `log/2026-10-23-bld-drill-check.mjs`. Letter-pair words: `data/letter-pairs.js`, X = "sh",
   checked by `log/2026-10-23-letter-pairs-check.mjs`. See `log/2026-10-23-blind-drills.md`.
@@ -356,6 +360,8 @@ cipher (e.g. "Sassy" = RUPV = `R U R' U'`). **Always decode/encode through
 `docs/mnemonics.md`** — never invent new letter meanings without confirming
 with the user. Every algorithm shown on the site should display both the
 standard WCA notation and the user's mnemonic word breakdown.
+**Letters added 2026-10-30 (owner):** D, Q = D′, L, J = L′, B, C = B′ (2 suffix on D/L/B too); H, T, W
+still free; vowels are word fillers. Pages that say "no mnemonic: no D letter" predate this.
 
 **Exception (2026-10-23):** the full OLL (57) and full PLL (21) lists
 (`data/oll-full.js`, `data/pll-full.js`; their sections on the OLL and PLL
