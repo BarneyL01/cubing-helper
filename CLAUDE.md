@@ -286,6 +286,10 @@ built ahead of being asked for. As of 2026-10-03:
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
+  **3-Style corners** (`3x3/bld/three-style-corners.html`, menu Blindfolded › 3-Style, 2026-11-02): all 378 pairs from
+  Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
+  `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet
+  cells fixed (listed on the page). Parity, twists and edges from the sheet not added yet.
   **How Orozco works** (`3x3/bld/orozco-explained.html`, Blind section, 2026-10-27): the base `[R D R', U']` taken apart for
   learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
   runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup); switch for three corners / whole cube in colour. `log/2026-10-27-orozco-explained.md`.

@@ -87,6 +87,7 @@ const MENU = [
           { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],
       },
+      { label: '3-Style', path: '3x3/bld/three-style-corners.html' },
     ],
   },
   {

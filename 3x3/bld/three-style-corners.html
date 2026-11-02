@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3-Style corners — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=13" />
+  <script type="module" src="../../js/site-chrome.js?v=8"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>3-Style corners</h1>
+    <p class="subtitle">
+      One commutator for every pair of corner targets, buffer UFR (C): 378 pairs, 8 to 18 moves (12 on average).
+      Each pair is solved in one go, instead of one letter at a time.
+    </p>
+    <div class="source-note">
+      <p>
+        From <a href="https://docs.google.com/spreadsheets/d/1rCpr-RVZVHq4S3ctRvuCfl37uy8A27okymzt5yqMPvk/htmlview">Dylan's
+        3-Style Learning Sheet</a> (J Perm), its "UFR Comms" and "UFR Types" tabs; not from your notes. The sheet's
+        video on choosing corner commutators: <a href="https://www.youtube.com/watch?v=7FMU90zhhWs">3-Style Corners</a>.
+        Every commutator was written out and checked in the cube simulator: it moves the buffer's sticker to the 1st
+        target, the 1st target's to the 2nd, the 2nd's back to the buffer, and nothing else. Eleven entries needed a
+        fix; they are marked and listed at the end. No mnemonic words: there are 378 of them.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="how" data-short="How to read">How to read it</h2>
+    <ul class="bld-list">
+      <li>Same letters as your other blind pages. The buffer is C (UFR), as for Orozco; J and M are its other stickers.</li>
+      <li>Memo in pairs. For the pair A then B, pick A below and find B in its list.</li>
+      <li><code>[A : B]</code> means A, B, then A undone: a setup. <code>[A , B]</code> means A, B, A undone, B undone:
+        a commutator. <code>[A : [B , C]]</code> is a setup around a commutator.</li>
+      <li>The type (for example "U-Top / D-Side") is the sheet's own label for where the two targets are.</li>
+      <li>An odd number of corner letters leaves one target without a partner: that needs a parity algorithm at the
+        end. The sheet has a Parity tab; it is not on this page yet.</li>
+    </ul>
+
+    <h2 class="section-heading" id="pairs" data-short="Pairs">Pick the 1st target</h2>
+    <div class="ex-tabs ts-letters" id="ts-letters" role="group" aria-label="1st target"></div>
+    <label class="ts-order">Order <select id="ts-order">
+      <option value="letter">By 2nd letter</option>
+      <option value="type">By type</option>
+      <option value="moves">By length</option>
+    </select></label>
+    <p class="bld-note" id="ts-summary"></p>
+    <div class="ts-list" id="ts-list"></div>
+
+    <h2 class="section-heading" id="fixes" data-short="Fixes">Fixed from the sheet</h2>
+    <p>These cells of the sheet, as written, do not do the pair they are listed for (or are empty). The version used
+      above is checked; the sheet's text is kept here.</p>
+    <ul class="ts-fixes" id="ts-fixes"></ul>
+  </main>
+
+  <script type="module">
+    import { threeStyleCorners } from '../../data/three-style-corners.js?v=1';
+    import { bldNet } from '../../js/bld-net.js?v=4';
+    import { bldCorners } from '../../data/bld.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    const PIECE = Object.fromEntries(bldCorners.map((r) => [r.letter, r.piece]));
+    const KEY = 'cubing-helper:3style-corners';
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
+    const firsts = [...new Set(threeStyleCorners.map((e) => e.first))].sort();
+    if (!firsts.includes(saved.first)) saved.first = firsts[0];
+    if (saved.order) $('ts-order').value = saved.order;
+
+    for (const l of firsts) {
+      const b = el('button', null, l);
+      b.type = 'button';
+      b.title = `1st target ${l} (${PIECE[l]})`;
+      b.addEventListener('click', () => { saved.first = l; save(); draw(); });
+      $('ts-letters').appendChild(b);
+    }
+    $('ts-order').addEventListener('change', () => { saved.order = $('ts-order').value; save(); draw(); });
+
+    function draw() {
+      document.querySelectorAll('#ts-letters button').forEach((b) => b.setAttribute('aria-selected', String(b.textContent === saved.first)));
+      const order = $('ts-order').value;
+      const rows = threeStyleCorners.filter((e) => e.first === saved.first);
+      rows.sort((a, b) => (order === 'type' ? a.type.localeCompare(b.type) : 0) || (order === 'moves' ? a.count - b.count : 0) || a.second.localeCompare(b.second));
+      $('ts-summary').textContent = `1st target ${saved.first} (${PIECE[saved.first]}): ${rows.length} pairs.`;
+      const list = $('ts-list');
+      list.replaceChildren();
+      let lastType = null;
+      for (const e of rows) {
+        if (order === 'type' && e.type !== lastType) { list.appendChild(el('h3', 'ts-type-head', e.type || 'No type in the sheet')); lastType = e.type; }
+        const row = el('article', 'ts-row');
+        row.id = `pair-${e.pair}`;
+        const net = el('div', 'ts-net');
+        net.innerHTML = bldNet('corners', { buffers: ['C'], marked: [e.first, e.second], letters: [e.first, e.second] });
+        const body = el('div', 'ts-body');
+        const head = el('p', 'ts-pair');
+        head.append(el('strong', null, `${e.first} → ${e.second}`), ` ${PIECE[e.first]} then ${PIECE[e.second]}`);
+        body.append(head, el('p', 'case-alg ts-alg')); body.lastChild.appendChild(el('code', null, e.notation));
+        const meta = el('p', 'bld-note', `${e.type ? `${e.type} · ` : ''}${e.count} moves`);
+        body.appendChild(meta);
+        const more = el('details', 'ts-more');
+        more.appendChild(el('summary', null, 'Moves written out'));
+        more.appendChild(el('code', null, e.moves));
+        body.appendChild(more);
+        if (e.fix) body.appendChild(el('p', 'ts-fix', `Fixed: ${e.fix}.`));
+        row.append(net, body);
+        list.appendChild(row);
+      }
+    }
+    draw();
+
+    // the fixes, as a list (reads better than a table on a phone)
+    for (const e of threeStyleCorners.filter((x) => x.fix)) {
+      const li = el('li');
+      const a = el('a', null, `${e.first} → ${e.second}`);
+      a.href = `#pair-${e.pair}`;
+      a.addEventListener('click', () => { saved.first = e.first; save(); draw(); });
+      const sheet = el('p', null, 'Sheet: ');
+      if (e.sheet) sheet.appendChild(el('code', null, e.sheet)); else sheet.append('(empty)');
+      const used = el('p', null, 'Used: ');
+      used.appendChild(el('code', null, e.notation));
+      li.append(a, sheet, used, el('p', 'bld-note', `${e.fix[0].toUpperCase()}${e.fix.slice(1)}.`));
+      $('ts-fixes').appendChild(li);
+    }
+    // a link to #pair-XY opens that letter
+    const m = location.hash.match(/^#pair-([A-X])([A-X])$/);
+    if (m && firsts.includes(m[1])) { saved.first = m[1]; draw(); document.getElementById(`pair-${m[1]}${m[2]}`)?.scrollIntoView(); }
+  </script>
+</body>
+</html>
