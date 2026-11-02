@@ -58,6 +58,27 @@ export function expand(text) {
   if (!topLevel(t)) t = `[${t}]`; // e.g. "R' D R U' R : [F , R' U R U']"
   return cancelMoves(expandBrackets(t));
 }
+// The notation split into its setup (outer conjugates, in order) and its core commutator [A , B]; the insertion is
+// the longer part, the interchange the shorter one (one face turn, or a short sequence).
+export function split(text) {
+  let t = text.trim().replace(/([A-Za-z])2'/g, '$12');
+  if (!topLevel(t)) t = `[${t}]`;
+  const setups = [];
+  for (;;) {
+    const inner = t.slice(1, -1);
+    let d = 0, colon = -1, comma = -1;
+    for (let i = 0; i < inner.length; i++) {
+      const c = inner[i];
+      if (c === '[') d++; else if (c === ']') d--;
+      else if (d === 0 && c === ':' && colon < 0) colon = i;
+      else if (d === 0 && c === ',' && comma < 0) comma = i;
+    }
+    if (colon >= 0) { setups.push(inner.slice(0, colon).trim()); t = inner.slice(colon + 1).trim(); continue; }
+    const a = inner.slice(0, comma).trim().replace(/\s+/g, ' '), b = inner.slice(comma + 1).trim().replace(/\s+/g, ' ');
+    const aLong = a.split(' ').length >= b.split(' ').length;
+    return { setup: setups.join(' '), core: `[${a} , ${b}]`, insertion: aLong ? a : b, interchange: aLong ? b : a };
+  }
+}
 const fails = [];
 const check = (name, ok) => { if (!ok) fails.push(name); };
 const entries = [];
@@ -79,7 +100,10 @@ for (const first of LETTERS) for (const second of LETTERS) {
   const b = spot('UFR'), a = spot(PIECE[first]), c = spot(PIECE[second]);
   check(`${pair} cycles C -> ${first} -> ${second}`, where.get(b) === a && where.get(a) === c && where.get(c) === b);
   check(`${pair} moves only three corners`, st.filter((s) => s.home !== key(s)).length === 9);
-  entries.push({ pair, first, second, notation: text, ...(fix ? { sheet: sheet || '', fix: fix.why } : {}), moves, count: moves.split(' ').length, type: types[pair] || '' });
+  const parts = split(text);
+  check(`${pair} core parses`, !!parts.insertion);
+  check(`${pair} setup + core = the commutator`, expand(parts.setup ? `[${parts.setup} : ${parts.core}]` : parts.core) === moves);
+  entries.push({ pair, first, second, notation: text, ...parts, setupMoves: parts.setup ? parts.setup.split(' ').length : 0, ...(fix ? { sheet: sheet || '', fix: fix.why } : {}), moves, count: moves.split(' ').length, type: types[pair] || '' });
 }
 for (const pair of Object.keys(FIXES)) {
   // a fix is only listed if the sheet's own version is wrong

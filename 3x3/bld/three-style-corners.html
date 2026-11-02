@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>3-Style corners — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=13" />
+  <link rel="stylesheet" href="../../css/style.css?v=14" />
   <script type="module" src="../../js/site-chrome.js?v=8"></script>
 </head>
 <body>
@@ -41,7 +41,25 @@
         end. The sheet has a Parity tab; it is not on this page yet.</li>
     </ul>
 
-    <h2 class="section-heading" id="pairs" data-short="Pairs">Pick the 1st target</h2>
+    <h2 class="section-heading" id="groups" data-short="Groups">The same few commutators</h2>
+    <p>Almost every pair is one short <strong>core</strong> commutator with a <strong>setup</strong> around it. The
+      setup (in orange) turns the cube so the core can reach the two targets; after the core, the setup is undone.
+      325 of the 378 pairs use one of eight cores:</p>
+    <ul class="bld-list">
+      <li><code>R' D R</code>, <code>R' D' R</code>, <code>R D R'</code> or <code>R D' R'</code> against a top turn
+        (<code>U</code>, <code>U'</code>, <code>U2</code>): 195 pairs. Like Orozco's base.</li>
+      <li><code>R U R'</code>, <code>R U' R'</code>, <code>R' U R</code> or <code>R' U' R</code> against a bottom turn
+        (<code>D</code>, <code>D'</code>, <code>D2</code>): 130 pairs.</li>
+    </ul>
+    <p>A way in: learn the 41 pairs with no setup first, then those with a one-move setup (58), then two (113).
+      "By commutator" below lists each core with its pairs in that order.</p>
+
+    <h2 class="section-heading" id="pairs" data-short="Pairs">The pairs</h2>
+    <div class="ex-tabs" id="ts-view" role="group" aria-label="View">
+      <button type="button" data-view="first">By 1st target</button>
+      <button type="button" data-view="core">By commutator</button>
+    </div>
+    <div id="ts-first-view">
     <div class="ex-tabs ts-letters" id="ts-letters" role="group" aria-label="1st target"></div>
     <label class="ts-order">Order <select id="ts-order">
       <option value="letter">By 2nd letter</option>
@@ -50,6 +68,11 @@
     </select></label>
     <p class="bld-note" id="ts-summary"></p>
     <div class="ts-list" id="ts-list"></div>
+    </div>
+    <div id="ts-core-view" hidden>
+      <label class="ts-order"><input type="checkbox" id="ts-pure" /> Only pairs with no setup</label>
+      <div id="ts-cores"></div>
+    </div>
 
     <h2 class="section-heading" id="fixes" data-short="Fixes">Fixed from the sheet</h2>
     <p>These cells of the sheet, as written, do not do the pair they are listed for (or are empty). The version used
@@ -58,7 +81,7 @@
   </main>
 
   <script type="module">
-    import { threeStyleCorners } from '../../data/three-style-corners.js?v=1';
+    import { threeStyleCorners } from '../../data/three-style-corners.js?v=2';
     import { bldNet } from '../../js/bld-net.js?v=4';
     import { bldCorners } from '../../data/bld.js';
 
@@ -82,6 +105,55 @@
     }
     $('ts-order').addEventListener('change', () => { saved.order = $('ts-order').value; save(); draw(); });
 
+    // [setup : core] with the setup in orange (no brackets when there is no setup)
+    function coloured(e) {
+      const c = el('code');
+      if (e.setup) c.append('[', el('span', 'mv-setup', e.setup), ' : ', e.core, ']'); else c.append(e.core);
+      return c;
+    }
+    // ---- by commutator: one group per core (insertion + interchange face), pairs by setup length
+    const famKey = (e) => `${e.insertion} · ${e.interchange.replace(/['2]/g, '')}`;
+    function drawCores() {
+      const pureOnly = $('ts-pure').checked;
+      const fams = new Map();
+      for (const e of threeStyleCorners) { const k = famKey(e); if (!fams.has(k)) fams.set(k, []); fams.get(k).push(e); }
+      const box = $('ts-cores');
+      box.replaceChildren();
+      [...fams.entries()].sort((a, b) => b[1].length - a[1].length).forEach(([k, list], i) => {
+        const shown = list.filter((e) => !pureOnly || !e.setup).sort((a, b) => a.setupMoves - b.setupMoves || a.pair.localeCompare(b.pair));
+        if (!shown.length) return;
+        const [ins, face] = k.split(' · ');
+        const d = el('details', 'ts-core');
+        if (i < 2) d.open = true;
+        const sum = el('summary');
+        sum.append(el('code', null, ins), ` against ${face} turns`, el('span', 'bld-muted', ` · ${list.length} pairs, ${list.filter((e) => !e.setup).length} with no setup`));
+        d.appendChild(sum);
+        const ul = el('ul', 'ts-core-list');
+        let lastLen = -1;
+        for (const e of shown) {
+          if (e.setupMoves !== lastLen) { ul.appendChild(el('li', 'ts-core-sub', e.setupMoves ? `Setup of ${e.setupMoves} move${e.setupMoves > 1 ? 's' : ''}` : 'No setup')); lastLen = e.setupMoves; }
+          const li = el('li', 'ts-core-row');
+          const a = el('a', 'ts-core-pair', `${e.first} → ${e.second}`);
+          a.href = `#pair-${e.pair}`;
+          a.addEventListener('click', (ev) => { ev.preventDefault(); saved.view = 'first'; saved.first = e.first; save(); showView(); draw(); document.getElementById(`pair-${e.pair}`)?.scrollIntoView(); });
+          li.append(a, coloured(e), el('span', 'bld-muted', `${e.count} moves`));
+          ul.appendChild(li);
+        }
+        d.appendChild(ul);
+        box.appendChild(d);
+      });
+    }
+    function showView() {
+      const core = saved.view === 'core';
+      $('ts-first-view').hidden = core;
+      $('ts-core-view').hidden = !core;
+      document.querySelectorAll('#ts-view button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === (core ? 'core' : 'first'))));
+      if (core) drawCores();
+    }
+    document.querySelectorAll('#ts-view button').forEach((b) => b.addEventListener('click', () => { saved.view = b.dataset.view; save(); showView(); }));
+    $('ts-pure').addEventListener('change', () => { saved.pure = $('ts-pure').checked; save(); drawCores(); });
+    $('ts-pure').checked = !!saved.pure;
+
     function draw() {
       document.querySelectorAll('#ts-letters button').forEach((b) => b.setAttribute('aria-selected', String(b.textContent === saved.first)));
       const order = $('ts-order').value;
@@ -100,7 +172,7 @@
         const body = el('div', 'ts-body');
         const head = el('p', 'ts-pair');
         head.append(el('strong', null, `${e.first} → ${e.second}`), ` ${PIECE[e.first]} then ${PIECE[e.second]}`);
-        body.append(head, el('p', 'case-alg ts-alg')); body.lastChild.appendChild(el('code', null, e.notation));
+        body.append(head, el('p', 'case-alg ts-alg')); body.lastChild.appendChild(coloured(e));
         const meta = el('p', 'bld-note', `${e.type ? `${e.type} · ` : ''}${e.count} moves`);
         body.appendChild(meta);
         const more = el('details', 'ts-more');
@@ -113,6 +185,7 @@
       }
     }
     draw();
+    showView();
 
     // the fixes, as a list (reads better than a table on a phone)
     for (const e of threeStyleCorners.filter((x) => x.fix)) {
@@ -129,7 +202,7 @@
     }
     // a link to #pair-XY opens that letter
     const m = location.hash.match(/^#pair-([A-X])([A-X])$/);
-    if (m && firsts.includes(m[1])) { saved.first = m[1]; draw(); document.getElementById(`pair-${m[1]}${m[2]}`)?.scrollIntoView(); }
+    if (m && firsts.includes(m[1])) { saved.first = m[1]; saved.view = 'first'; showView(); draw(); document.getElementById(`pair-${m[1]}${m[2]}`)?.scrollIntoView(); }
   </script>
 </body>
 </html>

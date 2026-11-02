@@ -289,7 +289,7 @@ built ahead of being asked for. As of 2026-10-03:
   **3-Style corners** (`3x3/bld/three-style-corners.html`, menu Blindfolded › 3-Style, 2026-11-02): all 378 pairs from
   Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
   `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet
-  cells fixed (listed on the page). Parity, twists and edges from the sheet not added yet.
+  cells fixed (listed on the page); views By 1st target and By commutator (setup + core, 27 groups, 8 cores cover 325 pairs). Parity, twists and edges from the sheet not added yet.
   **How Orozco works** (`3x3/bld/orozco-explained.html`, Blind section, 2026-10-27): the base `[R D R', U']` taken apart for
   learning commutators: 3D pictures with only the three corners coloured, part by part, why only three move, and a step
   runner (rotatable cube, each move animated, Back/Next/Play, from solved or from the case); tabs for O, H, L and K (setup); switch for three corners / whole cube in colour. `log/2026-10-27-orozco-explained.md`.

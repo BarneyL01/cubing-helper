@@ -17,3 +17,14 @@ letter buttons (saved in `cubing-helper:3style-corners`), list of the 18 pairs f
 targets, notation, the sheet's type, move count, moves written out), order by letter / type / length,
 `#pair-XY` links, and the list of fixes. Not added yet: the sheet's Parity, 2-Twists, 3-Twists and edge tabs; no
 mnemonics (378 algorithms). Checked in headless Chromium at 390 px (no errors).
+
+## By commutator (same day)
+
+Owner: the pairs look hard to remember; group them by commutator. The generator now splits every notation into its
+setup (outer conjugates) and core [A , B] (insertion = the longer part, interchange = the shorter), checks that
+[setup : core] gives exactly the same moves, and stores setup, core, insertion, interchange, setupMoves. 27 groups
+(insertion + interchange face); 325 of 378 use one of eight cores: R' D R / R' D' R / R D R' / R D' R' against U
+turns (195) and R U R' / R U' R' / R' U R / R' U' R against D turns (130). Setups: 41 none, 58 one move, 113 two,
+111 three, 55 four or five. The page has a "The same few commutators" section and a view switch By 1st target /
+By commutator (groups biggest first, pairs by setup length, setup in orange; "Only pairs with no setup"; tapping a
+pair opens it in the letter view). Saved as `view` / `pure`. ALL OK; checked in headless Chromium.

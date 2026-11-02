@@ -2503,3 +2503,10 @@ a.menu-sec[aria-current="page"],
 .ts-fixes li > a { font-weight: 700; display: inline-flex; min-height: 44px; align-items: center; }
 .ts-fixes p { margin: 0.15rem 0; }
 .ts-fixes code { white-space: normal; word-break: break-word; }
+.ts-core { border: 1px solid var(--border, #d0d4dc); border-radius: 8px; margin: 0.5rem 0; padding: 0 0.6rem; }
+.ts-core > summary { min-height: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; cursor: pointer; font-weight: 600; }
+.ts-core-list { list-style: none; padding: 0; margin: 0 0 0.5rem; }
+.ts-core-sub { font-weight: 700; font-size: 0.9rem; margin: 0.6rem 0 0.2rem; color: var(--muted, #5b6170); }
+.ts-core-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 44px; border-bottom: 1px solid var(--border, #e3e6ec); }
+.ts-core-pair { font-weight: 700; min-width: 3.5em; }
+.ts-core-row code { white-space: normal; }
