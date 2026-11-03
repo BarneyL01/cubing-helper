@@ -7,6 +7,8 @@
 import { writeFileSync } from 'node:fs';
 import { SPEFFZ, permOf, spotOf, letterAt, spots, expandBrackets, cancelMoves, invertAlg } from './three-style-lib.mjs';
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
+import { orozcoCorners } from '../data/orozco-corners.js';
+const OROZCO = Object.fromEntries(orozcoCorners.map((r) => [r.letter, r]));
 
 const SETUP_MOVES = 'RUDF'.split('').flatMap((f) => [f, f + "'", f + '2']);
 const axis = (f) => ({ R: 0, L: 0, U: 1, D: 1, F: 2, B: 2 })[f];
@@ -55,8 +57,22 @@ const entries = [];
 for (const first of targets) for (const second of targets) {
   if (pieceId(first) === pieceId(second)) continue;
   const pair = first + second;
-  const c = pick[pair];
+  let c = pick[pair];
   check(`${pair} found`, !!c); if (!c) continue;
+  // Pairs with B are the owner's Orozco commutators (X then B = X forwards, B then X = X backwards): keep those,
+  // and keep the search's version only as a shorter alternative.
+  const ozLetter = second === 'B' ? first : first === 'B' ? second : null;
+  let orozco = null, alt = null;
+  if (ozLetter && OROZCO[ozLetter]) {
+    const r = OROZCO[ozLetter];
+    const ins = `R ${r.base} R'`;
+    const [a, b] = second === 'B' ? [ins, "U'"] : ["U'", ins];
+    const searched = c;
+    const om = cancelMoves(`${r.setup || ''} ${a} ${b} ${invertAlg(a)} ${invertAlg(b)} ${invertAlg(r.setup || '')}`);
+    c = { setup: r.setup || '', setupLen: r.setup ? r.setup.split(' ').length : 0, core: { a, b, ins, inter: "U'" }, count: om.split(' ').length, moves: om };
+    orozco = second === 'B' ? 'forwards' : 'backwards';
+    if (searched.count < c.count) alt = { notation: searched.setup ? `[${searched.setup} : [${searched.core.a} , ${searched.core.b}]]` : `[${searched.core.a} , ${searched.core.b}]`, moves: searched.moves, count: searched.count };
+  }
   const core = `[${c.core.a} , ${c.core.b}]`;
   const notation = c.setup ? `[${c.setup} : ${core}]` : core;
   const moves = cancelMoves(expandBrackets(notation));
@@ -67,7 +83,8 @@ for (const first of targets) for (const second of targets) {
   check(`${pair} cycles C -> ${first} -> ${second}`, where.get(K('C')) === K(first) && where.get(K(first)) === K(second) && where.get(K(second)) === K('C'));
   check(`${pair} only three corners`, st.filter((s) => s.home !== key(s)).length === 9);
   const aLong = c.core.a.split(' ').length >= c.core.b.split(' ').length;
-  entries.push({ pair, first, second, notation, setup: c.setup, core, insertion: c.core.ins, interchange: c.core.inter, spots: spots(first, second, c.setup, core), setupMoves: c.setupLen, moves, count: c.count, aLong });
+  if (alt) { const am = cancelMoves(expandBrackets(alt.notation)); check(`${pair} alternative = same effect`, applyAlg(solvedCube(), am).every((x, i) => { const y = applyAlg(solvedCube(), moves)[i]; return x.colour === y.colour && x.p.join() === y.p.join() && x.n.join() === y.n.join(); })); }
+  entries.push({ pair, first, second, notation, setup: c.setup, core, insertion: c.core.ins, interchange: c.core.inter, spots: spots(first, second, c.setup, core), setupMoves: c.setupLen, moves, count: c.count, ...(orozco ? { orozco } : {}), ...(alt ? { alt } : {}), aLong });
 }
 check('378 pairs', entries.length === 378);
 const fams = {}; entries.forEach((e) => { const k = `${e.insertion} · ${e.interchange.replace(/['2]/g, '')}`; fams[k] = (fams[k] || 0) + 1; });
