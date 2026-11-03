@@ -7,7 +7,7 @@
 // setup, core, insertion, interchange, spots { buffer, first, second } (where the setup puts C and the two
 // targets), setupMoves, moves, count, and optionally type / fix / sheet.
 import { bldNet } from './bld-net.js?v=4';
-import { invertAlg, expandBrackets } from './algs.js';
+import { invertAlg, expandBrackets, cancelMoves } from './algs.js';
 import { applyAlg } from './cube-sim.js';
 import { trackedSolved } from './cube-laws.js';
 import { createMoveRunner } from './move-runner.js?v=1';
@@ -21,10 +21,10 @@ const SPEFFZ = { A: 'UBL', B: 'UBR', C: 'UFR', D: 'UFL', E: 'LUB', F: 'LUF', G: 
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
 const name = (l) => `${l} (${SPEFFZ[l]})`;
 // Pairs you already know from Orozco: X then B is Orozco's X forwards; B then X is X backwards.
-const OROZCO = Object.fromEntries(orozcoCorners.map((r) => [r.letter, r.notation]));
+const OROZCO = Object.fromEntries(orozcoCorners.map((r) => [r.letter, r]));
 export function orozcoKnown(e) {
-  if (e.second === 'B' && OROZCO[e.first]) return { text: `Orozco ${e.first} forwards`, notation: OROZCO[e.first] };
-  if (e.first === 'B' && OROZCO[e.second]) return { text: `Orozco ${e.second} backwards`, notation: `${OROZCO[e.second]}'` };
+  if (e.second === 'B' && OROZCO[e.first]) return { text: `Orozco ${e.first} forwards`, notation: OROZCO[e.first].notation, moves: cancelMoves(OROZCO[e.first].moves) };
+  if (e.first === 'B' && OROZCO[e.second]) return { text: `Orozco ${e.second} backwards`, notation: `${OROZCO[e.second].notation}'`, moves: cancelMoves(invertAlg(OROZCO[e.second].moves)) };
   return null;
 }
 const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
@@ -108,7 +108,8 @@ function pairBody(e) {
   const oz = orozcoKnown(e);
   if (oz) {
     const k = el('p', 'ts-known');
-    k.append(el('strong', null, 'You know this one: '), `it does exactly what ${oz.text} does, `, el('code', null, oz.notation), '. Use whichever you prefer.');
+    if (e.orozco || e.moves === oz.moves) k.append(el('strong', null, 'You know this one: '), `it is your ${oz.text}. Nothing new to learn.`);
+    else k.append(el('strong', null, 'You know this one: '), `the sheet's commutator is different, but it does exactly what your ${oz.text} does, `, el('code', null, oz.notation), '. Use whichever you prefer.');
     body.appendChild(k);
   }
   const meta = el('p', 'bld-note', `${e.count} moves written out${e.type ? ` · the sheet's type: ${e.type}` : ''}`);
@@ -236,7 +237,8 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
     tabs.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === (core ? 'core' : 'first'))));
     coreView.hidden = !core;
     firstView.hidden = core;
-    if (core) drawGroups(); else drawFirst();
+    // only the shown view is built, so every pair's id (#pair-XY) is on the page once
+    if (core) { firstList.replaceChildren(); drawGroups(); } else { groups.replaceChildren(); drawFirst(); }
   }
   show();
 

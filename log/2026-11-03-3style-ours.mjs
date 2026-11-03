@@ -1,7 +1,8 @@
 // Our 3-style corner table (buffer UFR, Speffz letters): for every pair of targets, the shortest
 // [setup : [A , B]] where the core is an R move (R x R' or R' x R, x a U or D turn) against one U or D turn, and the
 // setup is at most 3 moves of R, U, D, F. Ties: fewer setup moves, then the core group used most. Every entry is
-// checked: it cycles C -> 1st -> 2nd -> C and moves nothing else.
+// checked: it cycles C -> 1st -> 2nd -> C and moves nothing else. The 36 pairs with B are the owner's Orozco
+// commutators (X then B = X forwards, B then X = X backwards), kept as they are.
 //   node log/2026-11-03-3style-ours.mjs           checks; prints ALL OK
 //   node log/2026-11-03-3style-ours.mjs --write   also rewrites data/three-style-ours.js
 import { writeFileSync } from 'node:fs';
@@ -59,19 +60,17 @@ for (const first of targets) for (const second of targets) {
   const pair = first + second;
   let c = pick[pair];
   check(`${pair} found`, !!c); if (!c) continue;
-  // Pairs with B are the owner's Orozco commutators (X then B = X forwards, B then X = X backwards): keep those,
-  // and keep the search's version only as a shorter alternative.
+  // Pairs with B are the owner's Orozco commutators (X then B = X forwards, B then X = X backwards): the owner chose
+  // to keep those, with no alternatives (the search saves at most 1-3 moves on 16 of them).
   const ozLetter = second === 'B' ? first : first === 'B' ? second : null;
-  let orozco = null, alt = null;
+  let orozco = null;
   if (ozLetter && OROZCO[ozLetter]) {
     const r = OROZCO[ozLetter];
     const ins = `R ${r.base} R'`;
     const [a, b] = second === 'B' ? [ins, "U'"] : ["U'", ins];
-    const searched = c;
     const om = cancelMoves(`${r.setup || ''} ${a} ${b} ${invertAlg(a)} ${invertAlg(b)} ${invertAlg(r.setup || '')}`);
     c = { setup: r.setup || '', setupLen: r.setup ? r.setup.split(' ').length : 0, core: { a, b, ins, inter: "U'" }, count: om.split(' ').length, moves: om };
     orozco = second === 'B' ? 'forwards' : 'backwards';
-    if (searched.count < c.count) alt = { notation: searched.setup ? `[${searched.setup} : [${searched.core.a} , ${searched.core.b}]]` : `[${searched.core.a} , ${searched.core.b}]`, moves: searched.moves, count: searched.count };
   }
   const core = `[${c.core.a} , ${c.core.b}]`;
   const notation = c.setup ? `[${c.setup} : ${core}]` : core;
@@ -83,8 +82,7 @@ for (const first of targets) for (const second of targets) {
   check(`${pair} cycles C -> ${first} -> ${second}`, where.get(K('C')) === K(first) && where.get(K(first)) === K(second) && where.get(K(second)) === K('C'));
   check(`${pair} only three corners`, st.filter((s) => s.home !== key(s)).length === 9);
   const aLong = c.core.a.split(' ').length >= c.core.b.split(' ').length;
-  if (alt) { const am = cancelMoves(expandBrackets(alt.notation)); check(`${pair} alternative = same effect`, applyAlg(solvedCube(), am).every((x, i) => { const y = applyAlg(solvedCube(), moves)[i]; return x.colour === y.colour && x.p.join() === y.p.join() && x.n.join() === y.n.join(); })); }
-  entries.push({ pair, first, second, notation, setup: c.setup, core, insertion: c.core.ins, interchange: c.core.inter, spots: spots(first, second, c.setup, core), setupMoves: c.setupLen, moves, count: c.count, ...(orozco ? { orozco } : {}), ...(alt ? { alt } : {}), aLong });
+  entries.push({ pair, first, second, notation, setup: c.setup, core, insertion: c.core.ins, interchange: c.core.inter, spots: spots(first, second, c.setup, core), setupMoves: c.setupLen, moves, count: c.count, ...(orozco ? { orozco } : {}), aLong });
 }
 check('378 pairs', entries.length === 378);
 const fams = {}; entries.forEach((e) => { const k = `${e.insertion} · ${e.interchange.replace(/['2]/g, '')}`; fams[k] = (fams[k] || 0) + 1; });
