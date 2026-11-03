@@ -1,0 +1,191 @@
+pair,sheet,alg,moves,movedStickers,pure3cycle,ours,oursMoves,dylan,dylanMoves,vsOurs,vsDylan,reverseVsOurs,reverseVsDylan
+AF,"[F: [U2, R' D' R]]",F U2 R' D' R U2 R' D R F',10,9,yes,F U2 R' D' R U2 R' D R F',10,F U2 F' R F R' U2 R F' R',10,identical effect,identical effect,identical effect,identical effect
+AG,"[R' D R, U2]",R' D R U2 R' D' R U2,8,9,yes,R' D R U2 R' D' R U2,8,R' D R U2 R' D' R U2,8,identical effect,identical effect,identical effect,identical effect
+AH,"[U': [R D' R', U2]]",U' R D' R' U2 R D R' U2 U,10,9,yes,U' R D' R' U2 R D R' U',9,U' R D' R' U2 R D R' U',9,identical effect,identical effect,identical effect,identical effect
+AI,"[Lw': [U2, R' D2 R]]",Lw' U2 R' D2 R U2 R' D2 R Lw,10,9,yes,F D' R U R D2 R' U' R D2 R2 D F',13,l' D' U R D R' U2 R D' R' U D l,13,identical effect,identical effect,identical effect,identical effect
+AK,"[DU': [R D R', U2]]",D U' R D R' U2 R D' R' U2 U D',12,9,yes,D' R' D R U2 R' D' R U2 D,10,D U' R D R' U2 R D' R' U' D',11,identical effect,identical effect,identical effect,identical effect
+AL,"[U'D': [R D' R', U2]]",U' D' R D' R' U2 R D R' U2 D U,12,9,yes,U' R D2 R' U2 R D2 R' U',9,D R' D' R U2 R' D R U2 D',10,identical effect,identical effect,identical effect,identical effect
+AN,"[R D R': [R' D2 R, U2]]",R D R' R' D2 R U2 R' D2 R U2 R D' R',14,9,yes,U2 F R' D' R U2 R' D R U2 F' U2,12,R' U D R2 U' R' D' R U R' D R' D' U' R,15,identical effect,identical effect,identical effect,identical effect
+AO,"[U': [R D R', U2]]",U' R D R' U2 R D' R' U2 U,10,9,yes,U' R D R' U2 R D' R' U',9,U' R D R' U2 R D' R' U',9,identical effect,identical effect,identical effect,identical effect
+AP,"[R' D' R, U2]",R' D' R U2 R' D R U2,8,9,yes,R' D' R U2 R' D R U2,8,R' D' R U2 R' D R U2,8,identical effect,identical effect,identical effect,identical effect
+AQ,"[R' D': [U2, R' D R]]",R' D' U2 R' D R U2 R' D' R D R,12,9,yes,R' D' U2 R' D R U2 R' D' R D R,12,R' U D R D R' U2 R D' R' U2 D' U' R,14,identical effect,identical effect,identical effect,identical effect
+AS,"[R' D2 R, U2]",R' D2 R U2 R' D2 R U2,8,9,yes,R' D2 R U2 R' D2 R U2,8,D' U' R D R' U2 R D' R' U' D,11,identical effect,identical effect,identical effect,identical effect
+AT,"[U' D: [R D' R', U2]]",U' D R D' R' U2 R D R' U2 D' U,12,9,yes,D' R' D' R U2 R' D R U2 D,10,D U' R D' R' U2 R D R' U' D',11,identical effect,identical effect,identical effect,identical effect
+AU,"[R F' R' U': [R D R', U2]]",R F' R' U' R D R' U2 R D' R' U2 U R F R',16,9,yes,R U2 R U2 R D2 R' U2 R D2 R2 U2 R',13,R F' R' U' R D R' U2 R D' R' U' R F R',15,identical effect,identical effect,identical effect,identical effect
+AV,"[D R D' R': [R' D R, U2]]",D R D' R' R' D R U2 R' D' R U2 R D R' D',16,9,yes,R' F R' U R D2 R' U' R D2 F' R,12,R' D R U' R D' R' U2 R D R' U R' D' R U2,16,identical effect,identical effect,identical effect,identical effect
+AW,"[R D' R': [R' D R, U2]]",R D' R' R' D R U2 R' D' R U2 R D R',14,9,yes,F D' R2 U R D2 R' U' R D2 R D F',13,R D' R2 D R U2 R' D' R U2 R D R',13,identical effect,identical effect,identical effect,identical effect
+AX,"[D' R D' R': [R' D R, U2]]",D' R D' R' R' D R U2 R' D' R U2 R D R' D,16,9,yes,F D2 R2 U R D' R' U' R D R D2 F',13,R' U' D' R2 U' R' D R U R' D' R' D U R,15,identical effect,identical effect,identical effect,identical effect
+BA,"[Lw': [R' D2 R, U]]",Lw' R' D2 R U R' D2 R U' Lw,10,9,yes,F U R' D' R U R' D R U2 F',11,R' B' R U' R D R' U R D' R2 B R,13,identical effect,identical effect,identical effect,identical effect
+BD,"[Lw D: [R' D' R, U]]",Lw D R' D' R U R' D R U' D' Lw',12,9,yes,R F U' R D R' U R D' R' F' R',12,R F' R2 D R U R' D' R U' R F R',13,identical effect,identical effect,identical effect,identical effect
+BE,"[R: [U, R D R']]",R U R D R' U' R D' R' R',10,9,yes,R U R D R' U' R D' R2,9,R U R D R' U' R D' R2,9,identical effect,identical effect,identical effect,identical effect
+BF,"[R': [R' D' R, U']]",R' R' D' R U' R' D R U R,10,9,yes,R2 D' R U' R' D R U R,9,R2 D' R U' R' D R U R,9,identical effect,identical effect,identical effect,identical effect
+BG,"[R' D R, U]",R' D R U R' D' R U',8,9,yes,R' D R U R' D' R U',8,R' D R U R' D' R U',8,identical effect,identical effect,identical effect,identical effect
+BH,"[U', R D' R']",U' R D' R' U R D R',8,9,yes,U' R D' R' U R D R',8,U' R D' R' U R D R',8,identical effect,identical effect,identical effect,identical effect
+BI,"[R: [U2, R D R']]",R U2 R D R' U2 R D' R' R',10,9,yes,R U2 R D R' U2 R D' R2,9,R2 U' D' R U R' D R U' R' U R2,12,identical effect,identical effect,identical effect,identical effect
+BK,"[D': [R' D R, U]]",D' R' D R U R' D' R U' D,10,9,yes,D' R' D R U R' D' R U' D,10,D' R' D R U R' D' R U' D,10,identical effect,identical effect,identical effect,identical effect
+BL,"[D: [R' D' R, U]]",D R' D' R U R' D R U' D',10,9,yes,U' R D2 R' U R D2 R',8,D R' D' R U R' D R U' D',10,identical effect,identical effect,identical effect,identical effect
+BO,"[U', R D R']",U' R D R' U R D' R',8,9,yes,U' R D R' U R D' R',8,U' R D R' U R D' R',8,identical effect,identical effect,identical effect,identical effect
+BP,"[R' D' R, U]",R' D' R U R' D R U',8,9,yes,R' D' R U R' D R U',8,R' D' R U R' D R U',8,identical effect,identical effect,identical effect,identical effect
+BR,"[R': [R' D' R, U2]]",R' R' D' R U2 R' D R U2 R,10,9,yes,R2 D' R U2 R' D R U2 R,9,R2 U R' U' R D R' U R D' U' R2,12,identical effect,identical effect,identical effect,identical effect
+BS,"[R' D2 R, U]",R' D2 R U R' D2 R U',8,9,yes,R' D2 R U R' D2 R U',8,D' U' R D R' U R D' R' D,10,identical effect,identical effect,identical effect,identical effect
+BT,"[D: [U', R D' R']]",D U' R D' R' U R D R' D',10,9,yes,D2 U' R D2 R' U R D2 R' D2,10,D U' R D' R' U R D R' D',10,identical effect,identical effect,identical effect,identical effect
+BU,"[x': [D2, R U R']]",x' D2 R U R' D2 R U' R' x,10,9,yes,R F' R' U' R D R' U R D' F R',12,R F' R' U' R D R' U R D' F R',12,identical effect,identical effect,identical effect,identical effect
+BV,"[U' R' D R: [R D' R', U]]",U' R' D R R D' R' U R D R' U' R' D' R U,16,9,yes,R F' U2 R D R' U2 R D' R' F R',12,R' D R U' R D' R' U R D R' U R' D' R U',16,identical effect,identical effect,identical effect,identical effect
+BW,"[U R D' R': [U', R' D R]]",U R D' R' U' R' D R U R' D' R R D R' U',16,9,yes,R F2 U2 R D R' U2 R D' R' F2 R',12,U' R D' R' U R' D R U R' D' R U' R D R',16,identical effect,identical effect,identical effect,identical effect
+BX,"[x: [R' U' R, D2]]",x R' U' R D2 R' U R D2 x',10,9,yes,F' R' U' R' D2 R U R' D2 R2 F,11,R' B D' R U R' D R U' R' B' R,12,identical effect,identical effect,identical effect,identical effect
+DA,"[R' D'U': [R' D R, U']]",R' D' U' R' D R U' R' D' R U U D R,14,9,yes,R F' R' U2 R' D R U2 R' D' R2 F R',13,R' D R U' R' D' R U' R' D R U2 R' D' R,15,identical effect,identical effect,identical effect,identical effect
+DE,"[U' R: [R D R', U2]]",U' R R D R' U2 R D' R' U2 R' U,12,9,yes,U' R2 D R' U2 R D' R' U2 R' U,11,U' R2 D R' U2 R D' R' U2 R' U,11,identical effect,identical effect,identical effect,identical effect
+DG,"[R' D R, U']",R' D R U' R' D' R U,8,9,yes,R' D R U' R' D' R U,8,R' D R U' R' D' R U,8,identical effect,identical effect,identical effect,identical effect
+DH,"[U': [R D' R', U']]",U' R D' R' U' R D R' U U,10,9,yes,U' R D' R' U' R D R' U2,9,U' R D' R' U' R D R' U2,9,identical effect,identical effect,identical effect,identical effect
+DK,"[D': [R' D R, U']]",D' R' D R U' R' D' R U D,10,9,yes,D' R' D R U' R' D' R U D,10,D' R' D R U' R' D' R U D,10,identical effect,identical effect,identical effect,identical effect
+DL,"[D: [R' D' R, U']]",D R' D' R U' R' D R U D',10,9,yes,U' R D2 R' U' R D2 R' U2,9,D R' D' R U' R' D R U D',10,identical effect,identical effect,identical effect,identical effect
+DN,"[U' R': [U2, R' D' R]]",U' R' U2 R' D' R U2 R' D R R U,12,9,yes,F' R D2 R' U2 R D2 R' U2 F,10,U' R' U2 R' D' R U2 R' D R2 U,11,identical effect,identical effect,identical effect,identical effect
+DO,"[U': [R D R', U']]",U' R D R' U' R D' R' U U,10,9,yes,U' R D R' U' R D' R' U2,9,U' R D R' U' R D' R' U2,9,identical effect,identical effect,identical effect,identical effect
+DP,"[R' D' R, U']",R' D' R U' R' D R U,8,9,yes,R' D' R U' R' D R U,8,R' D' R U' R' D R U,8,identical effect,identical effect,identical effect,identical effect
+DQ,"[U' R: [R D R', U]]",U' R R D R' U R D' R' U' R' U,12,9,yes,U' R2 D R' U R D' R' U' R' U,11,R' D' U' R' D R U R' D' R D R,12,identical effect,identical effect,identical effect,identical effect
+DR,"[U' R': [U', R' D' R]]",U' R' U' R' D' R U R' D R R U,12,9,yes,F2 D R U2 R' D' R U2 R' F2,10,U' R' U' R' D' R U R' D R2 U,11,identical effect,identical effect,identical effect,identical effect
+DS,"[R' D2 R, U']",R' D2 R U' R' D2 R U,8,9,yes,R' D2 R U' R' D2 R U,8,D R' D R U' R' D' R U D',10,identical effect,identical effect,identical effect,identical effect
+DT,"[D': [R' D' R, U']]",D' R' D' R U' R' D R U D,10,9,yes,D' R' D' R U' R' D R U D,10,D' R' D' R U' R' D R U D,10,identical effect,identical effect,identical effect,identical effect
+DU,"[U' x': [R U R', D2]]",U' x' R U R' D2 R U' R' D2 x U,12,9,yes,F' R' D2 R' U2 R D2 R' U2 R2 F,11,R' U' R F2 R' U R U' F2 U,10,identical effect,identical effect,identical effect,identical effect
+DV,"[D R D' R': [R' D R, U']]",D R D' R' R' D R U' R' D' R U R D R' D',16,9,yes,F' R2 D2 R' U2 R D2 R' U2 R' F,11,R' D R U' R D' R' U' R D R' U R' D' R U,16,identical effect,identical effect,identical effect,identical effect
+DW,"[R D' R': [R' D R, U']]",R D' R' R' D R U' R' D' R U R D R',14,9,yes,R F U R' D R U' R' D' R F' R',12,R D' R2 D R U' R' D' R U R D R',13,identical effect,identical effect,identical effect,identical effect
+DX,"[R' D' R : [R U' R', D]]",R' D' R R U' R' D R U R' D' R' D R,14,9,yes,R F R D' R' U' R D R' U F' R',12,R' D' R2 U' R' D R U R' D' R' D R,13,identical effect,identical effect,identical effect,identical effect
+EF,"[L, U' R' U]",L U' R' U L' U' R U,8,9,yes,R F' R D2 R' U R D2 R' U' F R',12,U' R' F D R U R' D' R U' R' F' R U,14,identical effect,identical effect,identical effect,identical effect
+EG,"[U R' U': [R' D R, U]]",U R' U' R' D R U R' D' R U' U R U',14,9,yes,F2 U R D2 R' U2 R D2 R' U F2,11,U R' U' R' D R U R' D' R2 U',11,identical effect,identical effect,identical effect,identical effect
+EH,"[R D': [R D R', U]]",R D' R D R' U R D' R' U' D R',12,9,yes,F D2 R U2 R' D2 R U2 R' F',10,R D' R D R' U R D' R' U' D R',12,identical effect,identical effect,identical effect,identical effect
+EI,"[Lw' U: [R D' R', U2]]",Lw' U R D' R' U2 R D R' U2 U' Lw,12,9,yes,F2 R2 U R D2 R' U' R D2 R F2,11,l' U R D' R' U2 R D R' U l,11,identical effect,identical effect,identical effect,identical effect
+EK,"[R U R' : [R' D' R, U']]",R U R' R' D' R U' R' D R U R U' R',14,9,yes,F D R U2 R' D' R U2 R' F',10,U D' R' U' R' D R U R' D' R2 D U',13,identical effect,identical effect,identical effect,identical effect
+EL,"[R U: [R' D R, U]]",R U R' D R U R' D' R U' U' R',12,9,yes,R U R' D R U R' D' R U2 R',11,R U R' D R U R' D' R U2 R',11,identical effect,identical effect,identical effect,identical effect
+EN,"[R: [R2' D R2 D' R2', U]]",R R2' D R2 D' R2' U R2 D R2 D' R2 U' R',14,9,yes,R2 F D2 R' U R D2 R' U' R F' R2,12,R' D R2 D' R2 U R2 D R2 D' R2 U' R',13,identical effect,identical effect,identical effect,identical effect
+EO,"[R D: [R D R', U]]",R D R D R' U R D' R' U' D' R',12,9,yes,U' R2 U' R' D' R U R' D R' U,11,U' R2 U' R' D' R U R' D R' U,11,identical effect,identical effect,identical effect,identical effect
+EP,"[D' R U : [R' D R, U]]",D' R U R' D R U R' D' R U' U' R' D,14,9,yes,U F U' R D2 R' U R D2 R' F' U',12,U R' U2 R D R' U R D' R' U R U',13,identical effect,identical effect,identical effect,identical effect
+EQ,"[U R': [U', R' D' R]]",U R' U' R' D' R U R' D R R U',12,9,yes,F2 U R D2 R' U' R D2 R' F2,10,R' F' L F R F' L' F,8,identical effect,identical effect,identical effect,identical effect
+ES,"[U R': [U', R' D2 R]]",U R' U' R' D2 R U R' D2 R R U',12,9,yes,U R' U' R' D2 R U R' D2 R2 U',11,U D R' U' R' D R U R' D' R2 D' U',13,identical effect,identical effect,identical effect,identical effect
+ET,"[R U: [R' D' R, U]]",R U R' D' R U R' D R U' U' R',12,9,yes,F D' R U2 R' D R U2 R' F',10,R U R' D' R U R' D R U2 R',11,identical effect,identical effect,identical effect,identical effect
+EU,"[R: [R D2 R', U]]",R R D2 R' U R D2 R' U' R',10,9,yes,R2 D2 R' U R D2 R' U' R',9,D' R2 D' R' U R D R' U' R' D,11,identical effect,identical effect,identical effect,identical effect
+EV,"[D2 R: [R D' R', U]]",D2 R R D' R' U R D R' U' R' D2,12,9,yes,D' R2 D2 R' U R D2 R' U' R' D,11,U R' D' U' R' D' R U R' D R D R U',14,identical effect,identical effect,identical effect,identical effect
+EW,"[D R: [R D' R', U]]",D R R D' R' U R D R' U' R' D',12,9,yes,F2 R' U R D2 R' U' R D2 F2,10,D R2 D' R' U R D R' U' R' D',11,identical effect,identical effect,identical effect,identical effect
+EX,"[R: [R D' R', U]]",R R D' R' U R D R' U' R',10,9,yes,R2 D' R' U R D R' U' R',9,R2 D' R' U R D R' U' R',9,identical effect,identical effect,identical effect,identical effect
+FG,"[R' U' : [D, R U R']]",R' U' D R U R' D' R U' R' U R,12,9,yes,F' D R U' R' D' R U R' F,10,R' U' D R U R' D' R U' R' U R,12,identical effect,identical effect,identical effect,identical effect
+FH,"[z: [R' D' R, U2]]",z R' D' R U2 R' D R U2 z',10,9,yes,F D2 R U R' D2 R U' R' F',10,U' R U' D' R' U R D R' U' R U R' U,14,identical effect,identical effect,identical effect,identical effect
+FK,"[R, U L U']",R U L U' R' U L' U',8,9,yes,F' R' D R U' R' D' R U F,10,R F R' U R U' F' U R' U',10,identical effect,identical effect,identical effect,identical effect
+FL,"[D R' U': [D', R U R']]",D R' U' D' R U R' D R U' R' U R D',14,9,yes,D R2 U2 R D R' U2 R D' R D',11,D R' U' D' R U R' D R U' R' U R D',14,identical effect,identical effect,identical effect,identical effect
+FN,"[F' U: [R' D R, U2]]",F' U R' D R U2 R' D' R U2 U' F,12,9,yes,F' U R' D R U2 R' D' R U F,11,R U' D' R' D R' U R D' R' U' R2 D U R',15,identical effect,identical effect,identical effect,identical effect
+FO,"[R' U': [R' D' R, U2]]",R' U' R' D' R U2 R' D R U2 U R,12,9,yes,R' U' R' D' R U2 R' D R U' R,11,D' R F R' U R U' F' U R' U' D,12,identical effect,identical effect,identical effect,identical effect
+FP,"[R' U': [D', R U R']]",R' U' D' R U R' D R U' R' U R,12,9,yes,R2 U2 R D R' U2 R D' R,9,R' U' D' R U R' D R U' R' U R,12,identical effect,identical effect,identical effect,identical effect
+FQ,"[R', U L U']",R' U L U' R U L' U',8,9,yes,R' F' U' R' D R U R' D' R F R,12,R' F R U R' D R U' R' D' F' R,12,identical effect,identical effect,identical effect,identical effect
+FR,"[x': [R U' R', D]]",x' R U' R' D R U R' D' x,10,9,yes,F' U2 R' D R U R' D' R U F,11,l U' l' F l U l' F',8,identical effect,identical effect,identical effect,identical effect
+FS,"[x': [R U2 R', D]]",x' R U2 R' D R U2 R' D' x,10,9,yes,R' D' R' U2 R D2 R' U2 R D' R,11,l U2 l' F l U2 l' F',8,identical effect,identical effect,identical effect,identical effect
+FT,"[F: [D', R U R']]",F D' R U R' D R U' R' F',10,9,yes,F D' R U R' D R U' R' F',10,D' R' U' D' R U R' D R U' R' U R D,14,identical effect,identical effect,identical effect,identical effect
+FU,"[U' R' U: [R U' R', D]]",U' R' U R U' R' D R U R' D' U' R U,14,9,yes,F2 R U' R D2 R' U R D2 R2 F2,11,U' R' U R U' R' D R U R' D' U' R U,14,identical effect,identical effect,identical effect,identical effect
+FV,"[R U' R': [R' D' R, U2]]",R U' R' R' D' R U2 R' D R U2 R U R',14,9,yes,R F' U2 R D2 R' U2 R D2 R' F R',12,U' D' R' U R U' R' D R U R' D' U' R D U,16,identical effect,identical effect,identical effect,identical effect
+FW,"[z: [D2, R U R']]",z D2 R U R' D2 R U' R' z',10,9,yes,F' D R U' R' D2 R U R' D F,11,R U' R' D R' U R D' R' U' R2 U R',13,identical effect,identical effect,identical effect,identical effect
+FX,"[R2 D2: [R U' R', D]]",R2 D2 R U' R' D R U R' D' D2 R2,12,9,yes,F R U' R D' R' U R D R2 F',11,U' D R' U R U' R' D R U R' D' U' R D' U,16,identical effect,identical effect,identical effect,identical effect
+GB,"[U, R' D R]",U R' D R U' R' D' R,8,9,yes,U R' D R U' R' D' R,8,U R' D R U' R' D' R,8,identical effect,identical effect,identical effect,identical effect
+GH,"[z': [R U' R', D']]",z' R U' R' D' R U R' D z,10,9,yes,F D' R' U2 R D2 R' U2 R D' F',11,D R' F' R D' R' D F D' R,10,identical effect,identical effect,identical effect,identical effect
+GI,"[D R': [F2, R D' R' D]]",D R' F2 R D' R' D F2 D' R D R' R D',14,9,yes,U2 R2 D R U2 R' D' R U2 R U2,11,D R' F2 R D' R' D F2 D' R,10,identical effect,identical effect,identical effect,identical effect
+GK,"[U: [D, R U' R']]",U D R U' R' D' R U R' U',10,9,yes,U D R U' R' D' R U R' U',10,U D R U' R' D' R U R' U',10,identical effect,identical effect,identical effect,identical effect
+GN,"[U R U: [R' D R, U2]]",U R U R' D R U2 R' D' R U2 U' R' U',14,9,yes,D' F' R D' R' U2 R D R' U2 F D,12,U R U R' D R U2 R' D' R U R' U',13,identical effect,identical effect,identical effect,identical effect
+GO,"[DU: [R U' R', D2]]",D U R U' R' D2 R U R' D2 U' D',12,9,yes,U' D2 R' U' R D2 R' U R U,10,U D R U' R' D2 R U R' D U',11,identical effect,identical effect,identical effect,identical effect
+GP,"[U R' D: [R U' R', D2]]",U R' D R U' R' D2 R U R' D2 D' R U',14,9,yes,R2 F' R' U' R D R' U R D' F R2,12,U R' D R U' R' D2 R U R' D R U',13,identical effect,identical effect,identical effect,identical effect
+GQ,"[R' U: [R U' R', D]]",R' U R U' R' D R U R' D' U' R,12,9,yes,F2 U' R D2 R' U R D2 R' F2,10,R' U R U' R' D R U R' D' U' R,12,identical effect,identical effect,identical effect,identical effect
+GR,"[Lw U2: [R D' R', U]]",Lw U2 R D' R' U R D R' U' U2 Lw',12,9,yes,R' D R' U R D R' U' R D2 R,11,R B' R2 D R U R' D' R U' R B R',13,identical effect,identical effect,identical effect,identical effect
+GS,"[UD: [R U' R', D]]",U D R U' R' D R U R' D' D' U',12,9,yes,D' F' D' R' U2 R D R' U2 R F D,12,U D R U' R' D R U R' D2 U',11,identical effect,identical effect,identical effect,identical effect
+GT,"[R' U' R: [U2, R' D R]]",R' U' R U2 R' D R U2 R' D' R R' U R,14,9,yes,F R' U2 R D R' U2 R D' F',10,R' D R D' R U R' D R U' R2 D' R,13,identical effect,identical effect,identical effect,identical effect
+GV,"[UD R D' : [U', R' D R]]",U D R D' U' R' D R U R' D' R D R' D' U',16,9,yes,D F2 R' U2 R D2 R' U2 R D2 F2 D',12,U D R D' U' R' D R U R' D' R D R' D' U',16,identical effect,identical effect,identical effect,identical effect
+GW,"[U R : [D, R U' R']]",U R D R U' R' D' R U R' R' U',12,9,yes,F' R U' R' D' R U R' D F,10,U R D R U' R' D' R U R2 U',11,identical effect,identical effect,identical effect,identical effect
+GX,"[F': [R U' R', D2]]",F' R U' R' D2 R U R' D2 F,10,9,yes,F' R U' R' D2 R U R' D2 F,10,D U R U' F2 U R' U' R F2 R' D',12,identical effect,identical effect,identical effect,identical effect
+HI,"[Lw': [U2, R' D R]]",Lw' U2 R' D R U2 R' D' R Lw,10,9,yes,R U' R' D2 R U2 R' D2 R U' R',11,R U' D R' D R U2 R' D' R U2 D' U R',14,identical effect,identical effect,identical effect,identical effect
+HK,"[U R U': [R D' R', U']]",U R U' R D' R' U' R D R' U U R' U',14,9,yes,D F' D R' U2 R D' R' U2 R F D',12,l' U D R U' R' D' R U R' U' l,12,identical effect,identical effect,identical effect,identical effect
+HL,"[D2: [R U R', D']]",D2 R U R' D' R U' R' D D2,10,9,yes,D2 R U R' D' R U' R' D',9,D2 R U R' D' R U' R' D',9,identical effect,identical effect,identical effect,identical effect
+HN,"[U R: [R D' R', U2]]",U R R D' R' U2 R D R' U2 R' U',12,9,yes,U R2 D' R' U2 R D R' U2 R' U',11,U R2 D' R' U2 R D R' U2 R' U',11,identical effect,identical effect,identical effect,identical effect
+HO,"[R D': [R' U' R, D2]]",R D' R' U' R D2 R' U R D2 D R',12,9,yes,R D' R' U' R D2 R' U R D' R',11,R D' R' U' R D2 R' U R D' R',11,identical effect,identical effect,identical effect,identical effect
+HP,"[D2, R U R']",D2 R U R' D2 R U' R',8,9,yes,D2 R U R' D2 R U' R',8,D2 R U R' D2 R U' R',8,identical effect,identical effect,identical effect,identical effect
+HQ,"[U' L U, R]",U' L U R U' L' U R',8,9,yes,F D R' U' R D2 R' U R D F',11,U' L U R U' L' U R',8,identical effect,identical effect,identical effect,identical effect
+HR,"[U2 R: [R D' R', U]]",U2 R R D' R' U R D R' U' R' U2,12,9,yes,U2 R2 D' R' U R D R' U' R' U2,11,U D R' F' D R U' R' D' R U R' F R D' U',16,identical effect,identical effect,identical effect,identical effect
+HT,"[D': [D', R U R']]",D' D' R U R' D R U' R' D,10,9,yes,D2 R U R' D R U' R' D,9,D2 R U R' D R U' R' D,9,identical effect,identical effect,identical effect,identical effect
+HU,"[R D R' D: [R U R', D2]]",R D R' D R U R' D2 R U' R' D2 D' R D' R',16,9,yes,U' F2 U' R D' R' U R D R' F2 U,12,D R U' R2 D R U2 R' D' R U2 R U R' D',15,identical effect,identical effect,identical effect,identical effect
+HV,"[D2 R: [R D' R', U']]",D2 R R D' R' U' R D R' U R' D2,12,9,yes,D2 R2 D' R' U' R D R' U R' D2,11,R U' D R2 D R U2 R' D' R U2 R D' U R',15,identical effect,identical effect,identical effect,identical effect
+HW,"[R D' R': [R' D R, U]]",R D' R' R' D R U R' D' R U' R D R',14,9,yes,D2 R2 D2 R' U' R D2 R' U R' D2,11,R D' R2 D R U R' D' R U' R D R',13,identical effect,identical effect,identical effect,identical effect
+IK,"[R': [R D' R' D, F2]]",R' R D' R' D F2 D' R D R' F2 R,12,9,yes,F2 R' D2 R' U2 R D2 R' U2 R2 F2,11,D' R' D F2 D' R D R' F2 R,10,identical effect,identical effect,identical effect,identical effect
+IL,"[R U: [R' D R, U2]]",R U R' D R U2 R' D' R U2 U' R',12,9,yes,R U R' D R U2 R' D' R U R',11,R U R' D R U2 R' D' R U R',11,identical effect,identical effect,identical effect,identical effect
+IN,"[R' : [U', R2 D' R2 D R2]]",R' U' R2 D' R2 D R2 U R2 D' R2 D R2 R,14,9,yes,R' F' R U2 R D2 R' U2 R D2 R2 F R,13,R' F' R D U' R' D' R U2 R' D R U' D' R' F R,17,identical effect,identical effect,identical effect,identical effect
+IO,"[Lw' U': [R D R', U2]]",Lw' U' R D R' U2 R D' R' U2 U Lw,12,9,yes,F2 R' D2 R' U' R D2 R' U R2 F2,11,R D' U R' D R U2 R' D' R U D R',13,identical effect,identical effect,identical effect,identical effect
+IP,"[Lw': [R' D' R, U2]]",Lw' R' D' R U2 R' D R U2 Lw,10,9,yes,R2 F U' R D R' U R D' R' F' R2,12,D R U R' D' R U2 R' D R U R' D',13,identical effect,identical effect,identical effect,identical effect
+IQ,"[R D'U: [R' D' R, U2]]",R D' U R' D' R U2 R' D R U2 U' D R',14,9,yes,R D2 R D2 R' U2 R D2 R' U2 D2 R',12,R U D' R' D' R U2 R' D R U2 D U' R',14,identical effect,identical effect,identical effect,identical effect
+IR,"[R U R' D': [U2, R' D R]]",R U R' D' U2 R' D R U2 R' D' R D R U' R',16,9,yes,R2 F U' R D R' U2 R D' R' U' F' R2,13,R U R' U D R D R' U2 R D' R' U2 D' U' R U' R',18,identical effect,identical effect,identical effect,identical effect
+IS,"[D R' D : [F2, D' R D R']]",D R' D F2 D' R D R' F2 R D' R' D D' R D',16,9,yes,U2 R' U2 R' D2 R U2 R' D2 R2 U2,11,D R' D F2 D' R D R' F2 R D2,11,identical effect,identical effect,identical effect,identical effect
+IT,"[R U: [R' D' R, U2]]",R U R' D' R U2 R' D R U2 U' R',12,9,yes,R U R' D' R U2 R' D R U R',11,R U R' D' R U2 R' D R U R',11,identical effect,identical effect,identical effect,identical effect
+IU,"[R UD: [R' D' R, U2]]",R U D R' D' R U2 R' D R U2 D' U' R',14,9,yes,R2 D2 R' U2 R D2 R' U2 R',9,D' R2 D' R' U2 R D R' U2 R' D,11,identical effect,identical effect,identical effect,identical effect
+IV,"[D' R UD: [R' D' R, U2]]",D' R U D R' D' R U2 R' D R U2 D' U' R' D,16,9,yes,D' R2 D2 R' U2 R D2 R' U2 R' D,11,R U' R' D' R' D R U2 R' D' R U2 D R U R',16,identical effect,identical effect,identical effect,identical effect
+IW,"[D R: [R D' R', U2]]",D R R D' R' U2 R D R' U2 R' D',12,9,yes,D2 R2 D2 R' U2 R D2 R' U2 R' D2,11,D R2 D' R' U2 R D R' U2 R' D',11,identical effect,identical effect,identical effect,identical effect
+IX,"[R: [R D' R', U2]]",R R D' R' U2 R D R' U2 R',10,9,yes,R2 D' R' U2 R D R' U2 R',9,R2 D' R' U2 R D R' U2 R',9,identical effect,identical effect,identical effect,identical effect
+KL,"[U L' U', R]",U L' U' R U L U' R',8,9,yes,F R U' R' D R U R' D' F',10,R' F' R D' R' D F D' R D,10,identical effect,identical effect,identical effect,identical effect
+KN,"[U' R' U: [R D R', U2]]",U' R' U R D R' U2 R D' R' U2 U' R U,14,9,yes,D2 F' R D' R' U2 R D R' U2 F D2,12,U' R' U R D R' U2 R D' R' U R U,13,identical effect,identical effect,identical effect,identical effect
+KO,"[U: [R U' R', D']]",U R U' R' D' R U R' D U',10,9,yes,U R U' R' D' R U R' D U',10,U R U' R' D' R U R' D U',10,identical effect,identical effect,identical effect,identical effect
+KQ,"[D' R' U: [R U' R', D]]",D' R' U R U' R' D R U R' D' U' R D,14,9,yes,F2 U2 R D2 R' U2 R D2 R' F2,10,D' R' U R U' R' D R U R' D' U' R D,14,identical effect,identical effect,identical effect,identical effect
+KR,"[R: [U' L' U, R]]",R U' L' U R U' L U R' R',10,9,yes,U F' U' R D2 R' U R D2 R' F U',12,U' R' U2 R D R' U R D' R' U R U,13,identical effect,identical effect,identical effect,identical effect
+KS,"[U: [R U' R', D2]]",U R U' R' D2 R U R' D2 U',10,9,yes,U R U' R' D2 R U R' D2 U',10,U R U' R' D2 R U R' D2 U',10,identical effect,identical effect,identical effect,identical effect
+KT,"[D R D: [R' U' R, D2]]",D R D R' U' R D2 R' U R D2 D' R' D',14,9,yes,U2 F D2 R' U R D2 R' U' R F' U2,12,R U R' U' D' R U R' D R U' R' U R U' R',16,identical effect,identical effect,identical effect,identical effect
+KU,"[R : [R' U R U', F2]]",R R' U R U' F2 U R' U' R F2 R',12,9,yes,F2 R U2 R D2 R' U2 R D2 R2 F2,11,U R U' F2 U R' U' R F2 R',10,identical effect,identical effect,identical effect,identical effect
+KW,"[U R D': [U', R' D R]]",U R D' U' R' D R U R' D' R D R' U',14,9,yes,F2 R' U2 R D2 R' U2 R D2 F2,10,U R D' U' R' D R U R' D' R D R' U',14,identical effect,identical effect,identical effect,identical effect
+KX,"[z: [R U2 R', D]]",z R U2 R' D R U2 R' D' z',10,9,yes,F' U' R' D2 R U R' D2 R F,10,R' D' R2 U R' D R U' R' D' R' D R,13,identical effect,identical effect,identical effect,identical effect
+LN,"[F' U: [R' D' R, U2]]",F' U R' D' R U2 R' D R U2 U' F,12,9,yes,F2 R' D R U R' D' R U' F2,10,U R U D R' D' R U2 R' D R U2 D' U' R' U',16,identical effect,identical effect,identical effect,identical effect
+LO,"[R D: [D, R' U' R]]",R D D R' U' R D' R' U R D' R',12,9,yes,F' D R' U2 R D' R' U2 R F,10,R D2 R' U' R D' R' U R D' R',11,identical effect,identical effect,identical effect,identical effect
+LP,"[D, R U R']",D R U R' D' R U' R',8,9,yes,D R U R' D' R U' R',8,D R U R' D' R U' R',8,identical effect,identical effect,identical effect,identical effect
+LQ,"[R', U L' U']",R' U L' U' R U L U',8,9,yes,R' F R U' R' D R U R' D' F' R,12,R' F R U' R' D R U R' D' F' R,12,identical effect,identical effect,identical effect,identical effect
+LR,"[D x': [R U' R', D']]",D x' R U' R' D' R U R' D x D',12,9,yes,F2 R' D R U2 R' D' R U2 F2,10,D R' D R' U R D' R' U' R2 D',11,identical effect,identical effect,identical effect,identical effect
+LS,"[D' R D': [R' U' R, D2]]",D' R D' R' U' R D2 R' U R D2 D R' D,14,9,yes,F' D R' U2 R D2 R' U2 R D F,11,D' R D' R' U' R D2 R' U R D' R' D,13,identical effect,identical effect,identical effect,identical effect
+LT,"[D: [R U R', D2]]",D R U R' D2 R U' R' D2 D',10,9,yes,D R U R' D2 R U' R' D,9,D R U R' D2 R U' R' D,9,identical effect,identical effect,identical effect,identical effect
+LV,"[R U' R': [R' D R, U2]]",R U' R' R' D R U2 R' D' R U2 R U R',14,9,yes,U R' D2 R' U2 R D2 R' U2 R2 U',11,R U' R2 D R U2 R' D' R U2 R U R',13,identical effect,identical effect,identical effect,identical effect
+LW,"[D R: [R D' R', U']]",D R R D' R' U' R D R' U R' D',12,9,yes,D R2 D' R' U' R D R' U R' D',11,D R2 D' R' U' R D R' U R' D',11,identical effect,identical effect,identical effect,identical effect
+LX,"[Lw' D: [R' D' R, U']]",Lw' D R' D' R U' R' D R U D' Lw,12,9,yes,D R2 D2 R' U' R D2 R' U R' D',11,D R D U R' D' R U' R' D R D' R' D',14,identical effect,identical effect,identical effect,identical effect
+NO,"[U R U': [R' D' R, U2]]",U R U' R' D' R U2 R' D R U2 U R' U',14,9,yes,F' D2 U2 R D2 R' U2 R D2 R' D2 F,12,U R U' R' D' R U2 R' D R U' R' U',13,identical effect,identical effect,identical effect,identical effect
+NP,"[U' R' U'D: [R D' R', U2]]",U' R' U' D R D' R' U2 R D R' U2 D' U R U,16,9,yes,F2 U R' D R U2 R' D' R U F2,11,U' R' D U' R D' R' U2 R D R' U' D' R U,15,identical effect,identical effect,identical effect,identical effect
+NR,"[U R: [U2, R D R']]",U R U2 R D R' U2 R D' R' R' U',12,9,yes,F2 U R' D R U R' D' R U2 F2,11,U R2 U' D' R U R' D R U' R' U R2 U',14,identical effect,identical effect,identical effect,identical effect
+NS,"[U' R' U': [R D' R', U2]]",U' R' U' R D' R' U2 R D R' U2 U R U,14,9,yes,F' U2 R D' R' U2 R D R' F,10,U' R' U' R D' R' U2 R D R' U' R U,13,identical effect,identical effect,identical effect,identical effect
+NT,"[UD R: [U2, R D' R']]",U D R U2 R D' R' U2 R D R' R' D' U',14,9,yes,D2 F2 U R' D R U' R' D' R F2 D2,12,R' F' R D' U R' D' R U2 R' D R U D R' F R,17,identical effect,identical effect,identical effect,identical effect
+NU,"[U' R': [R' D R, U2]]",U' R' R' D R U2 R' D' R U2 R U,12,9,yes,U' R2 D R U2 R' D' R U2 R U,11,U' R2 D R U2 R' D' R U2 R U,11,identical effect,identical effect,identical effect,identical effect
+NV,"[U' D' R': [R' D R, U2]]",U' D' R' R' D R U2 R' D' R U2 R D U,14,9,yes,U2 F U2 R' D R U2 R' D' R F' U2,12,D' U' R2 D R U2 R' D' R U2 R U D,13,identical effect,identical effect,identical effect,identical effect
+NW,"[F': [U2, R D R']]",F' U2 R D R' U2 R D' R' F,10,9,yes,F' U2 R D R' U2 R D' R' F,10,U R U' D' R' D R U2 R' D' R U2 D U R' U',16,identical effect,identical effect,identical effect,identical effect
+NX,"[U'D R': [R' D R, U2]]",U' D R' R' D R U2 R' D' R U2 R D' U,14,9,yes,F2 D' R' U' R D' R' U R D2 F2,11,D U' R2 D R U2 R' D' R U2 R U D',13,identical effect,identical effect,identical effect,identical effect
+OP,"[R D': [R' D R, U]]",R D' R' D R U R' D' R U' D R',12,9,yes,R D' R' D R U R' D' R U' D R',12,R D' R' D R U R' D' R U' D R',12,identical effect,identical effect,identical effect,identical effect
+OQ,"[U' R U: [R' U' R, D]]",U' R U R' U' R D R' U R D' U' R' U,14,9,yes,U' R D' R U2 R' D R U2 R2 U,11,U' R U R' U' R D R' U R D' U' R' U,14,identical effect,identical effect,identical effect,identical effect
+OR,"[R' U: [R' D' R, U]]",R' U R' D' R U R' D R U' U' R,12,9,yes,R' U R' D' R U R' D R U2 R,11,R B' R' U' R D R' U R D' B R',12,identical effect,identical effect,identical effect,identical effect
+OS,"[U': [R' U' R, D']]",U' R' U' R D' R' U R D U,10,9,yes,F' R' U2 R D' R' U2 R D F,10,U' R' U' R D' R' U R D U,10,identical effect,identical effect,identical effect,identical effect
+OU,"[U' R': [R' D R, U]]",U' R' R' D R U R' D' R U' R U,12,9,yes,U' R2 D R U R' D' R U' R U,11,U' R2 D R U R' D' R U' R U,11,identical effect,identical effect,identical effect,identical effect
+OV,"[R U' D' R' : [R' D R, U2]]",R U' D' R' R' D R U2 R' D' R U2 R D U R',16,9,yes,D2 F' R U' R' D2 R U R' D2 F D2,12,D' U R U' F2 U R' U' R F2 R' D,12,identical effect,identical effect,identical effect,identical effect
+OX,"[R2 D2: [R U R', D]]",R2 D2 R U R' D R U' R' D' D2 R2,12,9,yes,R2 D2 R U R' D R U' R' D R2,11,U D' R D' U' R' D R U R' D' R D R' D U',16,identical effect,identical effect,identical effect,identical effect
+PQ,"[R D: [R D' R', U']]",R D R D' R' U' R D R' U D' R',12,9,yes,R D2 R D2 R' U' R D2 R' U D2 R',12,R' U R U' R' D' R U R' D U' R,12,identical effect,identical effect,identical effect,identical effect
+PR,"[x': [R U' R', D']]",x' R U' R' D' R U R' D x,10,9,yes,R' D R' U R D' R' U' R2,9,R' D R' U R D' R' U' R2,9,identical effect,identical effect,identical effect,identical effect
+PS,"[x': [R U2 R', D']]",x' R U2 R' D' R U2 R' D x,10,9,yes,D F D R' U2 R D' R' U2 R F' D',12,U R' D' R U' R' D' R U R' D2 R U',13,identical effect,identical effect,identical effect,identical effect
+PT,"[R U R', D']",R U R' D' R U' R' D,8,9,yes,R U R' D' R U' R' D,8,R U R' D' R U' R' D,8,identical effect,identical effect,identical effect,identical effect
+PU,"[R D: [U, R' D' R]]",R D U R' D' R U' R' D R D' R',12,9,yes,R2 D2 R' U' R D2 R' U R',9,R D U R' D' R U' R' D R D' R',12,identical effect,identical effect,identical effect,identical effect
+PW,"[R U' R' D R: [U, R D' R']]",R U' R' D R U R D' R' U' R D R' R' D' R U R',18,9,yes,F2 D' R U' R' D2 R U R' D' F2,11,D' R U' R2 D R U2 R' D' R U2 R U R' D,15,identical effect,identical effect,identical effect,identical effect
+PX,"[R: [R D' R', U']]",R R D' R' U' R D R' U R',10,9,yes,R2 D' R' U' R D R' U R',9,R2 D' R' U' R D R' U R',9,identical effect,identical effect,identical effect,identical effect
+QR,"[R, U' L' U]",R U' L' U R' U' L U,8,9,yes,F' U2 R2 D' R U' R' D R U R U2 F,13,R U' L' U R' U' L U,8,identical effect,identical effect,identical effect,identical effect
+QS,"[R' U: [D2, R U' R']]",R' U D2 R U' R' D2 R U R' U' R,12,9,yes,D F2 R D2 R' U' R D2 R' U F2 D',12,D R' U D R U' R' D' R U R' U' R D',14,identical effect,identical effect,identical effect,identical effect
+QT,"[R U': [R' U R, D]]",R U' R' U R D R' U' R D' U R',12,9,yes,F R' U' R D R' U R D' F',10,R U' R' U R D R' U' R D' U R',12,identical effect,identical effect,identical effect,identical effect
+QU,"[UD R' U': [R U R', D']]",U D R' U' R U R' D' R U' R' D U R D' U',16,9,yes,R U2 R' U2 R D2 R' U2 R D2 U2 R',12,D' R U' R' U R D' R' U' R D U R' D,14,identical effect,identical effect,identical effect,identical effect
+QV,"[U R' U': [R U R', D']]",U R' U' R U R' D' R U' R' D U R U',14,9,yes,F' R2 D R' U2 R D' R' U2 R' F,11,U R' U' R U R' D' R U' R' D U R U',14,identical effect,identical effect,identical effect,identical effect
+QW,"[D R U': [R' U R, D']]",D R U' R' U R D' R' U' R D U R' D',14,9,yes,R' F2 R D2 R' U2 R D2 R' U2 F2 R,12,D R U' R' U R D' R' U' R D U R' D',14,identical effect,identical effect,identical effect,identical effect
+QX,"[R U': [R' U R, D']] ",R U' R' U R D' R' U' R D U R',12,9,yes,R U2 R' U2 R D' R' U2 R D U2 R',12,R U' R' U R D' R' U' R D U R',12,identical effect,identical effect,identical effect,identical effect
+RS,"[U' R' U': [R D' R', U']]",U' R' U' R D' R' U' R D R' U U R U,14,9,yes,F R' D' R' U R D R' U' R2 F',11,U' R' U' R D' R' U' R D R' U2 R U,13,identical effect,identical effect,identical effect,identical effect
+RT,"[R2 U : [R D R', U2]]",R2 U R D R' U2 R D' R' U2 U' R2,12,9,yes,F2 R2 U2 R' D R U2 R' D' R' F2,11,D' R2 U R D R' U' R D' R D,11,identical effect,identical effect,identical effect,identical effect
+RU,"[U' R': [R' D R, U']]",U' R' R' D R U' R' D' R U R U,12,9,yes,U' R2 D R U' R' D' R U R U,11,U' R2 D R U' R' D' R U R U,11,identical effect,identical effect,identical effect,identical effect
+RV,"[U'D' R': [R' D R, U']]",U' D' R' R' D R U' R' D' R U R D U,14,9,yes,F R' D2 R' U R D2 R' U' R2 F',11,D' U' R2 D R U' R' D' R U R U D,13,identical effect,identical effect,identical effect,identical effect
+RW,"[U R : [D', R U' R']]",U R D' R U' R' D R U R' R' U',12,9,yes,U R D' R U' R' D R U R2 U',11,U R D' R U' R' D R U R2 U',11,identical effect,identical effect,identical effect,identical effect
+RX,"[U'D R': [R' D R, U']]",U' D R' R' D R U' R' D' R U R D' U,14,9,yes,U' R2 D2 R U' R' D2 R U R U,11,R2 U D' R' U' R D R' U R U' R2,12,identical effect,identical effect,identical effect,identical effect
+ST,"[U': [R', U' L U]]",U' R' U' L U R U' L' U U,10,9,yes,F R2 U' R D' R' U R D R F',11,D2 R' F' R D' R' D F D' R D',11,identical effect,identical effect,identical effect,identical effect
+SU,"[x': [D2, R U2 R']]",x' D2 R U2 R' D2 R U2 R' x,10,9,yes,F R2 U2 R D' R' U2 R D R F',11,U' D' R' D' U' R D R' U R D' R' D R D U,16,identical effect,identical effect,identical effect,identical effect
+SV,"[U'D' R': [R' D R, U]]",U' D' R' R' D R U R' D' R U' R D U,14,9,yes,F' R2 D' R' U2 R D R' U2 R' F,11,U' D' R2 D R U R' D' R U' R D U,13,identical effect,identical effect,identical effect,identical effect
+SW,"[U R: [D2, R U' R']]",U R D2 R U' R' D2 R U R' R' U',12,9,yes,U R D2 R U' R' D2 R U R2 U',11,U R D2 R U' R' D2 R U R2 U',11,identical effect,identical effect,identical effect,identical effect
+TU,"[D' R: [R D' R', U']]",D' R R D' R' U' R D R' U R' D,12,9,yes,D' R2 D' R' U' R D R' U R' D,11,D' R2 D' R' U' R D R' U R' D,11,identical effect,identical effect,identical effect,identical effect
+TV,"[D' R D: [U, R' D' R]]",D' R D U R' D' R U' R' D R D' R' D,14,9,yes,D' R2 D2 R' U' R D2 R' U R' D,11,D' R D U R' D' R U' R' D R D' R' D,14,identical effect,identical effect,identical effect,identical effect
+TX,"[R U' D' : [D2, R' U R]]",R U' D' D2 R' U R D2 R' U' R D U R',14,9,yes,F' R2 U' R' D2 R U R' D2 R' F,11,R U' D R' U R D2 R' U' R D U R',13,identical effect,identical effect,identical effect,identical effect
+UV,"[U' R' F' : [R U' R', D']]",U' R' F' R U' R' D' R U R' D F R U,14,9,yes,F R' D2 R' U2 R D2 R' U2 R2 F',11,U' R' U R D R U' R' D' R U R2 U' R U,15,identical effect,identical effect,identical effect,identical effect
+UW,"[U' R2: [R2 U R2 U' R2, D]]",U' R2 R2 U R2 U' R2 D R2 U R2 U' R2 D' R2 U,16,9,yes,R U' R' D2 R' U R D2 R' U' R2 U R',13,R2 U' R2 D R2 U R2 U' R2 D' R2 U,12,identical effect,identical effect,identical effect,identical effect
+UX,"[x U: [R' D R, U2]]",x U R' D R U2 R' D' R U2 U' x',12,9,yes,D F R2 U2 R D2 R' U2 R D2 R F' D',13,R U' D2 R' U R D R' U' R D U R',13,identical effect,identical effect,identical effect,identical effect
+VW,"[F' R U': [R' D' R, U2]]",F' R U' R' D' R U2 R' D R U2 U R' F,14,9,yes,R' F2 R D R' U2 R D' R' U2 F2 R,12,D R U' R2 U R D' R' U' R D R U R' D',15,identical effect,identical effect,identical effect,identical effect
+VX,"[R U' R' U: [R D' R', U2]]",R U' R' U R D' R' U2 R D R' U2 U' R U R',16,9,yes,R F' R D' R' U2 R D R' U2 F R',12,R U' R' U R D' R' U2 R D R' U R U R',15,identical effect,identical effect,identical effect,identical effect
+WX,"[z: [R U2 R', D2]]",z R U2 R' D2 R U2 R' D2 z',10,9,yes,F' D' R U' R' D' R U R' D2 F,11,R U' R2 U R D' R' U' R D R U R',13,identical effect,identical effect,identical effect,identical effect
