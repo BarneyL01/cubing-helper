@@ -32,11 +32,61 @@ const AXIS = { R: [0, 1], L: [0, -1], U: [1, 1], D: [1, -1], F: [2, 1], B: [2, -
 const coords = (pieceName) => { const p = [0, 0, 0]; for (const f of pieceName) p[AXIS[f][0]] = AXIS[f][1]; return p.join(); };
 // only the listed corners in colour (by where they belong), the rest grey
 const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) ? s.colour : 'X' }));
-// The core's own cycle, starting at the buffer spot C when it is one of the three.
-function coreCycle(e) {
-  const c = [e.spots.buffer, e.spots.first, e.spots.second];
-  const i = c.findIndex((l) => 'CJM'.includes(l));
-  return i > 0 ? [...c.slice(i), ...c.slice(0, i)] : c;
+// A corner's name from any of its sticker letters, written the same way every time: U/D, then F/B, then R/L.
+const cornerName = (l) => [...SPEFFZ[l]].sort((a, b) => 'UDFBRL'.indexOf(a) - 'UDFBRL'.indexOf(b)).join('');
+// Fixed order for where a cycle starts, so a core and its reverse show the same corners with the arrows turned round.
+const CORNER_ORDER = ['UFR', 'UFL', 'UBL', 'UBR', 'DFR', 'DFL', 'DBL', 'DBR'];
+function coreCorners(e) {
+  const c = [e.spots.buffer, e.spots.first, e.spots.second].map(cornerName);
+  let i = 0;
+  c.forEach((n, j) => { if (CORNER_ORDER.indexOf(n) < CORNER_ORDER.indexOf(c[i])) i = j; });
+  return [...c.slice(i), ...c.slice(0, i)];
+}
+// A see-through cube (front face square, back face drawn up and to the right) with the three corners named
+// and joined by arrows in the order the core moves them.
+function cornerDiagram(cycle) {
+  const pt = (n) => {
+    const x = n.includes('R') ? 1 : -1, y = n.includes('U') ? 1 : -1, z = n.includes('F') ? 1 : -1;
+    return [114 + 46 * x - 32 * z, 96 - 46 * y + 16 * z];
+  };
+  const f = (v) => v.toFixed(1);
+  const edges = [];
+  for (const a of CORNER_ORDER) for (const b of CORNER_ORDER) {
+    if (a >= b) continue;
+    const diff = [0, 1, 2].filter((k) => a[k] !== b[k]).length;
+    if (diff !== 1) continue;
+    const back = a.includes('DBL') || b.includes('DBL');
+    const [p, q] = [pt(a), pt(b)];
+    edges.push(`<line x1="${f(p[0])}" y1="${f(p[1])}" x2="${f(q[0])}" y2="${f(q[1])}" class="cd-edge${back ? ' cd-hidden' : ''}"/>`);
+  }
+  const arrows = cycle.map((a, i) => {
+    const b = cycle[(i + 1) % 3], other = pt(cycle[(i + 2) % 3]);
+    const [p, q] = [pt(a), pt(b)];
+    const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+    // bend each arrow sideways, away from the third corner, so the three arrows never lie on top of each other
+    const l0 = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    let nx = -(q[1] - p[1]) / l0, ny = (q[0] - p[0]) / l0;
+    if (nx * (other[0] - m[0]) + ny * (other[1] - m[1]) > 0) { nx = -nx; ny = -ny; }
+    const ctrl = [m[0] + nx * 20, m[1] + ny * 20];
+    const trim = (from, to, r) => { const ux = to[0] - from[0], uy = to[1] - from[1], l = Math.hypot(ux, uy); return [from[0] + (ux / l) * r, from[1] + (uy / l) * r]; };
+    const s = trim(p, ctrl, 9), t = trim(q, ctrl, 10);
+    const ang = Math.atan2(t[1] - ctrl[1], t[0] - ctrl[0]);
+    const head = [[t[0], t[1]], [t[0] - 9 * Math.cos(ang - 0.45), t[1] - 9 * Math.sin(ang - 0.45)], [t[0] - 9 * Math.cos(ang + 0.45), t[1] - 9 * Math.sin(ang + 0.45)]];
+    return `<path d="M${f(s[0])} ${f(s[1])} Q${f(ctrl[0])} ${f(ctrl[1])} ${f(t[0])} ${f(t[1])}" class="cd-arrow"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="cd-head"/>`;
+  }).join('');
+  const dots = CORNER_ORDER.map((n) => {
+    const [x, y] = pt(n);
+    const on = cycle.includes(n);
+    let out = `<circle cx="${f(x)}" cy="${f(y)}" r="${on ? 6 : 3}" class="${on ? 'cd-on' : 'cd-off'}"/>`;
+    if (on) {
+      const lx = x + (n.includes('R') ? 10 : -10);
+      const ly = y + (n.includes('U') ? -10 : 18);
+      const anchor = n.includes('R') ? 'start' : 'end';
+      out += `<text x="${f(lx)}" y="${f(ly)}" text-anchor="${anchor}" class="cd-label">${n}</text>`;
+    }
+    return out;
+  }).join('');
+  return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${cycle.join(' to ')} to ${cycle[0]}">${edges.join('')}${arrows}${dots}</svg>`;
 }
 // An animated cube for one algorithm in parts: only the given corners in colour.
 function watch(host, parts, moves, keepPieces, startText, doneText) {
@@ -203,13 +253,13 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       for (const e of list) if (!cores.has(e.core)) cores.set(e.core, { e, n: 0 }); 
       for (const e of list) cores.get(e.core).n++;
       const bases = el('div', 'ts-bases');
-      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each core cycles the three spots shown: the sticker on the 1st goes to the 2nd, the 2nd to the 3rd, the 3rd back to the 1st. The setup brings the buffer and the two targets onto those three spots, in that order round the cycle; open a pair to see which piece goes where.`));
+      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three corners a core moves, by name, with arrows for where each corner goes (a core and its reverse show the same corners with the arrows turned round). The setup brings the buffer and the two targets onto those three corners; open a pair to see the sticker letters, which say how each corner ends up turned.`));
       const row = el('div', 'ts-figs');
       for (const [core, { e, n }] of cores) {
-        const [a, b, c] = coreCycle(e);
+        const [a, b, c] = coreCorners(e);
         const f = el('figure', 'ts-fig ts-base');
-        const nb = el('div', 'ts-net');
-        nb.innerHTML = bldNet('corners', { marked: [a, b, c], letters: [a, b, c] });
+        const nb = el('div', 'ts-corners');
+        nb.innerHTML = cornerDiagram([a, b, c]);
         f.append(nb);
         const cap = el('figcaption');
         cap.append(el('code', null, core), ` cycles ${a} → ${b} → ${c} · ${n} pair${n > 1 ? 's' : ''}`);

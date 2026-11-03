@@ -2535,3 +2535,13 @@ a.menu-sec[aria-current="page"],
 .ts-is-known > summary .ts-pair-name { color: #1d4ed8; }
 .ts-known { background: #eef4ff; border-radius: 6px; padding: 0.4rem 0.6rem; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ts-known { background: #172554; } }
+/* 3-Style group bases: the three corners a core moves, by name, with arrows */
+.ts-corners { width: 150px; }
+.corner-diagram { display: block; width: 100%; height: auto; overflow: visible; }
+.corner-diagram .cd-edge { stroke: var(--text-muted); stroke-width: 1.2; opacity: 0.55; }
+.corner-diagram .cd-hidden { stroke-dasharray: 3 3; }
+.corner-diagram .cd-off { fill: var(--text-muted); opacity: 0.6; }
+.corner-diagram .cd-on { fill: #e0457b; }
+.corner-diagram .cd-arrow { fill: none; stroke: var(--accent); stroke-width: 2.4; }
+.corner-diagram .cd-head { fill: var(--accent); }
+.corner-diagram .cd-label { font: 600 13px system-ui, sans-serif; fill: var(--text); }
