@@ -289,7 +289,9 @@ built ahead of being asked for. As of 2026-10-03:
   **3-Style (ours)** (`3x3/bld/three-style.html`, 2026-11-03): our own table, R cores against a U/D turn, setups ≤ 3 moves of
   R U D F, 12 groups, mean 10.7 moves; `data/three-style-ours.js` from `log/2026-11-03-3style-ours.mjs --write`. Both 3-style pages
   use `js/three-style-page.js` (By commutator / By 1st target; each pair opens to show what the setup moves where, the
-  core's cycle, two nets; `spots` from `log/three-style-lib.mjs`). Menu section 3-Style: "3-Style" and "Dylan / J Perm".
+  core's cycle, two nets, "Watch it" runner; each group shows its cores' base spots; `spots` from `log/three-style-lib.mjs`). Menu section 3-Style: "3-Style" and "Dylan / J Perm".
+  Parity + twists on both (M2 edges): last letter X -> pair X then B + R U F Ra; twisted corners at the end with the Orozco twist after a
+  B/D/L setup into UBR (`data/three-style-twists.js`, `log/2026-11-03-3style-twists.mjs`: 3,000 whole solves per table).
   **3-Style corners: Dylan / J Perm** (`3x3/bld/three-style-corners.html`, 2026-11-02): all 378 pairs from
   Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
   `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet

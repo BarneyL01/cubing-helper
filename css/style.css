@@ -2523,3 +2523,10 @@ a.menu-sec[aria-current="page"],
 .ts-steps { padding-left: 1.3rem; margin: 0.5rem 0; }
 .ts-steps li { margin: 0.35rem 0; }
 .ts-moves code { white-space: normal; word-break: break-word; }
+.ts-bases { margin: 0.4rem 0 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px dashed var(--border, #d0d4dc); }
+.ts-base { width: 150px; }
+.ts-base .ts-net, .ts-base .bld-net { width: 150px; }
+.ts-watch { margin: 0.4rem 0; min-height: 44px; }
+.ts-runner { margin: 0.4rem 0; }
+.ts-tw-net { width: 96px; margin-top: 0.3rem; }
+.ts-tw-net .bld-net { width: 96px; }

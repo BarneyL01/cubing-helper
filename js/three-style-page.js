@@ -7,12 +7,35 @@
 // setup, core, insertion, interchange, spots { buffer, first, second } (where the setup puts C and the two
 // targets), setupMoves, moves, count, and optionally type / fix / sheet.
 import { bldNet } from './bld-net.js?v=4';
-import { invertAlg } from './algs.js';
+import { invertAlg, expandBrackets } from './algs.js';
+import { applyAlg } from './cube-sim.js';
+import { trackedSolved } from './cube-laws.js';
+import { createMoveRunner } from './move-runner.js?v=1';
+import { WHITE_TOP } from './cube-diagram.js';
+import { threeStyleTwists } from '../data/three-style-twists.js?v=1';
+import { OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../data/orozco-mnemonics.js?v=4';
 
 const SPEFFZ = { A: 'UBL', B: 'UBR', C: 'UFR', D: 'UFL', E: 'LUB', F: 'LUF', G: 'LDF', H: 'LDB', I: 'FUL', J: 'FUR', K: 'FDR', L: 'FDL',
   M: 'RUF', N: 'RUB', O: 'RDB', P: 'RDF', Q: 'BUR', R: 'BUL', S: 'BDL', T: 'BDR', U: 'DFL', V: 'DFR', W: 'DBR', X: 'DBL' };
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
 const name = (l) => `${l} (${SPEFFZ[l]})`;
+const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
+const AXIS = { R: [0, 1], L: [0, -1], U: [1, 1], D: [1, -1], F: [2, 1], B: [2, -1] };
+const coords = (pieceName) => { const p = [0, 0, 0]; for (const f of pieceName) p[AXIS[f][0]] = AXIS[f][1]; return p.join(); };
+// only the listed corners in colour (by where they belong), the rest grey
+const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) ? s.colour : 'X' }));
+// The core's own cycle, starting at the buffer spot C when it is one of the three.
+function coreCycle(e) {
+  const c = [e.spots.buffer, e.spots.first, e.spots.second];
+  const i = c.findIndex((l) => 'CJM'.includes(l));
+  return i > 0 ? [...c.slice(i), ...c.slice(0, i)] : c;
+}
+// An animated cube for one algorithm in parts: only the given corners in colour.
+function watch(host, parts, moves, keepPieces, startText, doneText) {
+  const runner = createMoveRunner(host, { palette: PALETTE });
+  const keep = new Set(keepPieces.map(coords));
+  runner.set({ parts, start: applyAlg(trackedSolved(), invertAlg(moves)), shown: (st) => greyed(st, keep), startText, doneText });
+}
 const famKey = (e) => `${e.insertion} · ${e.interchange.replace(/['2]/g, '')}`;
 const turnWord = (face) => ({ U: 'top', D: 'bottom', F: 'front', R: 'right', L: 'left', B: 'back' })[face] || face;
 
@@ -59,6 +82,21 @@ function pairBody(e) {
     ol.appendChild(undo);
   }
   body.appendChild(ol);
+  const w = el('button', 'rec-btn ts-watch', 'Watch it on a cube');
+  w.type = 'button';
+  w.addEventListener('click', () => {
+    const host = el('div', 'ts-runner');
+    w.replaceWith(host);
+    const coreMoves = expandBrackets(e.core);
+    const parts = e.setup
+      ? [{ name: 'Setup', moves: e.setup, text: `The setup puts the three corners on the core's spots ${s.buffer}, ${s.first}, ${s.second}.` },
+        { name: 'Core', moves: coreMoves, text: `The core cycles ${s.buffer} → ${s.first} → ${s.second}.` },
+        { name: 'Undo', moves: invertAlg(e.setup), text: 'The setup is undone: the three corners go home.' }]
+      : [{ name: 'Core', moves: coreMoves, text: `The core cycles C → ${e.first} → ${e.second}: solved.` }];
+    watch(host, parts, e.moves, [SPEFFZ.C, SPEFFZ[e.first], SPEFFZ[e.second]],
+      `Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.`, 'Solved: all three corners are home.');
+  });
+  body.appendChild(w);
   const meta = el('p', 'bld-note', `${e.count} moves written out${e.type ? ` · the sheet's type: ${e.type}` : ''}`);
   body.appendChild(meta);
   body.appendChild(el('p', 'ts-moves')).appendChild(el('code', null, e.moves));
@@ -141,6 +179,26 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       const sum = el('summary');
       sum.append(el('code', null, ins), ` against ${turnWord(face)} turns`, el('span', 'bld-muted', ` · ${list.length} pairs, ${list.filter((e) => !e.setup).length} with no setup`));
       d.appendChild(sum);
+      // the cores in this group and the spots each one cycles (its base)
+      const cores = new Map();
+      for (const e of list) if (!cores.has(e.core)) cores.set(e.core, { e, n: 0 }); 
+      for (const e of list) cores.get(e.core).n++;
+      const bases = el('div', 'ts-bases');
+      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each core cycles the three spots shown: the sticker on the 1st goes to the 2nd, the 2nd to the 3rd, the 3rd back to the 1st. The setup brings the buffer and the two targets onto those three spots, in that order round the cycle; open a pair to see which piece goes where.`));
+      const row = el('div', 'ts-figs');
+      for (const [core, { e, n }] of cores) {
+        const [a, b, c] = coreCycle(e);
+        const f = el('figure', 'ts-fig ts-base');
+        const nb = el('div', 'ts-net');
+        nb.innerHTML = bldNet('corners', { marked: [a, b, c], letters: [a, b, c] });
+        f.append(nb);
+        const cap = el('figcaption');
+        cap.append(el('code', null, core), ` cycles ${a} → ${b} → ${c} · ${n} pair${n > 1 ? 's' : ''}`);
+        f.appendChild(cap);
+        row.appendChild(f);
+      }
+      bases.appendChild(row);
+      d.appendChild(bases);
       let last = -1;
       for (const e of shown) {
         if (e.setupMoves !== last) { d.appendChild(el('p', 'ts-core-sub', e.setupMoves ? `Setup of ${e.setupMoves} move${e.setupMoves > 1 ? 's' : ''}` : 'No setup')); last = e.setupMoves; }
@@ -174,4 +232,65 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
   const m = location.hash.match(/^#pair-([A-X]{2})$/);
   if (m) openPair(m[1]);
   return { openPair };
+}
+
+// Parity and twisted corners, for M2 edges (the same on both pages; checked by log/2026-11-03-3style-twists.mjs).
+export function mountParityTwists(slot) {
+  const p = el('div', 'ts-pt');
+  const h = (t, id, short) => { const x = el('h2', 'section-heading', t); x.id = id; x.dataset.short = short; return x; };
+  p.appendChild(h('Odd number of corner letters (parity)', 'parity', 'Parity'));
+  const ol = el('ol', 'bld-list');
+  const li = (...kids) => { const x = el('li'); x.append(...kids); ol.appendChild(x); };
+  li('Do your edges with M2 as usual, including your M2 parity algorithm when the edge count is odd. That leaves UL and UB swapped, exactly as for Orozco.');
+  li('Do the corner pairs. The last letter X has no partner: do the pair ', el('strong', null, 'X then B'), ' from the list. It moves X home and leaves the buffer and B (UBR) swapped.');
+  const ra = el('code', null, OROZCO_PARITY_RUF);
+  li('Then the Ra-perm ', ra, ` (${OROZCO_PARITY_RUF_WORDS.map((w) => w.word).join(' · ')}): it swaps the buffer and B back, and UL and UB. The same as Orozco's parity.`);
+  li('If the last letter is on the UBR corner itself (B, N or Q): skip the pair, only do the Ra-perm. If it was N or Q, that corner is left twisted: the twist step below fixes it.');
+  p.appendChild(ol);
+
+  p.appendChild(h('Twisted corners', 'twists', 'Twists'));
+  p.appendChild(el('p', null, "A corner in its own spot but twisted is not memoed as letters (don't break into it). Note it, and fix it at the very end, after the pairs and parity, with your Orozco twist: bring the corner into UBR with a setup that does not touch the buffer, do the twist (or twist backwards), undo the setup. It also twists the buffer; after the last twisted corner the buffer comes out right by itself."));
+  const rule = el('p');
+  rule.append(el('strong', null, 'Which one: '), 'look at where the white or yellow sticker of the twisted corner is. The table says twist or twist backwards for each. Twist = ', el('code', null, "(R' D' R D)×2 U (D' R' D R)×2 U'"), ', twist backwards = ', el('code', null, "U (R' D' R D)×2 U' (D' R' D R)×2"), '.');
+  p.appendChild(rule);
+  const wrap = el('div', 'table-wrap');
+  const t = el('table', 'bld-table');
+  t.createCaption().textContent = 'Twisted corner → setup, twist';
+  const hr = t.createTHead().insertRow();
+  ['Corner', 'White/yellow faces', 'Do', ''].forEach((x) => hr.appendChild(el('th', null, x)));
+  const tb = t.createTBody();
+  const letterOf = Object.fromEntries(Object.entries(SPEFFZ).map(([l, n]) => [n, l]));
+  for (const r of threeStyleTwists) {
+    const tr = tb.insertRow();
+    const c = el('td');
+    c.append(el('strong', null, r.corner));
+    const n = el('div', 'ts-tw-net');
+    n.innerHTML = bldNet('corners', { buffers: ['C'], marked: [letterOf[r.corner], 'B'].filter((v, i, a) => a.indexOf(v) === i), letters: ['C', 'B', letterOf[r.corner]] });
+    c.appendChild(n);
+    const how = el('td');
+    if (r.setup) how.append(el('span', 'mv-setup', r.setup), ' · ');
+    how.append(r.alg);
+    if (r.setup) how.append(' · ', el('span', 'mv-setup', invertAlg(r.setup)));
+    how.appendChild(el('div', 'bld-muted', `${r.count} moves`));
+    const wcell = el('td');
+    const b = el('button', 'rec-btn ts-watch', 'Watch');
+    b.type = 'button';
+    b.addEventListener('click', () => {
+      const host = el('td');
+      host.colSpan = 4;
+      const row2 = tb.insertRow(tr.sectionRowIndex + 1);
+      row2.appendChild(host);
+      b.disabled = true;
+      const tw = expandBrackets(r.alg === 'twist' ? "(R' D' R D)×2 U (D' R' D R)×2 U'" : "U (R' D' R D)×2 U' (D' R' D R)×2");
+      const parts = r.setup ? [{ name: 'Setup', moves: r.setup, text: `The setup brings ${r.corner} into UBR without touching the buffer.` }, { name: r.alg, moves: tw, text: 'The twist turns UBR and the buffer (UFR) opposite ways.' }, { name: 'Undo', moves: invertAlg(r.setup), text: 'The setup is undone.' }]
+        : [{ name: r.alg, moves: tw, text: 'The twist turns UBR and the buffer (UFR) opposite ways.' }];
+      watch(host, parts, r.moves, ['UFR', r.corner], `Only ${r.corner} and the buffer in colour; ${r.corner} is twisted. Press Next or Play.`, `${r.corner} is fixed; the buffer is twisted the other way, which the last twist of a solve undoes.`);
+    });
+    wcell.appendChild(b);
+    tr.append(c, el('td', null, r.faces), how, wcell);
+  }
+  wrap.appendChild(t);
+  p.appendChild(wrap);
+  p.appendChild(el('p', 'bld-note', "Faster later: the sheet's 2-Twists tab twists the buffer with any corner in 16-17 moves without a setup; this way uses only the twist you already know. Checked: 3,000 whole solves per table (M2 edges, pairs, parity, twists) all solved."));
+  slot.appendChild(p);
 }
