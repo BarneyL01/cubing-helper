@@ -2483,3 +2483,43 @@ a.menu-sec[aria-current="page"],
 .th-frame figcaption { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
 .th-compare { display: grid; gap: 0.75rem; }
 @media (min-width: 900px) { .th-compare { grid-template-columns: 1fr 1fr; } }
+
+/* 3-Style corners */
+.ts-letters button { min-width: 44px; }
+.ts-order { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+.ts-row { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.6rem 0; border-bottom: 1px solid var(--border, #d0d4dc); }
+.ts-net { width: 112px; flex: none; }
+.ts-net .bld-net { width: 112px; }
+.ts-body { min-width: 0; flex: 1; }
+.ts-pair { margin: 0 0 0.2rem; }
+.ts-alg { margin: 0.2rem 0; font-size: 1rem; }
+.ts-alg code { white-space: normal; word-break: break-word; }
+.ts-more summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--accent, #2f6fed); }
+.ts-more code { display: block; white-space: normal; }
+.ts-fix { color: var(--partial, #8a6408); font-size: 0.9rem; margin: 0.2rem 0; }
+.ts-type-head { margin: 1rem 0 0.2rem; font-size: 1rem; }
+.ts-fixes { list-style: none; padding: 0; }
+.ts-fixes li { padding: 0.5rem 0; border-bottom: 1px solid var(--border, #d0d4dc); }
+.ts-fixes li > a { font-weight: 700; display: inline-flex; min-height: 44px; align-items: center; }
+.ts-fixes p { margin: 0.15rem 0; }
+.ts-fixes code { white-space: normal; word-break: break-word; }
+.ts-core { border: 1px solid var(--border, #d0d4dc); border-radius: 8px; margin: 0.5rem 0; padding: 0 0.6rem; }
+.ts-core > summary { min-height: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; cursor: pointer; font-weight: 600; }
+.ts-core-list { list-style: none; padding: 0; margin: 0 0 0.5rem; }
+.ts-core-sub { font-weight: 700; font-size: 0.9rem; margin: 0.6rem 0 0.2rem; color: var(--muted, #5b6170); }
+.ts-core-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 44px; border-bottom: 1px solid var(--border, #e3e6ec); }
+.ts-core-pair { font-weight: 700; min-width: 3.5em; }
+.ts-core-row code { white-space: normal; }
+/* 3-style pages: pairs open to show the setup, core and pictures */
+.ts-pair { border-bottom: 1px solid var(--border, #e3e6ec); }
+.ts-pair > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 48px; cursor: pointer; }
+.ts-pair > summary code { white-space: normal; }
+.ts-pair-name { font-weight: 700; min-width: 3.5em; color: var(--accent, #2f6fed); }
+.ts-pair-body { padding: 0.3rem 0 0.8rem; }
+.ts-figs { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.ts-fig { margin: 0; width: 160px; }
+.ts-fig .ts-net, .ts-fig .bld-net { width: 160px; }
+.ts-fig figcaption { font-size: 0.85rem; color: var(--muted, #5b6170); }
+.ts-steps { padding-left: 1.3rem; margin: 0.5rem 0; }
+.ts-steps li { margin: 0.35rem 0; }
+.ts-moves code { white-space: normal; word-break: break-word; }
