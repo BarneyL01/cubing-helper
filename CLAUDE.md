@@ -286,7 +286,11 @@ built ahead of being asked for. As of 2026-10-03:
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
-  **3-Style corners** (`3x3/bld/three-style-corners.html`, menu Blindfolded › 3-Style, 2026-11-02): all 378 pairs from
+  **3-Style (ours)** (`3x3/bld/three-style.html`, 2026-11-03): our own table, R cores against a U/D turn, setups ≤ 3 moves of
+  R U D F, 12 groups, mean 10.7 moves; `data/three-style-ours.js` from `log/2026-11-03-3style-ours.mjs --write`. Both 3-style pages
+  use `js/three-style-page.js` (By commutator / By 1st target; each pair opens to show what the setup moves where, the
+  core's cycle, two nets; `spots` from `log/three-style-lib.mjs`). Menu section 3-Style: "3-Style" and "Dylan / J Perm".
+  **3-Style corners: Dylan / J Perm** (`3x3/bld/three-style-corners.html`, 2026-11-02): all 378 pairs from
   Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
   `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet
   cells fixed (listed on the page); views By 1st target and By commutator (setup + core, 27 groups, 8 cores cover 325 pairs). Parity, twists and edges from the sheet not added yet.

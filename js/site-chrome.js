@@ -87,7 +87,13 @@ const MENU = [
           { label: 'Edge cycles', path: '3x3/bld/edge-cycles.html' },
         ],
       },
-      { label: '3-Style', path: '3x3/bld/three-style-corners.html' },
+      {
+        label: '3-Style',
+        pages: [
+          { label: '3-Style', path: '3x3/bld/three-style.html' },
+          { label: 'Dylan / J Perm', path: '3x3/bld/three-style-corners.html' },
+        ],
+      },
     ],
   },
   {

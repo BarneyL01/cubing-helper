@@ -2510,3 +2510,16 @@ a.menu-sec[aria-current="page"],
 .ts-core-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 44px; border-bottom: 1px solid var(--border, #e3e6ec); }
 .ts-core-pair { font-weight: 700; min-width: 3.5em; }
 .ts-core-row code { white-space: normal; }
+/* 3-style pages: pairs open to show the setup, core and pictures */
+.ts-pair { border-bottom: 1px solid var(--border, #e3e6ec); }
+.ts-pair > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-height: 48px; cursor: pointer; }
+.ts-pair > summary code { white-space: normal; }
+.ts-pair-name { font-weight: 700; min-width: 3.5em; color: var(--accent, #2f6fed); }
+.ts-pair-body { padding: 0.3rem 0 0.8rem; }
+.ts-figs { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.ts-fig { margin: 0; width: 160px; }
+.ts-fig .ts-net, .ts-fig .bld-net { width: 160px; }
+.ts-fig figcaption { font-size: 0.85rem; color: var(--muted, #5b6170); }
+.ts-steps { padding-left: 1.3rem; margin: 0.5rem 0; }
+.ts-steps li { margin: 0.35rem 0; }
+.ts-moves code { white-space: normal; word-break: break-word; }

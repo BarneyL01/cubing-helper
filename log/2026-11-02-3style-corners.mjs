@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { applyAlg, solvedCube } from '../js/cube-sim.js';
 import { expandBrackets, cancelMoves } from '../js/algs.js';
 import { bldCorners } from '../data/bld.js';
+import { spots } from './three-style-lib.mjs';
 
 const root = new URL('..', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
@@ -103,7 +104,9 @@ for (const first of LETTERS) for (const second of LETTERS) {
   const parts = split(text);
   check(`${pair} core parses`, !!parts.insertion);
   check(`${pair} setup + core = the commutator`, expand(parts.setup ? `[${parts.setup} : ${parts.core}]` : parts.core) === moves);
-  entries.push({ pair, first, second, notation: text, ...parts, setupMoves: parts.setup ? parts.setup.split(' ').length : 0, ...(fix ? { sheet: sheet || '', fix: fix.why } : {}), moves, count: moves.split(' ').length, type: types[pair] || '' });
+  let at = null;
+  try { at = spots(first, second, parts.setup, parts.core); } catch (err) { check(`${pair} spots: ${err.message}`, false); }
+  entries.push({ pair, first, second, notation: text, ...parts, spots: at, setupMoves: parts.setup ? parts.setup.split(' ').length : 0, ...(fix ? { sheet: sheet || '', fix: fix.why } : {}), moves, count: moves.split(' ').length, type: types[pair] || '' });
 }
 for (const pair of Object.keys(FIXES)) {
   // a fix is only listed if the sheet's own version is wrong
