@@ -291,7 +291,9 @@ built ahead of being asked for. As of 2026-10-03:
   use `js/three-style-page.js` (By commutator / By 1st target; each pair opens to show what the setup moves where, the
   core's cycle, two nets, "Watch it" runner; each group shows its cores' base spots; `spots` from `log/three-style-lib.mjs`). Menu section 3-Style: "3-Style" and "Dylan / J Perm".
   Parity + twists on both (M2 edges): last letter X -> pair X then B + R U F Ra; twisted corners at the end with the Orozco twist after a
-  B/D/L setup into UBR (`data/three-style-twists.js`, `log/2026-11-03-3style-twists.mjs`: 3,000 whole solves per table).
+  B/D/L setup into UBR, or "without B" buffer twists `[setup : [R' D R D' R' D R , U^k]]` (`data/three-style-twists.js`,
+  `log/2026-11-03-3style-twists.mjs`: 3,000 whole solves per table). Pairs known from Orozco (with B) carry an "Orozco" badge.
+  Blind drills has a "3-Style" mode (`js/three-style-drill.js`): random pair, filters, reveal, timer.
   **3-Style corners: Dylan / J Perm** (`3x3/bld/three-style-corners.html`, 2026-11-02): all 378 pairs from
   Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
   `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet

@@ -1,12 +1,12 @@
 /* Blind drills and Letter pairs pages (kept apart from style.css). */
 .drill-modes {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   margin: 1rem 0;
 }
 @media (min-width: 700px) {
-  .drill-modes { grid-template-columns: repeat(4, 1fr); }
+  .drill-modes { grid-template-columns: repeat(5, 1fr); }
 }
 .drill-mode {
   min-height: 48px;
@@ -125,3 +125,7 @@ text.net-letter-on-colour {
 .trace-buttons .rec-btn, .trace-buttons .rec-btn-primary { grid-column: auto; min-height: 48px; padding: 0 0.3rem; font-size: 1rem; }
 .trace-time { display: flex; align-items: center; gap: 0.4rem; min-height: 44px; font-size: 0.95rem; }
 .trace-time input { width: 4em; }
+
+/* 3-Style pairs drill */
+.ts-drill-answer { text-align: left; }
+.ts-drill-answer .case-alg code { white-space: normal; }

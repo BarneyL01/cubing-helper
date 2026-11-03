@@ -19,6 +19,7 @@ import { threeStyleCorners } from '../data/three-style-corners.js';
 import { SPEFFZ } from './three-style-lib.mjs';
 
 const fails = [];
+const permSig = (m) => JSON.stringify(applyAlg(solvedCube(), m).map((s) => [s.p.join(), s.n.join(), s.colour]));
 const check = (n, ok) => { if (!ok) fails.push(n); };
 const key = (s) => `${s.p.join()}|${s.n.join()}`;
 const TW = { twist: cancelMoves(expandBrackets(OROZCO_TWIST)), 'twist backwards': cancelMoves(expandBrackets(OROZCO_TWIST_REV)) };
@@ -40,12 +41,35 @@ for (const [corner, setup] of Object.entries(SETUPS)) for (const [name, t] of Ob
 }
 check('14 twist rows', rows.length === 14);
 
+// Without B: twist the buffer and the corner directly, [setup : [R' D R D' R' D R , U^k]] (or the two parts swapped),
+// setup at most 2 moves of R U D F. The shortest for each row; checked like the others.
+{
+  const CORE = "R' D R D' R' D R";
+  const MOVES = 'RUDF'.split('').flatMap((f) => [f, f + "'", f + '2']);
+  const setups = [''];
+  for (const a of MOVES) { setups.push(a); for (const b of MOVES) if (a[0] !== b[0]) setups.push(`${a} ${b}`); }
+  for (const r of rows) {
+    let best = null;
+    for (const st of setups) for (const k of ['U', "U'", 'U2']) for (const body of [`[${CORE} , ${k}]`, `[${k} , ${CORE}]`]) {
+      const notation = st ? `[${st} : ${body}]` : body;
+      const moves = cancelMoves(expandBrackets(notation));
+      const p1 = permSig(moves);
+      if (p1 !== permSig(r.moves)) continue; // the same effect as the B version: this corner and the buffer, same directions
+      const n = moves.split(' ').length;
+      if (!best || n < best.count) best = { notation, moves, count: n };
+    }
+    check(`${r.corner} ${r.alg}: a version without B`, !!best && !/B/.test(best.moves));
+    if (best) r.noB = best;
+  }
+}
+
 // whole solves
 const OZ = Object.fromEntries(rows.map((r) => [`${r.corner}:${r.faces}`, r.moves]));
+const OZB = Object.fromEntries(rows.map((r) => [`${r.corner}:${r.faces}`, r.noB ? r.noB.moves : r.moves]));
 let seed = 20261103; const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 const pieceId = (l) => [...SPEFFZ[l]].sort().join('');
 const UFR = '1,1,1';
-for (const [label, table] of [['ours', threeStyleOurs], ['Dylan', threeStyleCorners]]) {
+for (const [label, table, noB] of [['ours', threeStyleOurs, false], ['Dylan', threeStyleCorners, false], ['ours, twists without B', threeStyleOurs, true]]) {
   const PAIR = Object.fromEntries(table.map((e) => [e.pair, e.moves]));
   let solved = 0, odd = 0, twisted = 0;
   for (let t = 0; t < 3000; t++) {
@@ -67,7 +91,7 @@ for (const [label, table] of [['ours', threeStyleOurs], ['Dylan', threeStyleCorn
       const name = slotName(c.slot.split(',').map(Number));
       const AX = c.slot.split(',').map(Number);
       const wy = st.find((s) => s.p.join() === c.slot && (s.colour === 'U' || s.colour === 'D'));
-      st = applyAlg(st, OZ[`${name}:${FACE(wy.n)}`]);
+      st = applyAlg(st, noB ? OZB[`${name}:${FACE(wy.n)}`] : OZ[`${name}:${FACE(wy.n)}`]);
     }
     if (st.every((s) => key(s) === s.home)) solved++;
   }

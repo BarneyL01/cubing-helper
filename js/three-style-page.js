@@ -12,13 +12,21 @@ import { applyAlg } from './cube-sim.js';
 import { trackedSolved } from './cube-laws.js';
 import { createMoveRunner } from './move-runner.js?v=1';
 import { WHITE_TOP } from './cube-diagram.js';
-import { threeStyleTwists } from '../data/three-style-twists.js?v=1';
+import { threeStyleTwists } from '../data/three-style-twists.js?v=2';
+import { orozcoCorners } from '../data/orozco-corners.js?v=1';
 import { OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../data/orozco-mnemonics.js?v=4';
 
 const SPEFFZ = { A: 'UBL', B: 'UBR', C: 'UFR', D: 'UFL', E: 'LUB', F: 'LUF', G: 'LDF', H: 'LDB', I: 'FUL', J: 'FUR', K: 'FDR', L: 'FDL',
   M: 'RUF', N: 'RUB', O: 'RDB', P: 'RDF', Q: 'BUR', R: 'BUL', S: 'BDL', T: 'BDR', U: 'DFL', V: 'DFR', W: 'DBR', X: 'DBL' };
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
 const name = (l) => `${l} (${SPEFFZ[l]})`;
+// Pairs you already know from Orozco: X then B is Orozco's X forwards; B then X is X backwards.
+const OROZCO = Object.fromEntries(orozcoCorners.map((r) => [r.letter, r.notation]));
+export function orozcoKnown(e) {
+  if (e.second === 'B' && OROZCO[e.first]) return { text: `Orozco ${e.first} forwards`, notation: OROZCO[e.first] };
+  if (e.first === 'B' && OROZCO[e.second]) return { text: `Orozco ${e.second} backwards`, notation: `${OROZCO[e.second]}'` };
+  return null;
+}
 const PALETTE = { ...WHITE_TOP, X: '#d4d4d8' };
 const AXIS = { R: [0, 1], L: [0, -1], U: [1, 1], D: [1, -1], F: [2, 1], B: [2, -1] };
 const coords = (pieceName) => { const p = [0, 0, 0]; for (const f of pieceName) p[AXIS[f][0]] = AXIS[f][1]; return p.join(); };
@@ -97,6 +105,12 @@ function pairBody(e) {
       `Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.`, 'Solved: all three corners are home.');
   });
   body.appendChild(w);
+  const oz = orozcoKnown(e);
+  if (oz) {
+    const k = el('p', 'ts-known');
+    k.append(el('strong', null, 'You know this one: '), `it does exactly what ${oz.text} does, `, el('code', null, oz.notation), '. Use whichever you prefer.');
+    body.appendChild(k);
+  }
   const meta = el('p', 'bld-note', `${e.count} moves written out${e.type ? ` · the sheet's type: ${e.type}` : ''}`);
   body.appendChild(meta);
   body.appendChild(el('p', 'ts-moves')).appendChild(el('code', null, e.moves));
@@ -109,6 +123,7 @@ function pairRow(e) {
   d.id = `pair-${e.pair}`;
   const sum = el('summary');
   sum.append(el('span', 'ts-pair-name', `${e.first} → ${e.second}`), coloured(e), el('span', 'bld-muted', `${e.count} moves`));
+  if (orozcoKnown(e)) { d.classList.add('ts-is-known'); sum.appendChild(el('span', 'ts-badge', 'Orozco')); }
   d.appendChild(sum);
   d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) d.appendChild(pairBody(e)); });
   return d;
@@ -139,7 +154,10 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       li.append(el('code', null, ins), ` against ${turnWord(face)} turns: ${list.length} pairs`);
       ul.appendChild(li);
     }
-    summarySlot.append(p, ul);
+    const known = data.filter(orozcoKnown).length;
+    const kn = el('p');
+    kn.append(el('span', 'ts-badge', 'Orozco'), ` marks the ${known} pairs you already know: X then B is Orozco's X forwards, B then X is X backwards. Any pair you have not learned yet can still be done the Orozco way (1st letter forwards, 2nd backwards): same result, about twice the moves.`);
+    summarySlot.append(p, ul, kn);
   }
 
   // views
@@ -257,7 +275,7 @@ export function mountParityTwists(slot) {
   const t = el('table', 'bld-table');
   t.createCaption().textContent = 'Twisted corner → setup, twist';
   const hr = t.createTHead().insertRow();
-  ['Corner', 'White/yellow faces', 'Do', ''].forEach((x) => hr.appendChild(el('th', null, x)));
+  ['Corner', 'White/yellow faces', 'With your Orozco twist', 'Without B', ''].forEach((x) => hr.appendChild(el('th', null, x)));
   const tb = t.createTBody();
   const letterOf = Object.fromEntries(Object.entries(SPEFFZ).map(([l, n]) => [n, l]));
   for (const r of threeStyleTwists) {
@@ -277,7 +295,7 @@ export function mountParityTwists(slot) {
     b.type = 'button';
     b.addEventListener('click', () => {
       const host = el('td');
-      host.colSpan = 4;
+      host.colSpan = 5;
       const row2 = tb.insertRow(tr.sectionRowIndex + 1);
       row2.appendChild(host);
       b.disabled = true;
@@ -287,10 +305,12 @@ export function mountParityTwists(slot) {
       watch(host, parts, r.moves, ['UFR', r.corner], `Only ${r.corner} and the buffer in colour; ${r.corner} is twisted. Press Next or Play.`, `${r.corner} is fixed; the buffer is twisted the other way, which the last twist of a solve undoes.`);
     });
     wcell.appendChild(b);
-    tr.append(c, el('td', null, r.faces), how, wcell);
+    const nb = el('td');
+    nb.append(el('code', null, r.noB.notation), el('div', 'bld-muted', `${r.noB.count} moves`));
+    tr.append(c, el('td', null, r.faces), how, nb, wcell);
   }
   wrap.appendChild(t);
   p.appendChild(wrap);
-  p.appendChild(el('p', 'bld-note', "Faster later: the sheet's 2-Twists tab twists the buffer with any corner in 16-17 moves without a setup; this way uses only the twist you already know. Checked: 3,000 whole solves per table (M2 edges, pairs, parity, twists) all solved."));
+  p.appendChild(el('p', 'bld-note', "Without B: the same job in 16-17 moves with no B turn: one core, R' D R D' R' D R, against a top turn, with at most D R as a setup (the same idea as the sheet's 2-Twists tab). L cannot replace B in the Orozco way: L never touches UBR, the corner your Orozco twist works on, and U or R would move the buffer. Checked: 3,000 whole solves per table, and with the twists without B, all solved."));
   slot.appendChild(p);
 }

@@ -2530,3 +2530,8 @@ a.menu-sec[aria-current="page"],
 .ts-runner { margin: 0.4rem 0; }
 .ts-tw-net { width: 96px; margin-top: 0.3rem; }
 .ts-tw-net .bld-net { width: 96px; }
+.ts-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 999px; background: #e0ecff; color: #1d4ed8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ts-badge { background: #1e3a8a; color: #dbeafe; } }
+.ts-is-known > summary .ts-pair-name { color: #1d4ed8; }
+.ts-known { background: #eef4ff; border-radius: 6px; padding: 0.4rem 0.6rem; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ts-known { background: #172554; } }
