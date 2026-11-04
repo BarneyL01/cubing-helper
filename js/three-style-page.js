@@ -122,27 +122,35 @@ function pairBody(e) {
   const s = e.spots;
   const figs = el('div', 'ts-figs');
   const fig = (title, n) => { const f = el('figure', 'ts-fig'); f.append(n, el('figcaption', null, title)); return f; };
+  // Where each piece is after the setup, named by sticker letter only ("D' moves K into the G position").
+  const roles = [['the buffer', 'C', s.buffer], [e.first, e.first, s.first], [e.second, e.second, s.second]];
+  const label = (l) => (l === 'C' ? 'buffer' : l);
+  const atStart = (l) => (l === 'C' ? 'buffer' : `${l} (the buffer)`);
+  const list = (xs) => (xs.length < 3 ? xs.join(' and ') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
   figs.appendChild(fig(`The pair: buffer C (blue), 1st ${e.first}, 2nd ${e.second}`, net('C', e.first, e.second)));
-  if (e.setup) figs.appendChild(fig(`After the setup: they are at ${s.buffer}, ${s.first}, ${s.second}`, net(s.buffer, s.first, s.second)));
+  if (e.setup) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')}`, net(s.buffer, s.first, s.second)));
   body.appendChild(figs);
 
   const ol = el('ol', 'ts-steps');
+  const cycle = `${atStart(s.buffer)} → ${s.first} → ${s.second}`;
+  const base = { "[R D R' , U']": 'O', "[R D' R' , U']": 'H', "[R D2 R' , U']": 'L' }[e.core];
   if (e.setup) {
-    const moved = [['the buffer', 'C', s.buffer], [`the 1st target`, e.first, s.first], [`the 2nd target`, e.second, s.second]].filter(([, from, to]) => from !== to);
-    const stay = [['the buffer', 'C', s.buffer], [`the 1st target`, e.first, s.first], [`the 2nd target`, e.second, s.second]].filter(([, from, to]) => from === to);
+    const moved = roles.filter(([, from, to]) => from !== to);
+    const stay = roles.filter(([, from, to]) => from === to);
     const li = el('li');
-    li.append(el('strong', null, 'Setup '), el('span', 'mv-setup', e.setup), `: moves ${moved.length === 0 ? 'none of the three' : moved.length === 1 ? 'one piece' : moved.length === 2 ? 'two pieces' : 'all three'}${moved.length ? ': ' : '.'}`);
-    if (moved.length) li.append(moved.map(([what, from, to]) => `${what} ${from} onto sticker ${to}`).join('; ') + '.');
-    if (stay.length) { const t = stay.map(([what, from]) => `${what} ${from}`).join(' and '); li.append(` ${t[0].toUpperCase()}${t.slice(1)} ${stay.length > 1 ? 'stay' : 'stays'} put.`); }
+    li.append(el('span', 'mv-setup', e.setup), ` moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.`);
+    if (stay.length) { const t = stay.map(([w]) => w).join(' and '); li.append(` ${t[0].toUpperCase()}${t.slice(1)} ${stay.length > 1 ? 'stay' : 'stays'} put.`); }
     ol.appendChild(li);
   }
   const core = el('li');
-  core.append(el('strong', null, 'Core '), el('code', null, e.core), `: cycles ${s.buffer} → ${s.first} → ${s.second}. The sticker at ${s.buffer} goes to ${s.first}, ${s.first}'s to ${s.second}, ${s.second}'s back to ${s.buffer}.`);
-  if (!e.setup) core.append(' That is the pair itself, so no setup is needed.');
+  core.append('The commutator ', el('code', null, e.core), base ? ` (your Orozco ${base} base)` : '', ` moves ${cycle}.`);
+  if (!e.setup) core.append(' That is the pair itself, so there is no setup.');
   ol.appendChild(core);
   if (e.setup) {
     const undo = el('li');
-    undo.append(el('strong', null, 'Undo the setup '), el('span', 'mv-setup', invertAlg(e.setup)), `: everything goes back, except that ${e.first} and ${e.second} have been solved and the buffer holds a new piece.`);
+    const back = roles.filter(([, from, to]) => from !== to).map(([, from, to]) => `${to} back to ${label(from) === 'buffer' ? 'the buffer' : from}`);
+    
+    undo.append(el('span', 'mv-setup', invertAlg(e.setup)), ` takes ${list(back)}. Net: buffer → ${e.first} → ${e.second}.`);
     ol.appendChild(undo);
   }
   body.appendChild(ol);
@@ -153,10 +161,10 @@ function pairBody(e) {
     w.replaceWith(host);
     const coreMoves = expandBrackets(e.core);
     const parts = e.setup
-      ? [{ name: 'Setup', moves: e.setup, text: `The setup puts the buffer on ${s.buffer}, ${e.first} on ${s.first} and ${e.second} on ${s.second}.` },
-        { name: 'Core', moves: coreMoves, text: `The core cycles ${s.buffer} → ${s.first} → ${s.second}.` },
-        { name: 'Undo', moves: invertAlg(e.setup), text: 'The setup is undone: the three corners go home.' }]
-      : [{ name: 'Core', moves: coreMoves, text: `The core cycles C → ${e.first} → ${e.second}: solved.` }];
+      ? [{ name: 'Setup', moves: e.setup, text: `The setup moves ${list(roles.filter(([, f, t]) => f !== t).map(([w, , t]) => `${w} into the ${t} position`))}.` },
+        { name: 'Core', moves: coreMoves, text: `The commutator moves ${cycle}.` },
+        { name: 'Undo', moves: invertAlg(e.setup), text: `The setup is undone. Net: buffer → ${e.first} → ${e.second}.` }]
+      : [{ name: 'Core', moves: coreMoves, text: `The commutator moves buffer → ${e.first} → ${e.second}: solved.` }];
     watch(host, parts, e.moves, [SPEFFZ.C, SPEFFZ[e.first], SPEFFZ[e.second]],
       `Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.`, 'Solved: all three corners are home.');
   });

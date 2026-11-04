@@ -2,7 +2,7 @@
 // Filters: which table, pairs known from Orozco, setup length, core group. Optional timer like the Letters drill.
 // Saved in localStorage 'cubing-helper:3style-drill'.
 import { bldNet } from './bld-net.js?v=4';
-import { orozcoKnown } from './three-style-page.js?v=8';
+import { orozcoKnown } from './three-style-page.js?v=9';
 import { threeStyleOurs } from '../data/three-style-ours.js?v=2';
 import { threeStyleCorners } from '../data/three-style-corners.js?v=3';
 

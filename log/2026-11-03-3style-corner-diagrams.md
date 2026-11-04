@@ -31,3 +31,10 @@ always "the buffer" / C. Do not bring back UFR-style names in explanations to th
 label each moved position with the sticker in the cycle, captions read "cycles E → U → Q", the twist texts say
 "the B position". Explain moves the owner's way: "D' moves K into the G position, then the commutator moves
 buffer → G → D".
+
+## 2026-11-04 — pair explanations in the owner's words
+
+Each pair's steps now read: "D' moves K into the G position. The buffer and D stay put." / "The commutator
+[U' , R' D R] moves buffer → G → D." (when the buffer was moved: "Q (the buffer) → U → E"; Orozco bases are
+named, e.g. "your Orozco H base") / "D takes G back to K. Net: buffer → K → D." Same wording in the Watch-it runner.
+Checked on both pages (KD, UE, DH, UB, DG, LW, AF), no console errors.
