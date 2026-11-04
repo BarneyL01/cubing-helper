@@ -17,3 +17,10 @@ Owner wants the sticker letters too (memorising needs the faces, since corners t
 shows the corner diagram and, under it, the letter net of its three stickers (as before), with the caption giving
 both: e.g. `[R D2 R' , U]` cycles UBL → DFL → UBR, stickers E → U → Q. The letters start at the same corner as the
 corner names. Checked at 390 px, both pages and Blind drills, no console errors.
+
+## 2026-11-04 — Speffz only
+
+Owner is learning Speffz and can't picture UFR-style names: the 3-Style pages and the 3-Style drill now name corners
+by their top/bottom Speffz letter (A B C D on top, U V W X on the bottom): corner pictures, captions ("cycles corners
+A → U → B"), pair steps ("onto sticker L"), parity (edges A and D) and the twist table (corner letters). The buffer is
+always "the buffer" / C. Do not bring back UFR-style names in explanations to the owner either.

@@ -17,7 +17,7 @@
   <main>
     <h1>3-Style corners</h1>
     <p class="subtitle">
-      Our own table: one commutator for every pair of corner targets, buffer UFR (C). Every core is an R move against
+      Our own table: one commutator for every pair of corner targets, buffer C. Every core is an R move against
       one top or bottom turn, like Orozco's base; setups are at most 3 moves of R, U, D and F.
     </p>
     <div class="source-note">
@@ -33,7 +33,7 @@
     </div>
 
     <h2 class="section-heading" id="how" data-short="How it works">How it works</h2>
-    <p>Like Orozco: you memo the corners in pairs from the buffer C (UFR), and each pair has one commutator. Every
+    <p>Like Orozco: you memo the corners in pairs from the buffer C, and each pair has one commutator. Every
       commutator here is a short <strong>core</strong> with a <strong>setup</strong> around it (setup in orange):</p>
     <ol class="bld-list">
       <li><strong>Setup:</strong> moves one or two of the pieces (the buffer and the two targets) into the three
@@ -53,7 +53,7 @@
 
   <script type="module">
     import { threeStyleOurs } from '../../data/three-style-ours.js?v=2';
-    import { mountThreeStyle, mountParityTwists } from '../../js/three-style-page.js?v=6';
+    import { mountThreeStyle, mountParityTwists } from '../../js/three-style-page.js?v=7';
     mountThreeStyle({ data: threeStyleOurs, storageKey: 'cubing-helper:3style-ours', summarySlot: document.getElementById('ts-summary'), appSlot: document.getElementById('ts-app') });
     mountParityTwists(document.getElementById('ts-pt'));
   </script>

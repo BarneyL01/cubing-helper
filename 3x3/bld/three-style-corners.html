@@ -17,8 +17,8 @@
   <main>
     <h1>3-Style corners: Dylan / J Perm</h1>
     <p class="subtitle">
-      The commutators from Dylan's (J Perm's) 3-Style Learning Sheet: one for every pair of corner targets, buffer UFR
-      (C), 8 to 18 moves (12 on average). Built for speed, so some setups are long; see <a href="three-style.html">our
+      The commutators from Dylan's (J Perm's) 3-Style Learning Sheet: one for every pair of corner targets, buffer C
+      8 to 18 moves (12 on average). Built for speed, so some setups are long; see <a href="three-style.html">our
       table</a> for shorter setups.
     </p>
     <div class="source-note">
@@ -33,7 +33,7 @@
     </div>
 
     <h2 class="section-heading" id="how" data-short="How it works">How it works</h2>
-    <p>Like Orozco: you memo the corners in pairs from the buffer C (UFR), and each pair has one commutator. Every
+    <p>Like Orozco: you memo the corners in pairs from the buffer C, and each pair has one commutator. Every
       commutator here is a short <strong>core</strong> with a <strong>setup</strong> around it (setup in orange):</p>
     <ol class="bld-list">
       <li><strong>Setup:</strong> moves one or two of the pieces (the buffer and the two targets) into the three
@@ -59,7 +59,7 @@
 
   <script type="module">
     import { threeStyleCorners } from '../../data/three-style-corners.js?v=3';
-    import { mountThreeStyle, mountParityTwists } from '../../js/three-style-page.js?v=6';
+    import { mountThreeStyle, mountParityTwists } from '../../js/three-style-page.js?v=7';
     const ts = mountThreeStyle({ data: threeStyleCorners, storageKey: 'cubing-helper:3style-corners', summarySlot: document.getElementById('ts-summary'), appSlot: document.getElementById('ts-app') });
     mountParityTwists(document.getElementById('ts-pt'));
     const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };

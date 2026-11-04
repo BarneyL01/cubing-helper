@@ -2,7 +2,7 @@
 // Filters: which table, pairs known from Orozco, setup length, core group. Optional timer like the Letters drill.
 // Saved in localStorage 'cubing-helper:3style-drill'.
 import { bldNet } from './bld-net.js?v=4';
-import { orozcoKnown } from './three-style-page.js?v=6';
+import { orozcoKnown } from './three-style-page.js?v=7';
 import { threeStyleOurs } from '../data/three-style-ours.js?v=2';
 import { threeStyleCorners } from '../data/three-style-corners.js?v=3';
 
@@ -116,7 +116,7 @@ export function mountThreeStyleDrill(section) {
     show.disabled = !e;
     if (!e) { big.textContent = ''; sub.textContent = n ? 'Press Next.' : 'No pairs match: tick more boxes.'; net.replaceChildren(); return; }
     big.textContent = `${e.first} ${e.second}`;
-    sub.textContent = `${e.first} (${SPEFFZ[e.first]}) then ${e.second} (${SPEFFZ[e.second]}) · buffer C (UFR)`;
+    sub.textContent = `${e.first} then ${e.second} · buffer C`;
     net.hidden = !saved.picture;
     net.innerHTML = saved.picture ? bldNet('corners', { buffers: ['C'], marked: [e.first, e.second], letters: ['C', e.first, e.second] }) : '';
   }
