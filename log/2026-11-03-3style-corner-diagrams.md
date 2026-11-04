@@ -24,3 +24,10 @@ Owner is learning Speffz and can't picture UFR-style names: the 3-Style pages an
 by their top/bottom Speffz letter (A B C D on top, U V W X on the bottom): corner pictures, captions ("cycles corners
 A → U → B"), pair steps ("onto sticker L"), parity (edges A and D) and the twist table (corner letters). The buffer is
 always "the buffer" / C. Do not bring back UFR-style names in explanations to the owner either.
+
+## 2026-11-04 — sticker letters only
+
+"Corner V" is as hard for the owner as "DFR". Positions are now named only by sticker letters: the corner pictures
+label each moved position with the sticker in the cycle, captions read "cycles E → U → Q", the twist texts say
+"the B position". Explain moves the owner's way: "D' moves K into the G position, then the commutator moves
+buffer → G → D".
