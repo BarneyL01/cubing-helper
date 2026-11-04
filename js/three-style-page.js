@@ -36,11 +36,14 @@ const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.hom
 const cornerName = (l) => [...SPEFFZ[l]].sort((a, b) => 'UDFBRL'.indexOf(a) - 'UDFBRL'.indexOf(b)).join('');
 // Fixed order for where a cycle starts, so a core and its reverse show the same corners with the arrows turned round.
 const CORNER_ORDER = ['UFR', 'UFL', 'UBL', 'UBR', 'DFR', 'DFL', 'DBL', 'DBR'];
+// The core's cycle as corner names and as sticker letters, both starting at the same corner.
 function coreCorners(e) {
-  const c = [e.spots.buffer, e.spots.first, e.spots.second].map(cornerName);
+  const l = [e.spots.buffer, e.spots.first, e.spots.second];
+  const c = l.map(cornerName);
   let i = 0;
   c.forEach((n, j) => { if (CORNER_ORDER.indexOf(n) < CORNER_ORDER.indexOf(c[i])) i = j; });
-  return [...c.slice(i), ...c.slice(0, i)];
+  const rot = (x) => [...x.slice(i), ...x.slice(0, i)];
+  return { corners: rot(c), letters: rot(l) };
 }
 // A see-through cube (front face square, back face drawn up and to the right) with the three corners named
 // and joined by arrows in the order the core moves them.
@@ -253,16 +256,18 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       for (const e of list) if (!cores.has(e.core)) cores.set(e.core, { e, n: 0 }); 
       for (const e of list) cores.get(e.core).n++;
       const bases = el('div', 'ts-bases');
-      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three corners a core moves, by name, with arrows for where each corner goes (a core and its reverse show the same corners with the arrows turned round). The setup brings the buffer and the two targets onto those three corners; open a pair to see the sticker letters, which say how each corner ends up turned.`));
+      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three corners a core moves, by name, with arrows for where each corner goes (a core and its reverse show the same corners with the arrows turned round). The setup brings the buffer and the two targets onto those three corners; the letter picture under it shows which sticker goes to which, so you can see how each corner turns as it moves.`));
       const row = el('div', 'ts-figs');
       for (const [core, { e, n }] of cores) {
-        const [a, b, c] = coreCorners(e);
+        const { corners: [a, b, c], letters: lt } = coreCorners(e);
         const f = el('figure', 'ts-fig ts-base');
         const nb = el('div', 'ts-corners');
         nb.innerHTML = cornerDiagram([a, b, c]);
-        f.append(nb);
+        const ln = el('div', 'ts-net');
+        ln.innerHTML = bldNet('corners', { marked: lt, letters: lt });
+        f.append(nb, ln);
         const cap = el('figcaption');
-        cap.append(el('code', null, core), ` cycles ${a} → ${b} → ${c} · ${n} pair${n > 1 ? 's' : ''}`);
+        cap.append(el('code', null, core), ` cycles ${a} → ${b} → ${c}, stickers ${lt.join(' → ')} · ${n} pair${n > 1 ? 's' : ''}`);
         f.appendChild(cap);
         row.appendChild(f);
       }
