@@ -3,6 +3,7 @@
 // that never moves the buffer. Three tabs: the setup moves one target / both targets / N and Q (buffer moves).
 // Data: data/three-style-bases.js (generated and checked by log/2026-11-05-3style-bases.mjs).
 import { pairRow, coreFigure } from './three-style-page.js?v=10';
+import { bldNet } from './bld-net.js?v=4';
 
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
 const TABS = [
@@ -166,8 +167,19 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
       tr.appendChild(td);
     }
     wrap.appendChild(t);
+    // one letter picture per position: the position in blue, every letter that sets up into it outlined
+    const nets = el('div', 'ts-figs');
+    for (const pos of k) {
+      const ls = [...into[pos].keys()].sort();
+      if (!ls.length) continue;
+      const f = el('figure', 'ts-fig');
+      const n = el('div', 'ts-net');
+      n.innerHTML = bldNet('corners', { buffers: [pos], marked: ls, letters: [pos, ...ls] });
+      f.append(n, el('figcaption', null, `Into ${pos} (blue): ${ls.join(' ')}`));
+      nets.appendChild(f);
+    }
     const box = el('div');
-    box.appendChild(wrap);
+    box.append(nets, wrap);
     if (note) box.appendChild(el('p', 'bld-note', '* Two setups: the short one would also move the other target in some pairs, so those pairs use the longer one. Open the pair to see which.'));
     return box;
   }

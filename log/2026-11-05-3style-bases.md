@@ -27,3 +27,17 @@ always D2). Each group in "One target moves" now has a table: for each of its tw
 it and the setup (forwards and backwards share them). 45 of the 52 letter-into-position moves always use one setup;
 7 have two (T>P, U>S, E>P, X>P, I>A, R>D, R>P) because the short setup would also move the other target in some
 pairs; those are marked *.
+
+## Setup diagrams
+
+Each group in "One target moves" shows one letter picture per position: the position in blue, every letter that sets
+up into it outlined (e.g. Into A: I O S U), above the letter/setup table.
+
+## B setups: tried, waiting for the owner
+
+Owner asked for B "everywhere that causes a problem or shortens the setup". Tried in a copy of the generator (not
+committed): B setups wherever shorter make all 378 pairs reachable with the buffer still (268 one-target, 110 both),
+but create 44 conflicts + 22 four-move setups; fixing them greedily needs 26 new bases (13 groups, total 56) and still
+leaves 5 letters with two setups and 8 four-move setups. Narrow version (B only where D/L cannot reach or to fix a
+problem): 216 one-target, 162 both, 16 new bases (total 46), 2 letters with two setups, 12 four-move. The earlier
+estimate of 8 new bases only counted the 32 problem pairs of the D/L table. Asked the owner which to build.
