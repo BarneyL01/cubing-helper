@@ -106,6 +106,7 @@ const MENU = [
           { label: 'Recognition', path: '3x3/practice/recognition.html' },
           { label: 'Blind drills', path: '3x3/practice/blind-drills.html' },
           { label: 'Blind memo', path: '3x3/bld/practice.html' },
+          { label: '3-Style solves', path: '3x3/practice/three-style-solves.html' },
         ],
       },
     ],

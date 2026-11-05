@@ -297,7 +297,7 @@ built ahead of being asked for. As of 2026-10-03:
   **3-Style by base** (`3x3/bld/three-style-bases.html`, 2026-11-05, menu 3-Style › "By base"): 3-style the Orozco way: 30 bases
   (no-setup commutators, each with its reverse) + one extra base `[L' U L , D2]` (owner, for LT TL TX XT LR RL) + setups of D and L only (owner: no B, tried and dropped), so the buffer never moves. Tabs: One
   target moves (184), Both targets move (122), N and Q (72, unreachable with D/L: the 3-Style page's commutators). Pairs with B
-  are the Orozco ones. "Find letters" search (1 or 2 letters). `js/three-style-bases.js`, `data/three-style-bases.js` from `log/2026-11-05-3style-bases.mjs --write`.
+  are the Orozco ones. "Find letters" search (1 or 2 letters). **3-Style solves** trainer (`3x3/practice/three-style-solves.html`, Practice section, 2026-11-05): small blind solves made only of the chosen base groups / setup lengths (1-3 pairs), `js/three-style-trainer.js`, checked by `log/2026-11-05-3style-trainer-check.mjs`. `js/three-style-bases.js`, `data/three-style-bases.js` from `log/2026-11-05-3style-bases.mjs --write`.
   **3-Style corners: Dylan / J Perm** (`3x3/bld/three-style-corners.html`, 2026-11-02): all 378 pairs from
   Dylan's (J Perm's) 3-Style Learning Sheet, buffer UFR; data `data/three-style-corners.js` generated and checked by
   `log/2026-11-02-3style-corners.mjs --write` from `docs/sheets/3-style/UFR-Comms.csv` + `UFR-Types.csv`; 11 sheet
@@ -418,7 +418,7 @@ Method").
   in `data/` are fine even when a script generated them (keep the script and
   its checks in `log/`).
 - Practice pages: one page per drill area, listed as a page of the Practice
-  section in `MENU` (Recognition, Blind drills, Blind memo so far; the menu and
+  section in `MENU` (Recognition, Blind drills, Blind memo, 3-Style solves so far; the menu and
   section row come from there — no hand-written tabs). The current item is kept in localStorage (`cubing-helper:<page>`),
   answers are hidden until a button is pressed, and anything generated (a
   scramble, a solver's solution) is checked by simulation in a Node checker

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3-Style solves — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=24" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=11"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>3-Style solves</h1>
+    <p class="subtitle">
+      Small blind solves with only the 3-style corner pairs you choose: the base groups and setup lengths you are
+      learning from the <a href="../bld/three-style-bases.html">By base</a> page. Edges stay solved.
+    </p>
+    <div class="source-note">
+      <p>
+        Made here (2026-11-05). Each scramble picks pairs from your choice that use different corners and undoes them,
+        using the commutators of the <a href="../bld/three-style.html">3-Style page</a> or Dylan's sheet, so the
+        scramble does not spell out the answer (for some pairs, such as a base with no setup, every table has the same
+        commutator, so then it does). Every scramble is checked on the simulated cube before it is shown: the corner
+        memo from C is exactly the chosen pairs, and the solution solves it. Checked by
+        <code>log/2026-11-05-3style-trainer-check.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="settings" data-short="Settings">What to practise</h2>
+    <form class="rec-settings" id="t-form" onsubmit="return false">
+      <fieldset>
+        <legend>Base groups</legend>
+        <div class="rec-controls t-all">
+          <button type="button" class="rec-btn" id="t-all">All</button>
+          <button type="button" class="rec-btn" id="t-none">None</button>
+        </div>
+        <div id="t-groups"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Setup moves</legend>
+        <div id="t-setups"></div>
+        <label><input type="checkbox" id="t-both" /> Also pairs where the setup moves both targets</label>
+      </fieldset>
+      <fieldset>
+        <legend>Pairs per solve</legend>
+        <label><input type="radio" name="t-n" value="1" /> 1</label>
+        <label><input type="radio" name="t-n" value="2" /> 2</label>
+        <label><input type="radio" name="t-n" value="3" /> 3</label>
+      </fieldset>
+      <fieldset>
+        <legend>Picture</legend>
+        <label><input type="radio" name="t-pic" value="none" /> None (use your cube)</label>
+        <label><input type="radio" name="t-pic" value="3d" /> 3D cube</label>
+        <label><input type="radio" name="t-pic" value="net" /> Flat net</label>
+      </fieldset>
+      <p class="bld-note" id="t-count"></p>
+    </form>
+
+    <h2 class="section-heading" id="solve" data-short="Solve">Solve</h2>
+    <p class="drill-how">Do the scramble with white on top and green in front, memo the corners from C, solve them
+      blind, then check. Edges are already solved.</p>
+    <p class="drill-error" id="t-error" role="status"></p>
+    <div class="rec-controls">
+      <button type="button" class="rec-btn rec-btn-primary" id="t-new">New scramble</button>
+    </div>
+    <div class="drill-stage">
+      <p class="drill-label">Scramble <span class="bld-muted" id="t-length"></span></p>
+      <p class="scramble-text"><code id="t-scramble"></code></p>
+      <div class="drill-cube" id="t-cube"></div>
+      <div class="drill-net" id="t-net"></div>
+    </div>
+    <div class="rec-controls">
+      <button type="button" class="rec-btn" id="t-show-memo">Show targets</button>
+      <button type="button" class="rec-btn" id="t-show-moves">Show solution</button>
+    </div>
+    <div id="t-memo" hidden>
+      <h3>Corner targets</h3>
+      <p class="memo-letters" id="t-letters"></p>
+    </div>
+    <div id="t-moves" hidden></div>
+  </main>
+
+  <script type="module">
+    import { threeStyleBases, threeStyleBaseList } from '../../data/three-style-bases.js?v=6';
+    import { threeStyleOurs } from '../../data/three-style-ours.js?v=2';
+    import { threeStyleCorners } from '../../data/three-style-corners.js?v=3';
+    import { trainerPool, trainerScramble, groupOf } from '../../js/three-style-trainer.js?v=1';
+    import { colourNet } from '../../js/bld-net.js?v=4';
+    import { rotatableCube } from '../../js/cube-rotatable.js?v=3';
+    import { applyAlg, solvedCube } from '../../js/cube-sim.js';
+
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
+    const KEY = 'cubing-helper:3style-solves';
+    const COLOURS = { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' };
+    const key = (s) => `${s.p.join()}|${s.n.join()}`;
+
+    // groups in the By base page's order (most one-target pairs first), each with its insertion-first base
+    const one = threeStyleBases.filter((e) => e.kind !== 'nq');
+    const sizes = {};
+    for (const e of one) if (e.kind === 'one') sizes[groupOf(e)] = (sizes[groupOf(e)] || 0) + 1;
+    const GROUPS = Object.keys(sizes).sort((a, b) => sizes[b] - sizes[a]);
+    const baseOf = (g) => threeStyleBaseList.find((b) => [...b.base].sort().join('') === g && b.core.startsWith(`[${b.insertion}`));
+    const SETUPS = [[0, 'None (the base itself)'], [1, '1 move'], [2, '2 moves'], [3, '3 moves'], [4, '4 moves']];
+
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
+    saved = { groups: GROUPS.slice(0, 1), setups: [0, 1], both: false, n: 1, pic: 'none', ...saved };
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
+
+    // settings
+    for (const g of GROUPS) {
+      const l = el('label', 't-group');
+      const i = el('input'); i.type = 'checkbox'; i.value = g; i.checked = saved.groups.includes(g);
+      const b = baseOf(g);
+      l.append(i, ' ', el('strong', null, `${g[0]} ${g[1]}`), ' ', el('code', null, b ? b.core : ''), el('span', 'bld-muted', ` · ${sizes[g]} pairs${['BL', 'BO', 'BH'].includes(g) ? ' · your Orozco' : ''}`));
+      $('t-groups').appendChild(l);
+    }
+    for (const [n, text] of SETUPS) {
+      const l = el('label');
+      const i = el('input'); i.type = 'checkbox'; i.value = String(n); i.checked = saved.setups.includes(n);
+      l.append(i, ` ${text}`);
+      $('t-setups').appendChild(l);
+    }
+    $('t-both').checked = saved.both;
+    document.querySelector(`input[name="t-n"][value="${saved.n}"]`).checked = true;
+    document.querySelector(`input[name="t-pic"][value="${saved.pic}"]`).checked = true;
+    const read = () => {
+      saved.groups = [...$('t-groups').querySelectorAll('input:checked')].map((i) => i.value);
+      saved.setups = [...$('t-setups').querySelectorAll('input:checked')].map((i) => Number(i.value));
+      saved.both = $('t-both').checked;
+      saved.n = Number(document.querySelector('input[name="t-n"]:checked').value);
+      saved.pic = document.querySelector('input[name="t-pic"]:checked').value;
+      save();
+    };
+    const pool = () => trainerPool(threeStyleBases, saved);
+    const showCount = () => { const n = pool().length; $('t-count').textContent = `${n} pair${n === 1 ? '' : 's'} match.`; };
+    $('t-form').addEventListener('change', (ev) => { read(); showCount(); if (ev.target.name === 't-pic') draw(); });
+    const setAll = (on) => { $('t-groups').querySelectorAll('input').forEach((i) => (i.checked = on)); read(); showCount(); };
+    $('t-all').addEventListener('click', () => setAll(true));
+    $('t-none').addEventListener('click', () => setAll(false));
+
+    // scramble
+    let cube3d = null;
+    const hint = (e) => {
+      if (!e.setup) return 'the base itself, no setup';
+      return [[e.first, e.spots.first], [e.second, e.spots.second]].filter(([f, t]) => f !== t).map(([f, t]) => `${f} into ${t}`).join(', ');
+    };
+    function newScramble() {
+      read();
+      $('t-error').textContent = '';
+      const r = trainerScramble(pool(), saved.n, [threeStyleOurs, threeStyleCorners]);
+      if (!r) { $('t-error').textContent = 'Not enough pairs on different corners for that: tick more groups or setups, or fewer pairs per solve.'; return; }
+      saved.scramble = r.scramble;
+      saved.pairs = r.pairs.map((e) => e.pair);
+      saved.showMemo = false;
+      saved.showMoves = false;
+      save();
+      draw();
+    }
+    function draw() {
+      if (!saved.scramble || !saved.pairs) { newScramble(); return; }
+      const pairs = saved.pairs.map((p) => threeStyleBases.find((e) => e.pair === p));
+      if (pairs.some((e) => !e)) { newScramble(); return; }
+      const state = applyAlg(solvedCube().map((s) => ({ ...s, home: key(s) })), saved.scramble);
+      $('t-scramble').textContent = saved.scramble;
+      $('t-length').textContent = `(${saved.scramble.split(' ').length} moves)`;
+      $('t-net').hidden = saved.pic !== 'net';
+      $('t-cube').hidden = saved.pic !== '3d';
+      if (saved.pic === 'net') $('t-net').innerHTML = colourNet(state, COLOURS);
+      if (saved.pic === '3d') {
+        if (!cube3d) { cube3d = rotatableCube(state, { palette: COLOURS, label: 'Scrambled cube; drag to turn it' }); $('t-cube').appendChild(cube3d.element); }
+        else cube3d.update(state);
+      }
+      // targets
+      const letters = $('t-letters');
+      letters.replaceChildren();
+      for (const e of pairs) {
+        const s = el('span', 'memo-pair');
+        s.append(el('span', 'memo-letter', e.first), el('span', 'memo-letter', e.second));
+        letters.appendChild(s);
+      }
+      // solution, one pair at a time, by base
+      const moves = $('t-moves');
+      moves.replaceChildren();
+      pairs.forEach((e, i) => {
+        const d = el('div', 't-step');
+        const h = el('p');
+        h.append(el('strong', null, `${i + 1}. ${e.first} → ${e.second}`), el('span', 'bld-muted', ` · base ${groupOf(e)[0]} ${groupOf(e)[1]}${e.kind === 'both' ? ' · both targets move' : ''}`));
+        const alg = el('p', 'case-alg');
+        const c = el('code');
+        if (e.setup) c.append('[', el('span', 'mv-setup', e.setup), ' : ', e.core, ']'); else c.append(e.core);
+        alg.appendChild(c);
+        d.append(h, alg, el('p', 'bld-note', `${hint(e)} · ${e.count} moves: ${e.moves}`));
+        moves.appendChild(d);
+      });
+      $('t-memo').hidden = !saved.showMemo;
+      $('t-moves').hidden = !saved.showMoves;
+      $('t-show-memo').textContent = saved.showMemo ? 'Hide targets' : 'Show targets';
+      $('t-show-moves').textContent = saved.showMoves ? 'Hide solution' : 'Show solution';
+    }
+    $('t-new').addEventListener('click', newScramble);
+    $('t-show-memo').addEventListener('click', () => { saved.showMemo = !saved.showMemo; save(); draw(); });
+    $('t-show-moves').addEventListener('click', () => { saved.showMoves = !saved.showMoves; save(); draw(); });
+    showCount();
+    draw();
+  </script>
+</body>
+</html>
