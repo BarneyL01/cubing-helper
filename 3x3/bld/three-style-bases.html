@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3-Style by base — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=19" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=10"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>3-Style by base</h1>
+    <p class="subtitle">
+      3-Style learned the Orozco way: a few bases, and a short setup of D and L turns that never moves the buffer.
+    </p>
+    <div class="source-note">
+      <p>
+        Worked out here (2026-11-05), not from your notes or a published list. A search tried every base (a commutator
+        that solves one pair with no setup: R or R' around a top or bottom turn, against one top or bottom turn) with
+        every setup of up to 4 D and L turns, and kept the shortest setup for each pair, preferring setups that move
+        only one target. Pairs with B are your Orozco commutators; pairs with N or Q use the commutators of the
+        <a href="three-style.html">3-Style page</a>. Every one was checked in the cube simulator: it cycles the buffer
+        and the two targets and moves nothing else. Built by <code>log/2026-11-05-3style-bases.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="how" data-short="How it works">How it works</h2>
+    <ol class="bld-list">
+      <li><strong>A base</strong> is a commutator that solves one pair with no setup. For example
+        <code>[R' D' R , U2]</code> moves buffer → A → P. Your Orozco bases are three of them: buffer → O → B,
+        buffer → H → B and buffer → L → B.</li>
+      <li><strong>Its reverse</strong> (the two parts swapped) solves the pair the other way round: buffer → P → A.
+        Like Orozco forwards and backwards, each group below shows both.</li>
+      <li><strong>Any other pair:</strong> find a base whose positions your targets can reach with D and L turns.
+        The setup moves a target into its base position (for example D' moves K into the G position), the base does
+        its cycle, and the setup is undone. The buffer never moves.</li>
+    </ol>
+    <p>Each pair shows what its setup moves, for example "K into G". Open a pair for the steps, pictures and a
+      cube to watch.</p>
+
+    <h2 class="section-heading" id="pairs" data-short="Pairs">The pairs</h2>
+    <div id="tsb-app"></div>
+  </main>
+
+  <script type="module">
+    import { threeStyleBases, threeStyleBaseList } from '../../data/three-style-bases.js?v=1';
+    import { mountThreeStyleBases } from '../../js/three-style-bases.js?v=1';
+    mountThreeStyleBases({ data: threeStyleBases, baseList: threeStyleBaseList, slot: document.getElementById('tsb-app'), storageKey: 'cubing-helper:3style-bases' });
+  </script>
+</body>
+</html>

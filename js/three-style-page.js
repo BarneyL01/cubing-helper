@@ -183,7 +183,23 @@ function pairBody(e) {
   return body;
 }
 
-function pairRow(e) {
+// One core as a picture: the see-through cube with the three positions and arrows, the letter net, and a caption
+// (caption(letters) gives the text after the core).
+export function coreFigure(e, caption) {
+  const { corners: [a, b, c], letters: lt } = coreCorners(e);
+  const f = el('figure', 'ts-fig ts-base');
+  const nb = el('div', 'ts-corners');
+  nb.innerHTML = cornerDiagram([a, b, c], lt);
+  const ln = el('div', 'ts-net');
+  ln.innerHTML = bldNet('corners', { marked: lt, letters: lt });
+  f.append(nb, ln);
+  const cap = el('figcaption');
+  cap.append(el('code', null, e.core), caption(lt));
+  f.appendChild(cap);
+  return f;
+}
+
+export function pairRow(e) {
   const d = el('details', 'ts-pair');
   d.id = `pair-${e.pair}`;
   const sum = el('summary');
@@ -269,19 +285,7 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       const bases = el('div', 'ts-bases');
       bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three positions a core moves, by sticker letter, with arrows for where each one goes (a core and its reverse show the same positions with the arrows turned round). The letter picture under it shows the same three stickers on the faces. The setup brings the buffer and the two targets onto those three corners.`));
       const row = el('div', 'ts-figs');
-      for (const [core, { e, n }] of cores) {
-        const { corners: [a, b, c], letters: lt } = coreCorners(e);
-        const f = el('figure', 'ts-fig ts-base');
-        const nb = el('div', 'ts-corners');
-        nb.innerHTML = cornerDiagram([a, b, c], lt);
-        const ln = el('div', 'ts-net');
-        ln.innerHTML = bldNet('corners', { marked: lt, letters: lt });
-        f.append(nb, ln);
-        const cap = el('figcaption');
-        cap.append(el('code', null, core), ` cycles ${lt.join(' → ')} · ${n} pair${n > 1 ? 's' : ''}`);
-        f.appendChild(cap);
-        row.appendChild(f);
-      }
+      for (const [core, { e, n }] of cores) row.appendChild(coreFigure(e, (lt) => ` cycles ${lt.join(' → ')} · ${n} pair${n > 1 ? 's' : ''}`));
       bases.appendChild(row);
       d.appendChild(bases);
       let last = -1;

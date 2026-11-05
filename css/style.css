@@ -2545,3 +2545,5 @@ a.menu-sec[aria-current="page"],
 .corner-diagram .cd-arrow { fill: none; stroke: var(--accent); stroke-width: 2.4; }
 .corner-diagram .cd-head { fill: var(--accent); }
 .corner-diagram .cd-label { font: 600 13px system-ui, sans-serif; fill: var(--text); }
+/* 3-Style by base: what the setup moves, under each pair's name */
+.ts-hint { flex-basis: 100%; font-size: 0.85rem; color: var(--text-muted); }

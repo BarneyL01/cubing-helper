@@ -91,6 +91,7 @@ const MENU = [
         label: '3-Style',
         pages: [
           { label: '3-Style', path: '3x3/bld/three-style.html' },
+          { label: 'By base', path: '3x3/bld/three-style-bases.html' },
           { label: 'Dylan / J Perm', path: '3x3/bld/three-style-corners.html' },
         ],
       },
