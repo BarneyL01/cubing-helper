@@ -46,3 +46,12 @@ estimate of 8 new bases only counted the 32 problem pairs of the D/L table. Aske
 
 Each closed group now shows its two commutators under "Base A P · 24 pairs", e.g. `[R' D' R , U2]` buffer → A → P and
 `[U2 , R' D' R]` buffer → P → A. Search placeholder no longer shown in capitals.
+
+## Decision: D/L only, plus one extra base
+
+Owner: keep D and L setups (no B); add `[L' U L , D2]` (and its reverse, group L T). The generator uses it only for
+pairs whose letter otherwise needs a different setup or a 4-move setup: LT, TL (no setup), TX, XT (`L'`), LR, RL
+(`D2 L2 D2`). B setups were tried and dropped (see above). Within one group every letter has one setup; across groups
+7 letters go into a position a different way. Those now get a grey line in the group's table ("I into A is usually L',
+but that would also move S, the other target here"), replacing the `*` note; each line checked (the usual setup does
+move that other target). Group titles show one direction only (insertion first).

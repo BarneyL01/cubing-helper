@@ -295,7 +295,7 @@ built ahead of being asked for. As of 2026-10-03:
   `log/2026-11-03-3style-twists.mjs`: 3,000 whole solves per table). Pairs known from Orozco (with B) carry an "Orozco" badge.
   Blind drills has a "3-Style" mode (`js/three-style-drill.js`): random pair, filters, reveal, timer.
   **3-Style by base** (`3x3/bld/three-style-bases.html`, 2026-11-05, menu 3-Style › "By base"): 3-style the Orozco way: 30 bases
-  (no-setup commutators, each with its reverse) + setups of D and L only (owner: no B), so the buffer never moves. Tabs: One
+  (no-setup commutators, each with its reverse) + one extra base `[L' U L , D2]` (owner, for LT TL TX XT LR RL) + setups of D and L only (owner: no B, tried and dropped), so the buffer never moves. Tabs: One
   target moves (184), Both targets move (122), N and Q (72, unreachable with D/L: the 3-Style page's commutators). Pairs with B
   are the Orozco ones. "Find letters" search (1 or 2 letters). `js/three-style-bases.js`, `data/three-style-bases.js` from `log/2026-11-05-3style-bases.mjs --write`.
   **3-Style corners: Dylan / J Perm** (`3x3/bld/three-style-corners.html`, 2026-11-02): all 378 pairs from

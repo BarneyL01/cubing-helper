@@ -104,9 +104,10 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
       } else {
         const [x, y] = [...k];
         // the two commutators of the group in the title, so it reads at a glance while closed
-        const bs = baseList.filter((b) => [...b.base].sort().join('') === k).sort((a, b) => (a.core.startsWith('[R') ? -1 : 1) - (b.core.startsWith('[R') ? -1 : 1));
+        // one direction only (the insertion first): the reverse is the same moves with the two parts swapped
+        const b = baseList.find((b) => [...b.base].sort().join('') === k && b.core.startsWith(`[${b.insertion}`));
         const lines = el('span', 'ts-sum-bases');
-        for (const b of bs) { const l = el('span', 'ts-sum-base'); l.append(el('code', null, b.core), ` buffer → ${b.base[0]} → ${b.base[1]}`); lines.appendChild(l); }
+        if (b) { const l = el('span', 'ts-sum-base'); l.append(el('code', null, b.core), ` buffer → ${b.base[0]} → ${b.base[1]}`); lines.appendChild(l); }
         sum.append(el('strong', null, `Base ${x} ${y}`), el('span', 'bld-muted', ` · ${rows.length} pairs`), lines);
       }
       d.appendChild(sum);
@@ -121,7 +122,8 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
       d.appendChild(figs);
       if (saved.tab === 'one') d.appendChild(swapTable(k, rows));
       // forwards and backwards (the base and its reverse), each by setup length
-      const cores = [...new Set(rows.map((e) => e.core))].sort((a, b) => (a.startsWith('[R') ? -1 : 1) - (b.startsWith('[R') ? -1 : 1));
+      const insFirst = (c) => { const e = rows.find((x) => x.core === c); return c.startsWith(`[${e.insertion}`) ? 0 : 1; };
+      const cores = [...new Set(rows.map((e) => e.core))].sort((a, b) => insFirst(a) - insFirst(b));
       for (const c of cores) {
         const sub = rows.filter((e) => e.core === c).sort((a, b) => a.setupMoves - b.setupMoves || a.pair.localeCompare(b.pair));
         const h = el('p', 'ts-core-sub');
@@ -138,14 +140,30 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
   }
   // Which letters can be moved into each of the group's two positions, and with which setup (forwards and backwards
   // use the same ones). A letter with two setups: the short one would also move the other target in some pairs.
+  // The usual setup for each "letter into position" across the whole one-target list: the one most pairs use.
+  const GLOBAL = (() => {
+    const u = new Map();
+    for (const e of data) {
+      if (e.kind !== 'one' || !e.setup) continue;
+      for (const [f, t] of [[e.first, e.spots.first], [e.second, e.spots.second]]) {
+        if (f === t) continue;
+        const k = `${f}>${t}`;
+        if (!u.has(k)) u.set(k, new Map());
+        u.get(k).set(e.setup, (u.get(k).get(e.setup) || 0) + 1);
+      }
+    }
+    return new Map([...u].map(([k, m]) => [k, [...m].sort((a, b) => b[1] - a[1] || a[0].split(' ').length - b[0].split(' ').length)[0][0]]));
+  })();
   function swapTable(k, rows) {
     const into = { [k[0]]: new Map(), [k[1]]: new Map() };
     for (const e of rows) {
       if (!e.setup) continue;
       for (const [f, t] of [[e.first, e.spots.first], [e.second, e.spots.second]]) {
         if (f === t || !into[t]) continue;
-        if (!into[t].has(f)) into[t].set(f, new Set());
-        into[t].get(f).add(e.setup);
+        if (!into[t].has(f)) into[t].set(f, new Map());
+        const m = into[t].get(f);
+        if (!m.has(e.setup)) m.set(e.setup, new Set());
+        m.get(e.setup).add(f === e.first ? e.second : e.first); // the other target
       }
     }
     const wrap = el('div', 'table-wrap');
@@ -156,17 +174,29 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
     const tb = t.createTBody();
     let note = false;
     for (const pos of k) {
-      const list = [...into[pos].entries()].sort((a, b) => [...a[1]][0].split(' ').length - [...b[1]][0].split(' ').length || a[0].localeCompare(b[0]));
+      // the usual setup is the one most pairs use (ties: the shorter); the others are for when the usual one would
+      // also move the other target
+      const usualOf = (m) => [...m.entries()].sort((a, b) => b[1].size - a[1].size || a[0].split(' ').length - b[0].split(' ').length)[0][0];
+      const list = [...into[pos].entries()].sort((a, b) => usualOf(a[1]).split(' ').length - usualOf(b[1]).split(' ').length || a[0].localeCompare(b[0]));
       if (!list.length) continue;
       const tr = tb.insertRow();
       tr.appendChild(el('th', null, pos));
       const td = el('td');
-      list.forEach(([f, set], i) => {
+      list.forEach(([f, set]) => {
         const item = el('span', 'ts-swap-item');
         item.append(el('strong', null, f), ': ');
-        [...set].forEach((st, j) => { if (j) item.append(' or '); item.append(el('span', 'mv-setup', st)); });
-        if (set.size > 1) { item.append('*'); note = true; }
+        const usual = usualOf(set);
+        item.append(el('span', 'mv-setup', usual));
         td.append(item);
+        // across the whole page this letter usually goes into this position another way
+        const g = GLOBAL.get(`${f}>${pos}`);
+        if (g && g !== usual) {
+          const alt = el('span', 'ts-swap-alt');
+          const others = [...set.get(usual)].sort().join(' or ');
+          alt.append(`${f} into ${pos} is usually `, el('span', 'mv-setup', g), `, but that would also move ${others}, the other target here.`);
+          td.append(alt);
+          note = true;
+        }
       });
       tr.appendChild(td);
     }
@@ -184,7 +214,7 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
     }
     const box = el('div');
     box.append(nets, wrap);
-    if (note) box.appendChild(el('p', 'bld-note', '* Two setups: the short one would also move the other target in some pairs, so those pairs use the longer one. Open the pair to see which.'));
+    if (note) box.appendChild(el('p', 'bld-note', 'A letter with a grey line goes in another way here: its usual setup would also move the other target, so these pairs move it out of the way first or use another setup.'));
     return box;
   }
   const baseOfCore = (c) => { const b = baseList.find((x) => x.core === c); return b ? `${b.base[0]} → ${b.base[1]}` : ''; };

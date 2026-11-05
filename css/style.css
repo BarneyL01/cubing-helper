@@ -2557,3 +2557,4 @@ a.menu-sec[aria-current="page"],
 .ts-sum-base { display: block; font-size: 0.9rem; }
 .ts-sum-base code { margin-right: 0.35rem; }
 .ts-search input::placeholder { text-transform: none; }
+.ts-swap-alt { display: block; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
