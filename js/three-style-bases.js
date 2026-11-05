@@ -114,6 +114,7 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
         }
       }
       d.appendChild(figs);
+      if (saved.tab === 'one') d.appendChild(swapTable(k, rows));
       // forwards and backwards (the base and its reverse), each by setup length
       const cores = [...new Set(rows.map((e) => e.core))].sort((a, b) => (a.startsWith('[R') ? -1 : 1) - (b.startsWith('[R') ? -1 : 1));
       for (const c of cores) {
@@ -129,6 +130,46 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
       }
       groups.appendChild(d);
     });
+  }
+  // Which letters can be moved into each of the group's two positions, and with which setup (forwards and backwards
+  // use the same ones). A letter with two setups: the short one would also move the other target in some pairs.
+  function swapTable(k, rows) {
+    const into = { [k[0]]: new Map(), [k[1]]: new Map() };
+    for (const e of rows) {
+      if (!e.setup) continue;
+      for (const [f, t] of [[e.first, e.spots.first], [e.second, e.spots.second]]) {
+        if (f === t || !into[t]) continue;
+        if (!into[t].has(f)) into[t].set(f, new Set());
+        into[t].get(f).add(e.setup);
+      }
+    }
+    const wrap = el('div', 'table-wrap');
+    const t = el('table', 'bld-table ts-swap');
+    t.createCaption().textContent = 'Letters you can move into each position (setup in orange)';
+    const hr = t.createTHead().insertRow();
+    ['Into', 'Letter and setup'].forEach((x) => hr.appendChild(el('th', null, x)));
+    const tb = t.createTBody();
+    let note = false;
+    for (const pos of k) {
+      const list = [...into[pos].entries()].sort((a, b) => [...a[1]][0].split(' ').length - [...b[1]][0].split(' ').length || a[0].localeCompare(b[0]));
+      if (!list.length) continue;
+      const tr = tb.insertRow();
+      tr.appendChild(el('th', null, pos));
+      const td = el('td');
+      list.forEach(([f, set], i) => {
+        const item = el('span', 'ts-swap-item');
+        item.append(el('strong', null, f), ': ');
+        [...set].forEach((st, j) => { if (j) item.append(' or '); item.append(el('span', 'mv-setup', st)); });
+        if (set.size > 1) { item.append('*'); note = true; }
+        td.append(item);
+      });
+      tr.appendChild(td);
+    }
+    wrap.appendChild(t);
+    const box = el('div');
+    box.appendChild(wrap);
+    if (note) box.appendChild(el('p', 'bld-note', '* Two setups: the short one would also move the other target in some pairs, so those pairs use the longer one. Open the pair to see which.'));
+    return box;
   }
   const baseOfCore = (c) => { const b = baseList.find((x) => x.core === c); return b ? `${b.base[0]} → ${b.base[1]}` : ''; };
   draw();

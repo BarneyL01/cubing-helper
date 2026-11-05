@@ -19,3 +19,11 @@ by moving one target into a base position, with the buffer never moving. New pag
 "Find letters" box above the tabs: one letter lists every pair with it as 1st and as 2nd target; two letters show that
 pair. Each result says what the setup moves and where it lives (tab and base). While there is text it replaces the
 tabs. Says so when the two letters are on one piece or a letter is a buffer sticker. Checked K, KD, KP, C, NQ, AN.
+
+## Letters that move into each position
+
+Owner asked, per base, which letters can be swapped in and whether the setup is always the same (e.g. H into P is
+always D2). Each group in "One target moves" now has a table: for each of its two positions, every letter moved into
+it and the setup (forwards and backwards share them). 45 of the 52 letter-into-position moves always use one setup;
+7 have two (T>P, U>S, E>P, X>P, I>A, R>D, R>P) because the short setup would also move the other target in some
+pairs; those are marked *.
