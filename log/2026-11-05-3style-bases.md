@@ -41,3 +41,8 @@ but create 44 conflicts + 22 four-move setups; fixing them greedily needs 26 new
 leaves 5 letters with two setups and 8 four-move setups. Narrow version (B only where D/L cannot reach or to fix a
 problem): 216 one-target, 162 both, 16 new bases (total 46), 2 letters with two setups, 12 four-move. The earlier
 estimate of 8 new bases only counted the 32 problem pairs of the D/L table. Asked the owner which to build.
+
+## Commutators in the group titles
+
+Each closed group now shows its two commutators under "Base A P · 24 pairs", e.g. `[R' D' R , U2]` buffer → A → P and
+`[U2 , R' D' R]` buffer → P → A. Search placeholder no longer shown in capitals.

@@ -103,7 +103,11 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
         sum.append(...cores.flatMap((c, j) => (j ? [' and ', el('code', null, c)] : [el('code', null, c)])), el('span', 'bld-muted', ` · ${rows.length} pairs`));
       } else {
         const [x, y] = [...k];
-        sum.append(el('strong', null, `Base ${x} ${y}`), el('span', 'bld-muted', ` · buffer → ${x} → ${y} and buffer → ${y} → ${x} · ${rows.length} pairs`));
+        // the two commutators of the group in the title, so it reads at a glance while closed
+        const bs = baseList.filter((b) => [...b.base].sort().join('') === k).sort((a, b) => (a.core.startsWith('[R') ? -1 : 1) - (b.core.startsWith('[R') ? -1 : 1));
+        const lines = el('span', 'ts-sum-bases');
+        for (const b of bs) { const l = el('span', 'ts-sum-base'); l.append(el('code', null, b.core), ` buffer → ${b.base[0]} → ${b.base[1]}`); lines.appendChild(l); }
+        sum.append(el('strong', null, `Base ${x} ${y}`), el('span', 'bld-muted', ` · ${rows.length} pairs`), lines);
       }
       d.appendChild(sum);
       const figs = el('div', 'ts-figs ts-bases');

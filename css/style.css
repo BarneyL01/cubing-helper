@@ -2553,3 +2553,7 @@ a.menu-sec[aria-current="page"],
 .ts-swap td { line-height: 1.9; }
 .ts-swap-item { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
 .ts-swap-item code, .ts-swap-item .mv-setup { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.ts-sum-bases { display: block; margin-top: 0.2rem; font-weight: 400; }
+.ts-sum-base { display: block; font-size: 0.9rem; }
+.ts-sum-base code { margin-right: 0.35rem; }
+.ts-search input::placeholder { text-transform: none; }
