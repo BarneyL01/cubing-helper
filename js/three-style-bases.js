@@ -36,7 +36,41 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
   }
   const lead = el('p', 'bld-note');
   const groups = el('div');
-  slot.append(tabs, lead, groups);
+  // Search by letters: "KD" shows that pair, "K" every pair with K. While there is text, it replaces the tabs.
+  const searchLabel = el('label', 'ts-search');
+  const search = el('input');
+  search.type = 'search';
+  search.placeholder = 'e.g. K or KD';
+  search.autocapitalize = 'characters';
+  search.autocomplete = 'off';
+  search.maxLength = 2;
+  searchLabel.append('Find letters ', search);
+  const results = el('div');
+  slot.append(searchLabel, results, tabs, lead, groups);
+  const TAB_NAME = Object.fromEntries(TABS);
+  const where = (e) => (e.kind === 'nq' ? TAB_NAME.nq : `${TAB_NAME[e.kind]} · base ${e.base[0]} ${e.base[1]}`);
+  function find() {
+    const q = search.value.toUpperCase().replace(/[^A-X]/g, '');
+    const on = q.length > 0;
+    tabs.hidden = lead.hidden = groups.hidden = on;
+    results.replaceChildren();
+    if (!on) return;
+    const row = (e) => { const r = pairRow(e); r.querySelector('summary').appendChild(el('span', 'ts-hint', `${hint(e)} · ${where(e)}`)); return r; };
+    if (q.length === 2) {
+      const e = data.find((x) => x.pair === q);
+      results.appendChild(e ? row(e) : el('p', 'bld-note', q[0] === q[1] ? 'Two letters on the same piece: not a pair.' : `${q} is not a pair (both letters are on the same piece, or one is the buffer).`));
+      return;
+    }
+    const sec = (title, list) => {
+      results.appendChild(el('p', 'ts-core-sub', `${title} (${list.length})`));
+      list.sort((a, b) => a.pair.localeCompare(b.pair)).forEach((e) => results.appendChild(row(e)));
+    };
+    const firsts = data.filter((e) => e.first === q), seconds = data.filter((e) => e.second === q);
+    if (!firsts.length && !seconds.length) { results.appendChild(el('p', 'bld-note', `${q} is a buffer sticker: no pairs.`)); return; }
+    sec(`${q} as the 1st target`, firsts);
+    sec(`${q} as the 2nd target`, seconds);
+  }
+  search.addEventListener('input', find);
 
   // A base as an entry with no setup, for its picture.
   const baseEntry = (b) => ({ core: b.core, spots: { buffer: 'C', first: b.base[0], second: b.base[1] } });

@@ -13,3 +13,9 @@ by moving one target into a base position, with the buffer never moving. New pag
   commutators, which move the buffer). Pairs with B are the Orozco commutators (all one-target).
 - Each pair row shows what the setup moves ("T into P"); opening it gives the same steps as the 3-Style page.
 - `pairRow` and a new `coreFigure` are exported from `js/three-style-page.js` (v=10) for this page.
+
+## Search by letters
+
+"Find letters" box above the tabs: one letter lists every pair with it as 1st and as 2nd target; two letters show that
+pair. Each result says what the setup moves and where it lives (tab and base). While there is text it replaces the
+tabs. Says so when the two letters are on one piece or a letter is a buffer sticker. Checked K, KD, KP, C, NQ, AN.
