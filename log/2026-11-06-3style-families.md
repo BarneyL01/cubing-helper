@@ -26,3 +26,8 @@ square (S, H, X …), so they no longer read as the neighbouring sticker's label
 
 Family pictures: squares now match their arrows. Swapped position pink (thick outline), the three D-turn partners
 green (solid green arrows), interchange position(s) orange (dashed orange arrows), buffer always blue.
+
+## Whole commutators under each picture
+
+Each family picture now lists its three commutators in full, from the buffer (e.g. buffer → O → B: `[R D R' , U']`),
+so the shared part and the changing part are both visible. All 12 checked against threeStyleBaseList.

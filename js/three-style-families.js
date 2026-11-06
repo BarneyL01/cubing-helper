@@ -45,24 +45,28 @@ function familyDiagram(spec) {
 const FAMILIES = [
   {
     name: 'Orozco: B and O, H or L',
+    algs: [['O → B', "[R D R' , U']"], ['H → B', "[R D' R' , U']"], ['L → B', "[R D2 R' , U']"]],
     spec: { slot: 'B', outs: [['O', 'D'], ['H', "D'"], ['L', 'D2']], inters: [['C', "U'"]],
       aria: 'B position, with O, H and L below and the buffer next to it' },
     text: "R D R' swaps the B position with one bottom position: O with D, H with D', L with D2 (solid arrows). U' brings the buffer into the B position (dashed). So one target is always B.",
   },
   {
     name: "G P S with D (U')",
+    algs: [['D → G', "[R' D R , U']"], ['D → P', "[R' D' R , U']"], ['D → S', "[R' D2 R , U']"]],
     spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['D', "U'"]],
       aria: 'buffer position, with G, P and S below and D on top' },
     text: "R' D R swaps the buffer's own position with G (D), P (D') or S (D2). U' brings D into the buffer's position. So the targets are D, and G, P or S.",
   },
   {
     name: 'G P S with A (U2)',
+    algs: [['A → G', "[R' D R , U2]"], ['A → P', "[R' D' R , U2]"], ['A → S', "[R' D2 R , U2]"]],
     spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['A', 'U2']],
       aria: 'buffer position, with G, P and S below and A on top' },
     text: "The same insertion, but U2 brings A into the buffer's position. So the targets are A, and G, P or S.",
   },
   {
     name: 'P family: P and L, T or H',
+    algs: [['P → L', "[R U R' , D]"], ['P → T', "[R U R' , D']"], ['P → H', "[R U R' , D2]"]],
     spec: { slot: 'P', outs: [['C', "R U R'"]], inters: [['L', 'D'], ['T', "D'"], ['H', 'D2']],
       aria: 'P position on the bottom, the buffer above it, L, T and H on the bottom' },
     text: "Upside down: here the interchange turns the bottom. R U R' swaps P's position with the buffer's. D brings L, D' brings T, D2 brings H into P's position. So the targets are P, and L, T or H.",
@@ -96,7 +100,9 @@ export function mountFamilies(slot, { pictures = true } = {}) {
   const figs = el('div', 'ts-figs');
   for (const fam of FAMILIES) {
     const fig = el('figure', 'ts-fig fd-fig');
-    fig.append(el('div', 'fd-pic', familyDiagram(fam.spec)), el('figcaption', null, `<strong>${fam.name}</strong><br>${fam.text}`));
+    // the whole commutators, each written from the buffer (buffer → 1st → 2nd); the reverse swaps the two halves
+    const list = fam.algs.map(([pair, c]) => `<li>buffer → ${pair}: <code>${c}</code></li>`).join('');
+    fig.append(el('div', 'fd-pic', familyDiagram(fam.spec)), el('figcaption', null, `<strong>${fam.name}</strong><br>${fam.text}<ul class="fd-algs">${list}</ul>`));
     figs.appendChild(fig);
   }
   slot.appendChild(figs);
