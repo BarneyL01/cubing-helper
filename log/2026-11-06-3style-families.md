@@ -15,3 +15,9 @@ Owner: the corner dot does not show which sticker. New `js/sticker-cube.js` (`ma
 sticker as a square on its own face (left/back/bottom faces dashed and lighter); used by the family pictures and the
 core pictures on all 3-Style pages (`cornerDiagram`). Arrows run between sticker middles. Fixed a quote bug ("sticker's"
 inside a single-quoted string) that stopped the families module loading; checked both pages, light and dark, no errors.
+
+## G P S split in two
+
+Owner found the G P S picture confusing: now two pictures, "G P S with D (U')" and "G P S with A (U2)", same
+insertion, one interchange each. Labels for stickers on the inner (back-bottom-left) corner now sit beside their own
+square (S, H, X …), so they no longer read as the neighbouring sticker's label.

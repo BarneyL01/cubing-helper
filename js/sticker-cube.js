@@ -47,6 +47,8 @@ export function makeCube(cx = 124, cy = 100, s = 46) {
     // where to put a sticker's label: outside the cube, beside its corner
     labelAt(letter) {
       const name = SPEFFZ[letter];
+      // the back-bottom-left corner is drawn inside the cube: label it beside its own square instead
+      if ([...'DBL'].every((c) => name.includes(c))) { const [mx, my] = proj(quad3(letter).mid); return { x: mx + 9, y: my + 4, anchor: 'start' }; }
       const [x, y] = proj(corner(name));
       const right = name.includes('R');
       return { x: x + (right ? 10 : -10), y: y + (name.includes('U') ? -10 : 19), anchor: right ? 'start' : 'end' };

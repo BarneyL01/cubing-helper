@@ -12,7 +12,7 @@ import { applyAlg } from './cube-sim.js';
 import { trackedSolved } from './cube-laws.js';
 import { createMoveRunner } from './move-runner.js?v=1';
 import { WHITE_TOP } from './cube-diagram.js';
-import { makeCube } from './sticker-cube.js?v=1';
+import { makeCube } from './sticker-cube.js?v=2';
 import { threeStyleTwists } from '../data/three-style-twists.js?v=2';
 import { orozcoCorners } from '../data/orozco-corners.js?v=1';
 import { OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../data/orozco-mnemonics.js?v=4';

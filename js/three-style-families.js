@@ -5,7 +5,7 @@
 // R U R' swaps P's position with the buffer's; U' brings C into B and D into C, U2 brings A into C; D brings L,
 // D' brings T, D2 brings H into P's position.
 
-import { makeCube } from './sticker-cube.js?v=1';
+import { makeCube } from './sticker-cube.js?v=2';
 
 const esc = (s) => s.replace(/'/g, '′');
 const f = (v) => v.toFixed(1);
@@ -48,10 +48,16 @@ const FAMILIES = [
     text: "R D R' swaps the B position with one bottom position: O with D, H with D', L with D2 (solid arrows). U' brings the buffer into the B position (dashed). So one target is always B.",
   },
   {
-    name: 'G P S: D or A and G, P or S',
-    spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['D', "U'"], ['A', 'U2']],
-      aria: 'buffer position, with G, P and S below and D and A on top' },
-    text: "R' D R swaps the buffer's own position with G (D), P (D') or S (D2). U' brings D, U2 brings A into the buffer's position. So the targets are D or A, and G, P or S.",
+    name: "G P S with D (U')",
+    spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['D', "U'"]],
+      aria: 'buffer position, with G, P and S below and D on top' },
+    text: "R' D R swaps the buffer's own position with G (D), P (D') or S (D2). U' brings D into the buffer's position. So the targets are D, and G, P or S.",
+  },
+  {
+    name: 'G P S with A (U2)',
+    spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['A', 'U2']],
+      aria: 'buffer position, with G, P and S below and A on top' },
+    text: "The same insertion, but U2 brings A into the buffer's position. So the targets are A, and G, P or S.",
   },
   {
     name: 'P family: P and L, T or H',
