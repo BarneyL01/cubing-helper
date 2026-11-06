@@ -2602,3 +2602,8 @@ a.menu-sec[aria-current="page"],
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mv-pick { color: #4ade80; } :root:not([data-theme="light"]) .mv-turn { color: #fb923c; } }
 :root[data-theme="dark"] .mv-pick { color: #4ade80; }
 :root[data-theme="dark"] .mv-turn { color: #fb923c; }
+/* hand-off pictures: the spot every D turn delivers to (yellow), the R move that lifts it (purple) */
+.family-diagram .sq-hand { fill: #facc15; }
+.family-diagram .fd-lift { fill: none; stroke: #7c3aed; stroke-width: 2.2; }
+.family-diagram .fd-head-lift { fill: #7c3aed; }
+.fd-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0.6rem; }

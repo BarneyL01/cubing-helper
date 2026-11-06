@@ -37,3 +37,12 @@ so the shared part and the changing part are both visible. All 12 checked agains
 Owner: highlight the moves that put the piece in place. In the family table and the commutator lists, the turn inside
 the insertion is green (as the solid arrows / green squares) and the interchange turn orange (dashed arrows / orange
 squares); the rest of each commutator stays plain. `colourCore()` in js/three-style-families.js.
+
+## Second picture: where the moves hand the piece over
+
+Owner: within a family all the D-layer turns put the piece in the same spot. Checked by simulation and drawn as a
+second picture under each family picture ("Where the moves hand it over"): yellow = the hand-off spot, green = what
+each D turn brings there, purple = the R move that lifts it, B/C kept highlighted with the interchange.
+- Orozco: R takes B to T (and O to P); D/D'/D2 bring P/H/L to T; R' lifts T to B; U' takes C to B.
+- G P S: R' takes C to K (and P to O); D/D'/D2 bring G/O/S to K; R lifts K to C; U' takes D, U2 takes A to C.
+- P family: R takes C to Q, U takes Q to M, R' drops M into P; D/D'/D2 bring L/T/H straight to P.

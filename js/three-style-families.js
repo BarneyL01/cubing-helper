@@ -42,9 +42,41 @@ function familyDiagram(spec) {
   return `<svg viewBox="0 0 250 190" class="family-diagram" role="img" aria-label="${spec.aria}">${CUBE.edges()}${dots}${squares}${arrows}${labels}</svg>`;
 }
 
+// The second picture: where the moves hand the piece over. squares: [[letter, class, label]],
+// arrows: [[from, to, class, bend]] (classes: ins green, int orange dashed, lift purple, pre grey).
+function handoffDiagram(spec) {
+  const used = new Set(spec.squares.map(([l]) => cornerOf(l)));
+  const dots = Object.keys(CORNERS).filter((c) => !used.has(c)).map((c) => { const [x, y] = CUBE.point(CORNERS[c]); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
+  const squares = spec.squares.map(([l, cls]) => CUBE.sticker(l, cls)).join('');
+  const arrows = spec.arrows.map(([a, b, cls, bend]) => arrow(a, b, cls, bend)).join('');
+  const labels = spec.squares.filter(([, , lab]) => lab !== null).map(([l, , lab]) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="fd-label">${esc(lab || l)}</text>`; }).join('');
+  return `<svg viewBox="0 0 250 190" class="family-diagram" role="img" aria-label="${spec.aria}">${CUBE.edges()}${dots}${squares}${arrows}${labels}</svg>`;
+}
+
+// Checked by simulation (log/2026-11-06-3style-families.md): R takes B to T and O to P; D, D', D2 take P, H, L to T;
+// R' lifts T to B; U' takes C to B. R' takes C to K and P to O; D, D', D2 take G, O, S to K; R lifts K to C;
+// U' takes D to C, U2 takes A to C. R takes C to Q, U takes Q to M, R' takes M to P; D, D', D2 take L, T, H to P.
+const OROZCO_HANDOFF = {
+  aria: 'T is the spot every D turn delivers to; R prime lifts it into B',
+  squares: [['B', 'sq-slot sq-thick', 'B'], ['C', 'sq-buffer', "C: U'"], ['T', 'sq-hand sq-thick', "T: R'"], ['P', 'sq-ins', 'P: D'], ['H', 'sq-ins', "H: D'"], ['L', 'sq-ins', 'L: D2']],
+  arrows: [['P', 'T', 'ins', 12], ['H', 'T', 'ins', -10], ['L', 'T', 'ins', 16], ['T', 'B', 'lift', -18], ['C', 'B', 'int', -14]],
+};
+const gpsHandoff = (top, turn) => ({
+  aria: 'K is the spot every D turn delivers to; R lifts it into the buffer',
+  squares: [['C', 'sq-buffer sq-thick', 'C'], [top, 'sq-int', `${top}: ${turn}`], ['K', 'sq-hand sq-thick', 'K: R'], ['G', 'sq-ins', 'G: D'], ['O', 'sq-ins', "O: D'"], ['S', 'sq-ins', 'S: D2']],
+  arrows: [['G', 'K', 'ins', -12], ['O', 'K', 'ins', 12], ['S', 'K', 'ins', 16], ['K', 'C', 'lift', 18], [top, 'C', 'int', -14]],
+});
+const P_HANDOFF = {
+  aria: "R U R prime carries the buffer to P's spot: C to Q to M to P",
+  squares: [['C', 'sq-buffer sq-thick', 'C'], ['Q', 'sq-hand', 'Q: R'], ['M', 'sq-hand', null], ['P', 'sq-slot sq-thick', "P: R'"]],
+  arrows: [['C', 'Q', 'lift', -14], ['Q', 'M', 'lift', -14], ['M', 'P', 'lift', 14]],
+};
+
 const FAMILIES = [
   {
     name: 'Orozco: B and O, H or L',
+    handoff: OROZCO_HANDOFF,
+    handText: "Every D turn delivers to the same spot, T. R first takes B's spot down to T (and moves O to the P spot, so the picture shows it at P). Then D, D' or D2 brings P, H or L into T, and R' lifts T up into B. U' brings C into B.",
     algs: [['O → B', "[R D R' , U']"], ['H → B', "[R D' R' , U']"], ['L → B', "[R D2 R' , U']"]],
     spec: { slot: 'B', outs: [['O', 'D'], ['H', "D'"], ['L', 'D2']], inters: [['C', "U'"]],
       aria: 'B position, with O, H and L below and the buffer next to it' },
@@ -52,6 +84,8 @@ const FAMILIES = [
   },
   {
     name: "G P S with D (U')",
+    handoff: gpsHandoff('D', "U'"),
+    handText: "Every D turn delivers to the same spot, K. R' first takes the buffer's spot down to K (and moves P to the O spot, so the picture shows it at O). Then D, D' or D2 brings G, O or S into K, and R lifts K up into C. U' brings D into C.",
     algs: [['D → G', "[R' D R , U']"], ['D → P', "[R' D' R , U']"], ['D → S', "[R' D2 R , U']"]],
     spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['D', "U'"]],
       aria: 'buffer position, with G, P and S below and D on top' },
@@ -59,6 +93,8 @@ const FAMILIES = [
   },
   {
     name: 'G P S with A (U2)',
+    handoff: gpsHandoff('A', 'U2'),
+    handText: 'The same hand-off spot, K. U2 brings A into C.',
     algs: [['A → G', "[R' D R , U2]"], ['A → P', "[R' D' R , U2]"], ['A → S', "[R' D2 R , U2]"]],
     spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['A', 'U2']],
       aria: 'buffer position, with G, P and S below and A on top' },
@@ -66,6 +102,8 @@ const FAMILIES = [
   },
   {
     name: 'P family: P and L, T or H',
+    handoff: P_HANDOFF,
+    handText: "R U R' carries the buffer to P's spot: R lifts C to Q, U turns Q to M (the yellow square beside C), R' drops M into P. The D turns deliver straight to P: D brings L, D' brings T, D2 brings H.",
     algs: [['P → L', "[R U R' , D]"], ['P → T', "[R U R' , D']"], ['P → H', "[R U R' , D2]"]],
     spec: { slot: 'P', outs: [['C', "R U R'"]], inters: [['L', 'D'], ['T', "D'"], ['H', 'D2']],
       aria: 'P position on the bottom, the buffer above it, L, T and H on the bottom' },
@@ -115,7 +153,8 @@ export function mountFamilies(slot, { pictures = true } = {}) {
     const fig = el('figure', 'ts-fig fd-fig');
     // the whole commutators, each written from the buffer (buffer → 1st → 2nd); the reverse swaps the two halves
     const list = fam.algs.map(([pair, c]) => `<li>buffer → ${pair}: <code>${colourCore(c)}</code></li>`).join('');
-    fig.append(el('div', 'fd-pic', familyDiagram(fam.spec)), el('figcaption', null, `<strong>${fam.name}</strong><br>${fam.text}<ul class="fd-algs">${list}</ul>`));
+    fig.append(el('div', 'fd-pic', familyDiagram(fam.spec)), el('p', 'fd-sub', `<strong>${fam.name}</strong><br>${fam.text}`),
+      el('div', 'fd-pic', handoffDiagram(fam.handoff)), el('figcaption', null, `<strong>Where the moves hand it over</strong><br>${fam.handText}<ul class="fd-algs">${list}</ul>`));
     figs.appendChild(fig);
   }
   slot.appendChild(figs);
