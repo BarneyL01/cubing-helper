@@ -2563,3 +2563,4 @@ a.menu-sec[aria-current="page"],
 .t-group code { font-size: 0.85rem; }
 .t-all { margin: 0.25rem 0 0.5rem; }
 .t-step { border-top: 1px solid var(--border); padding-top: 0.4rem; margin-top: 0.4rem; }
+.bld-table td.nw { white-space: nowrap; }

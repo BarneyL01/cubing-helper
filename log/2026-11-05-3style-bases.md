@@ -55,3 +55,10 @@ pairs whose letter otherwise needs a different setup or a 4-move setup: LT, TL (
 7 letters go into a position a different way. Those now get a grey line in the group's table ("I into A is usually L',
 but that would also move S, the other target here"), replacing the `*` note; each line checked (the usual setup does
 move that other target). Group titles show one direction only (insertion first).
+
+## 2026-11-06 — "Which base? Read it from the letters"
+
+New section under "How it works": the four families by target letters (B + O/H/L = `R D R'` vs `U'`; D or A +
+G/P/S = `R' D R` vs `U'`/`U2`; P + L/T/H = `R U R'` vs a D turn; L + T = `L' U L` vs `D2`), the D/D'/D2 letter sets
+(O H L, G P S, L T H), who stays at home (B, the buffer, both targets on the bottom), middle turn and interchange on
+opposite layers, and which letter comes first for each family. Every row checked against threeStyleBaseList.
