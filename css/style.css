@@ -2564,3 +2564,20 @@ a.menu-sec[aria-current="page"],
 .t-all { margin: 0.25rem 0 0.5rem; }
 .t-step { border-top: 1px solid var(--border); padding-top: 0.4rem; margin-top: 0.4rem; }
 .bld-table td.nw { white-space: nowrap; }
+/* 3-Style families: one picture per family */
+.fd-fig { width: 250px; }
+.family-diagram { display: block; width: 100%; height: auto; overflow: visible; }
+.family-diagram .cd-edge { stroke: var(--text-muted); stroke-width: 1.2; opacity: 0.5; }
+.family-diagram .cd-hidden { stroke-dasharray: 3 3; }
+.family-diagram .cd-off { fill: var(--text-muted); opacity: 0.6; }
+.family-diagram .fd-on { fill: #e0457b; }
+.family-diagram .fd-buffer { fill: #2f6fed; }
+.family-diagram .fd-slot { fill: #e0457b; stroke: var(--text); stroke-width: 2.5; }
+.family-diagram circle.fd-buffer { stroke: var(--text); stroke-width: 2.5; }
+.family-diagram .fd-ins { fill: none; stroke: var(--accent); stroke-width: 2.2; }
+.family-diagram .fd-head-ins { fill: var(--accent); }
+.family-diagram .fd-int { fill: none; stroke: #c2410c; stroke-width: 2; stroke-dasharray: 5 3; }
+.family-diagram .fd-head-int { fill: #c2410c; }
+.family-diagram .fd-label { font: 600 12px system-ui, sans-serif; fill: var(--text); }
+.t-families { margin: 0.75rem 0; }
+.t-families > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
