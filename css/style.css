@@ -2581,3 +2581,9 @@ a.menu-sec[aria-current="page"],
 .family-diagram .fd-label { font: 600 12px system-ui, sans-serif; fill: var(--text); }
 .t-families { margin: 0.75rem 0; }
 .t-families > summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+/* sticker squares on the see-through cubes (js/sticker-cube.js) */
+.sq { stroke: var(--text); stroke-width: 1.4; stroke-linejoin: round; }
+.sq-on { fill: #e0457b; }
+.sq-slot { fill: #e0457b; stroke-width: 3; }
+.sq-buffer { fill: #2f6fed; }
+.sq-hidden { fill-opacity: 0.45; stroke-dasharray: 3 2; }

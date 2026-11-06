@@ -12,6 +12,7 @@ import { applyAlg } from './cube-sim.js';
 import { trackedSolved } from './cube-laws.js';
 import { createMoveRunner } from './move-runner.js?v=1';
 import { WHITE_TOP } from './cube-diagram.js';
+import { makeCube } from './sticker-cube.js?v=1';
 import { threeStyleTwists } from '../data/three-style-twists.js?v=2';
 import { orozcoCorners } from '../data/orozco-corners.js?v=1';
 import { OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../data/orozco-mnemonics.js?v=4';
@@ -47,52 +48,30 @@ function coreCorners(e) {
   const rot = (x) => [...x.slice(i), ...x.slice(0, i)];
   return { corners: rot(c), letters: rot(l) };
 }
-// A see-through cube (front face square, back face drawn up and to the right) with the three corners named
-// and joined by arrows in the order the core moves them.
+// A see-through cube (front face square, back face drawn up and to the right) with the three stickers the core
+// moves drawn as squares on their own faces, labelled, and joined by arrows in the order the core moves them.
+const CUBE = makeCube(114, 96, 46);
 function cornerDiagram(cycle, labels) {
-  const lab = Object.fromEntries(cycle.map((n, i) => [n, labels[i]]));
-  const pt = (n) => {
-    const x = n.includes('R') ? 1 : -1, y = n.includes('U') ? 1 : -1, z = n.includes('F') ? 1 : -1;
-    return [114 + 46 * x - 32 * z, 96 - 46 * y + 16 * z];
-  };
   const f = (v) => v.toFixed(1);
-  const edges = [];
-  for (const a of CORNER_ORDER) for (const b of CORNER_ORDER) {
-    if (a >= b) continue;
-    const diff = [0, 1, 2].filter((k) => a[k] !== b[k]).length;
-    if (diff !== 1) continue;
-    const back = a === 'DBL' || b === 'DBL';
-    const [p, q] = [pt(a), pt(b)];
-    edges.push(`<line x1="${f(p[0])}" y1="${f(p[1])}" x2="${f(q[0])}" y2="${f(q[1])}" class="cd-edge${back ? ' cd-hidden' : ''}"/>`);
-  }
-  const arrows = cycle.map((a, i) => {
-    const b = cycle[(i + 1) % 3], other = pt(cycle[(i + 2) % 3]);
-    const [p, q] = [pt(a), pt(b)];
+  const arrows = labels.map((a, i) => {
+    const b = labels[(i + 1) % 3], other = CUBE.point(labels[(i + 2) % 3]);
+    const [p, q] = [CUBE.point(a), CUBE.point(b)];
     const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
-    // bend each arrow sideways, away from the third corner, so the three arrows never lie on top of each other
+    // bend each arrow sideways, away from the third sticker, so the three arrows never lie on top of each other
     const l0 = Math.hypot(q[0] - p[0], q[1] - p[1]);
     let nx = -(q[1] - p[1]) / l0, ny = (q[0] - p[0]) / l0;
     if (nx * (other[0] - m[0]) + ny * (other[1] - m[1]) > 0) { nx = -nx; ny = -ny; }
     const ctrl = [m[0] + nx * 20, m[1] + ny * 20];
     const trim = (from, to, r) => { const ux = to[0] - from[0], uy = to[1] - from[1], l = Math.hypot(ux, uy); return [from[0] + (ux / l) * r, from[1] + (uy / l) * r]; };
-    const s = trim(p, ctrl, 9), t = trim(q, ctrl, 10);
+    const s = trim(p, ctrl, 5), t = trim(q, ctrl, 7);
     const ang = Math.atan2(t[1] - ctrl[1], t[0] - ctrl[0]);
     const head = [[t[0], t[1]], [t[0] - 9 * Math.cos(ang - 0.45), t[1] - 9 * Math.sin(ang - 0.45)], [t[0] - 9 * Math.cos(ang + 0.45), t[1] - 9 * Math.sin(ang + 0.45)]];
     return `<path d="M${f(s[0])} ${f(s[1])} Q${f(ctrl[0])} ${f(ctrl[1])} ${f(t[0])} ${f(t[1])}" class="cd-arrow"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="cd-head"/>`;
   }).join('');
-  const dots = CORNER_ORDER.map((n) => {
-    const [x, y] = pt(n);
-    const on = cycle.includes(n);
-    let out = `<circle cx="${f(x)}" cy="${f(y)}" r="${on ? 6 : 3}" class="${on ? 'cd-on' : 'cd-off'}"/>`;
-    if (on) {
-      const lx = x + (n.includes('R') ? 10 : -10);
-      const ly = y + (n.includes('U') ? -10 : 18);
-      const anchor = n.includes('R') ? 'start' : 'end';
-      out += `<text x="${f(lx)}" y="${f(ly)}" text-anchor="${anchor}" class="cd-label">${lab[n]}</text>`;
-    }
-    return out;
-  }).join('');
-  return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${labels.join(' to ')} to ${labels[0]}">${edges.join('')}${arrows}${dots}</svg>`;
+  const dots = CORNER_ORDER.filter((n) => !cycle.includes(n)).map((n) => { const [x, y] = CUBE.point(n); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
+  const squares = labels.map((l) => CUBE.sticker(l, 'CJM'.includes(l) ? 'sq-buffer' : 'sq-on')).join('');
+  const text = labels.map((l) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="cd-label">${l}</text>`; }).join('');
+  return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${labels.join(' to ')} to ${labels[0]}">${CUBE.edges()}${dots}${squares}${arrows}${text}</svg>`;
 }
 // An animated cube for one algorithm in parts: only the given corners in colour.
 function watch(host, parts, moves, keepPieces, startText, doneText) {

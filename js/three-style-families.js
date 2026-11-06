@@ -5,69 +5,57 @@
 // R U R' swaps P's position with the buffer's; U' brings C into B and D into C, U2 brings A into C; D brings L,
 // D' brings T, D2 brings H into P's position.
 
+import { makeCube } from './sticker-cube.js?v=1';
+
 const esc = (s) => s.replace(/'/g, '′');
-// Corner places, drawn on a see-through cube (front face square, back face up and to the right).
-const XYZ = { UFR: [1, 1, 1], UFL: [-1, 1, 1], UBL: [-1, 1, -1], UBR: [1, 1, -1], DFR: [1, -1, 1], DFL: [-1, -1, 1], DBL: [-1, -1, -1], DBR: [1, -1, -1] };
-const pt = (n) => { const [x, y, z] = XYZ[n]; return [124 + 46 * x - 32 * z, 100 - 46 * y + 16 * z]; };
 const f = (v) => v.toFixed(1);
+const CUBE = makeCube(124, 100, 46);
+const CORNERS = { A: 'UBL', B: 'UBR', C: 'UFR', D: 'UFL', U: 'DFL', V: 'DFR', W: 'DBR', X: 'DBL' };
+const STICKERS = { A: 'AER', B: 'BNQ', C: 'CJM', D: 'DFI', U: 'UGL', V: 'VKP', W: 'WOT', X: 'XHS' };
+const cornerOf = (l) => Object.keys(STICKERS).find((k) => STICKERS[k].includes(l));
 
 function arrow(from, to, cls, bend) {
-  const [p, q] = [pt(from), pt(to)];
+  const [p, q] = [CUBE.point(from), CUBE.point(to)];
   const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
   const l = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
   const ctrl = [m[0] - ((q[1] - p[1]) / l) * bend, m[1] + ((q[0] - p[0]) / l) * bend];
   const trim = (a, b, r) => { const ux = b[0] - a[0], uy = b[1] - a[1], d = Math.hypot(ux, uy); return [a[0] + (ux / d) * r, a[1] + (uy / d) * r]; };
-  const s = trim(p, ctrl, 8), t = trim(q, ctrl, 10);
+  const s = trim(p, ctrl, 5), t = trim(q, ctrl, 7);
   const ang = Math.atan2(t[1] - ctrl[1], t[0] - ctrl[0]);
   const head = [t, [t[0] - 8 * Math.cos(ang - 0.45), t[1] - 8 * Math.sin(ang - 0.45)], [t[0] - 8 * Math.cos(ang + 0.45), t[1] - 8 * Math.sin(ang + 0.45)]];
   return `<path d="M${f(s[0])} ${f(s[1])} Q${f(ctrl[0])} ${f(ctrl[1])} ${f(t[0])} ${f(t[1])}" class="fd-${cls}"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="fd-head-${cls}"/>`;
 }
 
-// spec: { slot: [place, label], outs: [[place, label]], inters: [[place, label]], buffer: place }
+// spec: { slot: letter, outs: [[letter, turn]], inters: [[letter, turn]] } - letters are stickers; C is the buffer
 function familyDiagram(spec) {
-  const names = Object.keys(XYZ);
-  const edges = [];
-  for (const a of names) for (const b of names) {
-    if (a >= b) continue;
-    if ([0, 1, 2].filter((k) => a[k] !== b[k]).length !== 1) continue;
-    const [p, q] = [pt(a), pt(b)];
-    edges.push(`<line x1="${f(p[0])}" y1="${f(p[1])}" x2="${f(q[0])}" y2="${f(q[1])}" class="cd-edge${a === 'DBL' || b === 'DBL' ? ' cd-hidden' : ''}"/>`);
-  }
+  const shown = [[spec.slot, ''], ...spec.outs, ...spec.inters];
+  const used = new Set(shown.map(([l]) => cornerOf(l)));
+  const dots = Object.keys(CORNERS).filter((c) => !used.has(c)).map((c) => { const [x, y] = CUBE.point(CORNERS[c]); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
+  const squares = shown.map(([l]) => CUBE.sticker(l, l === 'C' ? 'sq-buffer' : l === spec.slot ? 'sq-slot' : 'sq-on')).join('');
   const arrows = [
-    ...spec.outs.map(([p], i) => arrow(p, spec.slot[0], 'ins', [14, -14, 22][i % 3])),
-    ...spec.inters.map(([p], i) => arrow(p, spec.slot[0], 'int', [-16, 16][i % 2])),
-  ];
-  const labels = new Map([[spec.slot[0], spec.slot[1]], ...spec.outs, ...spec.inters]);
-  const dots = names.map((n) => {
-    const [x, y] = pt(n);
-    const lab = labels.get(n);
-    const cls = n === spec.buffer ? 'fd-buffer' : n === spec.slot[0] ? 'fd-slot' : lab ? 'fd-on' : 'cd-off';
-    let out = `<circle cx="${f(x)}" cy="${f(y)}" r="${lab ? 6 : 3}" class="${cls}"/>`;
-    if (lab) {
-      const right = n.includes('R');
-      out += `<text x="${f(x + (right ? 10 : -10))}" y="${f(y + (n[0] === 'U' ? -10 : 19))}" text-anchor="${right ? 'start' : 'end'}" class="fd-label">${esc(lab)}</text>`;
-    }
-    return out;
-  }).join('');
-  return `<svg viewBox="0 0 250 190" class="family-diagram" role="img" aria-label="${spec.aria}">${edges.join('')}${arrows.join('')}${dots}</svg>`;
+    ...spec.outs.map(([l], i) => arrow(l, spec.slot, 'ins', [14, -14, 22][i % 3])),
+    ...spec.inters.map(([l], i) => arrow(l, spec.slot, 'int', [-16, 16][i % 2])),
+  ].join('');
+  const labels = shown.map(([l, turn]) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="fd-label">${l}${turn ? `: ${esc(turn)}` : ''}</text>`; }).join('');
+  return `<svg viewBox="0 0 250 190" class="family-diagram" role="img" aria-label="${spec.aria}">${CUBE.edges()}${dots}${squares}${arrows}${labels}</svg>`;
 }
 
 const FAMILIES = [
   {
     name: 'Orozco: B and O, H or L',
-    spec: { slot: ['UBR', 'B'], buffer: 'UFR', outs: [['DBR', "O: D"], ['DBL', "H: D'"], ['DFL', 'L: D2']], inters: [['UFR', "C: U'"]],
+    spec: { slot: 'B', outs: [['O', 'D'], ['H', "D'"], ['L', 'D2']], inters: [['C', "U'"]],
       aria: 'B position, with O, H and L below and the buffer next to it' },
     text: "R D R' swaps the B position with one bottom position: O with D, H with D', L with D2 (solid arrows). U' brings the buffer into the B position (dashed). So one target is always B.",
   },
   {
     name: 'G P S: D or A and G, P or S',
-    spec: { slot: ['UFR', 'C'], buffer: 'UFR', outs: [['DFL', 'G: D'], ['DFR', "P: D'"], ['DBL', 'S: D2']], inters: [['UFL', "D: U'"], ['UBL', 'A: U2']],
+    spec: { slot: 'C', outs: [['G', 'D'], ['P', "D'"], ['S', 'D2']], inters: [['D', "U'"], ['A', 'U2']],
       aria: 'buffer position, with G, P and S below and D and A on top' },
     text: "R' D R swaps the buffer's own position with G (D), P (D') or S (D2). U' brings D, U2 brings A into the buffer's position. So the targets are D or A, and G, P or S.",
   },
   {
     name: 'P family: P and L, T or H',
-    spec: { slot: ['DFR', 'P'], buffer: 'UFR', outs: [['UFR', "C: R U R'"]], inters: [['DFL', 'L: D'], ['DBR', "T: D'"], ['DBL', 'H: D2']],
+    spec: { slot: 'P', outs: [['C', "R U R'"]], inters: [['L', 'D'], ['T', "D'"], ['H', 'D2']],
       aria: 'P position on the bottom, the buffer above it, L, T and H on the bottom' },
     text: "Upside down: here the interchange turns the bottom. R U R' swaps P's position with the buffer's. D brings L, D' brings T, D2 brings H into P's position. So the targets are P, and L, T or H.",
   },
@@ -96,7 +84,7 @@ export function mountFamilies(slot, { pictures = true } = {}) {
       </tbody></table>`),
   );
   if (!pictures) return;
-  slot.appendChild(el('p', null, '<strong>Why these letters go together.</strong> A base swaps one position (outlined) with one of three others, chosen by the D turn (solid arrows), and the interchange brings one more position into it (dashed arrows). The buffer is blue.'));
+  slot.appendChild(el('p', null, '<strong>Why these letters go together.</strong> Each square is one sticker. A base swaps the position of one sticker (outlined) with one of three others, chosen by the D turn (solid arrows), and the interchange brings one more into it (dashed arrows). The buffer C is blue. Stickers on faces you cannot see from the front (left, back, bottom) are dashed.'));
   const figs = el('div', 'ts-figs');
   for (const fam of FAMILIES) {
     const fig = el('figure', 'ts-fig fd-fig');
