@@ -2587,3 +2587,11 @@ a.menu-sec[aria-current="page"],
 .sq-slot { fill: #e0457b; stroke-width: 3; }
 .sq-buffer { fill: #2f6fed; }
 .sq-hidden { fill-opacity: 0.45; stroke-dasharray: 3 2; }
+/* family pictures: three colours (plus the blue buffer), squares match their arrows */
+.family-diagram .sq-ins { fill: #16a34a; }
+.family-diagram .sq-int { fill: #ea580c; }
+.family-diagram .sq-thick { stroke-width: 3; }
+.family-diagram .fd-ins { stroke: #16a34a; }
+.family-diagram .fd-head-ins { fill: #16a34a; }
+.family-diagram .fd-int { stroke: #ea580c; }
+.family-diagram .fd-head-int { fill: #ea580c; }

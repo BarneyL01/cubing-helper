@@ -21,3 +21,8 @@ inside a single-quoted string) that stopped the families module loading; checked
 Owner found the G P S picture confusing: now two pictures, "G P S with D (U')" and "G P S with A (U2)", same
 insertion, one interchange each. Labels for stickers on the inner (back-bottom-left) corner now sit beside their own
 square (S, H, X …), so they no longer read as the neighbouring sticker's label.
+
+## Three colours
+
+Family pictures: squares now match their arrows. Swapped position pink (thick outline), the three D-turn partners
+green (solid green arrows), interchange position(s) orange (dashed orange arrows), buffer always blue.

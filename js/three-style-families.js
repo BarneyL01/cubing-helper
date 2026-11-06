@@ -31,7 +31,9 @@ function familyDiagram(spec) {
   const shown = [[spec.slot, ''], ...spec.outs, ...spec.inters];
   const used = new Set(shown.map(([l]) => cornerOf(l)));
   const dots = Object.keys(CORNERS).filter((c) => !used.has(c)).map((c) => { const [x, y] = CUBE.point(CORNERS[c]); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
-  const squares = shown.map(([l]) => CUBE.sticker(l, l === 'C' ? 'sq-buffer' : l === spec.slot ? 'sq-slot' : 'sq-on')).join('');
+  // colours: buffer blue, the swapped position pink, D-turn partners green (solid arrows), interchange orange (dashed)
+  const kind = (l) => (l === 'C' ? 'sq-buffer' : l === spec.slot ? 'sq-slot' : spec.outs.some(([x]) => x === l) ? 'sq-ins' : 'sq-int');
+  const squares = shown.map(([l]) => CUBE.sticker(l, kind(l) + (l === spec.slot ? ' sq-thick' : ''))).join('');
   const arrows = [
     ...spec.outs.map(([l], i) => arrow(l, spec.slot, 'ins', [14, -14, 22][i % 3])),
     ...spec.inters.map(([l], i) => arrow(l, spec.slot, 'int', [-16, 16][i % 2])),
@@ -90,7 +92,7 @@ export function mountFamilies(slot, { pictures = true } = {}) {
       </tbody></table>`),
   );
   if (!pictures) return;
-  slot.appendChild(el('p', null, '<strong>Why these letters go together.</strong> Each square is one sticker. A base swaps the position of one sticker (outlined) with one of three others, chosen by the D turn (solid arrows), and the interchange brings one more into it (dashed arrows). The buffer C is blue. Stickers on faces you cannot see from the front (left, back, bottom) are dashed.'));
+  slot.appendChild(el('p', null, '<strong>Why these letters go together.</strong> Each square is one sticker. A base swaps the position of one sticker (pink, thick outline) with one of three others, chosen by the D turn (green squares, solid green arrows), and the interchange brings one more into it (orange squares, dashed orange arrows). The buffer C is always blue. Stickers on faces you cannot see from the front (left, back, bottom) are dashed.'));
   const figs = el('div', 'ts-figs');
   for (const fam of FAMILIES) {
     const fig = el('figure', 'ts-fig fd-fig');
