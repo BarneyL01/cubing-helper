@@ -31,3 +31,9 @@ green (solid green arrows), interchange position(s) orange (dashed orange arrows
 
 Each family picture now lists its three commutators in full, from the buffer (e.g. buffer → O → B: `[R D R' , U']`),
 so the shared part and the changing part are both visible. All 12 checked against threeStyleBaseList.
+
+## The picking moves in colour
+
+Owner: highlight the moves that put the piece in place. In the family table and the commutator lists, the turn inside
+the insertion is green (as the solid arrows / green squares) and the interchange turn orange (dashed arrows / orange
+squares); the rest of each commutator stays plain. `colourCore()` in js/three-style-families.js.

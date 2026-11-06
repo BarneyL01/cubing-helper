@@ -73,18 +73,31 @@ const FAMILIES = [
   },
 ];
 
+// [A , B] with the two moves that pick the pieces coloured as in the pictures: the middle turn of the 3-move
+// insertion green, the one-move interchange orange.
+export function colourCore(core) {
+  const parts = core.slice(1, -1).split(' , ');
+  const out = parts.map((part) => {
+    const m = part.split(' ');
+    if (m.length === 3) return `${m[0]} <span class="mv-pick">${m[1]}</span> ${m[2]}`;
+    return `<span class="mv-turn">${part}</span>`;
+  });
+  return `[${out.join(' , ')}]`;
+}
+const g = (m) => `<code class="mv-pick">${m}</code>`;
+const o = (m) => `<code class="mv-turn">${m}</code>`;
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
 
 // The table, the rules and (unless pictures: false) one picture per family.
 export function mountFamilies(slot, { pictures = true } = {}) {
   slot.append(
-    el('p', null, "Every base belongs to one of four families, and the two letters tell you which. The D turn inside the insertion follows the same pattern in every family as Orozco's O, H, L: first letter <code>D</code>, second <code>D'</code>, third <code>D2</code>."),
+    el('p', null, "Every base belongs to one of four families, and the two letters tell you which. The D turn inside the insertion follows the same pattern in every family as Orozco's O, H, L: first letter <code>D</code>, second <code>D'</code>, third <code>D2</code>. Green: the turn inside the insertion; orange: the interchange turn. Those two moves pick the pieces; the rest of the commutator stays the same."),
     el('div', 'table-wrap', `<table class="bld-table"><caption>The four families</caption>
       <thead><tr><th>Targets</th><th>Insertion</th><th>Interchange</th><th>D turn</th></tr></thead><tbody>
-      <tr><th>B and O, H or L (Orozco)</th><td><code>R D R'</code></td><td><code>U'</code></td><td class="nw">O = <code>D</code><br>H = <code>D'</code><br>L = <code>D2</code></td></tr>
-      <tr><th>D or A and G, P or S</th><td><code>R' D R</code></td><td class="nw">D → <code>U'</code><br>A → <code>U2</code></td><td class="nw">G = <code>D</code><br>P = <code>D'</code><br>S = <code>D2</code></td></tr>
-      <tr><th>P and L, T or H</th><td><code>R U R'</code></td><td>D, D' or D2 (last column)</td><td class="nw">L = <code>D</code><br>T = <code>D'</code><br>H = <code>D2</code></td></tr>
-      <tr><th>L and T</th><td><code>L' U L</code></td><td><code>D2</code></td><td>–</td></tr>
+      <tr><th>B and O, H or L (Orozco)</th><td><code>R <span class="mv-pick">D</span> R'</code></td><td>${o("U'")}</td><td class="nw">O = ${g('D')}<br>H = ${g("D'")}<br>L = ${g('D2')}</td></tr>
+      <tr><th>D or A and G, P or S</th><td><code>R' <span class="mv-pick">D</span> R</code></td><td class="nw">D → ${o("U'")}<br>A → ${o('U2')}</td><td class="nw">G = ${g('D')}<br>P = ${g("D'")}<br>S = ${g('D2')}</td></tr>
+      <tr><th>P and L, T or H</th><td><code>R <span class="mv-pick">U</span> R'</code></td><td>the D turn (last column)</td><td class="nw">L = ${o('D')}<br>T = ${o("D'")}<br>H = ${o('D2')}</td></tr>
+      <tr><th>L and T</th><td><code>L' <span class="mv-pick">U</span> L</code></td><td>${o('D2')}</td><td>–</td></tr>
       </tbody></table>`),
     el('ul', 'bld-list', `<li><strong>Three letter sets, each in the order D, D', D2:</strong> O H L (your Orozco), G P S (like the satnav), L T H (the P family).</li>
       <li><strong>The middle turn and the interchange are always on opposite layers:</strong> a D in the insertion goes with a U interchange, and a U with a D interchange.</li>`),
@@ -101,7 +114,7 @@ export function mountFamilies(slot, { pictures = true } = {}) {
   for (const fam of FAMILIES) {
     const fig = el('figure', 'ts-fig fd-fig');
     // the whole commutators, each written from the buffer (buffer → 1st → 2nd); the reverse swaps the two halves
-    const list = fam.algs.map(([pair, c]) => `<li>buffer → ${pair}: <code>${c}</code></li>`).join('');
+    const list = fam.algs.map(([pair, c]) => `<li>buffer → ${pair}: <code>${colourCore(c)}</code></li>`).join('');
     fig.append(el('div', 'fd-pic', familyDiagram(fam.spec)), el('figcaption', null, `<strong>${fam.name}</strong><br>${fam.text}<ul class="fd-algs">${list}</ul>`));
     figs.appendChild(fig);
   }

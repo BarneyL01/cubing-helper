@@ -2596,3 +2596,9 @@ a.menu-sec[aria-current="page"],
 .family-diagram .fd-int { stroke: #ea580c; }
 .family-diagram .fd-head-int { fill: #ea580c; }
 .fd-algs { margin: 0.3rem 0 0; padding-left: 1.1rem; } .fd-algs li { margin: 0.1rem 0; }
+/* the moves that pick the pieces in a 3-style base: green = turn inside the insertion, orange = interchange */
+.mv-pick { color: #15803d; font-weight: 700; }
+.mv-turn { color: #c2410c; font-weight: 700; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mv-pick { color: #4ade80; } :root:not([data-theme="light"]) .mv-turn { color: #fb923c; } }
+:root[data-theme="dark"] .mv-pick { color: #4ade80; }
+:root[data-theme="dark"] .mv-turn { color: #fb923c; }
