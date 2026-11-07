@@ -2607,3 +2607,8 @@ a.menu-sec[aria-current="page"],
 .family-diagram .fd-lift { fill: none; stroke: #7c3aed; stroke-width: 2.2; }
 .family-diagram .fd-head-lift { fill: #7c3aed; }
 .fd-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0.2rem 0 0.6rem; }
+/* 3-style pair pictures: where the setup moved a piece from */
+.corner-diagram .sq-from { fill: var(--text-muted); fill-opacity: 0.25; stroke: var(--text-muted); stroke-dasharray: 2 2; }
+.corner-diagram .cd-setup { stroke: #7c3aed; stroke-width: 2; stroke-dasharray: 4 3; }
+.corner-diagram .cd-setup-head { fill: #7c3aed; }
+.corner-diagram .cd-label-from { fill: var(--text-muted); font-weight: 500; }

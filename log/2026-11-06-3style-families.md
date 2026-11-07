@@ -46,3 +46,12 @@ each D turn brings there, purple = the R move that lifts it, B/C kept highlighte
 - Orozco: R takes B to T (and O to P); D/D'/D2 bring P/H/L to T; R' lifts T to B; U' takes C to B.
 - G P S: R' takes C to K (and P to O); D/D'/D2 bring G/O/S to K; R lifts K to C; U' takes D, U2 takes A to C.
 - P family: R takes C to Q, U takes Q to M, R' drops M into P; D/D'/D2 bring L/T/H straight to P.
+
+## 2026-11-07 — pair pictures as see-through cubes
+
+Owner: every 3-style pair's pictures now use the see-through cube with sticker squares (all three 3-Style pages, via
+`pairCube` / `cornerDiagram` in js/three-style-page.js): "The pair" shows the buffer (blue) and the two targets with
+the cycle arrows; "After the setup" shows the three on the core's positions, with a grey square where each moved piece
+started and a purple dashed arrow to where the setup put it. The core groups' letter nets (owner wanted both) and the
+By base "Into A" nets are unchanged. Checked DH, UE, LW (ours), KD (By base), AF (Dylan): no nets left in the pairs,
+no errors.

@@ -51,8 +51,12 @@ function coreCorners(e) {
 // A see-through cube (front face square, back face drawn up and to the right) with the three stickers the core
 // moves drawn as squares on their own faces, labelled, and joined by arrows in the order the core moves them.
 const CUBE = makeCube(114, 96, 46);
-function cornerDiagram(cycle, labels) {
+// opts.buffer: the letter to draw blue (default: any of C J M); opts.from: [[start, now]] for pieces a setup moved,
+// drawn as a pale square where they started with a purple arrow to where they are now.
+function cornerDiagram(cycle, labels, opts = {}) {
   const f = (v) => v.toFixed(1);
+  const from = opts.from || [];
+  const isBuffer = (l) => (opts.buffer ? l === opts.buffer : 'CJM'.includes(l));
   const arrows = labels.map((a, i) => {
     const b = labels[(i + 1) % 3], other = CUBE.point(labels[(i + 2) % 3]);
     const [p, q] = [CUBE.point(a), CUBE.point(b)];
@@ -68,10 +72,23 @@ function cornerDiagram(cycle, labels) {
     const head = [[t[0], t[1]], [t[0] - 9 * Math.cos(ang - 0.45), t[1] - 9 * Math.sin(ang - 0.45)], [t[0] - 9 * Math.cos(ang + 0.45), t[1] - 9 * Math.sin(ang + 0.45)]];
     return `<path d="M${f(s[0])} ${f(s[1])} Q${f(ctrl[0])} ${f(ctrl[1])} ${f(t[0])} ${f(t[1])}" class="cd-arrow"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="cd-head"/>`;
   }).join('');
-  const dots = CORNER_ORDER.filter((n) => !cycle.includes(n)).map((n) => { const [x, y] = CUBE.point(n); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
-  const squares = labels.map((l) => CUBE.sticker(l, 'CJM'.includes(l) ? 'sq-buffer' : 'sq-on')).join('');
-  const text = labels.map((l) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="cd-label">${l}</text>`; }).join('');
-  return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${labels.join(' to ')} to ${labels[0]}">${CUBE.edges()}${dots}${squares}${arrows}${text}</svg>`;
+  const taken = new Set([...cycle, ...from.map(([a]) => cornerName(a))]);
+  const dots = CORNER_ORDER.filter((n) => !taken.has(n)).map((n) => { const [x, y] = CUBE.point(n); return `<circle cx="${f(x)}" cy="${f(y)}" r="3" class="cd-off"/>`; }).join('');
+  const pale = from.map(([a]) => CUBE.sticker(a, 'sq-from')).join('');
+  const moves = from.map(([a, b]) => {
+    const [p, q] = [CUBE.point(a), CUBE.point(b)];
+    const d = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    if (d < 4) return '';
+    const trim = (u, v, r) => [u[0] + ((v[0] - u[0]) / d) * r, u[1] + ((v[1] - u[1]) / d) * r];
+    const s0 = trim(p, q, 5), t = trim(q, p, 7);
+    const ang = Math.atan2(t[1] - s0[1], t[0] - s0[0]);
+    const head = [t, [t[0] - 8 * Math.cos(ang - 0.45), t[1] - 8 * Math.sin(ang - 0.45)], [t[0] - 8 * Math.cos(ang + 0.45), t[1] - 8 * Math.sin(ang + 0.45)]];
+    return `<line x1="${f(s0[0])}" y1="${f(s0[1])}" x2="${f(t[0])}" y2="${f(t[1])}" class="cd-setup"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="cd-setup-head"/>`;
+  }).join('');
+  const squares = labels.map((l) => CUBE.sticker(l, isBuffer(l) ? 'sq-buffer' : 'sq-on')).join('');
+  const text = [...labels.map((l) => [l, 'cd-label']), ...from.filter(([a]) => !labels.includes(a)).map(([a]) => [a, 'cd-label cd-label-from'])]
+    .map(([l, cls]) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="${cls}">${l}</text>`; }).join('');
+  return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${labels.join(' to ')} to ${labels[0]}">${CUBE.edges()}${dots}${pale}${squares}${moves}${arrows}${text}</svg>`;
 }
 // An animated cube for one algorithm in parts: only the given corners in colour.
 function watch(host, parts, moves, keepPieces, startText, doneText) {
@@ -89,9 +106,11 @@ function coloured(e) {
   return c;
 }
 
-function net(buffer, first, second) {
-  const d = el('div', 'ts-net');
-  d.innerHTML = bldNet('corners', { buffers: [buffer], marked: [first, second], letters: [buffer, first, second] });
+// A pair as a see-through cube: the buffer (blue) and the two targets with the cycle arrows; from: pieces the
+// setup moved (pale square where they started, purple arrow to where they are now).
+function pairCube(buffer, first, second, from = []) {
+  const d = el('div', 'ts-corners');
+  d.innerHTML = cornerDiagram([buffer, first, second].map(cornerName), [buffer, first, second], { buffer, from });
   return d;
 }
 
@@ -106,8 +125,8 @@ function pairBody(e) {
   const label = (l) => (l === 'C' ? 'buffer' : l);
   const atStart = (l) => (l === 'C' ? 'buffer' : `${l} (the buffer)`);
   const list = (xs) => (xs.length < 3 ? xs.join(' and ') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
-  figs.appendChild(fig(`The pair: buffer C (blue), 1st ${e.first}, 2nd ${e.second}`, net('C', e.first, e.second)));
-  if (e.setup) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')}`, net(s.buffer, s.first, s.second)));
+  figs.appendChild(fig(`The pair: buffer C (blue) → ${e.first} → ${e.second}`, pairCube('C', e.first, e.second)));
+  if (e.setup) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')} (grey: where they started)`, pairCube(s.buffer, s.first, s.second, roles.filter(([, fr, to]) => fr !== to).map(([, fr, to]) => [fr, to]))));
   body.appendChild(figs);
 
   const ol = el('ol', 'ts-steps');
