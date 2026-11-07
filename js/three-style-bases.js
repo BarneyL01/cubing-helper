@@ -2,8 +2,28 @@
 // A base solves one pair with no setup; every other pair of the group is the base plus a setup of D and L turns
 // that never moves the buffer. Three tabs: the setup moves one target / both targets / N and Q (buffer moves).
 // Data: data/three-style-bases.js (generated and checked by log/2026-11-05-3style-bases.mjs).
-import { pairRow, coreFigure } from './three-style-page.js?v=13';
-import { bldNet } from './bld-net.js?v=4';
+import { pairRow, coreFigure } from './three-style-page.js?v=15';
+import { makeCube } from './sticker-cube.js?v=4';
+
+// Which letters set up into one position: the position (yellow, thick) with every letter that goes into it (green)
+// and an arrow from each; the buffer C in blue.
+const INTO = makeCube(136, 102, 44);
+function intoDiagram(pos, letters) {
+  const f = (v) => v.toFixed(1);
+  const arrow = (a, b) => {
+    const [p, q] = [INTO.point(a), INTO.point(b)];
+    const d = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1;
+    const m = [(p[0] + q[0]) / 2 - ((q[1] - p[1]) / d) * 10, (p[1] + q[1]) / 2 + ((q[0] - p[0]) / d) * 10];
+    const t = [q[0] - ((q[0] - m[0]) / Math.hypot(q[0] - m[0], q[1] - m[1])) * 7, q[1] - ((q[1] - m[1]) / Math.hypot(q[0] - m[0], q[1] - m[1])) * 7];
+    const ang = Math.atan2(t[1] - m[1], t[0] - m[0]);
+    const head = [t, [t[0] - 7 * Math.cos(ang - 0.45), t[1] - 7 * Math.sin(ang - 0.45)], [t[0] - 7 * Math.cos(ang + 0.45), t[1] - 7 * Math.sin(ang + 0.45)]];
+    return `<path d="M${f(p[0])} ${f(p[1])} Q${f(m[0])} ${f(m[1])} ${f(t[0])} ${f(t[1])}" class="fd-ins"/><polygon points="${head.map((h) => h.map(f).join(',')).join(' ')}" class="fd-head-ins"/>`;
+  };
+  const all = ['C', pos, ...letters];
+  const squares = all.map((l) => INTO.sticker(l, l === 'C' ? 'sq-buffer' : l === pos ? 'sq-hand sq-thick' : 'sq-ins')).join('');
+  const text = all.map((l) => { const a = INTO.labelNear(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="fd-label">${l}</text>`; }).join('');
+  return `<svg viewBox="0 0 262 194" class="family-diagram" role="img" aria-label="letters that set up into ${pos}: ${letters.join(' ')}">${INTO.edges()}${squares}${letters.map((l) => arrow(l, pos)).join('')}${text}</svg>`;
+}
 
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; };
 const TABS = [
@@ -201,15 +221,15 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
       tr.appendChild(td);
     }
     wrap.appendChild(t);
-    // one letter picture per position: the position in blue, every letter that sets up into it outlined
+    // one cube picture per position: the position in yellow, every letter that sets up into it in green
     const nets = el('div', 'ts-figs');
     for (const pos of k) {
       const ls = [...into[pos].keys()].sort();
       if (!ls.length) continue;
-      const f = el('figure', 'ts-fig');
-      const n = el('div', 'ts-net');
-      n.innerHTML = bldNet('corners', { buffers: [pos], marked: ls, letters: [pos, ...ls] });
-      f.append(n, el('figcaption', null, `Into ${pos} (blue): ${ls.join(' ')}`));
+      const f = el('figure', 'ts-fig fd-fig');
+      const n = el('div', 'fd-pic');
+      n.innerHTML = intoDiagram(pos, ls);
+      f.append(n, el('figcaption', null, `Into ${pos} (yellow): ${ls.join(' ')}`));
       nets.appendChild(f);
     }
     const box = el('div');

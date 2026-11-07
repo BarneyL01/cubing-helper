@@ -44,6 +44,15 @@ export function makeCube(cx = 124, cy = 100, s = 46) {
       const pts = q.pts.map((p) => proj(p).map(f).join(',')).join(' ');
       return `<polygon points="${pts}" class="sq ${cls}${hiddenFace(q.face) ? ' sq-hidden' : ''}"/>`;
     },
+    // a label just outside the sticker itself (away from the middle of the picture), for pictures where two
+    // stickers of one corner are both labelled
+    labelNear(letter) {
+      const [mx, my] = proj(quad3(letter).mid);
+      const [cx0, cy0] = proj([0, 0, 0]);
+      const dx = mx - cx0, dy = my - cy0, d = Math.hypot(dx, dy) || 1;
+      const x = mx + (dx / d) * 22, y = my + (dy / d) * 18 + 4;
+      return { x, y, anchor: Math.abs(dx / d) < 0.35 ? 'middle' : dx > 0 ? 'start' : 'end' };
+    },
     // where to put a sticker's label: outside the cube, beside its corner
     labelAt(letter) {
       const name = SPEFFZ[letter];

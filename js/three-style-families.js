@@ -5,7 +5,7 @@
 // R U R' swaps P's position with the buffer's; U' brings C into B and D into C, U2 brings A into C; D brings L,
 // D' brings T, D2 brings H into P's position.
 
-import { makeCube } from './sticker-cube.js?v=2';
+import { makeCube } from './sticker-cube.js?v=4';
 
 const esc = (s) => s.replace(/'/g, '′');
 const f = (v) => v.toFixed(1);

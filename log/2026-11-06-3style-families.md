@@ -55,3 +55,11 @@ the cycle arrows; "After the setup" shows the three on the core's positions, wit
 started and a purple dashed arrow to where the setup put it. The core groups' letter nets (owner wanted both) and the
 By base "Into A" nets are unchanged. Checked DH, UE, LW (ours), KD (By base), AF (Dylan): no nets left in the pairs,
 no errors.
+
+## Remaining letter nets replaced
+
+Owner: replace the last nets too. The By base "Into A / Into P" pictures are now cubes (`intoDiagram` in
+js/three-style-bases.js: the position yellow, the letters that set up into it green with an arrow each, buffer blue;
+labels beside each square via `labelNear`, since two stickers of one corner can both be listed). The letter net under
+each core in the group lists is gone (the cube now shows each sticker on its face; the note says so). Only the
+twist-table pictures still use nets.

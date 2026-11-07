@@ -1,7 +1,7 @@
 // The 3-style corner pages (ours and Dylan / J Perm): the same layout for both tables.
 //   - a summary of the core groups,
 //   - "By commutator" (one group per core, pairs ordered by setup length) and "By 1st target" views,
-//   - every pair opens to show what the setup moves where, what the core then does, two letter pictures
+//   - every pair opens to show what the setup moves where, what the core then does, two cube pictures
 //     (the pair, and where the setup puts it) and the moves written out.
 // Data rows come from data/three-style-*.js (generated and checked in log/): pair, first, second, notation,
 // setup, core, insertion, interchange, spots { buffer, first, second } (where the setup puts C and the two
@@ -12,7 +12,7 @@ import { applyAlg } from './cube-sim.js';
 import { trackedSolved } from './cube-laws.js';
 import { createMoveRunner } from './move-runner.js?v=1';
 import { WHITE_TOP } from './cube-diagram.js';
-import { makeCube } from './sticker-cube.js?v=2';
+import { makeCube } from './sticker-cube.js?v=4';
 import { threeStyleTwists } from '../data/three-style-twists.js?v=2';
 import { orozcoCorners } from '../data/orozco-corners.js?v=1';
 import { OROZCO_PARITY_RUF, OROZCO_PARITY_RUF_WORDS } from '../data/orozco-mnemonics.js?v=4';
@@ -188,9 +188,7 @@ export function coreFigure(e, caption) {
   const f = el('figure', 'ts-fig ts-base');
   const nb = el('div', 'ts-corners');
   nb.innerHTML = cornerDiagram([a, b, c], lt);
-  const ln = el('div', 'ts-net');
-  ln.innerHTML = bldNet('corners', { marked: lt, letters: lt });
-  f.append(nb, ln);
+  f.append(nb);
   const cap = el('figcaption');
   cap.append(el('code', null, e.core), caption(lt));
   f.appendChild(cap);
@@ -281,7 +279,7 @@ export function mountThreeStyle({ data, storageKey, summarySlot, appSlot }) {
       for (const e of list) if (!cores.has(e.core)) cores.set(e.core, { e, n: 0 }); 
       for (const e of list) cores.get(e.core).n++;
       const bases = el('div', 'ts-bases');
-      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three positions a core moves, by sticker letter, with arrows for where each one goes (a core and its reverse show the same positions with the arrows turned round). The letter picture under it shows the same three stickers on the faces. The setup brings the buffer and the two targets onto those three corners.`));
+      bases.appendChild(el('p', 'bld-note', `Every pair here uses one of these ${cores.size} cores. Each picture shows the three stickers a core moves, as squares on their own faces (dashed: faces you cannot see from the front), with arrows for where each one goes (a core and its reverse show the same stickers with the arrows turned round). The setup brings the buffer and the two targets onto those three stickers.`));
       const row = el('div', 'ts-figs');
       for (const [core, { e, n }] of cores) row.appendChild(coreFigure(e, (lt) => ` cycles ${lt.join(' → ')} · ${n} pair${n > 1 ? 's' : ''}`));
       bases.appendChild(row);
