@@ -99,7 +99,7 @@ other target: T into P (group H P), R into D (D S and D G), U into S (D S), I in
 
 Left-layer group: both end positions on the left layer; both targets already there → one L turn (16).
 P family: all on the bottom; both already on the bottom → one D turn (e.g. HL `[D : [D , R U R′]]`).
-Offered to add this to the "Both targets move" tab; not built yet.
+Built 2026-11-08: the "Both targets move" tab opens with this guide (BOTH_GUIDE in js/three-style-bases.js).
 
 How often a group comes up in a solve (3,000 random solves, 3.8 corner pairs each): A P 33%, B L 20%,
 A G 19%, H P 18%, A S 18%, B O 18%, D S 16%, D G 14%, D P 14%, B H 11%, L P 9%, P T 5%, L T 4%.

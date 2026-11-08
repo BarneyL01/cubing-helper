@@ -36,6 +36,44 @@ const LEADS = {
   both: 'The buffer never moves, but the setup (D and L turns) has to move both targets into the base positions. Learn these after the first tab.',
   nq: "Pairs with N or Q. D and L turns never reach the B position, so the setup has to move the buffer too: these are the commutators from the 3-Style page. Pairs with the sticker B are your Orozco pairs, in the first tab.",
 };
+// The "Both targets move" guide: the 122 pairs in three groups by where the two targets end up (counts and
+// examples checked, see docs/three-style-notes.md).
+const st = (m) => `<span class="mv-setup">${m}</span>`;
+const BOTH_GUIDE = `
+<h3>Three groups, by where the two targets end up</h3>
+<p class="bld-note">Tell the group from the two final positions: both on the left layer → group 1; A or D with P → group 2; both on the bottom with P → group 3.</p>
+<details class="ts-guide" open><summary><strong>1. G P S, left layer</strong> · 78 pairs</summary>
+<p>End positions: A or D on top, with G or S below, all on the left layer. Bases <code>R' D R</code> or <code>R' D2 R</code> against <code>U'</code> (with D) or <code>U2</code> (with A).
+<strong>Rule:</strong> get both targets onto the left layer, then one L turn places both.</p>
+<div class="table-wrap"><table class="bld-table"><thead><tr><th>Setup</th><th>Pairs</th><th>When</th></tr></thead><tbody>
+<tr><td>${st('L')} only</td><td>16</td><td>both targets already on the left layer</td></tr>
+<tr><td>${st('D')} then ${st('L')}</td><td>24</td><td>one target is on the bottom but not on the left: D brings it round to the left</td></tr>
+<tr><td>${st('L')} then ${st('D')}</td><td>18</td><td>L places one target and lifts the other off the bottom; D brings that one into G or S</td></tr>
+<tr><td>${st('L D L')} and others</td><td>20</td><td>the first turn would knock the other target off, so it is moved out of the way and back</td></tr>
+</tbody></table></div>
+<p><strong>EU</strong> <code>[${st('L2')} : [U2 , R' D R]]</code>: L2 moves E into G and U into A; the base does buffer → G → A.<br>
+<strong>EV</strong> <code>[${st("D' L2")} : [U2 , R' D R]]</code>: D' moves V into U's place (onto the left layer), then L2 moves E into G and U into A.</p>
+</details>
+<details class="ts-guide" open><summary><strong>2. G P S with P</strong> · 20 pairs</summary>
+<p>End positions: A or D on top, with P (bottom, front, right face). Base <code>R' D' R</code> against <code>U'</code> (with D) or <code>U2</code> (with A).
+<strong>Rule:</strong> P is not on the left layer, so it always takes an L turn (for A or D) and a D turn (for P).</p>
+<div class="table-wrap"><table class="bld-table"><thead><tr><th>Setup</th><th>Pairs</th></tr></thead><tbody>
+<tr><td>${st('D')} then ${st('L')}</td><td>8</td></tr><tr><td>${st('L')} then ${st('D')}</td><td>6</td></tr>
+<tr><td>${st('D L D')}</td><td>4</td></tr><tr><td>${st('L D L')}</td><td>2</td></tr>
+</tbody></table></div>
+<p><strong>EI</strong> <code>[${st("L' D2")} : [U2 , R' D' R]]</code>: L' moves I into A and E down to H; D2 moves E from H into P; the base does buffer → P → A.</p>
+</details>
+<details class="ts-guide" open><summary><strong>3. P family</strong> · 24 pairs</summary>
+<p>End positions: P, with L, T or H, all on the bottom layer. Base <code>R U R'</code> against <code>D</code>, <code>D'</code> or <code>D2</code>.
+<strong>Rule:</strong> get both targets onto the bottom, then the D turn places them; L brings a target down.</p>
+<div class="table-wrap"><table class="bld-table"><thead><tr><th>Setup</th><th>Pairs</th><th>When</th></tr></thead><tbody>
+<tr><td>${st('D')} only</td><td>2</td><td>both already on the bottom</td></tr>
+<tr><td>${st('D')} then ${st('L')}</td><td>8</td><td>–</td></tr><tr><td>${st('L')} then ${st('D')}</td><td>4</td><td>–</td></tr>
+<tr><td>${st('L D L')} and others</td><td>10</td><td>–</td></tr>
+</tbody></table></div>
+<p><strong>HL</strong> <code>[${st('D')} : [D , R U R']]</code>: one D moves H into L and L into P; the base does buffer → L → P.<br>
+<strong>ET</strong> <code>[${st("L' D'")} : [D' , R U R']]</code>: L' moves E down to H; D' moves H into T, and T into P.</p>
+</details>`;
 const reverseCore = (core) => { const [a, b] = core.slice(1, -1).split(' , '); return `[${b} , ${a}]`; };
 
 export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
@@ -56,6 +94,8 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
     tabs.appendChild(b);
   }
   const lead = el('p', 'bld-note');
+  const guide = el('div', 'ts-both-guide');
+  guide.innerHTML = BOTH_GUIDE;
   const groups = el('div');
   // Search by letters: "KD" shows that pair, "K" every pair with K. While there is text, it replaces the tabs.
   const searchLabel = el('label', 'ts-search');
@@ -67,13 +107,14 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
   search.maxLength = 2;
   searchLabel.append('Find letters ', search);
   const results = el('div');
-  slot.append(searchLabel, results, tabs, lead, groups);
+  slot.append(searchLabel, results, tabs, lead, guide, groups);
   const TAB_NAME = Object.fromEntries(TABS);
   const where = (e) => (e.kind === 'nq' ? TAB_NAME.nq : `${TAB_NAME[e.kind]} · base ${e.base[0]} ${e.base[1]}`);
   function find() {
     const q = search.value.toUpperCase().replace(/[^A-X]/g, '');
     const on = q.length > 0;
     tabs.hidden = lead.hidden = groups.hidden = on;
+    guide.hidden = on || saved.tab !== 'both';
     results.replaceChildren();
     if (!on) return;
     const row = (e) => { const r = pairRow(e); r.querySelector('summary').appendChild(el('span', 'ts-hint', `${hint(e)} · ${where(e)}`)); return r; };
@@ -104,6 +145,7 @@ export function mountThreeStyleBases({ data, baseList, slot, storageKey }) {
   function draw() {
     tabs.querySelectorAll('button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === saved.tab)));
     lead.textContent = LEADS[saved.tab];
+    guide.hidden = saved.tab !== 'both';
     groups.replaceChildren();
     const list = data.filter((e) => e.kind === saved.tab);
     // group by the base and its reverse (one group per pair of positions)
