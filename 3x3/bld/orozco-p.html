@@ -116,14 +116,14 @@
 
     // By position: the base (forwards: buffer -> position -> P), the letters that set up into it, their commutators
     const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
-    const ORDER = [['L', 'P family, D'], ['T', "P family, D'"], ['H', 'P family, D2'], ['A', 'with U2'], ['D', "with U'"]];
-    for (const [pos, note] of ORDER) {
+    const ORDER = ['L', 'T', 'H', 'A', 'D'];
+    for (const pos of ORDER) {
       const rows = orozcoP.filter((r) => r.pos === pos);
       const base = rows.find((r) => !r.setup) || rows[0];
       const core = base.forwards.replace(/^\[[^:\[]+ : (\[.*\])\]$/, '$1');
       const d = el('details', 'ts-core');
       d.open = pos === 'L';
-      d.appendChild(el('summary', null, `<strong>Into ${pos}</strong> <span class="bld-muted">· ${note} · ${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span>`));
+      d.appendChild(el('summary', null, `<span><strong>Into ${pos}</strong> <code>${colourCore(core)}</code><span class="ts-sum-base bld-muted">${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span></span>`));
       const figs = el('div', 'ts-figs');
       figs.appendChild(coreFigure({ core, spots: { buffer: 'C', first: pos, second: 'P' } }, () => ` buffer → ${pos} → P (forwards)`));
       const moved = rows.filter((r) => r.setup).map((r) => r.letter);
