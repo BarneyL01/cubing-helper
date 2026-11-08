@@ -117,6 +117,12 @@ the buffer. 2a: `[R U R′ , D/D′/D2]`, positions L/T/H; P with L, D (L), R (L
 Frequency: step 1 48% of solves (0.53 pairs), 2a 13% (0.13), 2a+2b 34% (0.38). Page 3x3/bld/orozco-step2.html,
 trainer presets `?preset=step2a|step2` (2a: 1 pair per solve, all share P). Everything else stays plain Orozco.
 
+## Orozco with helper P (built 2026-11-09)
+
+Full Orozco variant: buffer C, helper P, L and B setups (owner chose B setups for B N O Q W). Letter table, K/V rules,
+twist and parity: see log/2026-11-09-orozco-p.md (all checked, 3,000 whole solves). Parity = last letter plain
+Orozco (helper B) + Ra, so nothing new. Twist for buffer + P: `(R D′ R′ D)×2 F (D′ R D R′)×2 F′`.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new
