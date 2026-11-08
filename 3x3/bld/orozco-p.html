@@ -91,7 +91,7 @@
       <code>D2</code>), and the base of the other letter does the rest.</p>
     <div class="table-wrap"><table class="bld-table" id="sc-one"></table></div>
     <h3>All shortcuts, by base</h3>
-    <p class="bld-note">Open a pair to see what the setup moves where, with pictures and a cube to watch.</p>
+    <p class="bld-note">Each letter pair is shown both ways: the same setup, then the base or its reverse (the two halves swapped), like Orozco forwards and backwards. Open a pair to see what the setup moves where, with pictures and a cube to watch.</p>
     <div id="sc-groups"></div>
 
     <h2 class="section-heading" id="practise" data-short="Practise">Practise</h2>
@@ -106,7 +106,7 @@
     import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
     import { colourCore } from '../../js/three-style-families.js?v=12';
     import { coreFigure, pairRow } from '../../js/three-style-page.js?v=15';
-    import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=1';
+    import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=2';
     import { intoDiagram } from '../../js/three-style-bases.js?v=15';
     const $ = (id) => document.getElementById(id);
     const alg = (n) => {
@@ -136,15 +136,28 @@
     {
       const st = orozcoPShortcutStats;
       $('sc-stats').innerHTML = `${st.pairs} pairs (none of them with P): ${st.bySetup[1]} with a one-move setup, ${st.bySetup[2]} with two moves (${st.withB} use a B turn). In random solves at least one of them comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average. Every other pair stays two commutators.`;
-      const one = orozcoPShortcuts.filter((e) => e.setupMoves === 1);
-      $('sc-one').innerHTML = `<caption>The ${one.length} pairs with a one-move setup</caption><thead><tr><th>Pair</th><th>Commutator</th></tr></thead><tbody>
-        ${one.map((e) => `<tr><th>${e.first} → ${e.second}</th><td><code>${alg(e.notation)}</code></td></tr>`).join('')}</tbody>`;
-      const cores = [...new Set(orozcoPShortcuts.map((e) => e.core))];
-      for (const c of cores) {
-        const list = orozcoPShortcuts.filter((e) => e.core === c).sort((x, y) => x.setupMoves - y.setupMoves || x.pair.localeCompare(y.pair));
+      // a pair and its reverse share the setup; the reverse swaps the base's two halves
+      const by = Object.fromEntries(orozcoPShortcuts.map((e) => [e.pair, e]));
+      const pairs = orozcoPShortcuts.filter((e) => e.first < e.second).map((e) => [e, by[e.second + e.first]]);
+      const one = pairs.filter(([e]) => e.setupMoves === 1);
+      $('sc-one').innerHTML = `<caption>The ${one.length} letter pairs with a one-move setup (each both ways)</caption><thead><tr><th>Letters</th><th>Commutator · reverse</th></tr></thead><tbody>
+        ${one.map(([e, r]) => `<tr><th>${e.first} ↔ ${e.second}</th><td>${e.first} → ${e.second} <code>${alg(e.notation)}</code><br>${r.first} → ${r.second} <code>${alg(r.notation)}</code></td></tr>`).join('')}</tbody>`;
+      // groups: a base together with its halves-swapped reverse
+      const swap = (c) => { const [x, y] = c.slice(1, -1).split(' , '); return `[${y} , ${x}]`; };
+      const groupKey = (c) => [c, swap(c)].sort()[0];
+      const keys = [...new Set(pairs.map(([e]) => groupKey(e.core)))];
+      for (const k of keys) {
+        const list = pairs.filter(([e]) => groupKey(e.core) === k).sort((x, y) => x[0].setupMoves - y[0].setupMoves || x[0].pair.localeCompare(y[0].pair));
         const d = el('details', 'ts-core');
-        d.appendChild(el('summary', null, `<span><code>${colourCore(c)}</code><span class="ts-sum-base bld-muted">${list.length} pairs, ${list.filter((e) => e.setupMoves === 1).length} with one move</span></span>`));
-        d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) list.forEach((e) => d.appendChild(pairRow(e))); });
+        d.appendChild(el('summary', null, `<span><code>${colourCore(k)}</code> and <code>${colourCore(swap(k))}</code><span class="ts-sum-base bld-muted">${list.length} letter pairs (each both ways), ${list.filter(([e]) => e.setupMoves === 1).length} with one move</span></span>`));
+        d.addEventListener('toggle', () => {
+          if (!d.open || d.children.length > 1) return;
+          for (const [e, r] of list) {
+            d.appendChild(el('p', 'ts-core-sub', `${e.first} ↔ ${e.second} · setup <span class="mv-setup">${e.setup}</span>, then the base one way or the other`));
+            d.appendChild(pairRow(e));
+            d.appendChild(pairRow(r));
+          }
+        });
         $('sc-groups').appendChild(d);
       }
     }
