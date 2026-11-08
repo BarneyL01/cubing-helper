@@ -88,9 +88,18 @@ By base numbers (checked): one target moves 184 pairs (mean 11.7), both move 122
 position" inside each group; across groups 7 letters go in another way because the usual setup would move the
 other target: T into P (group H P), R into D (D S and D G), U into S (D S), I into A (A S and A G), E into P (D P) — each shown as a grey line in that group's table.
 
-"Both targets move" structure (checked, 2026-11-08): 122 setups = L only 16, D then L 40, L D L′ 22, other 44
-(mostly P family, both on the bottom). 78 of 122 end on left-layer G P S positions (A or D with G or S), so
-"both targets on the left layer → one L turn moves both". Offered to add this rule to the tab; not built yet.
+"Both targets move" structure (checked 2026-11-08; corrects an earlier "other 44 mostly P family"):
+
+| Group | End positions | Bases | Pairs | Setup shapes |
+|---|---|---|---|---|
+| G P S, left layer | A or D + G or S | `R′ D R`, `R′ D2 R` vs `U′`/`U2` | 78 | L 16, D L 24, L D 18, L D L 14, D L D 4, 4-move 2 |
+| G P S, with P | A or D + P | `R′ D′ R` vs `U′`/`U2` | 20 | D L 8, L D 6, D L D 4, L D L 2 |
+| P family | P + L/T/H | `R U R′` vs D turns | 24 | D 2, D L 8, L D 4, L D L 6, D L D 2, 4-move 2 |
+| Orozco, L T | – | – | 0 | – |
+
+Left-layer group: both end positions on the left layer; both targets already there → one L turn (16).
+P family: all on the bottom; both already on the bottom → one D turn (e.g. HL `[D : [D , R U R′]]`).
+Offered to add this to the "Both targets move" tab; not built yet.
 
 How often a group comes up in a solve (3,000 random solves, 3.8 corner pairs each): A P 33%, B L 20%,
 A G 19%, H P 18%, A S 18%, B O 18%, D S 16%, D G 14%, D P 14%, B H 11%, L P 9%, P T 5%, L T 4%.
