@@ -99,7 +99,7 @@ function plan(state, rule) {
 }
 // find the K / V rule by trying both on positions where the letter comes up
 let seed = 11;
-const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+const rnd = () => ((seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648);
 const solves = (scr, rule) => {
   const bp = bldPlan(scr);
   const p = plan(bp.state, rule);

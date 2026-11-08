@@ -93,7 +93,7 @@ const steps = (targets) => targets.map((t, i) => {
   return odd ? ROW[t.letter].moves : invertAlg(ROW[t.letter].moves);
 });
 let seed = 20261025;
-const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+const rnd = () => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 const counts = { solves: 0, odd: 0, helper: 0, breaks: 0 };
 for (let n = 0; n < 3000; n++) {
   const scramble = randomScramble(25, rnd);

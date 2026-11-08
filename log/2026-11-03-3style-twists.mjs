@@ -66,7 +66,7 @@ check('14 twist rows', rows.length === 14);
 // whole solves
 const OZ = Object.fromEntries(rows.map((r) => [`${r.corner}:${r.faces}`, r.moves]));
 const OZB = Object.fromEntries(rows.map((r) => [`${r.corner}:${r.faces}`, r.noB ? r.noB.moves : r.moves]));
-let seed = 20261103; const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+let seed = 20261103; const rnd = () => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 const pieceId = (l) => [...SPEFFZ[l]].sort().join('');
 const UFR = '1,1,1';
 for (const [label, table, noB] of [['ours', threeStyleOurs, false], ['Dylan', threeStyleCorners, false], ['ours, twists without B', threeStyleOurs, true]]) {

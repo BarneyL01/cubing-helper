@@ -21,7 +21,7 @@ const oldM = await import(join(dir, 'js', 'bld-memo.js'));
 const newM = await import('../js/bld-memo.js');
 let seed = 9;
 const rnd = () => {
-  seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+  seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
   return seed / 0x7fffffff;
 };
 const strip = (plan) => JSON.stringify(plan, (k, v) => (k === 'state' ? undefined : v));

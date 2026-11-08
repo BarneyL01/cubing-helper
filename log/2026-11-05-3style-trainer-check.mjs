@@ -9,7 +9,7 @@ import { applyAlg } from '../js/cube-sim.js';
 import { cornerMemoFrom } from '../js/bld-memo.js';
 import { invertAlg, cancelMoves } from '../js/algs.js';
 let seed = 7;
-const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+const rnd = () => ((seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648);
 const key = (s) => `${s.p.join()}|${s.n.join()}`;
 const groups = [...new Set(threeStyleBases.filter((e) => e.kind !== 'nq').map(groupOf))];
 const fails = [];

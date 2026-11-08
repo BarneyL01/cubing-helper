@@ -125,6 +125,12 @@ Orozco (helper B) + Ra, so nothing new. Twist for buffer + P: `(R D′ R′ D)×
 Shortcuts (same 5 bases, D/L/B setups, P may move): 216 pairs with D/L ≤ 3 moves, 354 with D/L/B; on the page the
 134 with ≤ 2 moves (18 one-move, all among A D L T H), 79% of solves have one, 1.22 per solve.
 
+## Coverage of the Orozco family (2026-11-09, 5,000 solves)
+
+B pairs 36 (13% of solve pairs, 7.1 commutators per solve); P pairs 36 (7%, 7.4); both 70 (20%, 6.9); both +
+helper-P shortcuts 204 = 54% of the 378 (51% of solve pairs, 5.7 per solve); plain Orozco 7.6; full 3-style 3.8.
+Mixing per pair is fine. **Checker RNG:** use `Math.imul` (the old float LCG was skewed; fixed in all log/*.mjs).
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

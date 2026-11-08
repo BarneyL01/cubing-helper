@@ -14,7 +14,7 @@ let TOP_CYCLE = { alg: TOP_MAIN.alg };
 
 const fails = [];
 const check = (name, ok, detail = '') => { if (!ok) fails.push(detail ? `${name}: ${detail}` : name); };
-let seed = 29; const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+let seed = 29; const rnd = () => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 
 // Positions as permutations of the 54 sticker places: st[i] = where the sticker that starts at i is now.
 const SOLVED = solvedCube();

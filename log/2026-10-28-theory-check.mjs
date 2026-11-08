@@ -14,7 +14,7 @@ import { orozcoCorners } from '../data/orozco-corners.js';
 
 const fails = [];
 const check = (name, ok, detail = '') => { if (!ok) fails.push(detail ? `${name}: ${detail}` : name); };
-let seed = 28; const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+let seed = 28; const rnd = () => { seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
 
 // 1
 let n = 0;

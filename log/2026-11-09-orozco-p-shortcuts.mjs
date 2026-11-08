@@ -28,7 +28,7 @@ for (const [pair, b] of Object.entries(best).sort()) {
   rows.push({ pair, first: pair[0], second: pair[1], notation, setup: b.s, core: b.c, setupMoves: b.r[0], moves, count: moves.split(' ').length, spots: spots(pair[0], pair[1], b.s, b.c) });
 }
 const h = {}; rows.forEach((r) => (h[r.setupMoves] = (h[r.setupMoves] || 0) + 1));
-const set = new Set(rows.map((r) => r.pair)); let seed = 3; const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+const set = new Set(rows.map((r) => r.pair)); let seed = 3; const rnd = () => ((seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648);
 let any = 0, tot = 0; const N = 3000;
 for (let i = 0; i < N; i++) { const t = cornerMemoFrom(scrambledState(randomScramble(25, rnd)), 'C').map((x) => x.letter); let n = 0; for (let j = 0; j + 1 < t.length; j += 2) if (set.has(t[j] + t[j + 1])) n++; if (n) any++; tot += n; }
 const stats = { pairs: rows.length, bySetup: h, withB: rows.filter((r) => /B/.test(r.setup)).length, solvesPct: Math.round((100 * any) / N), perSolve: +(tot / N).toFixed(2) };

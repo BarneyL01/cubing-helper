@@ -249,7 +249,7 @@ for (const e of [...exercises, { n: 'w1', ...worked1 }, { n: 'w2', ...worked2 }]
 // ---- 2,000 random scrambles with only 3-cycles: the table solves every corner
 {
   let s = 99;
-  const r = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+  const r = () => { s = (Math.imul(s, 1103515245) + 12345) & 0x7fffffff; return s / 0x7fffffff; };
   let bad = 0;
   let twisted = 0;
   for (let i = 0; i < 2000; i++) {
