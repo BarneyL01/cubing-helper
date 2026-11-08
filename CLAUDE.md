@@ -297,6 +297,7 @@ built ahead of being asked for. As of 2026-10-03:
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
   **3-Style: all verified facts, numbers and owner decisions are in `docs/three-style-notes.md`.**
+  **Orozco step 2** (`3x3/bld/orozco-step2.html`, 2026-11-08, first page of the 3-Style menu section): pairs with P in one commutator like Orozco's pairs with B (2a: `[R U R' , D/D'/D2]`, 18 pairs; 2b: `[R' D' R , U2/U']`, 20 more), L/D setups of one turn; `data/orozco-step2.js` from `log/2026-11-08-orozco-step2.mjs --write`; 3-Style solves presets `?preset=step2a|step2`.
   **3-Style (ours)** (`3x3/bld/three-style.html`, 2026-11-03): our own table, R cores against a U/D turn, setups ≤ 3 moves of
   R U D F (the 36 pairs with B are the owner's Orozco commutators), 12 groups, mean 10.7 moves; `data/three-style-ours.js` from `log/2026-11-03-3style-ours.mjs --write`. Both 3-style pages
   use `js/three-style-page.js` (By commutator / By 1st target; each pair opens to show what the setup moves where, the

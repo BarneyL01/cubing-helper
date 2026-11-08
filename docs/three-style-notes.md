@@ -109,6 +109,14 @@ then H P or A G. Unlearned pairs: do them the Orozco way (1st forwards, 2nd back
 Setup-length coverage, buffer still, one target moves (checked): no setup 32, ≤ 1 move 92, ≤ 2 moves 96,
 ≤ 2 with B 142.
 
+## Orozco step 2 (built 2026-11-08)
+
+Bounded next step after Orozco (owner found full 3-style endless). P plays B's part because L turns never touch P or
+the buffer. 2a: `[R U R′ , D/D′/D2]`, positions L/T/H; P with L, D (L), R (L2), X (L′), T, H, G (L), F (L2), E (L′):
+18 pairs. 2b: `[R′ D′ R , U2/U′]`: P with A, I (L′), S (L), U (L2); A or D with L (D), T (D′), H (D2): 20 pairs.
+Frequency: step 1 48% of solves (0.53 pairs), 2a 13% (0.13), 2a+2b 34% (0.38). Page 3x3/bld/orozco-step2.html,
+trainer presets `?preset=step2a|step2` (2a: 1 pair per solve, all share P). Everything else stays plain Orozco.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

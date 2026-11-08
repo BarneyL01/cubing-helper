@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css?v=33" />
   <link rel="stylesheet" href="../../css/drills.css?v=7" />
-  <script type="module" src="../../js/site-chrome.js?v=11"></script>
+  <script type="module" src="../../js/site-chrome.js?v=12"></script>
 </head>
 <body>
   <header class="site-header" id="site-header">
@@ -34,6 +34,12 @@
     <h2 class="section-heading" id="settings" data-short="Settings">What to practise</h2>
     <form class="rec-settings" id="t-form" onsubmit="return false">
       <fieldset>
+        <legend>Pairs from</legend>
+        <label><input type="radio" name="t-src" value="bases" /> By base groups (choose below)</label>
+        <label><input type="radio" name="t-src" value="step2a" /> <a href="../bld/orozco-step2.html">Orozco step 2a</a> (18 pairs with P)</label>
+        <label><input type="radio" name="t-src" value="step2" /> Orozco step 2a + 2b (38 pairs)</label>
+      </fieldset>
+      <fieldset id="t-fs-groups">
         <legend>Base groups</legend>
         <div class="rec-controls t-all">
           <button type="button" class="rec-btn" id="t-all">All</button>
@@ -41,7 +47,7 @@
         </div>
         <div id="t-groups"></div>
       </fieldset>
-      <fieldset>
+      <fieldset id="t-fs-setups">
         <legend>Setup moves</legend>
         <div id="t-setups"></div>
         <label><input type="checkbox" id="t-both" /> Also pairs where the setup moves both targets</label>
@@ -51,6 +57,7 @@
         <label><input type="radio" name="t-n" value="1" /> 1</label>
         <label><input type="radio" name="t-n" value="2" /> 2</label>
         <label><input type="radio" name="t-n" value="3" /> 3</label>
+        <p class="bld-note" id="t-n-note" hidden>Every step 2a pair uses P, so a solve has one of them.</p>
       </fieldset>
       <fieldset>
         <legend>Picture</legend>
@@ -95,6 +102,7 @@
     import { threeStyleOurs } from '../../data/three-style-ours.js?v=2';
     import { threeStyleCorners } from '../../data/three-style-corners.js?v=3';
     import { trainerPool, trainerScramble, groupOf } from '../../js/three-style-trainer.js?v=1';
+    import { orozcoStep2 } from '../../data/orozco-step2.js?v=1';
     import { mountFamilies } from '../../js/three-style-families.js?v=12';
     import { colourNet } from '../../js/bld-net.js?v=4';
     import { rotatableCube } from '../../js/cube-rotatable.js?v=3';
@@ -116,7 +124,11 @@
 
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
-    saved = { groups: GROUPS.slice(0, 1), setups: [0, 1], both: false, n: 1, pic: 'none', ...saved };
+    saved = { groups: GROUPS.slice(0, 1), setups: [0, 1], both: false, n: 1, pic: 'none', src: 'bases', ...saved };
+    // ?preset=step2a or ?preset=step2 (from the Orozco step 2 page) picks that list and starts a new scramble
+    const preset = new URLSearchParams(location.search).get('preset');
+    if (['step2a', 'step2'].includes(preset) && saved.src !== preset) { saved.src = preset; saved.scramble = null; }
+    const DATA = () => (saved.src === 'bases' ? threeStyleBases : orozcoStep2);
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
 
     // settings
@@ -136,17 +148,28 @@
     $('t-both').checked = saved.both;
     document.querySelector(`input[name="t-n"][value="${saved.n}"]`).checked = true;
     document.querySelector(`input[name="t-pic"][value="${saved.pic}"]`).checked = true;
+    document.querySelector(`input[name="t-src"][value="${saved.src}"]`).checked = true;
+    const showSource = () => {
+      $('t-fs-groups').hidden = $('t-fs-setups').hidden = saved.src !== 'bases';
+      // every step 2a pair uses P, so a solve can hold only one of them
+      const only1 = saved.src === 'step2a';
+      document.querySelectorAll('input[name="t-n"]').forEach((i) => { i.disabled = only1 && i.value !== '1'; });
+      if (only1 && saved.n !== 1) { saved.n = 1; document.querySelector('input[name="t-n"][value="1"]').checked = true; save(); }
+      $('t-n-note').hidden = !only1;
+    };
+    showSource();
     const read = () => {
       saved.groups = [...$('t-groups').querySelectorAll('input:checked')].map((i) => i.value);
       saved.setups = [...$('t-setups').querySelectorAll('input:checked')].map((i) => Number(i.value));
       saved.both = $('t-both').checked;
       saved.n = Number(document.querySelector('input[name="t-n"]:checked').value);
       saved.pic = document.querySelector('input[name="t-pic"]:checked').value;
+      saved.src = document.querySelector('input[name="t-src"]:checked').value;
       save();
     };
-    const pool = () => trainerPool(threeStyleBases, saved);
+    const pool = () => (saved.src === 'bases' ? trainerPool(threeStyleBases, saved) : orozcoStep2.filter((e) => saved.src === 'step2' || e.step === '2a'));
     const showCount = () => { const n = pool().length; $('t-count').textContent = `${n} pair${n === 1 ? '' : 's'} match.`; };
-    $('t-form').addEventListener('change', (ev) => { read(); showCount(); if (ev.target.name === 't-pic') draw(); });
+    $('t-form').addEventListener('change', (ev) => { read(); showCount(); showSource(); if (ev.target.name === 't-pic') draw(); if (ev.target.name === 't-src') newScramble(); });
     const setAll = (on) => { $('t-groups').querySelectorAll('input').forEach((i) => (i.checked = on)); read(); showCount(); };
     $('t-all').addEventListener('click', () => setAll(true));
     $('t-none').addEventListener('click', () => setAll(false));
@@ -171,7 +194,7 @@
     }
     function draw() {
       if (!saved.scramble || !saved.pairs) { newScramble(); return; }
-      const pairs = saved.pairs.map((p) => threeStyleBases.find((e) => e.pair === p));
+      const pairs = saved.pairs.map((p) => DATA().find((e) => e.pair === p));
       if (pairs.some((e) => !e)) { newScramble(); return; }
       const state = applyAlg(solvedCube().map((s) => ({ ...s, home: key(s) })), saved.scramble);
       $('t-scramble').textContent = saved.scramble;
@@ -197,7 +220,7 @@
       pairs.forEach((e, i) => {
         const d = el('div', 't-step');
         const h = el('p');
-        h.append(el('strong', null, `${i + 1}. ${e.first} → ${e.second}`), el('span', 'bld-muted', ` · base ${groupOf(e)[0]} ${groupOf(e)[1]}${e.kind === 'both' ? ' · both targets move' : ''}`));
+        h.append(el('strong', null, `${i + 1}. ${e.first} → ${e.second}`), el('span', 'bld-muted', e.step ? ` · Orozco step ${e.step} · with ${e.fixed}` : ` · base ${groupOf(e)[0]} ${groupOf(e)[1]}${e.kind === 'both' ? ' · both targets move' : ''}`));
         const alg = el('p', 'case-alg');
         const c = el('code');
         if (e.setup) c.append('[', el('span', 'mv-setup', e.setup), ' : ', e.core, ']'); else c.append(e.core);

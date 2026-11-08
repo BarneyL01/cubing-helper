@@ -29,5 +29,19 @@ for (let i = 0; i < 3000; i++) {
   if (!ok || !done.every((s) => s.home === key(s)) || memo !== r.pairs.map((e) => e.pair).join('') || !edgesOk) fails.push(`${r.scramble} | ${r.pairs.map((e) => e.pair)}`);
   if (r.scramble === cancelMoves(invertAlg(r.pairs.map((e) => e.moves).join(' ')))) sameAsSolution++;
 }
+// the Orozco step 2 lists (the trainer's presets)
+const { orozcoStep2 } = await import('../data/orozco-step2.js');
+for (const step of ['2a', 'all']) {
+  const pool = orozcoStep2.filter((e) => step === 'all' || e.step === '2a');
+  for (let i = 0; i < 500; i++) {
+    const n = 1 + Math.floor(rnd() * 3);
+    const r = trainerScramble(pool, n, [threeStyleOurs, threeStyleCorners], rnd);
+    if (!r) { none++; continue; }
+    made++;
+    const done = applyAlg(r.state, r.pairs.map((e) => e.moves).join(' '));
+    const memo = cornerMemoFrom(r.state, 'C').map((t) => t.letter).join('');
+    if (!done.every((s) => s.home === key(s)) || memo !== r.pairs.map((e) => e.pair).join('') || !r.pairs.every((e) => pool.includes(e))) fails.push(`step2 ${r.scramble}`);
+  }
+}
 console.log(`${made} scrambles checked, ${none} settings with too few pairs; scramble is the by-base solution undone in ${sameAsSolution}`);
 console.log(fails.length ? `FAIL\n${fails.slice(0, 10).join('\n')}` : 'ALL OK');

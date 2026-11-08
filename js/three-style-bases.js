@@ -8,7 +8,7 @@ import { makeCube } from './sticker-cube.js?v=4';
 // Which letters set up into one position: the position (yellow, thick) with every letter that goes into it (green)
 // and an arrow from each; the buffer C in blue.
 const INTO = makeCube(136, 102, 44);
-function intoDiagram(pos, letters) {
+export function intoDiagram(pos, letters) {
   const f = (v) => v.toFixed(1);
   const arrow = (a, b) => {
     const [p, q] = [INTO.point(a), INTO.point(b)];

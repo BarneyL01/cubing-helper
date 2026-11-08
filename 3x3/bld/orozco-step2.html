@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orozco step 2 — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=33" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=12"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Orozco step 2</h1>
+    <p class="subtitle">
+      The next step after Orozco: pairs with P in one commutator, the way Orozco already does pairs with B.
+      A short, fixed list; every other pair stays plain Orozco.
+    </p>
+    <div class="source-note">
+      <p>
+        Worked out here (2026-11-08), not from your notes or a published list. Every commutator on this page was checked
+        in the cube simulator: it cycles the buffer and the two targets and moves nothing else, and each setup keeps the
+        buffer and the other target where they are. Built by <code>log/2026-11-08-orozco-step2.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="idea" data-short="The idea">The idea</h2>
+    <p>Orozco is easy because B never moves: D and L turns never touch it, so the setup only ever moves your one
+      letter into O, H or L. <strong>L turns never touch P</strong> (or the buffer) either, so P can play the same
+      part, with three bases of its own.</p>
+    <div class="table-wrap">
+      <table class="bld-table">
+        <caption>Step 1 and step 2a side by side</caption>
+        <thead><tr><th></th><th>Orozco (step 1)</th><th>Step 2a</th></tr></thead>
+        <tbody>
+          <tr><th>The letter that stays put</th><td>B</td><td>P</td></tr>
+          <tr><th>Bases</th><td><code>[R <span class="mv-pick">D</span> R' , <span class="mv-turn">U'</span>]</code>, with D, D', D2</td><td><code>[R U R' , <span class="mv-turn">D</span>]</code>, with D, D', D2</td></tr>
+          <tr><th>Positions picked by the turn</th><td>O, H, L</td><td>L, T, H</td></tr>
+          <tr><th>Setups</th><td>D and L turns</td><td>one L turn at most</td></tr>
+          <tr><th>Pairs it does in one go</th><td>pairs with B</td><td>18 pairs with P</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="bld-list">
+      <li><strong>Recognise it:</strong> is P one of the two letters? Then look the other letter up below. If it is not
+        listed, do the pair the Orozco way (1st forwards, 2nd backwards) as usual.</li>
+      <li><strong>Which way round:</strong> as written each base does one order; swap its two halves for the other,
+        exactly like Orozco forwards and backwards.</li>
+      <li><strong>Step 2b</strong> adds two more bases: P with A, I, S or U, and A or D with L, T or H (20 more
+        pairs, setups again one turn at most).</li>
+    </ul>
+    <div class="table-wrap">
+      <table class="bld-table">
+        <caption>How often it helps (5,000 random solves, about 3.8 corner pairs each)</caption>
+        <thead><tr><th>What you know</th><th>Solves with at least one such pair</th><th>Pairs per solve</th></tr></thead>
+        <tbody>
+          <tr><th>Orozco pairs with B (step 1)</th><td>48%</td><td>0.53</td></tr>
+          <tr><th>Step 2a (18 pairs)</th><td>13%</td><td>0.13</td></tr>
+          <tr><th>Step 2a + 2b (38 pairs)</th><td>34%</td><td>0.38</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-heading" id="step2a" data-short="Step 2a">Step 2a: three bases, like O H L</h2>
+    <p>The P family: <code>[R U R' , <span class="mv-turn">D</span>]</code> with <code>D</code> for L,
+      <code>D'</code> for T and <code>D2</code> for H. An L turn brings the other letter into L or H.</p>
+    <div id="os2-2a"></div>
+
+    <h2 class="section-heading" id="step2b" data-short="Step 2b">Step 2b: two more bases</h2>
+    <p><code>[R' D' R , <span class="mv-turn">U2</span>]</code> (with A) and <code>[R' D' R , <span class="mv-turn">U'</span>]</code>
+      (with D). P with A, I, S or U (an L turn into A), and A or D with L, T or H (a D turn into P, the same L T H
+      letters with D, D', D2).</p>
+    <div id="os2-2b"></div>
+
+    <h2 class="section-heading" id="practise" data-short="Practise">Practise</h2>
+    <p>Small blind solves made only of these pairs, on the 3-Style solves page:</p>
+    <div class="rec-controls">
+      <a class="rec-btn rec-btn-primary" href="../practice/three-style-solves.html?preset=step2a">Practise step 2a</a>
+      <a class="rec-btn" href="../practice/three-style-solves.html?preset=step2">Practise 2a + 2b</a>
+    </div>
+  </main>
+
+  <script type="module">
+    import { orozcoStep2 } from '../../data/orozco-step2.js?v=1';
+    import { mountOrozcoStep2 } from '../../js/orozco-step2.js?v=1';
+    mountOrozcoStep2(orozcoStep2, { '2a': document.getElementById('os2-2a'), '2b': document.getElementById('os2-2b') });
+  </script>
+</body>
+</html>
