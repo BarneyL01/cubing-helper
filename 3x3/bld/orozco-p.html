@@ -55,6 +55,11 @@
         <a href="orozco-step2.html">Orozco step 2</a> for their pictures.</li>
     </ul>
 
+    <h2 class="section-heading" id="by-position" data-short="By position">By position: what goes where</h2>
+    <p>Like Orozco's O, H, L: each base has one position, and the setup brings a letter into it. Learn a position at a
+      time: its base, then the letters that go into it.</p>
+    <div id="op-groups"></div>
+
     <h2 class="section-heading" id="letters" data-short="Letters">Every letter</h2>
     <p>The setup (orange) moves the letter into a base position; the buffer and P never move. Forwards for the 1st
       letter of a pair, backwards for the 2nd.</p>
@@ -86,6 +91,8 @@
     import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../../data/orozco-p.js?v=1';
     import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
     import { colourCore } from '../../js/three-style-families.js?v=12';
+    import { coreFigure } from '../../js/three-style-page.js?v=15';
+    import { intoDiagram } from '../../js/three-style-bases.js?v=15';
     const $ = (id) => document.getElementById(id);
     const alg = (n) => {
       const m = n.match(/^\[([^:]+) : (\[.*\])\]$/);
@@ -106,6 +113,31 @@
         <code>${OROZCO_P_TWIST}</code></li>
       <li><strong>Twist backwards:</strong> <code>${OROZCO_P_TWIST_REV}</code></li>`;
     $('op-ra').textContent = OROZCO_PARITY_RUF;
+
+    // By position: the base (forwards: buffer -> position -> P), the letters that set up into it, their commutators
+    const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
+    const ORDER = [['L', 'P family, D'], ['T', "P family, D'"], ['H', 'P family, D2'], ['A', 'with U2'], ['D', "with U'"]];
+    for (const [pos, note] of ORDER) {
+      const rows = orozcoP.filter((r) => r.pos === pos);
+      const base = rows.find((r) => !r.setup) || rows[0];
+      const core = base.forwards.replace(/^\[[^:\[]+ : (\[.*\])\]$/, '$1');
+      const d = el('details', 'ts-core');
+      d.open = pos === 'L';
+      d.appendChild(el('summary', null, `<strong>Into ${pos}</strong> <span class="bld-muted">· ${note} · ${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span>`));
+      const figs = el('div', 'ts-figs');
+      figs.appendChild(coreFigure({ core, spots: { buffer: 'C', first: pos, second: 'P' } }, () => ` buffer → ${pos} → P (forwards)`));
+      const moved = rows.filter((r) => r.setup).map((r) => r.letter);
+      if (moved.length) {
+        const f = el('figure', 'ts-fig fd-fig');
+        f.append(el('div', 'fd-pic', intoDiagram(pos, moved)), el('figcaption', null, `Into ${pos} (yellow): ${moved.join(' ')}`));
+        figs.appendChild(f);
+      }
+      d.appendChild(figs);
+      d.appendChild(el('div', 'table-wrap', `<table class="bld-table"><thead><tr><th>Letter</th><th>Setup</th><th>Forwards / backwards</th></tr></thead><tbody>
+        ${rows.map((r) => `<tr><th>${r.letter}</th><td>${r.setup ? `<span class="mv-setup">${r.setup}</span>` : 'none'}</td><td><code>${alg(r.forwards)}</code><br><code>${alg(r.backwards)}</code></td></tr>`).join('')}
+        </tbody></table>`));
+      $('op-groups').appendChild(d);
+    }
   </script>
 </body>
 </html>
