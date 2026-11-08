@@ -105,8 +105,18 @@ content and drills get added as they're actually needed.
   - Home (`index.html`) is grouped by the four menu groups with one `.row-card` per
     section (icon, title, one-line description, chevron) and quick links (CFOP: OLL,
     PLL, F2L map; Blind: M2 edges, Old Pochmann, Letter pairs; Commutators: Corner
-    cycles, After 8355; Practice: Recognition, Blind drills, Blind memo). `.method-card` (whole
+    cycles, After 8355; Practice: Recognition, Blind drills, Blind memo, 3-Style solves). `.method-card` (whole
     card clickable via its stretched link) is only used on the CFOP hub now.
+
+## Owner preferences (learnt; apply everywhere)
+
+- Phone reader: outcome first, short, tables for comparisons, bullets for lists, no similes/metaphors/analogies.
+  Ask when something is unclear rather than guessing (the owner has said so several times).
+- Blind / 3-style: **Speffz sticker letters only** — never UFR-style or "corner V" names; "the buffer" for C;
+  explain new ideas with Orozco as the bridge. Full notes, verified facts and past decisions:
+  **`docs/three-style-notes.md` — read it before 3-style work and do not re-simulate what it lists as checked.**
+- Moves: dislikes M (M′, M2 fine), L as a main move, B (setups at most). Prefers short repeated patterns
+  over shorter irregular algorithms.
 
 ## Repo layout
 
@@ -286,6 +296,7 @@ built ahead of being asked for. As of 2026-10-03:
   the forwards/backwards rule and the helper rule; the published list (`data/orozco-published.js`, hand-copied) is shown
   under ours where different and checked by the same script. Published parity swaps UF/UB (for Orozco edges); Ra is kept for M2.
   Owner: ours are the ones to learn, published ones are labelled alternatives. Five worked examples as tabs (`data/orozco-examples.js`). Tables switch By base / By letter (`cubing-helper:orozco-order`).
+  **3-Style: all verified facts, numbers and owner decisions are in `docs/three-style-notes.md`.**
   **3-Style (ours)** (`3x3/bld/three-style.html`, 2026-11-03): our own table, R cores against a U/D turn, setups ≤ 3 moves of
   R U D F (the 36 pairs with B are the owner's Orozco commutators), 12 groups, mean 10.7 moves; `data/three-style-ours.js` from `log/2026-11-03-3style-ours.mjs --write`. Both 3-style pages
   use `js/three-style-page.js` (By commutator / By 1st target; each pair opens to show what the setup moves where, the
@@ -430,7 +441,7 @@ Method").
 
 ## Branch workflow
 
-Develop on the feature branch (currently `claude/intelligent-galileo-z6cd7r`),
+Develop on the session's designated feature branch (the session instructions name it; e.g. `ccr-30dfe743-5np96h`),
 verify locally (see "Verification" below), then **merge to `main` and let it
 deploy automatically** — the user has given standing permission for this, so
 it does not need to be asked for each time. Only pause to ask if something
