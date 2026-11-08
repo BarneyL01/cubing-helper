@@ -80,6 +80,20 @@
     <p class="bld-note">Why not P here: a helper-P letter on its own would leave the buffer and P swapped, and the Ra
       swaps the buffer with B, not P. Switching to B for the last letter lets the Ra finish it.</p>
 
+    <h2 class="section-heading" id="shortcuts" data-short="Shortcuts">Shortcuts: two letters in one commutator</h2>
+    <p>With helper P every pair takes two commutators, unless one letter is P. But the same five bases can also solve
+      many pairs <strong>directly</strong>, without going through P, if the setup may use D turns too (D, L and B: the
+      buffer still never moves, P may move). Then it is one commutator instead of two, like real 3-style.</p>
+    <p id="sc-stats"></p>
+    <h3>Start here: one-move setups</h3>
+    <p><strong>Pattern:</strong> all 18 are pairs of the five letters that already sit in a base position, A, D, L,
+      T and H. One D turn moves one of them into P's place (L with <code>D</code>, T with <code>D'</code>, H with
+      <code>D2</code>), and the base of the other letter does the rest.</p>
+    <div class="table-wrap"><table class="bld-table" id="sc-one"></table></div>
+    <h3>All shortcuts, by base</h3>
+    <p class="bld-note">Open a pair to see what the setup moves where, with pictures and a cube to watch.</p>
+    <div id="sc-groups"></div>
+
     <h2 class="section-heading" id="practise" data-short="Practise">Practise</h2>
     <p>Blind drills › Small solves and Tracing can show the corners this way ("Corners solved with: Orozco with helper P"):</p>
     <div class="rec-controls">
@@ -91,7 +105,8 @@
     import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../../data/orozco-p.js?v=1';
     import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
     import { colourCore } from '../../js/three-style-families.js?v=12';
-    import { coreFigure } from '../../js/three-style-page.js?v=15';
+    import { coreFigure, pairRow } from '../../js/three-style-page.js?v=15';
+    import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=1';
     import { intoDiagram } from '../../js/three-style-bases.js?v=15';
     const $ = (id) => document.getElementById(id);
     const alg = (n) => {
@@ -117,6 +132,22 @@
     // By position: the base (forwards: buffer -> position -> P), the letters that set up into it, their commutators
     const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
     const ORDER = ['L', 'T', 'H', 'A', 'D'];
+    // shortcuts
+    {
+      const st = orozcoPShortcutStats;
+      $('sc-stats').innerHTML = `${st.pairs} pairs (none of them with P): ${st.bySetup[1]} with a one-move setup, ${st.bySetup[2]} with two moves (${st.withB} use a B turn). In random solves at least one of them comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average. Every other pair stays two commutators.`;
+      const one = orozcoPShortcuts.filter((e) => e.setupMoves === 1);
+      $('sc-one').innerHTML = `<caption>The ${one.length} pairs with a one-move setup</caption><thead><tr><th>Pair</th><th>Commutator</th></tr></thead><tbody>
+        ${one.map((e) => `<tr><th>${e.first} → ${e.second}</th><td><code>${alg(e.notation)}</code></td></tr>`).join('')}</tbody>`;
+      const cores = [...new Set(orozcoPShortcuts.map((e) => e.core))];
+      for (const c of cores) {
+        const list = orozcoPShortcuts.filter((e) => e.core === c).sort((x, y) => x.setupMoves - y.setupMoves || x.pair.localeCompare(y.pair));
+        const d = el('details', 'ts-core');
+        d.appendChild(el('summary', null, `<span><code>${colourCore(c)}</code><span class="ts-sum-base bld-muted">${list.length} pairs, ${list.filter((e) => e.setupMoves === 1).length} with one move</span></span>`));
+        d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) list.forEach((e) => d.appendChild(pairRow(e))); });
+        $('sc-groups').appendChild(d);
+      }
+    }
     for (const pos of ORDER) {
       const rows = orozcoP.filter((r) => r.pos === pos);
       const base = rows.find((r) => !r.setup) || rows[0];

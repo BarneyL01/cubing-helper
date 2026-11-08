@@ -122,6 +122,8 @@ trainer presets `?preset=step2a|step2` (2a: 1 pair per solve, all share P). Ever
 Full Orozco variant: buffer C, helper P, L and B setups (owner chose B setups for B N O Q W). Letter table, K/V rules,
 twist and parity: see log/2026-11-09-orozco-p.md (all checked, 3,000 whole solves). Parity = last letter plain
 Orozco (helper B) + Ra, so nothing new. Twist for buffer + P: `(R D′ R′ D)×2 F (D′ R D R′)×2 F′`.
+Shortcuts (same 5 bases, D/L/B setups, P may move): 216 pairs with D/L ≤ 3 moves, 354 with D/L/B; on the page the
+134 with ≤ 2 moves (18 one-move, all among A D L T H), 79% of solves have one, 1.22 per solve.
 
 ## Decisions (owner)
 
