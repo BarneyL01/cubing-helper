@@ -1,8 +1,8 @@
 // Orozco with helper P (owner's request 2026-11-09): Orozco with P in B's place, so every target uses the step 2 bases.
 // Buffer C (memo from C). 1st letter of a pair forwards (buffer -> X -> P), 2nd backwards (buffer -> P -> X).
 // Setups: L and B turns only (they never move the buffer or P), at most 2 moves, the shortest (ties: no B, then L).
-// Bases (insertion first / halves swapped), checked: [R U R' , D/D'/D2] = P -> L/T/H; [R' D' R , U2] = A -> P;
-// [R' D' R , U'] = D -> P. Helper letters: P skip; K, V twist / twist backwards (rule found below by trying);
+// Bases (insertion first / halves swapped), checked: [R U R' , D/D'/D2] = P -> L/T/H; [R' D' R , U2] = A -> P.
+// (Owner 2026-11-09: four bases; D and R go into L with L / L2 instead of their own base [R' D' R , U'].) Helper letters: P skip; K, V twist / twist backwards (rule found below by trying);
 // the twist is (R D' R' D)x2 F (D' R D R')x2 F' (twists the buffer and P only, found by search 2026-11-09).
 // Odd number of letters (parity): the last letter is done the plain Orozco way (X forwards with helper B; B skip,
 // N/Q Orozco twists), then the Ra-perm - the same parity as Orozco.
@@ -31,7 +31,6 @@ const BASES = {
   T: ["[D' , R U R']", "[R U R' , D']"],
   H: ["[D2 , R U R']", "[R U R' , D2]"],
   A: ["[R' D' R , U2]", "[U2 , R' D' R]"],
-  D: ["[R' D' R , U']", "[U' , R' D' R]"],
 };
 const cyc = (alg) => { const p = permOf(expandBrackets(alg)); return [letterAt.get(p[C]), letterAt.get(p[p[C]]), p.filter((v, i) => v !== i).length]; };
 for (const [pos, [f, b]] of Object.entries(BASES)) {

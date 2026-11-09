@@ -1,4 +1,4 @@
-// Helper P shortcuts (owner 2026-11-09): pairs that the five helper-P bases solve in ONE commutator when the setup
+// Helper P shortcuts (owner 2026-11-09): pairs that the four helper-P bases solve in ONE commutator when the setup
 // may also use D turns (D, L, B; the buffer never moves; P may move). Pairs with the letter P are left out (with
 // helper P they are already one commutator). Setups at most 2 moves; shortest, then no B. Every entry is checked:
 // it cycles C -> 1st -> 2nd -> C and moves nothing else. Also counts how often they come up in random solves.
@@ -11,7 +11,7 @@ import { randomScramble, scrambledState, cornerMemoFrom } from '../js/bld-memo.j
 const fails = []; const check = (n, ok) => { if (!ok) fails.push(n); };
 const key = (s) => `${s.p.join()}|${s.n.join()}`; const K = (l) => key(solvedCube()[spotOf(l)]);
 const C = spotOf('C'); const inv = (p) => { const q = []; p.forEach((v, i) => (q[v] = i)); return q; };
-const CORES = ["[D , R U R']", "[R U R' , D]", "[D' , R U R']", "[R U R' , D']", "[D2 , R U R']", "[R U R' , D2]", "[R' D' R , U2]", "[U2 , R' D' R]", "[R' D' R , U']", "[U' , R' D' R]"];
+const CORES = ["[D , R U R']", "[R U R' , D]", "[D' , R U R']", "[R U R' , D']", "[D2 , R U R']", "[R U R' , D2]", "[R' D' R , U2]", "[U2 , R' D' R]"];
 const core = CORES.map((c) => ({ c, p: permOf(expandBrackets(c)) }));
 const turns = [...'DLB'].flatMap((x) => [x, x + "'", x + '2']);
 const setups = ['']; for (const a of turns) { setups.push(a); for (const b of turns) if (a[0] !== b[0]) setups.push(`${a} ${b}`); }

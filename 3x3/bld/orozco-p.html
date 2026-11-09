@@ -39,9 +39,9 @@
           <tr><th>Helper</th><td>B</td><td>P</td></tr>
           <tr><th>1st letter of a pair</th><td>forwards: buffer → letter → B</td><td>forwards: buffer → letter → P</td></tr>
           <tr><th>2nd letter of a pair</th><td>backwards: buffer → B → letter</td><td>backwards: buffer → P → letter</td></tr>
-          <tr><th>Bases</th><td>3 (O, H, L)</td><td>5 (L, T, H, A, D)</td></tr>
+          <tr><th>Bases</th><td>3 (O, H, L)</td><td>4 (L, T, H, A)</td></tr>
           <tr><th>Setup turns</th><td>D and L</td><td>L and B (they never move the buffer or P)</td></tr>
-          <tr><th>Setups</th><td>3 letters none, 10 one turn, 5 two turns</td><td>5 letters none, 11 one turn, 2 two turns</td></tr>
+          <tr><th>Setups</th><td>3 letters none, 10 one turn, 5 two turns</td><td>4 letters none, 12 one turn, 2 two turns</td></tr>
           <tr><th>Helper's letters</th><td>B skip; N, Q twist</td><td>P skip; K, V twist</td></tr>
           <tr><th>Odd number of letters</th><td>Ra-perm</td><td>last letter the plain Orozco way, then the Ra-perm</td></tr>
         </tbody>
@@ -51,7 +51,7 @@
       <li><strong>A pair with P is one commutator,</strong> the way a pair with B is in Orozco: "X then P" is just X
         forwards (P backwards is a skip).</li>
       <li><strong>The bases are the step 2 ones:</strong> the P family <code>[R U R' , D / D' / D2]</code> for L, T,
-        H, and <code>[R' D' R , U2]</code> for A, <code>[R' D' R , U']</code> for D. See
+        H, and <code>[R' D' R , U2]</code> for A. (D and R go into L with <code>L</code> and <code>L2</code>, so there is no fifth base.) See
         <a href="orozco-step2.html">Orozco step 2</a> for their pictures.</li>
     </ul>
 
@@ -81,7 +81,7 @@
       swaps the buffer with B, not P. Switching to B for the last letter lets the Ra finish it.</p>
 
     <h2 class="section-heading" id="shortcuts" data-short="Shortcuts">Shortcuts: two letters in one commutator</h2>
-    <p>With helper P every pair takes two commutators, unless one letter is P. But the same five bases can also solve
+    <p>With helper P every pair takes two commutators, unless one letter is P. But the same four bases can also solve
       many pairs <strong>directly</strong>, without going through P, if the setup may use D turns too (D, L and B: the
       buffer still never moves, P may move). Then it is one commutator instead of two, like real 3-style.</p>
     <div class="ts-guide os-quick">
@@ -99,13 +99,13 @@
         <code>[D2 , R U R']</code>, so <code>[<span class="mv-setup">D L'</span> : [D2 , R U R']]</code>; L then E
         is the same with <code>[R U R' , D2]</code>.</p>
       <p class="bld-note">This covers 45 letter pairs (90 both ways; a few need a third setup move, so they are not
-        all in the list below), 21% of the pairs in a solve, and one comes up in 63% of solves. The other shortcuts
+        all in the list below), 20% of the pairs in a solve, and one comes up in 61% of solves. The other shortcuts
         below start with an L or B turn that brings a letter onto L, T or H first.</p>
     </div>
     <p id="sc-stats"></p>
     <h3>Start here: one-move setups</h3>
-    <p><strong>Pattern:</strong> all 18 are pairs of the five letters that already sit in a base position, A, D, L,
-      T and H. One D turn moves one of them into P's place (L with <code>D</code>, T with <code>D'</code>, H with
+    <p><strong>Pattern:</strong> all of them are pairs of the four letters that already sit in a base position, A,
+      L, T and H. One D turn moves one of them into P's place (L with <code>D</code>, T with <code>D'</code>, H with
       <code>D2</code>), and the base of the other letter does the rest.</p>
     <div class="table-wrap"><table class="bld-table" id="sc-one"></table></div>
     <h3>All shortcuts, by base</h3>
@@ -120,11 +120,11 @@
   </main>
 
   <script type="module">
-    import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../../data/orozco-p.js?v=1';
+    import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../../data/orozco-p.js?v=2';
     import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
     import { colourCore } from '../../js/three-style-families.js?v=12';
     import { coreFigure, pairRow } from '../../js/three-style-page.js?v=15';
-    import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=2';
+    import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=3';
     import { intoDiagram } from '../../js/three-style-bases.js?v=15';
     const $ = (id) => document.getElementById(id);
     const alg = (n) => {
@@ -149,7 +149,7 @@
 
     // By position: the base (forwards: buffer -> position -> P), the letters that set up into it, their commutators
     const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
-    const ORDER = ['L', 'T', 'H', 'A', 'D'];
+    const ORDER = ['L', 'T', 'H', 'A'];
     // shortcuts
     {
       const st = orozcoPShortcutStats;
