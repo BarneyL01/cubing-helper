@@ -135,7 +135,7 @@
     // shortcuts
     {
       const st = orozcoPShortcutStats;
-      $('sc-stats').innerHTML = `${st.pairs} pairs (none of them with P): ${st.bySetup[1]} with a one-move setup, ${st.bySetup[2]} with two moves (${st.withB} use a B turn). In random solves at least one of them comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average. Every other pair stays two commutators.`;
+      $('sc-stats').innerHTML = `<strong>${st.pairs / 2} letter pairs to learn</strong>, each working both ways (the reverse is the same setup with the base's halves swapped), so ${st.pairs} pairs in a solve (none of them with P): ${st.bySetup[1] / 2} letter pairs with a one-move setup, ${st.bySetup[2] / 2} with two moves (${st.withB / 2} use a B turn). In random solves at least one of them comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average. Every other pair stays two commutators.`;
       // a pair and its reverse share the setup; the reverse swaps the base's two halves
       const by = Object.fromEntries(orozcoPShortcuts.map((e) => [e.pair, e]));
       const pairs = orozcoPShortcuts.filter((e) => e.first < e.second).map((e) => [e, by[e.second + e.first]]);
