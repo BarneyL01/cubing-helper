@@ -122,8 +122,9 @@ trainer presets `?preset=step2a|step2` (2a: 1 pair per solve, all share P). Ever
 Full Orozco variant: buffer C, helper P, L and B setups (owner chose B setups for B N O Q W). Letter table, K/V rules,
 twist and parity: see log/2026-11-09-orozco-p.md (all checked, 3,000 whole solves). Parity = last letter plain
 Orozco (helper B) + Ra, so nothing new. Twist for buffer + P: `(R D′ R′ D)×2 F (D′ R D R′)×2 F′`.
-Helper P uses FOUR bases since 2026-11-09 (owner): D and R go into L (`L`, `L2`), no `[R′ D′ R , U′]`. Shortcuts with the
-4 bases, ≤ 2 setup moves: 59 letter pairs (118 both ways), 6 one-move (among A L T H), 73% of solves, 1.02 per solve.
+Helper P uses THREE bases since 2026-11-09 (owner; 3-Style pages unchanged): `[R U R′ , D]` (L), `[R U R′ , D2]` (H),
+`[R′ D′ R , U2]` (A). D, R into L (`L`, `L2`); T into A (`B′ L`); Q into L (`B L2`). Shortcuts with the 3 bases, ≤ 2 setup
+moves: 58 letter pairs (116 both ways), 6 one-move (among A L T H), 72% of solves, 1.01 per solve. Coverage 186 = 49%.
 Quick test (checked): a pair with L, T or H (not with P/V) is always a shortcut: D/D′/D2 puts that letter where P was,
 then the other letter's helper-P setup + base (forwards if it is first). 45 letter pairs, 20% of solve pairs (4 bases).
 

@@ -4,7 +4,7 @@
 // Checked by log/2026-11-09-orozco-p.mjs (3,000 whole solves).
 import { expandBrackets } from './algs.js';
 import { cornerMemoFrom } from './bld-memo.js';
-import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../data/orozco-p.js?v=2';
+import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../data/orozco-p.js?v=3';
 import { orozcoCorners, OROZCO_TWIST, OROZCO_TWIST_REV, OROZCO_HELPER_RULES } from '../data/orozco-corners.js?v=1';
 import { OROZCO_PARITY_RUF } from '../data/orozco-mnemonics.js?v=4';
 
