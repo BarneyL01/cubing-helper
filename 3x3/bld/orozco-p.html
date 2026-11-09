@@ -92,24 +92,8 @@
     <p>With helper P every pair takes two commutators, unless one letter is P. But the same three bases can also solve
       many pairs <strong>directly</strong>, without going through P, if the setup may use D turns too (D, L and B: the
       buffer still never moves, P may move). Then it is one commutator instead of two, like real 3-style.</p>
-    <div class="ts-guide os-quick">
-      <p><strong>Quick test: is L, T or H one of the two letters?</strong> Then it is a shortcut, unless the other letter is P or V (checked for every other pair). L, T and H can play P: one D turn puts them in P's place.</p>
-      <ol class="bld-list">
-        <li>Turn <code>D</code> for L, <code>D'</code> for T or <code>D2</code> for H: that letter is now where P was.</li>
-        <li>See where the other letter is now (the D turn moves it too if it is on the bottom).</li>
-        <li>Carry on exactly as in helper P for that letter: its setup, then its base, <strong>forwards</strong> if the
-          other letter comes first, <strong>backwards</strong> if the L, T or H letter comes first.</li>
-        <li>Undo: the letter's setup, then the D turn.</li>
-      </ol>
-      <p class="bld-note">A then L: <code>D</code> puts L where P was, A stays, A forwards is
-        <code>[R' D' R , U2]</code>, so <code>[<span class="mv-setup">D</span> : [R' D' R , U2]]</code>.<br>
-        E then L: <code>D</code>, then E's setup <code>L'</code> into H, E forwards
-        <code>[D2 , R U R']</code>, so <code>[<span class="mv-setup">D L'</span> : [D2 , R U R']]</code>; L then E
-        is the same with <code>[R U R' , D2]</code>.</p>
-      <p class="bld-note">This covers 45 letter pairs (90 both ways; a few need a third setup move, so they are not
-        all in the list below), 20% of the pairs in a solve, and one comes up in 61% of solves. The other shortcuts
-        below start with an L or B turn that brings a letter onto L, T or H first.</p>
-    </div>
+    <h3>Quick test: is it a shortcut?</h3>
+    <div id="op-quick"></div>
     <p id="sc-stats"></p>
     <h3>Start here: one-move setups</h3>
     <p><strong>Pattern:</strong> all of them are pairs of A, L, T and H. One D turn (<code>D</code> for L,
@@ -131,11 +115,13 @@
     import { orozcoP, OROZCO_P_TWIST, OROZCO_P_TWIST_REV, OROZCO_P_HELPER_RULES } from '../../data/orozco-p.js?v=3';
     import { orozcoCorners, OROZCO_HELPER_RULES } from '../../data/orozco-corners.js?v=1';
     import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
+    import { mountQuick } from '../../js/orozco-quick.js?v=2';
     import { colourCore } from '../../js/three-style-families.js?v=12';
     import { coreFigure, pairRow } from '../../js/three-style-page.js?v=15';
     import { orozcoPShortcuts, orozcoPShortcutStats } from '../../data/orozco-p-shortcuts.js?v=4';
     import { intoDiagram } from '../../js/three-style-bases.js?v=15';
     const $ = (id) => document.getElementById(id);
+    mountQuick($('op-quick'), 'P');
     const alg = (n) => {
       const m = n.match(/^\[([^:]+) : (\[.*\])\]$/);
       return m ? `[<span class="mv-setup">${m[1]}</span> : ${colourCore(m[2])}]` : colourCore(n);

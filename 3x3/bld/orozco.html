@@ -112,18 +112,8 @@
     <p>Orozco does every pair in two commutators, unless one letter is B. The same three bases can also solve many
       pairs <strong>directly</strong> if the setup may move B. That needs a B turn: D and L never move B, so every
       shortcut here has one.</p>
-    <div class="ts-guide os-quick">
-      <p><strong>Quick test: is O, E or X one of the two letters?</strong> Then it is a shortcut (checked for every
-        such pair). O, E and X can play B: one B turn puts them in B's place.</p>
-      <ol class="bld-list">
-        <li>Turn <code>B</code> for O, <code>B'</code> for E or <code>B2</code> for X: that letter is now where B was.</li>
-        <li>See where the other letter is now (the B turn moves it too if it is on the back).</li>
-        <li>Carry on exactly as in Orozco for that letter: its setup, then its base, <strong>forwards</strong> if the
-          other letter comes first, <strong>backwards</strong> if the O, E or X letter comes first.</li>
-        <li>Undo: the letter's setup, then the B turn.</li>
-      </ol>
-      <p class="bld-note" id="obs-quick"></p>
-    </div>
+    <h3>Quick test: is it a shortcut?</h3>
+    <div id="ob-quick"></div>
     <p id="obs-stats"></p>
     <h3>Start here: one-move setups</h3>
     <div class="table-wrap"><table class="bld-table" id="obs-one"></table></div>
@@ -295,12 +285,13 @@
   <script type="module">
     import { orozcoBShortcuts, orozcoBShortcutStats } from '../../data/orozco-b-shortcuts.js?v=1';
     import { pairRow } from '../../js/three-style-page.js?v=15';
+    import { mountQuick } from '../../js/orozco-quick.js?v=2';
     import { colourCore } from '../../js/three-style-families.js?v=12';
     const $ = (id) => document.getElementById(id);
+    mountQuick($('ob-quick'), 'B');
     const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
     const alg = (n) => { const m = n.match(/^\[([^:]+) : (\[.*\])\]$/); return m ? `[<span class="mv-setup">${m[1]}</span> : ${colourCore(m[2])}]` : colourCore(n); };
     const st = orozcoBShortcutStats;
-    $('obs-quick').textContent = `This covers ${st.quickLetterPairs} letter pairs (some need a third setup move, so not all are in the list below), about ${st.quickPerSolve} per solve.`;
     $('obs-stats').innerHTML = `<strong>${st.pairs / 2} letter pairs to learn</strong>, each working both ways, so ${st.pairs} pairs in a solve (none with B): ${st.bySetup[1] / 2} letter pairs with a one-move setup, ${st.bySetup[2] / 2} with two moves. At least one comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average.`;
     const by = Object.fromEntries(orozcoBShortcuts.map((e) => [e.pair, e]));
     const pairs = orozcoBShortcuts.filter((e) => e.first < e.second).map((e) => [e, by[e.second + e.first]]);

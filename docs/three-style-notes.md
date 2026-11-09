@@ -138,6 +138,9 @@ Mixing per pair is fine. **Checker RNG:** use `Math.imul` (the old float LCG was
 
 Orozco page has a Shortcuts section: 65 letter pairs (130), all need a B turn; quick test O/E/X play B after
 B/B′/B2. Per letter, P is shorter for A I U W N Q, B for O T K V, the rest equal (see log/2026-11-10-orozco-b-shortcuts.md).
+Quick test levels (2026-11-10, `data/orozco-quick.js` from `log/2026-11-10-quick-tests.mjs`, shown by `js/orozco-quick.js`
+on both pages): level 1 (P: L T H; B: O E X) works with every partner, helper-corner letters included (checked, no exceptions);
+level 2 = one turn from a level-1 spot, works only with 2-3 listed partners each (partner lands on a base with no setup).
 
 ## Decisions (owner)
 
