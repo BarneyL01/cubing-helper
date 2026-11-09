@@ -134,6 +134,11 @@ B pairs 36 (13% of solve pairs, 7.1 commutators per solve); P pairs 36 (7%, 7.4)
 helper-P shortcuts 188 = 50% of the 378 (46% of solve pairs, 5.9 per solve; 4-base helper P); plain Orozco 7.6; full 3-style 3.8.
 Mixing per pair is fine. **Checker RNG:** use `Math.imul` (the old float LCG was skewed; fixed in all log/*.mjs).
 
+## Orozco B shortcuts and B-or-P per pair (2026-11-10)
+
+Orozco page has a Shortcuts section: 65 letter pairs (130), all need a B turn; quick test O/E/X play B after
+B/B′/B2. Per letter, P is shorter for A I U W N Q, B for O T K V, the rest equal (see log/2026-11-10-orozco-b-shortcuts.md).
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

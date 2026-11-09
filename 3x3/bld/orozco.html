@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orozco corners — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=8" />
+  <link rel="stylesheet" href="../../css/style.css?v=33" />
   <script type="module" src="../../js/site-chrome.js?v=13"></script>
 </head>
 <body>
@@ -108,6 +108,30 @@
       The published parity, <code id="pub-parity"></code>, swaps UF and UB instead: it is for Orozco edges (buffer UF,
       helper UB). With M2 edges, use the Ra-perm above.
     </p>
+    <h2 class="section-heading" id="shortcuts" data-short="Shortcuts">Shortcuts: two letters in one commutator</h2>
+    <p>Orozco does every pair in two commutators, unless one letter is B. The same three bases can also solve many
+      pairs <strong>directly</strong> if the setup may move B. That needs a B turn: D and L never move B, so every
+      shortcut here has one.</p>
+    <div class="ts-guide os-quick">
+      <p><strong>Quick test: is O, E or X one of the two letters?</strong> Then it is a shortcut (checked for every
+        such pair). O, E and X can play B: one B turn puts them in B's place.</p>
+      <ol class="bld-list">
+        <li>Turn <code>B</code> for O, <code>B'</code> for E or <code>B2</code> for X: that letter is now where B was.</li>
+        <li>See where the other letter is now (the B turn moves it too if it is on the back).</li>
+        <li>Carry on exactly as in Orozco for that letter: its setup, then its base, <strong>forwards</strong> if the
+          other letter comes first, <strong>backwards</strong> if the O, E or X letter comes first.</li>
+        <li>Undo: the letter's setup, then the B turn.</li>
+      </ol>
+      <p class="bld-note" id="obs-quick"></p>
+    </div>
+    <p id="obs-stats"></p>
+    <h3>Start here: one-move setups</h3>
+    <div class="table-wrap"><table class="bld-table" id="obs-one"></table></div>
+    <h3>All shortcuts, by base</h3>
+    <p class="bld-note">Each letter pair both ways: the same setup, then the base or its reverse (halves swapped), like
+      forwards and backwards. Open a pair for what the setup moves where, pictures and a cube to watch. Checked by
+      <code>log/2026-11-10-orozco-b-shortcuts.mjs</code>.</p>
+    <div id="obs-groups"></div>
   </main>
 
   <script type="module">
@@ -267,6 +291,34 @@
       $('ex-tabs').appendChild(b);
     }
     showExample(orozcoExamples.find((x) => x.id === savedEx) || orozcoExamples[0]);
+  </script>
+  <script type="module">
+    import { orozcoBShortcuts, orozcoBShortcutStats } from '../../data/orozco-b-shortcuts.js?v=1';
+    import { pairRow } from '../../js/three-style-page.js?v=15';
+    import { colourCore } from '../../js/three-style-families.js?v=12';
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
+    const alg = (n) => { const m = n.match(/^\[([^:]+) : (\[.*\])\]$/); return m ? `[<span class="mv-setup">${m[1]}</span> : ${colourCore(m[2])}]` : colourCore(n); };
+    const st = orozcoBShortcutStats;
+    $('obs-quick').textContent = `This covers ${st.quickLetterPairs} letter pairs (some need a third setup move, so not all are in the list below), about ${st.quickPerSolve} per solve.`;
+    $('obs-stats').innerHTML = `<strong>${st.pairs / 2} letter pairs to learn</strong>, each working both ways, so ${st.pairs} pairs in a solve (none with B): ${st.bySetup[1] / 2} letter pairs with a one-move setup, ${st.bySetup[2] / 2} with two moves. At least one comes up in ${st.solvesPct}% of solves, ${st.perSolve} per solve on average.`;
+    const by = Object.fromEntries(orozcoBShortcuts.map((e) => [e.pair, e]));
+    const pairs = orozcoBShortcuts.filter((e) => e.first < e.second).map((e) => [e, by[e.second + e.first]]);
+    const one = pairs.filter(([e]) => e.setupMoves === 1);
+    $('obs-one').innerHTML = `<caption>The ${one.length} letter pairs with a one-move setup (each both ways)</caption><thead><tr><th>Letters</th><th>Commutator · reverse</th></tr></thead><tbody>
+      ${one.map(([e, r]) => `<tr><th>${e.first} ↔ ${e.second}</th><td>${e.first} → ${e.second} <code>${alg(e.notation)}</code><br>${r.first} → ${r.second} <code>${alg(r.notation)}</code></td></tr>`).join('')}</tbody>`;
+    const swap = (c) => { const [x, y] = c.slice(1, -1).split(' , '); return `[${y} , ${x}]`; };
+    const groupKey = (c) => [c, swap(c)].sort()[0];
+    for (const k of [...new Set(pairs.map(([e]) => groupKey(e.core)))]) {
+      const list = pairs.filter(([e]) => groupKey(e.core) === k).sort((x, y) => x[0].setupMoves - y[0].setupMoves || x[0].pair.localeCompare(y[0].pair));
+      const d = el('details', 'ts-core');
+      d.appendChild(el('summary', null, `<span><code>${colourCore(k)}</code> and <code>${colourCore(swap(k))}</code><span class="ts-sum-base bld-muted">${list.length} letter pairs (each both ways), ${list.filter(([e]) => e.setupMoves === 1).length} with one move</span></span>`));
+      d.addEventListener('toggle', () => {
+        if (!d.open || d.children.length > 1) return;
+        for (const [e, r] of list) { d.appendChild(el('p', 'ts-core-sub', `${e.first} ↔ ${e.second} · setup <span class="mv-setup">${e.setup}</span>`)); d.appendChild(pairRow(e)); d.appendChild(pairRow(r)); }
+      });
+      $('obs-groups').appendChild(d);
+    }
   </script>
 </body>
 </html>
