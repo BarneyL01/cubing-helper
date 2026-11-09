@@ -124,6 +124,8 @@ twist and parity: see log/2026-11-09-orozco-p.md (all checked, 3,000 whole solve
 Orozco (helper B) + Ra, so nothing new. Twist for buffer + P: `(R D′ R′ D)×2 F (D′ R D R′)×2 F′`.
 Shortcuts (same 5 bases, D/L/B setups, P may move): 216 pairs with D/L ≤ 3 moves, 354 with D/L/B; on the page the
 134 with ≤ 2 moves (18 one-move, all among A D L T H), 79% of solves have one, 1.22 per solve.
+Quick test (checked): a pair with L, T or H (not with P/V) is always a shortcut: D/D′/D2 puts that letter where P was,
+then the other letter's helper-P setup + base (forwards if it is first). 45 letter pairs, 21% of solve pairs.
 
 ## Coverage of the Orozco family (2026-11-09, 5,000 solves)
 
