@@ -64,6 +64,20 @@ function pairPicture(e) {
   return diagram({ label: `${e.walked} into ${place(e.helper)}, ${other} into the ${e.into} position`, squares, arrows });
 }
 
+// ---- where the setup moves the pair: "as P → D · helper D" in the pair's heading ------------------------------------
+const HELPERS = ['B', 'P', 'D'];
+function movedTo(e) {
+  const { first, second } = e.spots;
+  const h = e.helper || [first, second].find((x) => HELPERS.includes(x)); // exceptions carry no helper field
+  const same = first === e.first && second === e.second;
+  return el('span', 'wr-moved', `${same ? 'no setup' : `as <strong>${first} → ${second}</strong>`}${h ? ` · helper ${h}` : ''}`);
+}
+function walkRow(e) {
+  const row = pairRow(e);
+  row.querySelector('.ts-pair-name').after(movedTo(e));
+  return row;
+}
+
 // ---- the rule for one pair, in words ---------------------------------------------------------------------------------
 function explain(e) {
   const box = el('div', 'wr-result');
@@ -84,9 +98,9 @@ function explain(e) {
     if (e.setup) ol.append(el('li', null, 'Undo the setup turns in reverse order.'));
     const figs = el('div', 'ts-figs');
     figs.append(figure(pairPicture(e), `${w.n ? `Green: ${e.walked} walks into ${place(h)} (yellow). ` : `Yellow: ${h}, the helper. `}Pink: ${other}${other === e.into ? ', already on its base position' : ` and the ${e.into} position it ends on`}.${e.lands !== other ? ' Purple arrow: the walk moves it.' : ''}${e.lands !== e.into ? ' Orange arrow: its own setup.' : ''}`));
-    box.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> <code>${alg(e.notation)}</code>`), figs, ol);
+    box.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> ${movedTo(e).outerHTML} <code>${alg(e.notation)}</code>`), figs, ol);
   }
-  const row = pairRow(e);
+  const row = walkRow(e);
   row.removeAttribute('id');
   row.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures of the setup, and a cube to watch: '));
   box.append(row);
@@ -183,7 +197,7 @@ function mountExceptions(slot) {
   const ex = walkPairs.filter((p) => p.exception && p.first < p.second);
   slot.append(el('div', 'table-wrap wr-wrap', `<table class="bld-table"><caption>The ${ex.length} letter pairs where the rule gives four setup moves</caption><thead><tr><th>Letters</th><th>The rule gives</th><th>Use · reverse</th></tr></thead><tbody>
     ${ex.map((e) => `<tr><th>${e.first} ↔ ${e.second}</th><td>${st(e.ruleSetup)}</td><td><code>${alg(e.notation)}</code><br><code>${alg(PAIR[e.second + e.first].notation)}</code></td></tr>`).join('')}</tbody></table>`));
-  for (const e of ex) { slot.append(pairRow(e), pairRow(PAIR[e.second + e.first])); }
+  for (const e of ex) { slot.append(walkRow(e), walkRow(PAIR[e.second + e.first])); }
 }
 
 function mountAll(slot) {
@@ -193,7 +207,7 @@ function mountAll(slot) {
     if (!list.length) continue;
     const d = el('details', 'ts-core');
     d.append(el('summary', null, `<span><strong>${l.letter}</strong> ${l.n ? `walks with ${st(l.turns)} into ${place(l.helper)}` : 'is a helper'}<span class="ts-sum-base bld-muted">${list.length} pairs</span></span>`));
-    d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) for (const e of list) d.append(pairRow(e)); });
+    d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) for (const e of list) d.append(walkRow(e)); });
     slot.append(d);
   }
 }

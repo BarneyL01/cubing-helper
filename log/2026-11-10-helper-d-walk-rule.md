@@ -15,3 +15,12 @@
   section. `site-chrome.js?v=14` on every page; `style.css?v=35` on the two new pages.
 - Checked at 390 px in headless Chromium (both new pages, home, Blind drills, helper P, step 2, 3-Style): no console
   errors, no sideways scroll.
+
+## Pair headings show where the setup moves the pair (owner request)
+
+- Every pair heading on the Walk rule page (Every pair, Exceptions, Find a pair) now has a chip beside the letters:
+  "as P → D · helper D" for G → R (from the pair's `spots`; exceptions take the helper from whichever spot is B, P or D;
+  "no setup" when the letters are already on base positions).
+- Done in `js/walk-rule.js` (`movedTo`, `walkRow` wraps the shared `pairRow`), so the 3-Style pages are unchanged.
+  `.wr-moved` in `css/style.css`; walk-rule.html uses `style.css?v=36`, `walk-rule.js?v=2`.
+- Checked at 390 px in headless Chromium: no console errors, no sideways scroll.
