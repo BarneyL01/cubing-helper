@@ -142,6 +142,12 @@ Quick test levels (2026-11-10, `data/orozco-quick.js` from `log/2026-11-10-quick
 on both pages): level 1 (P: L T H; B: O E X) works with every partner, helper-corner letters included (checked, no exceptions);
 level 2 = one turn from a level-1 spot, works only with 2-3 listed partners each (partner lands on a base with no setup).
 
+## Third set of 3 bases (2026-11-10, open)
+
+Status and open questions for another model: `docs/third-base-set-status.md`. In short: the 6 known bases cover 376/378
+with D/L/B setups ≤ 3 (UV, VU need 4); adding `[F D^k F′ , U2]` (buffer → A → K/T/H) covers 378 with mean setup 1.75;
+D/L setups alone can never reach the 36 N pairs. Nothing built; owner has not chosen.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new
