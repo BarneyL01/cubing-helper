@@ -38,13 +38,14 @@ const length = (alg) => (alg ? alg.split(' ').length : 0);
 
 // One try: random pieces until the counts match (or null). Corners first, then edges; half the time
 // (when both kinds are there) an odd swap first, as a real scramble can have.
-function attempt(corners, edges, rnd) {
+function attempt(corners, edges, rnd, parity = 'any') {
   const counts = (m) => unsolvedCounts(scrambledState(invertAlg(m)));
-  let moves = corners >= 2 && edges >= 2 && rnd() < 0.5 ? pick(DRILL_PIECES.swap, rnd) : '';
+  const swap = corners >= 2 && edges >= 2 && (parity === 'always' || (parity === 'any' && rnd() < 0.5));
+  let moves = swap ? pick(DRILL_PIECES.swap, rnd) : '';
   const phase = (target, kind, step, limit) => {
     for (let i = 0; i < limit; i++) {
       // stop on the target most of the time, sometimes carry on (more varied cycles)
-      if (counts(moves)[kind] === target && (i > 0 || target === 0) && rnd() < 0.7) return true;
+      if (counts(moves)[kind] === target && (i > 0 || target === 0 || moves) && rnd() < 0.7) return true;
       moves = cancelMoves(`${moves} ${step()}`);
     }
     return counts(moves)[kind] === target;
@@ -53,17 +54,23 @@ function attempt(corners, edges, rnd) {
   if (!phase(edges, 'edges', () => pick(rnd() < 0.85 ? DRILL_PIECES.edge3 : DRILL_PIECES.flip2, rnd), edges + 2)) return null;
   const scramble = cancelMoves(invertAlg(moves));
   const got = unsolvedCounts(scrambledState(scramble));
-  return got.corners === corners && got.edges === edges && !got.centres ? scramble : null;
+  return got.corners === corners && got.edges === edges && !got.centres && parityOk(scramble, parity) ? scramble : null;
 }
+
+// Parity (an odd number of letters, i.e. an odd swap): 'any' (about half the time when it can happen), 'always', 'never'.
+// It needs at least 2 corners and 2 edges unsolved: the odd swap moves two of each.
+export const parityPossible = (corners, edges) => corners >= 2 && edges >= 2;
+const parityOk = (scramble, parity) => parity === 'any' || bldPlan(scramble).parity === (parity === 'always');
 
 // { scramble, corners, edges } or throws if the counts are impossible. Keeps trying for `budgetMs`
 // (at least one success) and returns the shortest scramble found.
-export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budgetMs = 150, maxMs = 5000 } = {}) {
+export function drillScramble({ corners = 4, edges = 0, parity = 'any', rnd = Math.random, budgetMs = 150, maxMs = 5000 } = {}) {
   if (!possible(corners, edges)) throw new Error(`No cube has exactly ${corners} corners and ${edges} edges unsolved.`);
+  if (parity === 'always' && !parityPossible(corners, edges)) throw new Error('Parity needs at least 2 corners and 2 edges unsolved.');
   const t0 = Date.now();
   let best = null;
   for (let tries = 0; tries < 20000; tries++) {
-    const s = attempt(corners, edges, rnd);
+    const s = attempt(corners, edges, rnd, parity);
     if (s && (!best || length(s) < length(best))) best = s;
     if (best && Date.now() - t0 >= budgetMs) break;
     if (Date.now() - t0 >= maxMs) break;
@@ -74,7 +81,7 @@ export function drillScramble({ corners = 4, edges = 0, rnd = Math.random, budge
     for (let i = 0; i < 300; i++) {
       const s = randomScramble(i < 150 ? 20 : 25, rnd);
       const got = unsolvedCounts(scrambledState(s));
-      if (got.corners === corners && got.edges === edges) { if (length(s) < length(best)) best = s; break; }
+      if (got.corners === corners && got.edges === edges && parityOk(s, parity)) { if (length(s) < length(best)) best = s; break; }
     }
   }
   return { scramble: best, corners, edges };

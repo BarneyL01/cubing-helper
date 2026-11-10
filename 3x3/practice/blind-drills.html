@@ -101,6 +101,10 @@
           </div>
           <label>Corners <select id="s-corners"></select></label>
           <label>Edges <select id="s-edges"></select></label>
+          <label id="s-parity-pick">Parity <select id="s-parity-mode">
+            <option value="any">Sometimes</option><option value="always">Always</option><option value="never">Never</option>
+          </select></label>
+          <p class="bld-note" id="s-parity-hint"></p>
         </fieldset>
         <fieldset>
           <legend>Corners solved with</legend>
@@ -198,7 +202,7 @@
     import { bldPlan } from '../../js/bld-memo.js';
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { orozcoPPlan } from '../../js/orozco-p.js?v=3';
-    import { drillScramble, drillScrambleLetters, possible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=3';
+    import { drillScramble, drillScrambleLetters, possible, parityPossible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=4';
     import { letterPairs } from '../../data/letter-pairs.js?v=1';
     import { mountThreeStyleDrill } from '../../js/three-style-drill.js?v=4';
     import { bldEdges, bldCorners, BLD_PARITY } from '../../data/bld.js';
@@ -402,7 +406,14 @@
         $('s-count-legend').textContent = 'Unsolved pieces';
       }
       setRadio('s-count', byLetters() ? 'letters' : 'pieces');
+      // parity = an odd number of letters; by letters you pick that with the counts
+      $('s-parity-pick').hidden = byLetters();
+      $('s-parity-mode').value = ['always', 'never'].includes(saved.parityMode) ? saved.parityMode : 'any';
+      $('s-parity-hint').textContent = byLetters()
+        ? 'Parity: pick an odd number of corner and edge letters (both odd).'
+        : 'Parity needs at least 2 corners and 2 edges unsolved. Always: edge parity (M2) and the corner swap or Ra-perm in every solve.';
     }
+    $('s-parity-mode').addEventListener('change', () => { saved.parityMode = $('s-parity-mode').value; save(); });
     fillCounts();
     document.querySelectorAll('input[name="s-count"]').forEach((r) => r.addEventListener('change', () => {
       saved.count = radio('s-count');
@@ -642,8 +653,10 @@
         saved.edgeLetters = edges;
       } else {
         if (!possible(corners, edges)) { $('s-error').textContent = 'Choose at least one piece.'; return; }
+        const parity = $('s-parity-mode').value;
+        if (parity === 'always' && !parityPossible(corners, edges)) { $('s-error').textContent = 'Parity needs at least 2 corners and 2 edges unsolved.'; return; }
         try {
-          saved.scramble = drillScramble({ corners, edges }).scramble;
+          saved.scramble = drillScramble({ corners, edges, parity }).scramble;
         } catch (e) { $('s-error').textContent = e.message; return; }
         saved.corners = corners;
         saved.edges = edges;

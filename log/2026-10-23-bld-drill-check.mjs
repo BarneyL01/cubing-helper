@@ -1,6 +1,7 @@
 // Checks js/bld-drill.js: for every possible pair of counts (corners 0, 2-8; edges 0, 2-12),
 // 20 seeded scrambles each must leave exactly those pieces unsolved (centres solved), and
 // the M2 / Old Pochmann solution from js/bld-memo.js must solve each one, and so must M2 + Orozco corners.
+// Also the Parity setting (always / never).
 //   node log/2026-10-23-bld-drill-check.mjs        prints ALL OK and scramble lengths
 import { drillScramble, drillScrambleLetters, letterCounts, possible, unsolvedCounts, MAX_CORNERS, MAX_EDGES } from '../js/bld-drill.js';
 import { bldPlan, scrambledState } from '../js/bld-memo.js';
@@ -75,5 +76,28 @@ console.log(`${n} scrambles in ${((Date.now() - t0) / 1000).toFixed(1)} s`);
     rows.push(`${c}/${e} ${method}`);
   }
   console.log(`by letters: ${rows.length} combinations x 3 checked`);
+}
+// Parity setting (2026-11-10): 'always' gives an odd number of edge (and corner) letters every time, 'never' never;
+// both still solve with M2 + Old Pochmann, M2 + Orozco and M2 + Orozco with helper P.
+{
+  const { orozcoPPlan } = await import('../js/orozco-p.js');
+  let k = 0;
+  for (let c = 2; c <= MAX_CORNERS; c++) for (let e = 2; e <= MAX_EDGES; e++) for (const parity of ['always', 'never']) for (let i = 0; i < 4; i++) {
+    let r;
+    try { r = drillScramble({ corners: c, edges: e, parity, rnd, budgetMs: 0 }); } catch (err) { fails.push(`parity ${parity} ${c}/${e}: ${err.message}`); continue; }
+    k++;
+    const got = unsolvedCounts(scrambledState(r.scramble));
+    if (got.corners !== c || got.edges !== e || got.centres) fails.push(`parity ${parity} ${c}/${e}: got ${got.corners}/${got.edges}`);
+    const plan = bldPlan(r.scramble);
+    if (plan.parity !== (parity === 'always')) fails.push(`parity ${parity} ${c}/${e}: edge letters ${plan.edges.length}`);
+    if (!isSolved(applyAlg(plan.state, plan.solution))) fails.push(`parity ${parity} ${c}/${e}: M2/OP does not solve`);
+    for (const [name, oz] of [['Orozco', orozcoCornerPlan(plan.state)], ['helper P', orozcoPPlan(plan.state)]]) {
+      if (oz.parity !== (parity === 'always')) fails.push(`parity ${parity} ${c}/${e}: ${name} corner letters ${oz.targets.length}`);
+      const m = [...plan.edges.map((x) => x.moves), plan.parity ? BLD_PARITY[0] : '', ...oz.steps.map((x) => x.moves), oz.parity ? oz.parityAlg : ''].filter(Boolean).join(' ');
+      if (!isSolved(applyAlg(plan.state, m))) fails.push(`parity ${parity} ${c}/${e}: M2/${name} does not solve`);
+    }
+  }
+  try { drillScramble({ corners: 3, edges: 0, parity: 'always' }); fails.push('parity always 3/0 should be refused'); } catch { /* expected */ }
+  console.log(`parity always/never: ${k} scrambles checked`);
 }
 if (fails.length) { console.log(`${fails.length} FAILED\n${fails.slice(0, 10).join('\n')}`); process.exitCode = 1; } else console.log('ALL OK');
