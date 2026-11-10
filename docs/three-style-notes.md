@@ -142,11 +142,18 @@ Quick test levels (2026-11-10, `data/orozco-quick.js` from `log/2026-11-10-quick
 on both pages): level 1 (P: L T H; B: O E X) works with every partner, helper-corner letters included (checked, no exceptions);
 level 2 = one turn from a level-1 spot, works only with 2-3 listed partners each (partner lands on a base with no setup).
 
-## Third set of 3 bases (2026-11-10, open)
+## Third set of 3 bases (2026-11-10, answered, not built)
 
-Status and open questions for another model: `docs/third-base-set-status.md`. In short: the 6 known bases cover 376/378
-with D/L/B setups ≤ 3 (UV, VU need 4); adding `[F D^k F′ , U2]` (buffer → A → K/T/H) covers 378 with mean setup 1.75;
-D/L setups alone can never reach the 36 N pairs. Nothing built; owner has not chosen.
+Full write-up: `docs/third-base-set-status.md` ("Answers"); checker `log/2026-11-10-third-helper-set.mjs` (ALL OK).
+- Only three corners can hold an Orozco-style helper (two free faces): B (D, L free), P (L, B free), D (D, B free).
+  Third set = **helper D**: `[R′ D^k R , U′]`, positions G / P / S (recommended, already the "D + G/P/S" family), or
+  `[F D^k F′ , U′]`, positions K / T / H (shorter setups). Either + the 6 known = 378 / 378, setups ≤ 3 of D L B.
+- Helper D twist `(R′ D′ R D)×2 U′ (D′ R′ D R)×2 U`; F: 1st twist, 2nd backwards; I the opposite. 3,000 whole solves.
+- **Walk rule** for any pair: each letter has one walk into a helper's place (0: B P D; 1: O E X → B, L T H → P,
+  R → D; 2: A G N W via H, Q S via T, K via O, F via E, U via X → B, V via X → D; I never walks). Walk the letter with
+  the shorter walk, then the other letter's setup for that helper. All 378, mean setup 2.02; 5 exception pairs
+  (IK, IR, IU, RV, UV) have listed 3-move setups.
+- Owner has not chosen the set; nothing on the site.
 
 ## Decisions (owner)
 
