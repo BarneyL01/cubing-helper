@@ -2622,3 +2622,13 @@ a.menu-sec[aria-current="page"],
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .os-p-badge { background: #14532d; color: #dcfce7; } }
 :root[data-theme="dark"] .os-p-badge { background: #14532d; color: #dcfce7; }
 .bld-table tr.os-better th, .bld-table tr.os-better td { background: color-mix(in srgb, #16a34a 9%, transparent); }
+
+/* Walk rule page (js/walk-rule.js) */
+.family-diagram .sq-from { fill: var(--text-muted); fill-opacity: 0.25; stroke: var(--text-muted); stroke-dasharray: 2 2; }
+.family-diagram .sq-slot { fill: none; stroke: #e0457b; stroke-width: 3; }
+.wr-form { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 0.5rem 0; font-weight: 600; }
+.wr-select { min-height: 44px; min-width: 4rem; font-size: 1.1rem; padding: 0 0.5rem; }
+.wr-form .rec-btn { min-height: 44px; }
+.wr-result { border: 1px solid var(--border, #d0d4dc); border-radius: 8px; padding: 0.4rem 0.7rem; margin: 0.5rem 0; }
+.wr-alg { font-size: 1.1rem; } .wr-alg code { white-space: normal; }
+.wr-wrap code { white-space: normal; }

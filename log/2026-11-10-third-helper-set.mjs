@@ -8,7 +8,10 @@
 // 4. The rule for picking a base: every letter has one "walk" into a helper's place (0-2 turns); walk one letter, then
 //    the other letter's setup for that helper. Every pair checked as a commutator; whole solves with the rule's table.
 //   node log/2026-11-10-third-helper-set.mjs [GPS|KTH|LOS]      prints ALL OK or the failures
-import { permOf, spotOf, letterAt, expandBrackets } from './three-style-lib.mjs';
+//   node log/2026-11-10-third-helper-set.mjs --write            also writes data/walk-rule.js (GPS, the set the owner chose)
+import { writeFileSync } from 'node:fs';
+import { permOf, spotOf, letterAt, expandBrackets, cancelMoves, spots } from './three-style-lib.mjs';
+import { orozcoD } from '../data/orozco-d.js';
 import { applyAlg } from '../js/cube-sim.js';
 import { bldPlan, randomScramble, cornerMemoFrom } from '../js/bld-memo.js';
 import { BLD_PARITY } from '../data/bld.js';
@@ -50,7 +53,7 @@ for (const h of LET) { const hc = cornerOf(h); const free = [...'DLB'].filter((f
   console.log(`  ${h} free ${free.join('') || '-'} partners ${xs.join('') || '-'} ${best ? `best ${best.t}: longest ${best.max}, mean ${(best.sum / 18).toFixed(2)}` : 'no complete set'}`); }
 
 // ---- the three helpers ------------------------------------------------------------------------------------------
-const variant = process.argv[2] || 'GPS';
+const variant = ['KTH', 'LOS'].includes(process.argv[2]) ? process.argv[2] : 'GPS';
 const DSETS = { GPS: ["[R' D R , U']", "[R' D' R , U']", "[R' D2 R , U']"], KTH: ["[F D F' , U']", "[F D' F' , U']", "[F D2 F' , U']"], LOS: ["[F' D' F , U]", "[F' D2 F , U]", "[F' D F , U]"] };
 const H = { B: { free: 'DL', door: 'B', bases: ["[R D R' , U']", "[R D' R' , U']", "[R D2 R' , U']"] },
   P: { free: 'LB', door: 'D', bases: ["[R U R' , D]", "[R U R' , D2]", "[R' D' R , U2]"] },
@@ -61,6 +64,7 @@ for (const [h, o] of Object.entries(H)) {
   o.pos = Object.keys(o.core);
   o.row = {}; const less = (a, b) => a.s.length < b.s.length || (a.s.length === b.s.length && (a.s.join('').match(/B/g) || []).length < (b.s.join('').match(/B/g) || []).length);
   for (const e of setups([...o.free], 3)) for (const l of LET) if (cornerOf(l) !== cornerOf(h) && o.pos.includes(e.m[l]) && (!o.row[l] || less(e, { s: o.row[l].s.split(' ').filter(Boolean) }))) o.row[l] = { s: e.s.join(' '), n: e.s.length, to: e.m[l] };
+  if (h === 'D' && variant === 'GPS') for (const r of orozcoD) { check(`site row ${r.letter} same length`, o.row[r.letter].n === (r.setup ? r.setup.split(' ').length : 0)); o.row[r.letter] = { s: r.setup, n: r.setup ? r.setup.split(' ').length : 0, to: r.pos }; }
   check(`${h}: 18 letters`, Object.keys(o.row).length === 18);
   for (const [l, r] of Object.entries(o.row)) { const f = r.s ? `[${r.s} : ${o.core[r.to].fwd}]` : o.core[r.to].fwd, b = r.s ? `[${r.s} : ${o.core[r.to].back}]` : o.core[r.to].back;
     check(`${h} ${l} forwards`, cycOf(f) === l + h); check(`${h} ${l} backwards`, cycOf(b) === h + l); r.fwd = f; r.back = b; }
@@ -128,7 +132,7 @@ const walks = {}; for (const l of LET) { walks[l] = []; if (H[l]) { walks[l].pus
 // walk x into its helper's place, then y's row from where it lands; x first in the pair -> x, helper ... see alg
 const cand = (w, x, y, xFirst) => { if (!w) return null; let y2 = y; for (const t of w.s) y2 = mm[t][y2]; const o = H[w.h]; const r = o.row[y2]; if (!r) return null;
   const s = [...w.s, r.s].filter(Boolean).join(' '); const core = o.core[r.to][xFirst ? 'back' : 'fwd']; // x sits in the helper's place
-  return { n: w.s.length + r.n, s, h: w.h, walked: x, lands: y2, alg: s ? `[${s} : ${core}]` : core }; };
+  return { n: w.s.length + r.n, s, h: w.h, walked: x, lands: y2, rowSetup: r.s, into: r.to, core, alg: s ? `[${s} : ${core}]` : core }; };
 const pick = (ch, p) => { const a = cand(ch[p[0]], p[0], p[1], true), b = cand(ch[p[1]], p[1], p[0], false); const wa = ch[p[0]] ? ch[p[0]].s.length : 9, wb = ch[p[1]] ? ch[p[1]].s.length : 9;
   if (wa !== wb) return wa < wb ? (a || b) : (b || a); return !a ? b : !b ? a : a.n < b.n || (a.n === b.n && p[0] < p[1]) ? a : b; };
 const score = (ch) => { let over = 0, sum = 0; for (const p of PAIRS) { const c = pick(ch, p); if (!c) return 1e9; sum += c.n; if (c.n > 3) over++; } return over * 1000 + sum; };
@@ -137,7 +141,7 @@ for (let pass = 0; pass < 6; pass++) for (const l of LET) for (const w of walks[
 const rule = {}; const exceptions = []; const byWalk = [0, 0, 0];
 for (const p of PAIRS) { let c = pick(ch, p); check(`rule covers ${p}`, !!c); if (!c) continue; check(`rule ${p} ${c.alg}`, cycOf(c.alg) === p);
   byWalk[ch[c.walked].s.length]++;
-  if (c.n > 3) { if (p[0] < p[1]) exceptions.push(`${p} / ${p[1]}${p[0]}: rule gives ${c.s} (4 moves); use ${best[p].alg} and its reverse`); c = { ...best[p], exception: true }; }
+  if (c.n > 3) { if (p[0] < p[1]) exceptions.push(`${p} / ${p[1]}${p[0]}: rule gives ${c.s} (4 moves); use ${best[p].alg} and its reverse`); c = { ...best[p], core: best[p].alg.replace(/^\[[^:\[]+ : (\[.*\])\]$/, '$1'), exception: true, ruleSetup: c.s, ruleWalked: c.walked }; }
   rule[p] = c; }
 check('rule table: all 378, setups up to 3', PAIRS.every((p) => rule[p] && rule[p].n <= 3 && cycOf(rule[p].alg) === p));
 for (const p of PAIRS) check(`${p} and its reverse share a setup`, rule[p].s === rule[p[1] + p[0]].s);
@@ -158,4 +162,17 @@ console.log(`  whole solves with the rule's table: ${ok}/3000 (${tally.used} of 
   let bestT = null; for (let i = 0; i < 99; i++) for (let j = i + 1; j < 99; j++) for (let k = j + 1; k < 99; k++) { let sum = 0; const a = cov[i], b = cov[j], c = cov[k];
     for (let q = 0; q < 378; q++) sum += Math.min(base6[q], a[q], b[q], c[q]); if (!bestT || sum < bestT.sum) bestT = { sum, t: [i, j, k] }; }
   console.log(`\n5. Any 3 of the 99 bases added to the 6 known (D L B setups up to 3): best ${bestT.t.map((i) => bases[i].alg).join('  ')} -> mean setup ${(bestT.sum / 378).toFixed(2)}`); }
+if (process.argv.includes('--write') && variant === 'GPS' && !fails.length) {
+  const helpers = Object.entries(H).map(([h, o]) => ({ letter: h, free: o.free, door: o.door, stand: o.stand,
+    positions: o.pos.map((x) => ({ pos: x, forwards: o.core[x].fwd, backwards: o.core[x].back })),
+    rows: LET.filter((l) => o.row[l]).map((l) => ({ letter: l, setup: o.row[l].s, pos: o.row[l].to })) }));
+  const letters = LET.map((l) => (ch[l] ? { letter: l, turns: ch[l].s.join(' '), n: ch[l].s.length, helper: ch[l].h, via: ch[l].s.length === 2 ? mm[ch[l].s[0]][l] : null } : { letter: l, turns: null, n: null, helper: null, via: null }));
+  const pairs = PAIRS.map((p) => { const c = rule[p]; const moves = cancelMoves(expandBrackets(c.alg));
+    return { pair: p, first: p[0], second: p[1], notation: c.alg, setup: c.s, core: c.core, setupMoves: c.n, moves, count: moves.split(' ').length, spots: spots(p[0], p[1], c.s, c.core),
+      ...(c.exception ? { exception: true, ruleSetup: c.ruleSetup, ruleWalked: c.ruleWalked } : { walked: c.walked, helper: c.h, walk: ch[c.walked].s.join(' '), lands: c.lands, rowSetup: c.rowSetup, into: c.into }) }; });
+  const hist = [0, 0, 0, 0]; pairs.forEach((x) => hist[x.setupMoves]++);
+  const st = { pairs: 378, byWalk, bySetup: hist, meanSetup: +(pairs.reduce((a, x) => a + x.setupMoves, 0) / 378).toFixed(2), exceptions: exceptions.length };
+  writeFileSync(new URL('../data/walk-rule.js', import.meta.url), `// BEGIN GENERATED\n// GENERATED by log/2026-11-10-third-helper-set.mjs --write. Do not edit by hand.\n// The walk rule: every letter has one walk (0-2 turns) into a helper's place (B, P or D); a pair is the walk of one\n// letter, then the other letter's setup for that helper, then the base. A pair and its reverse share the setup.\nexport const walkStats = ${JSON.stringify(st)};\nexport const walkHelpers = ${JSON.stringify(helpers).replace(/\},\{"letter":"([BPD])","free"/g, '},\n{"letter":"$1","free"')};\nexport const walkLetters = ${JSON.stringify(letters)};\nexport const walkPairs = ${JSON.stringify(pairs).replace(/\},\{"pair"/g, '},\n{"pair"')};\n// END GENERATED\n`);
+  console.log('wrote data/walk-rule.js');
+}
 console.log(fails.length ? `FAIL (${fails.length})\n${fails.slice(0, 12).join('\n')}` : 'ALL OK');

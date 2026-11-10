@@ -142,7 +142,7 @@ Quick test levels (2026-11-10, `data/orozco-quick.js` from `log/2026-11-10-quick
 on both pages): level 1 (P: L T H; B: O E X) works with every partner, helper-corner letters included (checked, no exceptions);
 level 2 = one turn from a level-1 spot, works only with 2-3 listed partners each (partner lands on a base with no setup).
 
-## Third set of 3 bases (2026-11-10, answered, not built)
+## Third set of 3 bases: helper D and the walk rule (built 2026-11-10)
 
 Full write-up: `docs/third-base-set-status.md` ("Answers"); checker `log/2026-11-10-third-helper-set.mjs` (ALL OK).
 - Only three corners can hold an Orozco-style helper (two free faces): B (D, L free), P (L, B free), D (D, B free).
@@ -153,7 +153,9 @@ Full write-up: `docs/third-base-set-status.md` ("Answers"); checker `log/2026-11
   R → D; 2: A G N W via H, Q S via T, K via O, F via E, U via X → B, V via X → D; I never walks). Walk the letter with
   the shorter walk, then the other letter's setup for that helper. All 378, mean setup 2.02; 5 exception pairs
   (IK, IR, IU, RV, UV) have listed 3-move setups.
-- Owner has not chosen the set; nothing on the site.
+- Owner chose `[R′ D^k R , U′]` (2026-11-10). Built: `3x3/bld/orozco-d.html` (data/orozco-d.js, js/orozco-d.js,
+  log/2026-11-10-orozco-d.mjs) and `3x3/bld/walk-rule.html` (js/walk-rule.js, data/walk-rule.js). Menu section
+  "Orozco helpers" holds Orozco step 2, Helper P, Helper D, Walk rule. Not built: a 3-Style solves preset for the walk rule.
 
 ## Decisions (owner)
 

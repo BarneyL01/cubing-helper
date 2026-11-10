@@ -1,8 +1,8 @@
 # Status: a third set of 3 bases to finish 3-style corners (2026-11-10)
 
 **Answered 2026-11-10 (second session): see "Answers" at the end.** The third set is helper D with
-`[R′ D R , U′]`, `[R′ D′ R , U′]`, `[R′ D2 R , U′]`; the rule for picking a base is the "walk" rule. Nothing is on the
-site yet: the owner has not chosen between the two candidate sets.
+`[R′ D R , U′]`, `[R′ D′ R , U′]`, `[R′ D2 R , U′]`; the rule for picking a base is the "walk" rule. **Built 2026-11-10:** the owner chose `[R′ D^k R , U′]`;
+pages `3x3/bld/orozco-d.html` and `3x3/bld/walk-rule.html`.
 
 Written for another model to pick up. Read `docs/three-style-notes.md` first: it holds the owner's preferences,
 the Speffz letters, which turn moves which sticker, and everything already checked. This file covers only
@@ -221,6 +221,6 @@ Example, pair G O: O has the shorter walk (`B`, into B's place). `B` leaves G wh
 
 ### Still not done
 
-- Nothing on the site. Owner to choose `[R′ D^k R , U′]` or `[F D^k F′ , U′]`.
+- A 3-Style solves preset for the walk rule.
 - Move counts ignore cancellations between setup and base.
 - Question 5, and other base choices for helpers B and P.

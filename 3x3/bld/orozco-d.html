@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orozco with helper D — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=35" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=14"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Orozco with helper D</h1>
+    <p class="subtitle">
+      Your Orozco with D in B's place: the same buffer and the same forwards / backwards rule. It solves every
+      corner on its own, and its three bases are the D with G / P / S family from the By base page.
+    </p>
+    <div class="source-note">
+      <p>
+        Worked out here (2026-11-10), not from your notes or a published list. Every commutator was checked in the cube
+        simulator (it cycles the buffer, the letter and D and moves nothing else); 3,000 whole solves (M2 edges with M2
+        parity, then these corners, with the F / I and parity rules below) all came out solved. Built by
+        <code>log/2026-11-10-orozco-d.mjs</code>. Why D: only three places can be a helper with two faces free for
+        setups (B, P and D), checked for all 21 letters by <code>log/2026-11-10-third-helper-set.mjs</code>.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="idea" data-short="The idea">The idea</h2>
+    <div class="table-wrap">
+      <table class="bld-table">
+        <caption>The three helpers</caption>
+        <thead><tr><th></th><th>Orozco</th><th>Helper P</th><th>Helper D</th></tr></thead>
+        <tbody>
+          <tr><th>Buffer</th><td>C</td><td>C</td><td>C (memo from C)</td></tr>
+          <tr><th>Helper</th><td>B</td><td>P</td><td>D</td></tr>
+          <tr><th>1st letter of a pair</th><td>buffer → letter → B</td><td>buffer → letter → P</td><td>forwards: buffer → letter → D</td></tr>
+          <tr><th>2nd letter of a pair</th><td>buffer → B → letter</td><td>buffer → P → letter</td><td>backwards: buffer → D → letter</td></tr>
+          <tr><th>Positions</th><td>O, H, L</td><td>L, H, A</td><td>G, P, S</td></tr>
+          <tr><th>Setup turns</th><td>D and L</td><td>L and B</td><td>D and B (they never move the buffer or D)</td></tr>
+          <tr><th>Setups</th><td>3 none, 10 one turn, 5 two</td><td>3 none, 11 one turn, 4 two</td><td>3 none, 7 one turn, 6 two, 2 three (U, V)</td></tr>
+          <tr><th>Helper's letters</th><td>B skip; N, Q twist</td><td>P skip; K, V twist</td><td>D skip; F, I twist</td></tr>
+          <tr><th>Odd number of letters</th><td>Ra-perm</td><td>last letter plain Orozco, then Ra</td><td>last letter plain Orozco, then Ra</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="bld-list">
+      <li><strong>The bases:</strong> <code>[R' D R , U']</code> for G, <code>[R' D' R , U']</code> for P and
+        <code>[R' D2 R , U']</code> for S. As written they move buffer → D → position (backwards); with the two
+        halves swapped, buffer → position → D (forwards).</li>
+      <li><strong>The D turn picks the position,</strong> as in Orozco: <code>D</code> = G, <code>D'</code> = P, <code>D2</code> = S.</li>
+      <li><strong>A pair with D is one commutator:</strong> "X then D" is X forwards, "D then X" is X backwards.</li>
+      <li><strong>Any pair of letters</strong> in one commutator, with all three helpers: <a href="walk-rule.html">Walk rule</a>.</li>
+    </ul>
+
+    <h2 class="section-heading" id="by-position" data-short="By position">By position: what goes where</h2>
+    <p>Each base has one position, and the setup brings a letter into it. Learn a position at a time: its base, then
+      the letters that go into it.</p>
+    <div id="od-groups"></div>
+
+    <h2 class="section-heading" id="letters" data-short="Letters">Every letter</h2>
+    <p>The setup (orange) moves the letter into a base position; the buffer and D never move. Forwards for the 1st
+      letter of a pair, backwards for the 2nd.</p>
+    <div class="table-wrap wr-wrap"><table class="bld-table" id="od-table"></table></div>
+
+    <h2 class="section-heading" id="helper" data-short="D F I">D, F and I (the helper's letters)</h2>
+    <ul class="bld-list" id="od-helper"></ul>
+
+    <h2 class="section-heading" id="parity" data-short="Parity">Odd number of letters (parity)</h2>
+    <ol class="bld-list">
+      <li>Do your edges with M2 as usual, including your M2 parity. That leaves edges A and D swapped, as for Orozco.</li>
+      <li>Do the corner pairs with helper D. After every pair D is back home.</li>
+      <li>The last letter X has no partner: do it <strong>the plain Orozco way, X forwards with helper B</strong> (your
+        Orozco list). That leaves the buffer and B swapped. If X is B do nothing here; N or Q: your Orozco twist rule.</li>
+      <li>Then the Ra-perm <code id="od-ra"></code>: it swaps the buffer and B back, and edges A and D. Exactly your
+        Orozco parity, so there is nothing new to learn.</li>
+    </ol>
+
+    <h2 class="section-heading" id="practise" data-short="Practise">Practise</h2>
+    <p>Blind drills › Small solves and Tracing can show the corners this way ("Corners solved with: Orozco with helper D"):</p>
+    <div class="rec-controls">
+      <a class="rec-btn rec-btn-primary" href="../practice/blind-drills.html?mode=solve&amp;corners=orozcoD">Small solves with helper D</a>
+    </div>
+  </main>
+
+  <script type="module">
+    import { orozcoD, OROZCO_D_TWIST, OROZCO_D_TWIST_REV, OROZCO_D_HELPER_RULES } from '../../data/orozco-d.js?v=1';
+    import { OROZCO_PARITY_RUF } from '../../data/orozco-mnemonics.js?v=4';
+    import { colourCore } from '../../js/three-style-families.js?v=12';
+    import { coreFigure } from '../../js/three-style-page.js?v=15';
+    import { intoDiagram } from '../../js/three-style-bases.js?v=15';
+    const $ = (id) => document.getElementById(id);
+    const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
+    const alg = (n) => {
+      const m = n.match(/^\[([^:]+) : (\[.*\])\]$/);
+      return m ? `[<span class="mv-setup">${m[1]}</span> : ${colourCore(m[2])}]` : colourCore(n);
+    };
+    $('od-table').innerHTML = `<caption>Helper D: every letter (forwards = buffer → letter → D, backwards = buffer → D → letter)</caption>
+      <thead><tr><th>Letter</th><th>Into</th><th>Forwards (1st) / backwards (2nd)</th></tr></thead><tbody>
+      ${orozcoD.map((r) => `<tr id="letter-${r.letter}"><th>${r.letter}</th><td>${r.pos}${r.setup ? '' : ' (there)'}</td><td><code>${alg(r.forwards)}</code><br><code>${alg(r.backwards)}</code></td></tr>`).join('')}
+      </tbody>`;
+    const rule = Object.fromEntries(OROZCO_D_HELPER_RULES.map((r) => [r.letter, r]));
+    const say = { skip: 'nothing (skip it)', twist: 'the twist', 'twist-rev': 'the twist backwards' };
+    $('od-helper').innerHTML = `
+      <li><strong>D:</strong> skip it, like B in Orozco.</li>
+      <li><strong>F:</strong> as the 1st letter of a pair ${say[rule.F.odd]}; as the 2nd ${say[rule.F.even]}.</li>
+      <li><strong>I:</strong> as the 1st letter of a pair ${say[rule.I.odd]}; as the 2nd ${say[rule.I.even]}.</li>
+      <li><strong>Twist</strong> (twists the buffer and D, nothing else; your Orozco twist with U' and U exchanged):
+        <code>${OROZCO_D_TWIST}</code></li>
+      <li><strong>Twist backwards:</strong> <code>${OROZCO_D_TWIST_REV}</code></li>`;
+    $('od-ra').textContent = OROZCO_PARITY_RUF;
+
+    // By position: the base (forwards: buffer -> position -> D), the letters that set up into it, their commutators
+    for (const pos of ['G', 'P', 'S']) {
+      const rows = orozcoD.filter((r) => r.pos === pos);
+      const core = rows.find((r) => !r.setup).forwards;
+      const d = el('details', 'ts-core');
+      d.open = pos === 'G';
+      d.appendChild(el('summary', null, `<span><strong>Into ${pos}</strong> <code>${colourCore(core)}</code><span class="ts-sum-base bld-muted">${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span></span>`));
+      const figs = el('div', 'ts-figs');
+      figs.appendChild(coreFigure({ core, spots: { buffer: 'C', first: pos, second: 'D' } }, () => ` buffer → ${pos} → D (forwards)`));
+      const moved = rows.filter((r) => r.setup).map((r) => r.letter);
+      const f = el('figure', 'ts-fig fd-fig');
+      f.append(el('div', 'fd-pic', intoDiagram(pos, moved)), el('figcaption', null, `Into ${pos} (yellow): ${moved.join(' ')}`));
+      figs.appendChild(f);
+      d.appendChild(figs);
+      d.appendChild(el('div', 'table-wrap wr-wrap', `<table class="bld-table"><thead><tr><th>Letter</th><th>Setup</th><th>Forwards / backwards</th></tr></thead><tbody>
+        ${rows.map((r) => `<tr><th>${r.letter}</th><td>${r.setup ? `<span class="mv-setup">${r.setup}</span>` : 'none'}</td><td><code>${alg(r.forwards)}</code><br><code>${alg(r.backwards)}</code></td></tr>`).join('')}
+        </tbody></table>`));
+      $('od-groups').appendChild(d);
+    }
+  </script>
+</body>
+</html>

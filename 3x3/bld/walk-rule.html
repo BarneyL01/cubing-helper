@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Walk rule — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=35" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=14"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Walk rule: which base for any pair</h1>
+    <p class="subtitle">
+      Any two corner letters in one commutator, using only the three helpers (B, P, D) and the setups you know for
+      them. Walk one letter into a helper's place, then set up the other letter that helper's way.
+    </p>
+    <div class="source-note">
+      <p>
+        Worked out here (2026-11-10), not from your notes or a published list. Every one of the 378 commutators was
+        checked in the cube simulator (it cycles the buffer and the two letters and moves nothing else), a pair and
+        its reverse always share a setup, and 3,000 whole solves using this table all came out solved. Built by
+        <code>log/2026-11-10-third-helper-set.mjs</code>. Move counts do not include cancellations between the
+        setup and the base.
+      </p>
+    </div>
+
+    <h2 class="section-heading" id="rule" data-short="The rule">The rule</h2>
+    <ol class="bld-list">
+      <li><strong>Walk one letter into a helper's place.</strong> Every letter has one walk: no turn (B, P, D),
+        one turn, or two turns. Walk the letter with the shorter walk. If both walks are the same length, either
+        works; the table on this page keeps the shorter setup.</li>
+      <li><strong>Set up the other letter</strong> the way that helper always does, from where it is after the walk.</li>
+      <li><strong>Do the base</strong> for that position, in the order of the pair: the walked letter counts as the
+        helper. Then undo the setup turns.</li>
+    </ol>
+    <p class="bld-note" id="wr-stats"></p>
+
+    <h2 class="section-heading" id="find" data-short="Find a pair">Find a pair</h2>
+    <p>Pick the two letters in memo order. The picture shows the walk and where the other letter goes.</p>
+    <div id="wr-find"></div>
+
+    <h2 class="section-heading" id="helpers" data-short="Helpers">The three helpers</h2>
+    <p>A helper's own setups never move it. One other face reaches its place, and that face does the last turn of
+      every walk to it.</p>
+    <div id="wr-helpers"></div>
+
+    <h2 class="section-heading" id="one" data-short="One turn">Walks of one turn</h2>
+    <p>Seven letters are one turn from a helper's place. O, E, X and L, T, H are the level 1 quick-test letters from
+      the Orozco and helper P pages.</p>
+    <div id="wr-one"></div>
+    <p class="bld-note">L and X are also one turn from D's place (<span class="mv-setup">L'</span>, <span class="mv-setup">L2</span>). This page uses one walk per letter: L into P's place, X into B's place.</p>
+
+    <h2 class="section-heading" id="two" data-short="Two turns">Walks of two turns</h2>
+    <p>Ten letters need two turns: the first takes the letter onto a one-turn letter's position, the second is that
+      letter's walk.</p>
+    <div id="wr-two"></div>
+
+    <h2 class="section-heading" id="setups" data-short="Setups">After the walk: the other letter's setup</h2>
+    <p>These are the three helper tables you already use, one position at a time. Open a helper to see its bases
+      and which letters set up into each position.</p>
+    <div id="wr-setups"></div>
+
+    <h2 class="section-heading" id="exceptions" data-short="Exceptions">Exceptions</h2>
+    <p>For five letter pairs the rule gives a setup of four moves. Each has a three-move setup of its own.</p>
+    <div id="wr-exceptions"></div>
+
+    <h2 class="section-heading" id="all" data-short="Every pair">Every pair, by the letter that walks</h2>
+    <p>Open a letter to see its pairs; open a pair for pictures of the setup and a cube to watch.</p>
+    <div id="wr-all"></div>
+  </main>
+
+  <script type="module">
+    import { mountWalkRule } from '../../js/walk-rule.js?v=1';
+    mountWalkRule({ find: 'wr-find', helpers: 'wr-helpers', one: 'wr-one', two: 'wr-two', setups: 'wr-setups', exceptions: 'wr-exceptions', all: 'wr-all', stats: 'wr-stats' });
+  </script>
+</body>
+</html>

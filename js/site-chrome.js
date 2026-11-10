@@ -88,10 +88,17 @@ const MENU = [
         ],
       },
       {
-        label: '3-Style',
+        label: 'Orozco helpers',
         pages: [
           { label: 'Orozco step 2', path: '3x3/bld/orozco-step2.html' },
           { label: 'Helper P', path: '3x3/bld/orozco-p.html' },
+          { label: 'Helper D', path: '3x3/bld/orozco-d.html' },
+          { label: 'Walk rule', path: '3x3/bld/walk-rule.html' },
+        ],
+      },
+      {
+        label: '3-Style',
+        pages: [
           { label: '3-Style', path: '3x3/bld/three-style.html' },
           { label: 'By base', path: '3x3/bld/three-style-bases.html' },
           { label: 'Dylan / J Perm', path: '3x3/bld/three-style-corners.html' },

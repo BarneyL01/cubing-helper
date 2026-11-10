@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css?v=18" />
   <link rel="stylesheet" href="../../css/drills.css?v=7" />
-  <script type="module" src="../../js/site-chrome.js?v=13"></script>
+  <script type="module" src="../../js/site-chrome.js?v=14"></script>
 </head>
 <body>
   <header class="site-header" id="site-header">
@@ -111,6 +111,7 @@
           <label><input type="radio" name="s-method" value="op" checked /> Old Pochmann</label>
           <label><input type="radio" name="s-method" value="orozco" /> Orozco</label>
           <label><input type="radio" name="s-method" value="orozcoP" /> Orozco with helper P</label>
+          <label><input type="radio" name="s-method" value="orozcoD" /> Orozco with helper D</label>
         </fieldset>
       </form>
       <p class="drill-error" id="s-error" role="status"></p>
@@ -202,6 +203,7 @@
     import { bldPlan } from '../../js/bld-memo.js';
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { orozcoPPlan } from '../../js/orozco-p.js?v=3';
+    import { orozcoDPlan } from '../../js/orozco-d.js?v=1';
     import { drillScramble, drillScrambleLetters, possible, parityPossible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=4';
     import { letterPairs } from '../../data/letter-pairs.js?v=1';
     import { mountThreeStyleDrill } from '../../js/three-style-drill.js?v=4';
@@ -218,10 +220,10 @@
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
     // links from other pages: ?mode=solve&corners=orozcoP
-    { const q = new URLSearchParams(location.search); if (q.get('mode')) saved.mode = q.get('mode'); if (['op', 'orozco', 'orozcoP'].includes(q.get('corners'))) saved.cornerMethod = q.get('corners'); }
+    { const q = new URLSearchParams(location.search); if (q.get('mode')) saved.mode = q.get('mode'); if (['op', 'orozco', 'orozcoP', 'orozcoD'].includes(q.get('corners'))) saved.cornerMethod = q.get('corners'); }
     // memo from C (Orozco and Orozco with helper P) or from E (Old Pochmann); the plan for the chosen method
-    const fromC = () => ['orozco', 'orozcoP'].includes(saved.cornerMethod);
-    const cornerPlan = (state) => (saved.cornerMethod === 'orozcoP' ? orozcoPPlan(state) : orozcoCornerPlan(state));
+    const fromC = () => ['orozco', 'orozcoP', 'orozcoD'].includes(saved.cornerMethod);
+    const cornerPlan = (state) => (saved.cornerMethod === 'orozcoP' ? orozcoPPlan(state) : saved.cornerMethod === 'orozcoD' ? orozcoDPlan(state) : orozcoCornerPlan(state));
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
     const COLOURS = { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' };
     const PIECE = {
@@ -468,7 +470,7 @@
     function orozcoTable(id, oz) {
       const table = $(id);
       table.replaceChildren();
-      table.createCaption().textContent = saved.cornerMethod === 'orozcoP' ? 'Corners (Orozco with helper P)' : 'Corners (Orozco)';
+      table.createCaption().textContent = saved.cornerMethod === 'orozcoP' ? 'Corners (Orozco with helper P)' : saved.cornerMethod === 'orozcoD' ? 'Corners (Orozco with helper D)' : 'Corners (Orozco)';
       const head = table.createTHead().insertRow();
       ['#', 'Letter', 'How', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
       const body = table.createTBody();
@@ -478,6 +480,7 @@
         const th = el('th', 'bld-letter');
         const a = el('a', null, t.letter);
         if (saved.cornerMethod === 'orozcoP' && !t.how.startsWith('orozco')) a.href = '../bld/orozco-p.html#letters';
+        else if (saved.cornerMethod === 'orozcoD' && !t.how.startsWith('orozco')) a.href = '../bld/orozco-d.html#letters';
         else if (!'BNQ'.includes(t.letter)) a.href = `../bld/orozco.html#corner-${t.letter}`;
         th.appendChild(a);
         tr.appendChild(th);
@@ -628,7 +631,7 @@
       const cornerTargets = orozco ? oz.targets : plan.corners;
       lettersInto($('s-corner-letters'), cornerTargets);
       $('s-corner-from').textContent = orozco
-        ? (saved.cornerMethod === 'orozcoP' ? `Orozco with helper P: memo from C; P, K, V are the helper.${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}` : `Orozco: memo from C (UFR); B, N, Q are the helper.${oz.parity ? ' Odd number: Ra-perm at the end.' : ''}`)
+        ? (saved.cornerMethod === 'orozcoP' ? `Orozco with helper P: memo from C; P, K, V are the helper.${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}` : saved.cornerMethod === 'orozcoD' ? `Orozco with helper D: memo from C; D, F, I are the helper.${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}` : `Orozco: memo from C (UFR); B, N, Q are the helper.${oz.parity ? ' Odd number: Ra-perm at the end.' : ''}`)
         : 'Old Pochmann: memo from E (UBL).';
       $('s-edge-count').textContent = `${plan.edges.length} targets`;
       $('s-corner-count').textContent = `${cornerTargets.length} targets`;
@@ -672,7 +675,7 @@
       save();
       showScramble();
     }));
-    setRadio('s-method', ['orozco', 'orozcoP'].includes(saved.cornerMethod) ? saved.cornerMethod : 'op');
+    setRadio('s-method', ['orozco', 'orozcoP', 'orozcoD'].includes(saved.cornerMethod) ? saved.cornerMethod : 'op');
     document.querySelectorAll('input[name="s-method"]').forEach((r) => r.addEventListener('change', () => {
       saved.cornerMethod = radio('s-method');
       save();
