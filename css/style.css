@@ -2636,3 +2636,6 @@ a.menu-sec[aria-current="page"],
 /* Walk rule: where the setup moves the pair, beside the pair's letters */
 .wr-moved { font-size: 0.9rem; color: var(--text-muted); background: var(--chip-bg, rgba(47, 111, 237, 0.08)); border-radius: 6px; padding: 0.1rem 0.45rem; }
 .wr-moved strong { color: var(--text, inherit); }
+.wr-bases tr.wr-base-head > th { background: var(--surface-2, rgba(47, 111, 237, 0.06)); text-align: left; }
+.wr-bases td code { font-size: 0.85rem; }
+.wr-bases td, .wr-bases th { padding-left: 0.4rem; padding-right: 0.4rem; }

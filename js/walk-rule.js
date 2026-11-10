@@ -135,6 +135,17 @@ function mountFind(slot) {
   show();
 }
 
+// ---- all 9 bases at a glance -----------------------------------------------------------------------------------------
+function mountBases(slot) {
+  const rows = walkHelpers.map((h) => `<tr class="wr-base-head"><th colspan="3"><a href="${PAGE[h.letter]}">Helper ${h.letter}</a>${h.letter === 'B' ? ' (Orozco)' : ''}</th></tr>`
+    + h.positions.map((p) => `<tr><td class="bld-letter">${p.pos}</td><td class="nw"><code>${colourCore(p.forwards)}</code></td><td class="nw"><code>${colourCore(p.backwards)}</code></td></tr>`).join('')).join('');
+  slot.append(el('div', 'table-wrap', `<table class="bld-table wr-bases"><thead><tr><th>Pos.</th><th>Position first</th><th>Helper first</th></tr></thead><tbody>${rows}</tbody></table>`));
+  slot.append(el('ul', 'bld-list', `
+    <li><strong>B (Orozco):</strong> <code>R D R'</code> with the D turn picking O / H / L (D, D′, D2), against <code>U'</code>.</li>
+    <li><strong>P:</strong> <code>R U R'</code> against the D turn for L (D) and H (D2); A is <code>R' D' R</code> against <code>U2</code>.</li>
+    <li><strong>D:</strong> <code>R' D R</code> with the D turn picking G / P / S (D, D′, D2), against <code>U'</code>.</li>`));
+}
+
 function mountHelpers(slot) {
   const pic = diagram({ label: 'the buffer and the three helpers B, P and D', squares: [['C', 'sq-buffer'], ['B', 'sq-hand sq-thick'], ['P', 'sq-hand sq-thick'], ['D', 'sq-hand sq-thick']] });
   const figs = el('div', 'ts-figs');
@@ -214,6 +225,7 @@ function mountAll(slot) {
 
 export function mountWalkRule(ids) {
   const $ = (id) => document.getElementById(id);
+  if (ids.bases) mountBases($(ids.bases));
   mountFind($(ids.find));
   mountHelpers($(ids.helpers));
   mountOne($(ids.one));
