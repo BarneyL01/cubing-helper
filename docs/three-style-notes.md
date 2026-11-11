@@ -157,6 +157,13 @@ Full write-up: `docs/third-base-set-status.md` ("Answers"); checker `log/2026-11
   log/2026-11-10-orozco-d.mjs) and `3x3/bld/walk-rule.html` (js/walk-rule.js, data/walk-rule.js). Menu section
   "Orozco helpers" holds Orozco step 2, Helper P, Helper D, Walk rule. Not built: a 3-Style solves preset for the walk rule.
 
+## Hard letters and Buffer moves (2026-11-11)
+
+I, V, Q, U pairs (132, 30% of solve pairs) are long with the walk rule (13.1): D/L/B barely move them and no 8-move
+buffer base contains I, N or V. A 4th helper (Q) clears the 5 exceptions but helps little; the U family
+`[R/L B^k R'/L' , F2]` was rejected (owner: no B in a base). Built instead: Buffer moves page (setups that move the
+buffer, 3-Style (ours) commutators): 110 hard pairs 13.5 → 11.2, plus 20 other big savings. See log/2026-11-11-buffer-moves.md.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

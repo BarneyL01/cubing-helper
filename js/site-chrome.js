@@ -94,6 +94,7 @@ const MENU = [
           { label: 'Helper P', path: '3x3/bld/orozco-p.html' },
           { label: 'Helper D', path: '3x3/bld/orozco-d.html' },
           { label: 'Walk rule', path: '3x3/bld/walk-rule.html' },
+          { label: 'Buffer moves', path: '3x3/bld/buffer-moves.html' },
         ],
       },
       {

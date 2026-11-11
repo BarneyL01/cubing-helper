@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buffer moves — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=37" />
+  <link rel="stylesheet" href="../../css/drills.css?v=7" />
+  <script type="module" src="../../js/site-chrome.js?v=15"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main>
+    <h1>Buffer moves: shorter hard-letter pairs</h1>
+    <p class="subtitle">
+      The walk rule keeps the buffer still, so I, V, Q and U are always far from a base. Let the setup move the
+      buffer (R, U, F turns) and most of their pairs get shorter. No B anywhere.
+    </p>
+    <div class="source-note">
+      <p>
+        Worked out here (2026-11-11), not from your notes or a published list. The commutators are the ones on the
+        3-Style (ours) page: R bases against a U or D turn, setups of R, U, D and F of at most 3 moves. Every one was
+        checked in the cube simulator (it cycles the buffer and the two letters and moves nothing else), and so was the
+        walk rule's commutator it is compared with. Built by <code>log/2026-11-11-buffer-moves.mjs</code>. Move counts
+        are written out, after cancelling.
+      </p>
+    </div>
+    <p class="bld-note" id="bm-stats"></p>
+
+    <h2 class="section-heading" id="idea" data-short="The idea">The idea</h2>
+    <p>With the walk rule the setup never moves the buffer, so the base always starts at C. Here the setup may move the
+      buffer too: the base then runs with the buffer in another position, and undoing the setup brings it home.</p>
+    <div id="bm-example"></div>
+
+    <h2 class="section-heading" id="hard" data-short="I V Q U">Pairs with I, V, Q or U</h2>
+    <p>Grouped by base. Most are Orozco's insertions (<code>R D2 R'</code> above all) against a different U turn.
+      Open a base to see its pairs; open a pair for pictures of the setup and a cube to watch.</p>
+    <div class="drill-pic-switch" id="bm-hard-filter" role="group" aria-label="Which pairs"></div>
+    <div id="bm-hard"></div>
+
+    <h2 class="section-heading" id="other" data-short="Other pairs">Other pairs: big savings</h2>
+    <p>Pairs without I, V, Q or U where the setup gets two or more moves shorter (mostly three moves down to one), or
+      the pair gets four or more moves shorter.</p>
+    <h3>The buffer moves: one setup turn instead of three</h3>
+    <div id="bm-other-moves"></div>
+    <h3>The buffer stays: bases the walk rule does not have</h3>
+    <p>No setup at all. <code>[R' D R , U2]</code> and <code>[R' D2 R , U2]</code> are helper P's A base with the other
+      two D turns (A with G and S); <code>[R U R' , D']</code> is the T base helper P dropped when it went to three bases.</p>
+    <div id="bm-other-stays"></div>
+
+    <h2 class="section-heading" id="keep" data-short="Keep walk">Keep the walk rule for these</h2>
+    <p>Pairs with I, V, Q or U where moving the buffer is no shorter.</p>
+    <div id="bm-keep"></div>
+  </main>
+
+  <script type="module">
+    import { mountBufferMoves } from '../../js/buffer-moves.js?v=1';
+    mountBufferMoves({ stats: 'bm-stats', example: 'bm-example', hard: 'bm-hard', hardFilter: 'bm-hard-filter', otherMoves: 'bm-other-moves', otherStays: 'bm-other-stays', keep: 'bm-keep' });
+  </script>
+</body>
+</html>
