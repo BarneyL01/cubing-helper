@@ -18,22 +18,36 @@
     <h1>Letter pairs</h1>
     <p class="subtitle">
       One word for every pair of memo letters: picture the word instead of saying two letters. X is said
-      “sh”. Each word starts with the first letter and has the second letter after it.
+      “sh”, J is said “y”, and Q is said “qu” or “ch”. Each word starts with the first letter's sound and has the
+      second letter's sound after it.
     </p>
     <div class="source-note">
       <p>
-        Our own list, made for this site (2026-10-23): 552 pairs (24 letters × 23). Words were picked to be easy to
-        picture, and no two share a stem or mean nearly the same thing, so two pairs don't blur together. Where no
-        good single word fits, there is a two-word phrase. Swap any word for one that works better for you.
+        Our own list, rewritten for this site on 2026-11-11 to your rules: 552 pairs (24 letters × 23). Vivid things,
+        actions and adjectives, crude words allowed, no people or characters. Well-known initials stay as they are
+        (GQ, HQ, IQ, DJ, QR code, BBQ, TV, UFO). No two words mean nearly the same thing (one cat, one frog, one
+        word per rude body part), and no two share a stem. C words never start with “ch” and S words never start
+        with “sh”, because those sounds are Q and X. Swap any word for one that works better for you.
         Checked by <code>log/2026-10-23-letter-pairs-check.mjs</code>.
       </p>
+    </div>
+    <div class="table-wrap">
+      <table class="bld-table">
+        <caption>Letters that are not said as written</caption>
+        <thead><tr><th>Letter</th><th>Said</th><th>First in a pair</th><th>Second in a pair</th></tr></thead>
+        <tbody>
+          <tr><th>X</th><td>sh</td><td>XA shark</td><td>BX bush</td></tr>
+          <tr><th>J</th><td>y</td><td>JT yeti</td><td>CJ coyote</td></tr>
+          <tr><th>Q</th><td>qu, or ch where no qu word exists</td><td>QL quilt, QT cheetah</td><td>SQ squid, WQ witch</td></tr>
+        </tbody>
+      </table>
     </div>
     <p>Practise them in <a href="../practice/blind-drills.html">Blind drills</a> → Memo, with “Show the letter-pair words” ticked.</p>
     <div id="pairs"></div>
   </main>
 
   <script type="module">
-    import { letterPairs } from '../../data/letter-pairs.js?v=1';
+    import { letterPairs } from '../../data/letter-pairs.js?v=2';
     const host = document.getElementById('pairs');
     const L = 'ABCDEFGHIJKLMNOPQRSTUVWX';
     for (const a of L) {
@@ -41,7 +55,7 @@
       h.className = 'section-heading';
       h.id = `pairs-${a}`;
       h.dataset.short = a;
-      h.textContent = a === 'X' ? 'X (sh) …' : `${a} …`;
+      h.textContent = a === 'X' ? 'X (sh) …' : a === 'J' ? 'J (y) …' : a === 'Q' ? 'Q (qu, ch) …' : `${a} …`;
       const ul = document.createElement('ul');
       ul.className = 'pair-grid';
       for (const b of L) {
