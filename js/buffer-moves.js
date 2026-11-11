@@ -1,5 +1,6 @@
 // The Buffer moves page (3x3/bld/buffer-moves.html): pairs where a setup that moves the buffer beats the walk rule.
-// Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (3-Style (ours) commutators).
+// Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (the owner's 9 bases, setups that
+// may move the buffer).
 import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=2';
 import { pairRow } from './three-style-page.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
@@ -66,6 +67,27 @@ function mountExample(slot) {
   const r = row(e); r.removeAttribute('id');
   r.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures and a cube to watch: '));
   slot.append(r);
+}
+
+// for the Pair lookup page: the Buffer moves commutator for a pair (only pairs listed on this page), and its steps
+const LISTED = Object.fromEntries([...bufferMoveHard, ...bufferMoveOther].map((e) => [e.pair, e]));
+export const bufferMoveFor = (pair) => LISTED[pair] || null;
+export function explainBufferMove(e) {
+  const box = el('div', 'wr-result');
+  const s = e.spots;
+  const roles = [['the buffer', 'C', s.buffer], [e.first, e.first, s.first], [e.second, e.second, s.second]];
+  const moved = roles.filter(([, a, b]) => a !== b), stay = roles.filter(([, a, b]) => a === b);
+  const list = (xs) => (xs.length < 3 ? xs.join(' and ') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
+  box.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> <code>${alg(e.notation)}</code> · ${e.count} moves`));
+  const ol = el('ol', 'ts-steps');
+  if (e.setup) ol.append(el('li', null, `<strong>Setup</strong> ${st(e.setup)}: moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.${stay.length ? ` ${list(stay.map(([w]) => w))} ${stay.length > 1 ? 'stay' : 'stays'} put.` : ''}`));
+  ol.append(el('li', null, `<strong>Base:</strong> your helper ${e.helper} base <code>${colourCore(e.core)}</code> cycles ${s.buffer} → ${s.first} → ${s.second}.`));
+  if (e.setup) ol.append(el('li', null, `<strong>Undo</strong> the setup. Net: buffer → ${e.first} → ${e.second}.`));
+  box.append(ol);
+  const r = row(e); r.removeAttribute('id');
+  r.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures of the setup, and a cube to watch: '));
+  box.append(r);
+  return box;
 }
 
 function mountKeep(slot) {

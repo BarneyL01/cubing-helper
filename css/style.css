@@ -2639,3 +2639,5 @@ a.menu-sec[aria-current="page"],
 .wr-bases tr.wr-base-head > th { background: var(--surface-2, rgba(47, 111, 237, 0.06)); text-align: left; }
 .wr-bases td code { font-size: 0.85rem; }
 .wr-bases td, .wr-bases th { padding-left: 0.4rem; padding-right: 0.4rem; }
+/* Pair lookup: which method the shown commutator comes from */
+.pl-tag { margin: 0.8rem 0 0.2rem; }

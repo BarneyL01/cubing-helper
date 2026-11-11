@@ -108,32 +108,11 @@ function explain(e) {
 }
 
 // ---- sections ---------------------------------------------------------------------------------------------------------
-function mountFind(slot) {
-  const KEY = 'cubing-helper:walk-rule';
-  let saved = { a: 'G', b: 'O' };
-  try { saved = { ...saved, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { /* keep the default */ }
-  const q = new URLSearchParams(location.search).get('pair');
-  if (q && /^[A-X]{2}$/.test(q.toUpperCase())) { saved.a = q[0].toUpperCase(); saved.b = q[1].toUpperCase(); }
-  const letters = walkLetters.map((l) => l.letter);
-  const pick = (v) => { const s = el('select', 'wr-select'); for (const l of letters) { const o = el('option', null, l); o.value = l; s.append(o); } s.value = letters.includes(v) ? v : 'G'; return s; };
-  const a = pick(saved.a), b = pick(saved.b);
-  const swap = el('button', 'rec-btn', 'Swap'); swap.type = 'button';
-  const form = el('div', 'wr-form');
-  const la = el('label', null, '1st letter '), lb = el('label', null, '2nd letter ');
-  la.append(a); lb.append(b);
-  form.append(la, lb, swap);
-  const out = el('div');
-  const show = () => {
-    try { localStorage.setItem(KEY, JSON.stringify({ a: a.value, b: b.value })); } catch { /* not saved */ }
-    out.replaceChildren();
-    if (sameCorner(a.value, b.value)) { out.append(el('p', 'bld-note', a.value === b.value ? 'Pick two different letters.' : `${a.value} and ${b.value} are stickers of one corner, so they are never one commutator. Do them as a twist (see the helper pages).`)); return; }
-    out.append(explain(PAIR[a.value + b.value]));
-  };
-  a.addEventListener('change', show); b.addEventListener('change', show);
-  swap.addEventListener('click', () => { [a.value, b.value] = [b.value, a.value]; show(); });
-  slot.append(form, out);
-  show();
-}
+// for the Pair lookup page: the walk rule's commutator and its explanation for one pair
+export const walkPairFor = (pair) => PAIR[pair];
+export const explainWalk = (pair) => explain(PAIR[pair]);
+export const walkLetterList = walkLetters.map((l) => l.letter);
+export { sameCorner };
 
 // ---- all 9 bases at a glance -----------------------------------------------------------------------------------------
 function mountBases(slot) {
@@ -226,7 +205,6 @@ function mountAll(slot) {
 export function mountWalkRule(ids) {
   const $ = (id) => document.getElementById(id);
   if (ids.bases) mountBases($(ids.bases));
-  mountFind($(ids.find));
   mountHelpers($(ids.helpers));
   mountOne($(ids.one));
   mountTwo($(ids.two));

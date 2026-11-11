@@ -36,3 +36,15 @@ step less will still mean L and B is worth it"). The generator now searches itse
 - Example on the page: U → E `[R U : [R D2 R' , U']]` (9 moves, walk rule 14): R U puts the buffer in the M position;
   the L base read from the M sticker is M → U → Q.
 - Chips now say which helper's base: "buffer to M · helper B base · walk 14 → 9 · L/B setup".
+
+## Pair lookup page; finder removed from Walk rule (owner: two pages were confusing)
+
+- New `3x3/bld/pair-lookup.html` (Orozco helpers, "Pair lookup"; section now at 6 pages, the limit): two selects + Swap,
+  `?pair=`, saved in `cubing-helper:pair-lookup` (falls back to the old walk-rule key). Shows the Buffer moves commutator
+  when the Buffer moves page lists the pair (steps: setup, base read from the moved positions, undo; pair row with
+  pictures and runner), else the walk rule's explanation (exceptions included); the other method in one line below.
+- Walk rule page: "Find a pair" removed (a note links to Pair lookup); `walk-rule.js?v=4` exports `walkPairFor`,
+  `explainWalk`, `walkLetterList`, `sameCorner`. `buffer-moves.js?v=3` exports `bufferMoveFor`, `explainBufferMove`.
+- `site-chrome.js?v=16` on every page; `style.css?v=38` on pair-lookup.html (`.pl-tag`).
+- Checked at 390 px: GO (walk), UE (buffer moves), PT (buffer stays), IK, IU (exception), DF (same corner); Walk rule and
+  Buffer moves pages still load; no console errors, no sideways scroll.
