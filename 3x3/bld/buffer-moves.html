@@ -17,15 +17,16 @@
   <main>
     <h1>Buffer moves: shorter hard-letter pairs</h1>
     <p class="subtitle">
-      The walk rule keeps the buffer still, so I, V, Q and U are always far from a base. Let the setup move the
-      buffer (R, U, F turns) and most of their pairs get shorter. No B anywhere.
+      Your 9 bases (Orozco, helper P, helper D), nothing new: only the setup changes. The walk rule keeps the buffer
+      still, so I, V, Q and U are always far from a base. Let the setup move the buffer and most of their pairs get
+      shorter.
     </p>
     <div class="source-note">
       <p>
-        Worked out here (2026-11-11), not from your notes or a published list. The commutators are the ones on the
-        3-Style (ours) page: R bases against a U or D turn, setups of R, U, D and F of at most 3 moves. Every one was
-        checked in the cube simulator (it cycles the buffer and the two letters and moves nothing else), and so was the
-        walk rule's commutator it is compared with. Built by <code>log/2026-11-11-buffer-moves.mjs</code>. Move counts
+        Worked out here (2026-11-11), not from your notes or a published list. Every pair is one of your 9 bases (or
+        its halves swapped) with a setup of at most 3 moves: the shortest with R, U, F and D, or with L or B when that
+        is at least one move shorter. Every commutator was checked in the cube simulator (it cycles the buffer and the
+        two letters and moves nothing else), and so was the walk rule's commutator it is compared with. Built by <code>log/2026-11-11-buffer-moves.mjs</code>. Move counts
         are written out, after cancelling.
       </p>
     </div>
@@ -33,23 +34,22 @@
 
     <h2 class="section-heading" id="idea" data-short="The idea">The idea</h2>
     <p>With the walk rule the setup never moves the buffer, so the base always starts at C. Here the setup may move the
-      buffer too: the base then runs with the buffer in another position, and undoing the setup brings it home.</p>
+      buffer too: one of your bases then runs with the buffer in another position (sometimes the buffer's own corner,
+      twisted), and undoing the setup brings it home.</p>
     <div id="bm-example"></div>
 
     <h2 class="section-heading" id="hard" data-short="I V Q U">Pairs with I, V, Q or U</h2>
-    <p>Grouped by base. Most are Orozco's insertions (<code>R D2 R'</code> above all) against a different U turn.
-      Open a base to see its pairs; open a pair for pictures of the setup and a cube to watch.</p>
+    <p>Grouped by base. Orozco's L base <code>[R D2 R' , U']</code> and helper D's S base <code>[R' D2 R , U']</code> do over
+      half of them. Open a base to see its pairs; open a pair for pictures of the setup and a cube to watch.</p>
     <div class="drill-pic-switch" id="bm-hard-filter" role="group" aria-label="Which pairs"></div>
     <div id="bm-hard"></div>
 
     <h2 class="section-heading" id="other" data-short="Other pairs">Other pairs: big savings</h2>
-    <p>Pairs without I, V, Q or U where the setup gets two or more moves shorter (mostly three moves down to one), or
-      the pair gets four or more moves shorter.</p>
-    <h3>The buffer moves: one setup turn instead of three</h3>
+    <p>Pairs without I, V, Q or U that get three or more moves shorter, or whose setup gets two or more moves shorter
+      (mostly three moves down to one).</p>
+    <h3>The buffer moves</h3>
     <div id="bm-other-moves"></div>
-    <h3>The buffer stays: bases the walk rule does not have</h3>
-    <p>No setup at all. <code>[R' D R , U2]</code> and <code>[R' D2 R , U2]</code> are helper P's A base with the other
-      two D turns (A with G and S); <code>[R U R' , D']</code> is the T base helper P dropped when it went to three bases.</p>
+    <h3>The buffer stays: a shorter setup the walk rule does not pick</h3>
     <div id="bm-other-stays"></div>
 
     <h2 class="section-heading" id="keep" data-short="Keep walk">Keep the walk rule for these</h2>
@@ -58,7 +58,7 @@
   </main>
 
   <script type="module">
-    import { mountBufferMoves } from '../../js/buffer-moves.js?v=1';
+    import { mountBufferMoves } from '../../js/buffer-moves.js?v=2';
     mountBufferMoves({ stats: 'bm-stats', example: 'bm-example', hard: 'bm-hard', hardFilter: 'bm-hard-filter', otherMoves: 'bm-other-moves', otherStays: 'bm-other-stays', keep: 'bm-keep' });
   </script>
 </body>

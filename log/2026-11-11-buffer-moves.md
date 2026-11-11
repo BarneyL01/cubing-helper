@@ -20,3 +20,19 @@ hard-letter pairs that lets the buffer move, and scan the other pairs for big si
 - `js/buffer-moves.js`; menu entry in `js/site-chrome.js` (`site-chrome.js?v=15` on every page).
 - Not done: whole solves mixing the walk rule and these; a trainer preset.
 - Checked at 390 px in headless Chromium: no console errors, no sideways scroll.
+
+## Rebuilt on the owner's 9 bases (same day)
+
+Owner: "I thought it was move the buffer but still use the same algs?" — the first version used the 3-Style (ours)
+commutators, and only 26 of its 130 pairs used one of the 9 bases. Rebuilt: only the 9 bases (and their halves swapped),
+setups up to 3 moves; the shortest with R U F D, or with L or B when that is at least one move shorter (owner: "a single
+step less will still mean L and B is worth it"). The generator now searches itself (no longer reads three-style-ours).
+
+- Hard pairs (I V Q U): 104 of 132 shorter than the walk rule, 13.4 → 11.3 moves (80 save 2+); 28 keep the walk rule
+  (IU among them: 12 either way). Other pairs: 32 with 3+ moves saved or the setup 2+ moves shorter, 13.9 → 10.2.
+- 42 pairs use an L or B setup. Where the buffer ends up after the setup (136 pairs): another corner 94, its own corner
+  twisted (J or M) 20, not moved 22 (the walk rule is a rule, not always the shortest).
+- Bases used for the hard pairs: Orozco L `[R D2 R' , U']` 32, helper D's S `[R' D2 R , U']` 26, then helper P's bases.
+- Example on the page: U → E `[R U : [R D2 R' , U']]` (9 moves, walk rule 14): R U puts the buffer in the M position;
+  the L base read from the M sticker is M → U → Q.
+- Chips now say which helper's base: "buffer to M · helper B base · walk 14 → 9 · L/B setup".

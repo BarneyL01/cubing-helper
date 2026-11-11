@@ -161,8 +161,8 @@ Full write-up: `docs/third-base-set-status.md` ("Answers"); checker `log/2026-11
 
 I, V, Q, U pairs (132, 30% of solve pairs) are long with the walk rule (13.1): D/L/B barely move them and no 8-move
 buffer base contains I, N or V. A 4th helper (Q) clears the 5 exceptions but helps little; the U family
-`[R/L B^k R'/L' , F2]` was rejected (owner: no B in a base). Built instead: Buffer moves page (setups that move the
-buffer, 3-Style (ours) commutators): 110 hard pairs 13.5 → 11.2, plus 20 other big savings. See log/2026-11-11-buffer-moves.md.
+`[R/L B^k R'/L' , F2]` was rejected (owner: no B in a base). Built instead: Buffer moves page (owner's 9 bases only, setups that may
+move the buffer, R U F D first, L/B when 1+ move shorter): 104 hard pairs 13.4 → 11.3, plus 32 other big savings. See log/2026-11-11-buffer-moves.md.
 
 ## Decisions (owner)
 

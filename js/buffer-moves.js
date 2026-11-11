@@ -1,6 +1,6 @@
 // The Buffer moves page (3x3/bld/buffer-moves.html): pairs where a setup that moves the buffer beats the walk rule.
 // Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (3-Style (ours) commutators).
-import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=1';
+import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=2';
 import { pairRow } from './three-style-page.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
 
@@ -17,7 +17,7 @@ const save = () => { try { localStorage.setItem(STORE, JSON.stringify(saved)); }
 function row(e) {
   const r = pairRow(e);
   const where = e.bufferMoves ? `buffer to <strong>${e.spots.buffer}</strong>` : 'buffer stays';
-  r.querySelector('.ts-pair-name').after(el('span', 'wr-moved', `${where} · walk ${e.walk.count} → ${e.count}`));
+  r.querySelector('.ts-pair-name').after(el('span', 'wr-moved', `${where} · helper ${e.helper} base · walk ${e.walk.count} → ${e.count}${e.lb ? ' · L/B setup' : ''}`));
   return r;
 }
 
@@ -54,12 +54,14 @@ function mountHard(slot, filterSlot) {
 }
 
 function mountExample(slot) {
-  const e = bufferMoveHard.find((x) => x.pair === 'IU');
-  slot.append(el('p', 'wr-alg', `<strong>I → U</strong> <code>${alg(e.notation)}</code> · ${e.count} moves (walk rule: <code>${alg(e.walk.notation)}</code>, ${e.walk.count})`));
+  const e = bufferMoveHard.find((x) => x.pair === 'UE');
+  const s = e.spots;
+  slot.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> <code>${alg(e.notation)}</code> · ${e.count} moves (walk rule: <code>${alg(e.walk.notation)}</code>, ${e.walk.count})`));
   const ol = el('ol', 'bld-list');
-  ol.innerHTML = `<li>${st('R')} moves the buffer into the Q position. I and U stay put.</li>
-    <li>The base <code>${colourCore(e.core)}</code> then cycles Q → I → U: Q's position plays the buffer.</li>
-    <li>${st("R'")} puts the buffer back. Net: buffer → I → U.</li>`;
+  ol.innerHTML = `<li>${st(e.setup)} moves the buffer into the ${s.buffer} position and ${e.second} into the ${s.second} position. ${e.first} stays put.</li>
+    <li>Your Orozco L base <code>${colourCore(e.core)}</code> then cycles ${s.buffer} → ${s.first} → ${s.second}. It is the same base: it always turns the
+      same three corners, here read from their other stickers (C → L → B read from M is M → U → Q).</li>
+    <li>Undo ${st(e.setup)}. Net: buffer → ${e.first} → ${e.second}.</li>`;
   slot.append(ol);
   const r = row(e); r.removeAttribute('id');
   r.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures and a cube to watch: '));
@@ -74,7 +76,7 @@ function mountKeep(slot) {
 export function mountBufferMoves(ids) {
   const $ = (id) => document.getElementById(id);
   const s = bufferMoveStats;
-  $(ids.stats).innerHTML = `Pairs with I, V, Q or U: ${s.hard} of ${s.hardTotal} are shorter with the buffer moving, ${s.hardMoves[0]} → ${s.hardMoves[1]} moves on average (${s.hardSaves2} save 2 or more). The other ${s.keep} stay with the walk rule. Elsewhere, ${s.other} more pairs drop from ${s.otherMoves[0]} to ${s.otherMoves[1]} moves.`;
+  $(ids.stats).innerHTML = `Only your 9 bases. Pairs with I, V, Q or U: ${s.hard} of ${s.hardTotal} are shorter than the walk rule, ${s.hardMoves[0]} → ${s.hardMoves[1]} moves on average (${s.hardSaves2} save 2 or more); the other ${s.keep} stay with the walk rule. Elsewhere, ${s.other} more pairs drop from ${s.otherMoves[0]} to ${s.otherMoves[1]} moves. ${s.withLB} pairs use an L or B setup (each one move or more shorter than with R, U, F, D).`;
   mountExample($(ids.example));
   mountHard($(ids.hard), $(ids.hardFilter));
   groups($(ids.otherMoves), bufferMoveOther.filter((e) => e.bufferMoves));
