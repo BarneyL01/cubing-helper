@@ -28,11 +28,15 @@
       </p>
     </div>
     <div id="pl-find"></div>
+
+    <h2 class="section-heading" id="remember" data-short="Remember">How to remember which way a pair goes</h2>
+    <div id="pl-memory"></div>
   </main>
 
   <script type="module">
-    import { mountPairLookup } from '../../js/pair-lookup.js?v=1';
+    import { mountPairLookup, mountMemory } from '../../js/pair-lookup.js?v=2';
     mountPairLookup(document.getElementById('pl-find'));
+    mountMemory(document.getElementById('pl-memory'));
   </script>
 </body>
 </html>

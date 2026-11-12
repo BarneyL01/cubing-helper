@@ -48,3 +48,16 @@ step less will still mean L and B is worth it"). The generator now searches itse
 - `site-chrome.js?v=16` on every page; `style.css?v=38` on pair-lookup.html (`.pl-tag`).
 - Checked at 390 px: GO (walk), UE (buffer moves), PT (buffer stays), IK, IU (exception), DF (same corner); Walk rule and
   Buffer moves pages still load; no console errors, no sideways scroll.
+
+## Pair lookup: "How to remember which way a pair goes" (2026-11-12)
+
+Owner: base pairs and one-turn walks are obvious; the rest are not. Added under the finder (`mountMemory` in
+`js/pair-lookup.js?v=2`), all worked out from the same data as the lookup:
+1. Walk rule or buffer moves: pairs with I V Q U → buffer moves, except any two of I U V, I with L P, V with B X,
+   Q with D R W, U with A H N R (14 letter pairs); other pairs → walk rule, except any two of A F G / F G K / F K S /
+   R S W and GW KL NR PT ST WX (16). A pair and its reverse always go the same way (now checked by the generator,
+   with the same setup and base).
+2. Which letter walks: every letter's walk by number of turns (ties: either works; no simple tie rule exists —
+   helper order B > P > D predicts only 54 of 72).
+3. Buffer moves: which base, letter pairs per base (68 letter pairs, 60 different setups: no setup pattern to teach).
+Checked at 390 px: tables fit, no console errors.

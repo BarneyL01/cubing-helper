@@ -55,6 +55,11 @@ const hard = rows.filter((r) => r.hard && r.saves > 0);
 const keep = rows.filter((r) => r.hard && r.saves <= 0);
 const other = rows.filter((r) => !r.hard && (r.saves >= 3 || r.walk.setupMoves - r.setupMoves >= 2) && r.saves > 0);
 check('every hard pair placed once', hard.length + keep.length === 132);
+// the Pair lookup's memory section relies on these: a pair and its reverse go the same way, with the same base and setup
+{ const listed = new Map([...hard, ...other].map((r) => [r.pair, r]));
+  for (const r of rows) { const x = listed.get(r.pair), y = listed.get(r.second + r.first);
+    check(`${r.pair}: reverse goes the same way`, !!x === !!y);
+    if (x && y) check(`${r.pair}: reverse has the same setup and base`, x.setup === y.setup && x.insertion === y.insertion && x.interchange === y.interchange); } }
 const mean = (xs, f) => +(xs.reduce((a, x) => a + f(x), 0) / xs.length).toFixed(1);
 const stats = {
   hard: hard.length, hardTotal: 132, keep: keep.length, other: other.length,
