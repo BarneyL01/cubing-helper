@@ -2641,3 +2641,4 @@ a.menu-sec[aria-current="page"],
 .wr-bases td, .wr-bases th { padding-left: 0.4rem; padding-right: 0.4rem; }
 /* Pair lookup: which method the shown commutator comes from */
 .pl-tag { margin: 0.8rem 0 0.2rem; }
+.pl-exceptions h4 { margin: 0.9rem 0 0.3rem; font-size: 0.95rem; }

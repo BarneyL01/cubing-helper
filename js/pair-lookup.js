@@ -81,6 +81,27 @@ export function mountMemory(slot) {
       <tr><th>none of them</th><td>Walk rule</td><td>Buffer moves: ${o.tri.map((t) => `any two of <strong>${t.split('').join(' ')}</strong>`).join(', ')}; and <strong>${o.rest.join(' ')}</strong></td></tr>
     </tbody></table></div>
     <p class="bld-note">That is ${walkHard.length} + ${bmOther.length} letter pairs to learn as exceptions; everything else follows the first two columns.</p>`;
+  // the exceptions, one accordion per letter pair: the pair worked out with its cube pictures open, the reverse in one line
+  const exceptionGroup = (title, pairs, viaBM) => {
+    const box = el('div', 'pl-exceptions');
+    box.append(el('h4', null, `${title} (${pairs.length})`));
+    for (const p of pairs) {
+      const [x, y] = [p, p[1] + p[0]];
+      const w = walkPairFor(x), m = viaBM ? bufferMoveFor(x) : null, mr = viaBM ? bufferMoveFor(y) : null, wr = walkPairFor(y);
+      const d = el('details', 'ts-core');
+      d.append(el('summary', null, `<span><strong>${p[0]} ${p[1]}</strong> · ${viaBM ? 'buffer moves' : 'walk rule'}<span class="ts-sum-base bld-muted">${viaBM ? `helper ${m.helper} base · ${m.count} moves (walk rule ${w.count})` : `${w.count} moves`}</span></span>`));
+      d.addEventListener('toggle', () => {
+        if (!d.open || d.children.length > 1) return;
+        const body = viaBM ? explainBufferMove(m) : explainWalk(x);
+        body.querySelectorAll('details.ts-pair').forEach((r) => { r.open = true; });
+        if (viaBM) body.querySelector(':scope > ol.ts-steps')?.remove(); // the open pictures repeat the same three steps
+        d.append(body, el('p', 'bld-note', `Reverse, ${y[0]} → ${y[1]}: <code>${alg(viaBM ? mr.notation : wr.notation)}</code>, ${viaBM ? mr.count : wr.count} moves (the same setup, the base with its halves swapped).`));
+      });
+      box.append(d);
+    }
+    return box;
+  };
+  one.append(exceptionGroup('Walk rule, though the pair has I, V, Q or U', walkHard, false), exceptionGroup('Buffer moves, though the pair has none of them', bmOther, true));
   // 2. which letter walks
   const byN = [0, 1, 2].map((n) => walkLetters.filter((l) => l.n === n));
   const two = el('div', 'ts-guide');

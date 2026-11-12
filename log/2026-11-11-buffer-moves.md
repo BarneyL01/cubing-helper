@@ -61,3 +61,7 @@ Owner: base pairs and one-turn walks are obvious; the rest are not. Added under 
    helper order B > P > D predicts only 54 of 72).
 3. Buffer moves: which base, letter pairs per base (68 letter pairs, 60 different setups: no setup pattern to teach).
 Checked at 390 px: tables fit, no console errors.
+- Exception accordions (owner): under table 1, one accordion per exception letter pair (14 walk rule + 16 buffer moves),
+  built when opened: the pair (alphabetical order) worked out, with its see-through cube pictures already open (setup
+  and pair), the cube runner, and the reverse in one line. `pair-lookup.js?v=4`, `style.css?v=39` on pair-lookup.html.
+  All 30 opened in headless Chromium at 390 px: no console errors, no sideways scroll.
