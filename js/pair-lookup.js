@@ -2,15 +2,17 @@
 // rule's (js/walk-rule.js, buffer still), unless the Buffer moves page lists a shorter one (js/buffer-moves.js).
 // The other way is shown in one line underneath, so the two can be compared.
 import { walkPairFor, explainWalk, walkLetterList, sameCorner } from './walk-rule.js?v=4';
-import { bufferMoveFor, explainBufferMove } from './buffer-moves.js?v=3';
+import { bufferMoveFor, explainBufferMove } from './buffer-moves.js?v=4';
 import { walkLetters } from '../data/walk-rule.js?v=1';
-import { bufferMoveHard, bufferMoveOther } from '../data/buffer-moves.js?v=2';
+import { bufferMoveHard, bufferMoveOther } from '../data/buffer-moves.js?v=3';
 import { colourCore } from './three-style-families.js?v=12';
 
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
 const st = (m) => `<span class="mv-setup">${m}</span>`;
 const alg = (n) => { const m = n.match(/^\[([^:]+) : (\[.*\])\]$/); return m ? `[${st(m[1])} : ${colourCore(m[2])}]` : colourCore(n); };
 const KEY = 'cubing-helper:pair-lookup';
+// show the pictures straight away (the pair row builds them when it opens)
+const openRows = (box) => { box.querySelectorAll('details.ts-pair').forEach((r) => { r.open = true; }); return box; };
 
 export function mountPairLookup(slot) {
   let saved = { a: 'G', b: 'O' };
@@ -32,11 +34,11 @@ export function mountPairLookup(slot) {
     const pair = a.value + b.value, w = walkPairFor(pair), m = bufferMoveFor(pair);
     if (m) {
       out.append(el('p', 'pl-tag', `<strong>Buffer moves</strong> · ${m.walk.count - m.count} moves shorter than the walk rule${m.bufferMoves ? '' : ' (here the buffer stays: just a shorter setup)'}`));
-      out.append(explainBufferMove(m));
+      out.append(openRows(explainBufferMove(m)));
       out.append(el('p', 'bld-note', `Walk rule instead: <code>${alg(w.notation)}</code>, ${w.count} moves. <a href="walk-rule.html">How the walk rule works</a>.`));
     } else {
       out.append(el('p', 'pl-tag', `<strong>Walk rule</strong>${w.exception ? ' · one of the exception pairs' : ''}`));
-      out.append(explainWalk(pair));
+      out.append(openRows(explainWalk(pair)));
       out.append(el('p', 'bld-note', `Moving the buffer is no shorter here (or saves too little to be on the <a href="buffer-moves.html">Buffer moves</a> page).`));
     }
   };

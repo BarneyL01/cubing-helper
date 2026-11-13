@@ -8,7 +8,7 @@
 //   node log/2026-11-11-buffer-moves.mjs           checks; prints ALL OK
 //   node log/2026-11-11-buffer-moves.mjs --write   also writes data/buffer-moves.js
 import { writeFileSync } from 'node:fs';
-import { permOf, spotOf, letterAt, expandBrackets, cancelMoves, spots } from './three-style-lib.mjs';
+import { permOf, spotOf, letterAt, expandBrackets, cancelMoves, spots, SPEFFZ } from './three-style-lib.mjs';
 import { walkPairs } from '../data/walk-rule.js';
 
 const fails = []; const check = (n, ok) => { if (!ok) fails.push(n); };
@@ -47,7 +47,20 @@ const rows = Object.keys(W).sort().map((pair) => {
   check(`${pair}: ${pick.notation}`, cycOf(pick.notation) === pair);
   check(`${pair}: walk ${W[pair].notation}`, cycOf(W[pair].notation) === pair);
   const m = pick.core.match(/^\[(.+) , (.+)\]$/); const [insertion, interchange] = /^[RLUDFB]['2]?$/.test(m[1]) ? [m[2], m[1]] : [m[1], m[2]];
-  return { pair, first: pair[0], second: pair[1], notation: pick.notation, setup: pick.setup, core: pick.core, insertion, interchange, helper: HELPER_OF[pick.core],
+  // which reading of the base the setup lands on: the base turns the same three corners whatever happens; read from C it is
+  // C -> a -> b. reading[i] = { here, usual, who }: the sticker used now, the sticker on the same corner in the usual
+  // reading, and who sits there after the setup (buffer / first letter / second letter). Faces for the page's words.
+  const sp0 = spots(pair[0], pair[1], pick.setup, pick.core);
+  const P = permOf(expandBrackets(pick.core));
+  const readFrom = (x) => { const a0 = spotOf(x); return [x, letterAt.get(P[a0]), letterAt.get(P[P[a0]])]; };
+  const R = ['C', 'M', 'J'].map(readFrom);
+  const here = [sp0.buffer, sp0.first, sp0.second];
+  let reading = null;
+  for (const Rk of R) for (let r = 0; r < 3; r++) { const rot = [Rk[r], Rk[(r + 1) % 3], Rk[(r + 2) % 3]];
+    if (rot.join() === here.join()) reading = rot.map((h, i) => ({ here: h, usual: R[0][(r + i) % 3], who: ['buffer', pair[0], pair[1]][i], face: SPEFFZ[h][0], usualFace: SPEFFZ[R[0][(r + i) % 3]][0] })); }
+  check(`${pair}: lands on a reading of its base`, !!reading);
+  const helper = HELPER_OF[pick.core]; const pos = R[0].slice(1).find((x) => x !== helper);
+  return { pair, first: pair[0], second: pair[1], notation: pick.notation, setup: pick.setup, core: pick.core, insertion, interchange, helper, basePos: pos, reading,
     setupMoves: pick.n, moves: pick.moves, count: pick.count, spots: spots(pair[0], pair[1], pick.setup, pick.core), bufferMoves: !pick.bufferStays, lb: /[LB]/.test(pick.setup),
     rufdCount: r ? r.count : null, hard: HARD.test(pair), walk: { notation: W[pair].notation, setupMoves: W[pair].setupMoves, count: W[pair].count }, saves: W[pair].count - pick.count };
 }).filter(Boolean);

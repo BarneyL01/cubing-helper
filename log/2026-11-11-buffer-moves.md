@@ -65,3 +65,18 @@ Checked at 390 px: tables fit, no console errors.
   built when opened: the pair (alphabetical order) worked out, with its see-through cube pictures already open (setup
   and pair), the cube runner, and the reverse in one line. `pair-lookup.js?v=4`, `style.css?v=39` on pair-lookup.html.
   All 30 opened in headless Chromium at 390 px: no console errors, no sideways scroll.
+
+## Where the base works; pictures open (2026-11-13)
+
+Owner, on Q → G `[F2 : [R D2 R' , U']]`: "it's not the usual L base move for B, it's the faces next to it", and the lookup
+was missing 3D pictures.
+- Generator adds `reading` per pair (and `basePos`): the base turns the same three corners whatever the setup; read from C it
+  is C → a → b (the "usual" reading). For each sticker the base uses after the setup: the sticker on the same corner in the
+  usual reading, who sits there (buffer / letters), and both faces. Checked: every pair lands on one of the three readings
+  (from C, M or J). 76 of the 136 pairs use the stickers next to the usual ones; the others use the usual stickers.
+- `readingTable(e)` in `js/buffer-moves.js?v=4` ("Where the base works": Usually / Here / Holds, with face words), shown in
+  Pair lookup results, the exception accordions and the Buffer moves example; hidden when the buffer stays on C.
+  Base names: "Orozco L base", "helper P's A base", "helper D's S base".
+- Pair lookup opens the pair's pictures (see-through cubes) straight away, for walk rule and buffer moves results
+  (`pair-lookup.js?v=5`).
+- Checked at 390 px: QG, UE, PT, GO; Buffer moves page; no console errors.

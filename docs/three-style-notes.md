@@ -163,6 +163,9 @@ I, V, Q, U pairs (132, 30% of solve pairs) are long with the walk rule (13.1): D
 buffer base contains I, N or V. A 4th helper (Q) clears the 5 exceptions but helps little; the U family
 `[R/L B^k R'/L' , F2]` was rejected (owner: no B in a base). Built instead: Buffer moves page (owner's 9 bases only, setups that may
 move the buffer, R U F D first, L/B when 1+ move shorter): 104 hard pairs 13.4 → 11.3, plus 32 other big savings. See log/2026-11-11-buffer-moves.md.
+**Readings (checked):** a base turns the same three corners whatever the setup; read from C, M or J it gives three
+sticker cycles (L base: C → L → B, M → U → Q, J → G → N). A buffer-moving setup lands the pair on one of them; the page
+shows it as Usually / Here / Holds (owner found "the faces next to it" hard to see, Q → G).
 
 ## Decisions (owner)
 

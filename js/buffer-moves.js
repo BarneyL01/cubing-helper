@@ -1,7 +1,7 @@
 // The Buffer moves page (3x3/bld/buffer-moves.html): pairs where a setup that moves the buffer beats the walk rule.
 // Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (the owner's 9 bases, setups that
 // may move the buffer).
-import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=2';
+import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=3';
 import { pairRow } from './three-style-page.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
 
@@ -63,7 +63,7 @@ function mountExample(slot) {
     <li>Your Orozco L base <code>${colourCore(e.core)}</code> then cycles ${s.buffer} → ${s.first} → ${s.second}. It is the same base: it always turns the
       same three corners, here read from their other stickers (C → L → B read from M is M → U → Q).</li>
     <li>Undo ${st(e.setup)}. Net: buffer → ${e.first} → ${e.second}.</li>`;
-  slot.append(ol);
+  slot.append(ol, readingTable(e));
   const r = row(e); r.removeAttribute('id');
   r.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures and a cube to watch: '));
   slot.append(r);
@@ -72,6 +72,26 @@ function mountExample(slot) {
 // for the Pair lookup page: the Buffer moves commutator for a pair (only pairs listed on this page), and its steps
 const LISTED = Object.fromEntries([...bufferMoveHard, ...bufferMoveOther].map((e) => [e.pair, e]));
 export const bufferMoveFor = (pair) => LISTED[pair] || null;
+// "Orozco L base", "helper P's A base", "helper D's S base"
+const baseName = (e) => (e.helper === 'B' ? `Orozco ${e.basePos} base` : `helper ${e.helper}'s ${e.basePos} base`);
+const FACE = { U: 'top', D: 'bottom', F: 'front', B: 'back', R: 'right', L: 'left' };
+// how the base is read after the setup: the same three corners as always, maybe other stickers of them
+export function readingTable(e) {
+  const r = e.reading, wrap = el('div', 'pl-reading');
+  if (!r || r.every((x) => x.here === x.usual && x.who === 'buffer' ? x.here === 'C' : x.here === x.usual)) return wrap; // buffer still on C: nothing new
+  const usual = [...r].sort((a, b) => 'CJM'.includes(b.usual) - 'CJM'.includes(a.usual)); // the usual cycle from C
+  const from = usual[0];
+  const order = [from, ...[...r, ...r].slice(r.indexOf(from) + 1, r.indexOf(from) + 3)];
+  const same = r.every((x) => x.here === x.usual);
+  const who = (x) => (x.who === 'buffer' ? 'the buffer' : x.who);
+  wrap.innerHTML = `<p><strong>Where the base works:</strong> your ${baseName(e)} always turns the same three corners. Read from C it is
+      ${order.map((x) => x.usual).join(' → ')}. ${same ? `Here it uses those same stickers, with the buffer in the ${r[0].here} position.` : 'Here every sticker is the one next to it on the same corner:'}</p>
+    <div class="table-wrap"><table class="bld-table"><thead><tr><th>Usually</th><th>Here</th><th>Holds</th></tr></thead><tbody>
+      ${order.map((x) => `<tr><td><strong>${x.usual}</strong> <span class="bld-muted">${FACE[x.usualFace]}</span></td><td><strong>${x.here}</strong> <span class="bld-muted">${FACE[x.face]}</span></td><td>${who(x)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  return wrap;
+}
+
 export function explainBufferMove(e) {
   const box = el('div', 'wr-result');
   const s = e.spots;
@@ -81,9 +101,9 @@ export function explainBufferMove(e) {
   box.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> <code>${alg(e.notation)}</code> · ${e.count} moves`));
   const ol = el('ol', 'ts-steps');
   if (e.setup) ol.append(el('li', null, `<strong>Setup</strong> ${st(e.setup)}: moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.${stay.length ? ` ${list(stay.map(([w]) => w))} ${stay.length > 1 ? 'stay' : 'stays'} put.` : ''}`));
-  ol.append(el('li', null, `<strong>Base:</strong> your helper ${e.helper} base <code>${colourCore(e.core)}</code> cycles ${s.buffer} → ${s.first} → ${s.second}.`));
+  ol.append(el('li', null, `<strong>Base:</strong> your ${baseName(e)} <code>${colourCore(e.core)}</code> cycles ${s.buffer} → ${s.first} → ${s.second}.`));
   if (e.setup) ol.append(el('li', null, `<strong>Undo</strong> the setup. Net: buffer → ${e.first} → ${e.second}.`));
-  box.append(ol);
+  box.append(ol, readingTable(e));
   const r = row(e); r.removeAttribute('id');
   r.querySelector('summary').prepend(el('span', 'bld-muted', 'Pictures of the setup, and a cube to watch: '));
   box.append(r);
