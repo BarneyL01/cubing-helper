@@ -94,6 +94,7 @@ const MENU = [
           { label: 'Helper P', path: '3x3/bld/orozco-p.html' },
           { label: 'Helper D', path: '3x3/bld/orozco-d.html' },
           { label: 'Helper F', path: '3x3/bld/orozco-f.html' },
+          { label: 'Helper K', path: '3x3/bld/orozco-k.html' },
         ],
       },
       {

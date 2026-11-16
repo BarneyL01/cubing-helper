@@ -186,6 +186,8 @@ buffer and helper alone, so their groups have 1-2 move setups; A's corner has on
 group too hard. Built Orozco with helper F: `[U' R' U , L^k]` = z [R' D' R , U^k] z', setups D/B 0/1/2 = 3/11/4.
 Fourth group (asked): Q group `[U F U' , B^k]` = x y [R U R' , D^k] halves the pairs needing 3+ setup moves (88 → 44).
 See log/2026-11-17-orozco-f.md.
+Helper K built (owner rejected Q: two rotations). Both F and K are done holding the rotation for the whole corner phase;
+Walk rule / Buffer moves / Pair lookup marked outdated (still B, P, D).
 
 ## Decisions (owner)
 

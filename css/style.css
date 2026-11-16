@@ -2642,3 +2642,6 @@ a.menu-sec[aria-current="page"],
 /* Pair lookup: which method the shown commutator comes from */
 .pl-tag { margin: 0.8rem 0 0.2rem; }
 .pl-exceptions h4 { margin: 0.9rem 0 0.3rem; font-size: 0.95rem; }
+/* A page that has not been redone after a change elsewhere */
+.page-outdated { border: 1px solid var(--partial, #8a6408); border-left-width: 4px; border-radius: 6px; padding: 0.5rem 0.7rem; margin: 0.6rem 0; }
+.rh-cube .cube-3d, .rh-cube .cube-3d.with-mirrors { width: 100%; max-width: 100%; height: auto; display: block; }

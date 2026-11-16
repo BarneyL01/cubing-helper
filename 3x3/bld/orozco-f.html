@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Helper F — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="../../css/style.css?v=39" />
+  <link rel="stylesheet" href="../../css/style.css?v=42" />
   <link rel="stylesheet" href="../../css/drills.css?v=7" />
-  <script type="module" src="../../js/site-chrome.js?v=18"></script>
+  <script type="module" src="../../js/site-chrome.js?v=19"></script>
 </head>
 <body>
   <header class="site-header" id="site-header">
@@ -18,7 +18,7 @@
     <h1>Orozco with helper F</h1>
     <p class="subtitle">
       Your Orozco with F in B's place, done from one rotation: <strong>z</strong>, then <code>[R' D' R , U / U' / U2]</code>,
-      then <strong>z'</strong>. The setups are D and B turns before the rotation, never more than two.
+      then <strong>z'</strong> when the corners are done. Rotate once for all the corners; the setups are never more than two moves.
     </p>
     <div class="source-note">
       <p>
@@ -30,16 +30,21 @@
       </p>
     </div>
 
+    <h2 class="section-heading" id="flow" data-short="A solve">How a solve goes</h2>
+    <div id="hf-flow"></div>
+
     <h2 class="section-heading" id="idea" data-short="The idea">The idea</h2>
     <ul class="bld-list">
       <li>Memo from C as always. The 1st letter of each pair forwards (buffer → letter → F), the 2nd backwards
         (buffer → F → letter).</li>
-      <li>Do the setup first (D and B turns, as the cube is), then <strong>z</strong>, the base, <strong>z'</strong>, and undo
-        the setup.</li>
+      <li>Rotate once (<strong>z</strong>), do every letter while you hold the cube that way, rotate back (<strong>z'</strong>). Seen after z, the setups are L and B turns (they were D and B before the rotation).</li>
       <li>After z the base is <code>[R' D' R , U^k]</code>: the insertion of helper P's A base, with the U turn picking E, G or H.
         Without the rotation it is <code>[U' R' U , L^k]</code>.</li>
     </ul>
     <div id="hf-bases"></div>
+
+    <h2 class="section-heading" id="rotation" data-short="z rotation">What "z" means</h2>
+    <div id="hf-rotation"></div>
 
     <h2 class="section-heading" id="by-position" data-short="By position">By position: what goes where</h2>
     <div id="hf-groups"></div>
@@ -62,8 +67,20 @@
   </main>
 
   <script type="module">
-    import { mountHelperF } from '../../js/helper-f.js?v=1';
-    mountHelperF({ bases: 'hf-bases', groups: 'hf-groups', table: 'hf-table', helper: 'hf-helper', ra: 'hf-ra', compare: 'hf-compare' });
+    import { orozcoF, OROZCO_F_BASES, OROZCO_F_COMPARE, OROZCO_F_TWIST, OROZCO_F_TWIST_REV, OROZCO_F_HELPER_RULES, OROZCO_F_TWIST_VIEW } from '../../data/orozco-f.js?v=2';
+    import { mountRotHelper } from '../../js/rot-helper.js?v=5';
+    mountRotHelper({
+      helper: 'F', rot: 'z', back: "z'", rows: orozcoF, bases: OROZCO_F_BASES, compare: OROZCO_F_COMPARE,
+      compareRows: [['BDP', 'B + D + P (now)'], ['BDA', 'B + D + A group'], ['BDF', '<strong>B + D + F</strong>'], ['BDFQ', 'B + D + F + Q group']],
+      twist: OROZCO_F_TWIST, twistRev: OROZCO_F_TWIST_REV, rules: OROZCO_F_HELPER_RULES, twistView: OROZCO_F_TWIST_VIEW, twistLetters: ['D', 'I'],
+      twistNote: "helper D's twist: D and F are stickers of the same corner",
+      rotText: [
+        '<strong>z</strong> turns the whole cube in your hands, a quarter turn clockwise as you look at the front: the same direction as an F turn, but all three layers at once. Nothing on the cube changes, only how you hold it.',
+        'The top face goes to the right, the right face to the bottom, the bottom to the left, the left to the top. The front and the back stay where they are.',
+        "<strong>z'</strong> is the same turn the other way, back to how you started.",
+        "Do z once before the corners and z' once after them, not for every letter."],
+      seen: [['The buffer', 'P'], ['F', 'C (the usual buffer place)'], ['E, G, H', 'B, D, A']],
+    }, { flow: 'hf-flow', rotation: 'hf-rotation', bases: 'hf-bases', groups: 'hf-groups', table: 'hf-table', helper: 'hf-helper', ra: 'hf-ra', compare: 'hf-compare' });
   </script>
 </body>
 </html>
