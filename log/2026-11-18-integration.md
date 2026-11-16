@@ -16,3 +16,21 @@ Lead: merged both worktree branches (no conflicts), added Pair drill to the Prac
 itself). All three checkers ALL OK; 10 pages checked at 390 px, no console errors, no sideways scroll.
 Known gaps (not fixed): the pair pictures and "where the base works" tables are in the as-held view (the commutator
 lines are as seen after the rotation); the buffer-move row stays closed.
+
+## Rotated pictures and the 12-base table (owner, same day)
+
+- Owner: "make the pictures show the rotated view too", and "include in Which group the total list of all the commutator
+  bases, like the Walk rule page used to".
+- `log/2026-11-18-pair-rule.mjs`: every row / best / bufferMove now also has `seenPos` (buffer and letters after the
+  rotation), `spotsSeen` (after the seen setup), `movesSeen`, and bufferMove `readingSeen` (readings start at the buffer's
+  place after the rotation; for K the seen base does not touch C at all). Checked: the seen base cycles spotsSeen buffer →
+  first → second for every row; bufferMove readings found both ways. Regenerated; ALL OK; other checkers ALL OK.
+- `js/three-style-page.js?v=16`: optional `view` on a pair (`{ rot, back, pos, spots, setup, core, moves }`): pictures put
+  the pieces' own letters (C and the two letters) at their positions after the rotation, steps and the cube runner use the
+  seen moves, the runner starts from the cube as held after the rotation and ends "rotate back with …". No view = the 3-Style
+  pages unchanged (checked they load). `readingTable` (`buffer-moves.js?v=6`) takes `readingFrom` / `readingNote`.
+- Which group?: new "All 12 bases" section (`baseList()` from the data: each helper's three no-setup pairs, position first /
+  helper first, F and K as seen after the rotation, held forms listed under it).
+- Callers pass the view: `which-group.js?v=2` (`viewOf`), `pair-lookup.js?v=10`, `pair-drill.js?v=2`; `pair-rule.js?v=2`.
+- Checked at 390 px: Which group (bases table 358 px), Pair lookup QT (pictures, steps, runner), Pair drill GA, 3-Style,
+  Orozco, Buffer moves, helper K: no console errors, no sideways scroll.

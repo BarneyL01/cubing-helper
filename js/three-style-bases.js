@@ -2,7 +2,7 @@
 // A base solves one pair with no setup; every other pair of the group is the base plus a setup of D and L turns
 // that never moves the buffer. Three tabs: the setup moves one target / both targets / N and Q (buffer moves).
 // Data: data/three-style-bases.js (generated and checked by log/2026-11-05-3style-bases.mjs).
-import { pairRow, coreFigure } from './three-style-page.js?v=15';
+import { pairRow, coreFigure } from './three-style-page.js?v=16';
 import { makeCube } from './sticker-cube.js?v=4';
 
 // Which letters set up into one position: the position (yellow, thick) with every letter that goes into it (green)

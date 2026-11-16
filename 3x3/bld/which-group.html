@@ -33,6 +33,12 @@
     <h2 class="section-heading" id="rule" data-short="The rule">The rule in three levels</h2>
     <div id="wg-rule"></div>
 
+    <h2 class="section-heading" id="bases" data-short="All bases">All 12 bases</h2>
+    <p>Three bases per helper. "Position first" is the pair position → helper (forwards); "Helper first" is helper →
+      position (backwards): the same base with its halves swapped. Helpers F and K are written as you see them after their
+      rotation.</p>
+    <div id="wg-bases"></div>
+
     <h2 class="section-heading" id="level0" data-short="Level 0">Level 0: the pair has B, D, F or K</h2>
     <div id="wg-level0"></div>
 
@@ -55,8 +61,8 @@
   </main>
 
   <script type="module">
-    import { mountWhichGroup } from '../../js/which-group.js?v=1';
-    mountWhichGroup({ rule: 'wg-rule', level0: 'wg-level0', level1: 'wg-level1', level2: 'wg-level2', rotations: 'wg-rotations', exceptions: 'wg-exceptions', all: 'wg-all' });
+    import { mountWhichGroup } from '../../js/which-group.js?v=2';
+    mountWhichGroup({ bases: 'wg-bases', rule: 'wg-rule', level0: 'wg-level0', level1: 'wg-level1', level2: 'wg-level2', rotations: 'wg-rotations', exceptions: 'wg-exceptions', all: 'wg-all' });
   </script>
 </body>
 </html>

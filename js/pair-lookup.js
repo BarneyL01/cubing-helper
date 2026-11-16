@@ -1,9 +1,9 @@
 // The Pair lookup page (3x3/bld/pair-lookup.html): pick two corner letters, get the one commutator to use with the
 // four-helper rule (helpers B, D, F, K; data/pair-rule.js). F and K pairs are shown as seen after the rotation.
 // Optional line underneath: a shorter commutator if the buffer may move (the Buffer moves idea, from the same data).
-import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts } from './which-group.js?v=1';
-import { readingTable } from './buffer-moves.js?v=5';
-import { PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=1';
+import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts } from './which-group.js?v=2';
+import { readingTable } from './buffer-moves.js?v=6';
+import { PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 
 const KEY = 'cubing-helper:pair-lookup';
 // show the pictures straight away (the pair row builds them when it opens)
@@ -41,7 +41,7 @@ export function mountPairLookup(slot) {
       bm.append(el('p', 'pl-tag', `<strong>Shorter if the buffer may move:</strong> ${saves} ${saves === 1 ? 'move' : 'moves'} less (${m.count} instead of ${e.count}), helper ${m.helper}${m.rotation ? `, rotate ${st(m.rotation)}` : ''}.`));
       bm.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> ${mainLine(m)}`));
       if (m.rotation) bm.append(el('p', 'bld-note', `As held: <code>${alg(m.notation)}</code>`));
-      bm.append(readingTable({ reading: m.reading, helper: m.helper, baseLabel: `${m.helper === 'B' ? 'Orozco' : `helper ${m.helper}'s`} base` }));
+      bm.append(readingTable({ reading: m.rotation ? m.readingSeen : m.reading, readingFrom: m.rotation ? m.seenPos.buffer : 'C', readingNote: m.rotation ? ` (where the buffer is after ${m.rotation})` : '', helper: m.helper, baseLabel: `${m.helper === 'B' ? 'Orozco' : `helper ${m.helper}'s`} base` }));
       bm.append(groupRow({ ...RULE[e.pair], ...m, exception: false, level: e.level, bufferMove: null }, { id: false }));
       out.append(bm);
     }

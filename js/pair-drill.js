@@ -1,7 +1,7 @@
 // Pair drill: one random corner pair, the picking rule (docs/four-helper-picking-rule.md) revealed one step at a time.
 // The step-building functions below have no DOM code, so log/2026-11-18-pair-drill-check.mjs can import them in Node.
 // Data: data/pair-rule.js (from log/2026-11-18-pair-rule.mjs).
-import { pairRule, PAIR_RULE_TURNS, PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=1';
+import { pairRule, PAIR_RULE_TURNS, PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 
 export const STORE = 'cubing-helper:pair-drill';
 export const STEP_COUNT = 5;
@@ -51,7 +51,8 @@ export function rowSetupSeen(row) {
 export function answerOf(row) {
   const src = row.exception && row.best ? row.best : row;
   return { rule: src === row, rotation: src.rotation, rotationBack: src.rotationBack, setupSeen: src.setupSeen, coreSeen: src.coreSeen,
-    notationSeen: src.notationSeen, notation: src.notation, count: src.count, moves: src.moves, setup: src.setup, core: src.core, spots: src.spots };
+    notationSeen: src.notationSeen, notation: src.notation, count: src.count, moves: src.moves, setup: src.setup, core: src.core, spots: src.spots,
+    seenPos: src.seenPos, spotsSeen: src.spotsSeen, movesSeen: src.movesSeen };
 }
 
 // Segments: { k: 't' text, 'letter', 'setup' (orange moves), 'move' (plain code), 'full' / 'held' (the commutator) }
@@ -113,7 +114,7 @@ const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls)
 
 export async function mountPairDrill(root) {
   const [{ pairRow }, { colourCore }] = await Promise.all([
-    import('./three-style-page.js?v=15'),
+    import('./three-style-page.js?v=16'),
     import('./three-style-families.js?v=12'),
   ]);
   const $ = (id) => root.querySelector(`#${id}`);
@@ -183,7 +184,8 @@ export async function mountPairDrill(root) {
     stage.appendChild(ol);
     if (st.shown >= STEP_COUNT) {
       const a = answerOf(row);
-      const r = pairRow({ ...row, setup: a.setup, core: a.core, moves: a.moves, count: a.count, spots: a.spots });
+      const r = pairRow({ ...row, setup: a.setup, core: a.core, moves: a.moves, count: a.count, spots: a.spots,
+        view: a.rotation ? { rot: a.rotation, back: a.rotationBack, pos: a.seenPos, spots: a.spotsSeen, setup: a.setupSeen, core: a.coreSeen, moves: a.movesSeen } : undefined });
       r.open = true;
       stage.appendChild(r);
     }

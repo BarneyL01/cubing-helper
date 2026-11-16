@@ -87,14 +87,15 @@ function cornerDiagram(cycle, labels, opts = {}) {
   }).join('');
   const squares = labels.map((l) => CUBE.sticker(l, isBuffer(l) ? 'sq-buffer' : 'sq-on')).join('');
   const text = [...labels.map((l) => [l, 'cd-label']), ...from.filter(([a]) => !labels.includes(a)).map(([a]) => [a, 'cd-label cd-label-from'])]
-    .map(([l, cls]) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="${cls}">${l}</text>`; }).join('');
+    .map(([l, cls]) => { const a = CUBE.labelAt(l); return `<text x="${f(a.x)}" y="${f(a.y)}" text-anchor="${a.anchor}" class="${cls}">${opts.names?.[l] ?? l}</text>`; }).join('');
   return `<svg viewBox="0 0 222 182" class="corner-diagram" role="img" aria-label="${labels.join(' to ')} to ${labels[0]}">${CUBE.edges()}${dots}${pale}${squares}${moves}${arrows}${text}</svg>`;
 }
 // An animated cube for one algorithm in parts: only the given corners in colour.
-function watch(host, parts, moves, keepPieces, startText, doneText) {
+// start (optional): the position to start from instead of the moves undone on a solved cube (the rotated view).
+function watch(host, parts, moves, keepPieces, startText, doneText, start) {
   const runner = createMoveRunner(host, { palette: PALETTE });
   const keep = new Set(keepPieces.map(coords));
-  runner.set({ parts, start: applyAlg(trackedSolved(), invertAlg(moves)), shown: (st) => greyed(st, keep), startText, doneText });
+  runner.set({ parts, start: start || applyAlg(trackedSolved(), invertAlg(moves)), shown: (st) => greyed(st, keep), startText, doneText });
 }
 const famKey = (e) => `${e.insertion} · ${e.interchange.replace(/['2]/g, '')}`;
 const turnWord = (face) => ({ U: 'top', D: 'bottom', F: 'front', R: 'right', L: 'left', B: 'back' })[face] || face;
@@ -108,47 +109,55 @@ function coloured(e) {
 
 // A pair as a see-through cube: the buffer (blue) and the two targets with the cycle arrows; from: pieces the
 // setup moved (pale square where they started, purple arrow to where they are now).
-function pairCube(buffer, first, second, from = []) {
+// names (optional): text to write at a position instead of its own letter (the pieces' letters in the rotated view).
+function pairCube(buffer, first, second, from = [], names) {
   const d = el('div', 'ts-corners');
-  d.innerHTML = cornerDiagram([buffer, first, second].map(cornerName), [buffer, first, second], { buffer, from });
+  d.innerHTML = cornerDiagram([buffer, first, second].map(cornerName), [buffer, first, second], { buffer, from, names });
   return d;
 }
 
 // The explanation and pictures for one pair, built when it is first opened.
+// e.view (optional, helper F / K pairs): the cube held after a whole-cube rotation, { rot, back, pos (buffer and letters
+// after the rotation), spots (after the seen setup), setup, core, moves } all as seen. Without it nothing changes.
 function pairBody(e) {
   const body = el('div', 'ts-pair-body');
-  const s = e.spots;
+  const V = e.view;
+  const setupAlg = V ? V.setup : e.setup, coreAlg = V ? V.core : e.core;
+  const start = V ? V.pos : { buffer: 'C', first: e.first, second: e.second };
+  const s = V ? V.spots : e.spots;
+  const names = V ? { [start.buffer]: 'C', [start.first]: e.first, [start.second]: e.second, [s.buffer]: 'C', [s.first]: e.first, [s.second]: e.second } : undefined;
+  const namesStart = V ? { [start.buffer]: 'C', [start.first]: e.first, [start.second]: e.second } : undefined;
   const figs = el('div', 'ts-figs');
   const fig = (title, n) => { const f = el('figure', 'ts-fig'); f.append(n, el('figcaption', null, title)); return f; };
   // Where each piece is after the setup, named by sticker letter only ("D' moves K into the G position").
-  const roles = [['the buffer', 'C', s.buffer], [e.first, e.first, s.first], [e.second, e.second, s.second]];
-  const label = (l) => (l === 'C' ? 'buffer' : l);
-  const atStart = (l) => (l === 'C' ? 'buffer' : `${l} (the buffer)`);
+  const roles = [['the buffer', start.buffer, s.buffer], [e.first, start.first, s.first], [e.second, start.second, s.second]];
+  const label = (l) => (l === start.buffer ? 'buffer' : l);
+  const atStart = (l) => (l === start.buffer ? 'buffer' : `${l} (the buffer)`);
   const list = (xs) => (xs.length < 3 ? xs.join(' and ') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
-  figs.appendChild(fig(`The pair: buffer C (blue) → ${e.first} → ${e.second}`, pairCube('C', e.first, e.second)));
-  if (e.setup) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')} (grey: where they started)`, pairCube(s.buffer, s.first, s.second, roles.filter(([, fr, to]) => fr !== to).map(([, fr, to]) => [fr, to]))));
+  figs.appendChild(fig(V ? `After ${V.rot}, as you now hold the cube: buffer C (blue) → ${e.first} → ${e.second}, in the ${start.buffer}, ${start.first} and ${start.second} positions` : `The pair: buffer C (blue) → ${e.first} → ${e.second}`, pairCube(start.buffer, start.first, start.second, [], namesStart)));
+  if (setupAlg) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')} (grey: where they started)`, pairCube(s.buffer, s.first, s.second, roles.filter(([, fr, to]) => fr !== to).map(([, fr, to]) => [fr, to]), names)));
   body.appendChild(figs);
 
   const ol = el('ol', 'ts-steps');
   const cycle = `${atStart(s.buffer)} → ${s.first} → ${s.second}`;
-  const base = { "[R D R' , U']": 'O', "[R D' R' , U']": 'H', "[R D2 R' , U']": 'L' }[e.core];
-  if (e.setup) {
+  const base = V ? null : { "[R D R' , U']": 'O', "[R D' R' , U']": 'H', "[R D2 R' , U']": 'L' }[e.core];
+  if (setupAlg) {
     const moved = roles.filter(([, from, to]) => from !== to);
     const stay = roles.filter(([, from, to]) => from === to);
     const li = el('li');
-    li.append(el('span', 'mv-setup', e.setup), ` moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.`);
+    li.append(el('span', 'mv-setup', setupAlg), ` moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.`);
     if (stay.length) { const t = stay.map(([w]) => w).join(' and '); li.append(` ${t[0].toUpperCase()}${t.slice(1)} ${stay.length > 1 ? 'stay' : 'stays'} put.`); }
     ol.appendChild(li);
   }
   const core = el('li');
-  core.append('The commutator ', el('code', null, e.core), base ? ` (your Orozco ${base} base)` : '', ` moves ${cycle}.`);
-  if (!e.setup) core.append(' That is the pair itself, so there is no setup.');
+  core.append('The commutator ', el('code', null, coreAlg), base ? ` (your Orozco ${base} base)` : '', ` moves ${cycle}.`);
+  if (!setupAlg) core.append(' That is the pair itself, so there is no setup.');
   ol.appendChild(core);
-  if (e.setup) {
+  if (setupAlg) {
     const undo = el('li');
     const back = roles.filter(([, from, to]) => from !== to).map(([, from, to]) => `${to} back to ${label(from) === 'buffer' ? 'the buffer' : from}`);
     
-    undo.append(el('span', 'mv-setup', invertAlg(e.setup)), ` takes ${list(back)}. Net: buffer → ${e.first} → ${e.second}.`);
+    undo.append(el('span', 'mv-setup', invertAlg(setupAlg)), ` takes ${list(back)}. Net: buffer → ${e.first} → ${e.second}.`);
     ol.appendChild(undo);
   }
   body.appendChild(ol);
@@ -157,14 +166,16 @@ function pairBody(e) {
   w.addEventListener('click', () => {
     const host = el('div', 'ts-runner');
     w.replaceWith(host);
-    const coreMoves = expandBrackets(e.core);
-    const parts = e.setup
-      ? [{ name: 'Setup', moves: e.setup, text: `The setup moves ${list(roles.filter(([, f, t]) => f !== t).map(([w, , t]) => `${w} into the ${t} position`))}.` },
+    const coreMoves = expandBrackets(coreAlg);
+    const parts = setupAlg
+      ? [{ name: 'Setup', moves: setupAlg, text: `The setup moves ${list(roles.filter(([, f, t]) => f !== t).map(([w, , t]) => `${w} into the ${t} position`))}.` },
         { name: 'Core', moves: coreMoves, text: `The commutator moves ${cycle}.` },
-        { name: 'Undo', moves: invertAlg(e.setup), text: `The setup is undone. Net: buffer → ${e.first} → ${e.second}.` }]
+        { name: 'Undo', moves: invertAlg(setupAlg), text: `The setup is undone. Net: buffer → ${e.first} → ${e.second}.` }]
       : [{ name: 'Core', moves: coreMoves, text: `The commutator moves buffer → ${e.first} → ${e.second}: solved.` }];
     watch(host, parts, e.moves, [SPEFFZ.C, SPEFFZ[e.first], SPEFFZ[e.second]],
-      `Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.`, 'Solved: all three corners are home.');
+      V ? `The cube as you hold it after ${V.rot}. Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.` : `Only the three corners of this pair are in colour (the rest is grey). Press Next or Play.`,
+      V ? `Solved: all three corners are home. Now rotate back with ${V.back}.` : 'Solved: all three corners are home.',
+      V ? applyAlg(applyAlg(trackedSolved(), invertAlg(e.moves)), V.rot) : undefined);
   });
   body.appendChild(w);
   const oz = orozcoKnown(e);
@@ -174,9 +185,9 @@ function pairBody(e) {
     else k.append(el('strong', null, 'You know this one: '), `the sheet's commutator is different, but it does exactly what your ${oz.text} does, `, el('code', null, oz.notation), '. Use whichever you prefer.');
     body.appendChild(k);
   }
-  const meta = el('p', 'bld-note', `${e.count} moves written out${e.type ? ` · the sheet's type: ${e.type}` : ''}`);
+  const meta = el('p', 'bld-note', `${e.count} moves written out${V ? `, as seen after ${V.rot}` : ''}${e.type ? ` · the sheet's type: ${e.type}` : ''}`);
   body.appendChild(meta);
-  body.appendChild(el('p', 'ts-moves')).appendChild(el('code', null, e.moves));
+  body.appendChild(el('p', 'ts-moves')).appendChild(el('code', null, V ? `${V.rot} · ${V.moves} · ${V.back}` : e.moves));
   if (e.fix) body.appendChild(el('p', 'ts-fix', `Fixed from the sheet: ${e.fix}.${e.sheet ? ` The sheet has ${e.sheet}.` : ''}`));
   return body;
 }
@@ -199,7 +210,8 @@ export function pairRow(e) {
   const d = el('details', 'ts-pair');
   d.id = `pair-${e.pair}`;
   const sum = el('summary');
-  sum.append(el('span', 'ts-pair-name', `${e.first} → ${e.second}`), coloured(e), el('span', 'bld-muted', `${e.count} moves`));
+  const shown = e.view ? { ...e, setup: e.view.setup, core: e.view.core } : e;
+  sum.append(el('span', 'ts-pair-name', `${e.first} → ${e.second}`), ...(e.view ? [el('strong', null, e.view.rot)] : []), coloured(shown), ...(e.view ? [el('strong', null, e.view.back)] : []), el('span', 'bld-muted', `${e.count} moves`));
   if (orozcoKnown(e)) { d.classList.add('ts-is-known'); sum.appendChild(el('span', 'ts-badge', 'Orozco')); }
   d.appendChild(sum);
   d.addEventListener('toggle', () => { if (d.open && d.children.length === 1) d.appendChild(pairBody(e)); });

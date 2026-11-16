@@ -2,7 +2,7 @@
 // Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (the owner's 9 bases, setups that
 // may move the buffer).
 import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=3';
-import { pairRow } from './three-style-page.js?v=15';
+import { pairRow } from './three-style-page.js?v=16';
 import { colourCore } from './three-style-families.js?v=12';
 
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
@@ -77,14 +77,15 @@ const baseName = (e) => e.baseLabel || (e.helper === 'B' ? `Orozco ${e.basePos} 
 const FACE = { U: 'top', D: 'bottom', F: 'front', B: 'back', R: 'right', L: 'left' };
 // how the base is read after the setup: the same three corners as always, maybe other stickers of them
 export function readingTable(e) {
-  const r = e.reading, wrap = el('div', 'pl-reading');
-  if (!r || r.every((x) => x.here === x.usual && x.who === 'buffer' ? x.here === 'C' : x.here === x.usual)) return wrap; // buffer still on C: nothing new
+  // e.readingFrom: where the buffer starts ('C' as held; its place after the rotation for helper F / K pairs)
+  const r = e.reading, wrap = el('div', 'pl-reading'), start = e.readingFrom || 'C';
+  if (!r || r.every((x) => x.here === x.usual && x.who === 'buffer' ? x.here === start : x.here === x.usual)) return wrap; // buffer still at the start: nothing new
   const usual = [...r].sort((a, b) => 'CJM'.includes(b.usual) - 'CJM'.includes(a.usual)); // the usual cycle from C
-  const from = usual[0];
+  const from = r.find((x) => x.usual === start) || usual[0];
   const order = [from, ...[...r, ...r].slice(r.indexOf(from) + 1, r.indexOf(from) + 3)];
   const same = r.every((x) => x.here === x.usual);
   const who = (x) => (x.who === 'buffer' ? 'the buffer' : x.who);
-  wrap.innerHTML = `<p><strong>Where the base works:</strong> your ${baseName(e)} always turns the same three corners. Read from C it is
+  wrap.innerHTML = `<p><strong>Where the base works:</strong> your ${baseName(e)} always turns the same three corners. Read from ${start}${e.readingNote || ''} it is
       ${order.map((x) => x.usual).join(' → ')}. ${same ? `Here it uses those same stickers, with the buffer in the ${r[0].here} position.` : 'Here every sticker is the one next to it on the same corner:'}</p>
     <div class="table-wrap"><table class="bld-table"><thead><tr><th>Usually</th><th>Here</th><th>Holds</th></tr></thead><tbody>
       ${order.map((x) => `<tr><td><strong>${x.usual}</strong> <span class="bld-muted">${FACE[x.usualFace]}</span></td><td><strong>${x.here}</strong> <span class="bld-muted">${FACE[x.face]}</span></td><td>${who(x)}</td></tr>`).join('')}

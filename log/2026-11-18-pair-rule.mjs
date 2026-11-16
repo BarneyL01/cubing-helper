@@ -112,9 +112,10 @@ for (const s of SETUPS) { const si = invP(s.p); const onlyDLB = !/[RUF]/.test(s.
     if (!lb && better(e, found.rufd[pair])) found.rufd[pair] = e; } }
 
 // ---- the reading of a base (as log/2026-11-11-buffer-moves.mjs) -------------------------------------------------
-function readingOf(pair, setup, core) { const sp0 = spots(pair[0], pair[1], setup, core); const P = permOf(expandBrackets(core));
+// from: the buffer's place before the setup ('C' as held; seenPos.buffer in the rotated view). The usual reading starts there.
+function readingOf(pair, setup, core, hereGiven, from = 'C') { const sp0 = hereGiven || spots(pair[0], pair[1], setup, core); const P = permOf(expandBrackets(core));
   const readFrom = (x) => { const a0 = spotOf(x); return [x, letterAt.get(P[a0]), letterAt.get(P[P[a0]])]; };
-  const R = ['C', 'M', 'J'].map(readFrom); const here = [sp0.buffer, sp0.first, sp0.second]; let reading = null;
+  const R = [from, ...CORNER[cornerOf(from)].split('').filter((x) => x !== from)].map(readFrom); const here = [sp0.buffer, sp0.first, sp0.second]; let reading = null;
   for (const Rk of R) for (let r = 0; r < 3; r++) { const rot = [Rk[r], Rk[(r + 1) % 3], Rk[(r + 2) % 3]];
     if (rot.join() === here.join()) reading = rot.map((h, i) => ({ here: h, usual: R[0][(r + i) % 3], who: ['buffer', pair[0], pair[1]][i], face: SPEFFZ[h][0], usualFace: SPEFFZ[R[0][(r + i) % 3]][0] })); }
   return reading; }
@@ -125,9 +126,17 @@ function view(pair, h, setup, core) { const notation = mk(setup, core); const mo
   const setupSeen = seenOf(h, setup), coreSeen = seenOf(h, core), notationSeen = mk(setupSeen, coreSeen);
   check(`${pair} ${h}: ${notation} is a 3-cycle buffer -> ${pair[0]} -> ${pair[1]}`, cycOf(notation) === pair);
   check(`${pair} ${h}: rotated view ${ROT[h][0]} ${notationSeen} ${ROT[h][1]} = held`, rotCheck(h, notation, notationSeen));
-  return { rotation: ROT[h][0], rotationBack: ROT[h][1], setupSeen, coreSeen, notationSeen, setup, core, notation, setupMoves: len(setup), moves, count: moves.split(' ').length, spots: spots(pair[0], pair[1], setup, core) }; }
+  // the rotated view for the pictures: where the buffer and the two letters are after the rotation (seenPos) and after
+  // the seen setup (spotsSeen); the seen base must cycle spotsSeen buffer -> first -> second
+  const rp = permOf(ROT[h][0]); const at = (perm, x) => letterAt.get(perm[spotOf(x)]);
+  const seenPos = { buffer: at(rp, 'C'), first: at(rp, pair[0]), second: at(rp, pair[1]) };
+  const sp = permOf(setupSeen); const spotsSeen = { buffer: at(sp, seenPos.buffer), first: at(sp, seenPos.first), second: at(sp, seenPos.second) };
+  { const P = permOf(expandBrackets(coreSeen)); const [b0, a0, c0] = [spotsSeen.buffer, spotsSeen.first, spotsSeen.second].map(spotOf);
+    check(`${pair} ${h}: seen base cycles ${spotsSeen.buffer} -> ${spotsSeen.first} -> ${spotsSeen.second}`, P[b0] === a0 && P[a0] === c0 && P[c0] === b0); }
+  const movesSeen = movesOf(notationSeen);
+  return { rotation: ROT[h][0], rotationBack: ROT[h][1], setupSeen, coreSeen, notationSeen, movesSeen, seenPos, spotsSeen, setup, core, notation, setupMoves: len(setup), moves, count: moves.split(' ').length, spots: spots(pair[0], pair[1], setup, core) }; }
 const ruleRow = (pair, o) => ({ pair, first: pair[0], second: pair[1], level: o.L, helper: o.h, walked: o.x, other: o.y, turns: o.turns, via: o.via, otherNow: o.y2, rowSetup: o.rowSetup,
-  ...(({ setup, notation, setupMoves, moves, count, spots: s, core, rotation, rotationBack, setupSeen, coreSeen, notationSeen }) => ({ setup, core, notation, setupMoves, moves, count, spots: s, rotation, rotationBack, setupSeen, coreSeen, notationSeen }))(view(pair, o.h, o.setup, o.core)) });
+  ...(({ setup, notation, setupMoves, moves, count, spots: s, core, rotation, rotationBack, setupSeen, coreSeen, notationSeen, movesSeen, seenPos, spotsSeen }) => ({ setup, core, notation, setupMoves, moves, count, spots: s, rotation, rotationBack, setupSeen, coreSeen, notationSeen, movesSeen, seenPos, spotsSeen }))(view(pair, o.h, o.setup, o.core)) });
 const reverseOf = (r, pair) => { const core = swapHalves(r.core); return { ...r, pair, first: pair[0], second: pair[1], ...view(pair, r.helper, r.setup, core) }; }; // rule rows
 const plainCand = (e, pair) => ({ helper: e.h, ...view(pair, e.h, e.setup, e.core) });
 const reverseCand = (c, pair) => ({ ...c, ...view(pair, c.helper, c.setup, swapHalves(c.core)) });
@@ -156,10 +165,11 @@ let bmAsym = 0;
 for (const p of PAIRS) if (p[0] < p[1]) { const rp = p[1] + p[0]; const r = found.rufd[p], a = found.any[p]; const pick = !r || (a && a.count <= r.count - 1) ? a : r;
   const c = plainCand(pick, p); const cr = reverseCand(c, rp);
   const mkBM = (pair, x) => { const rule_ = ROWS[pair]; const saves = rule_.count - x.count; if (saves < 2) return null;
-    const { notationSeen, rotation, rotationBack, setupSeen, coreSeen } = x;
-    return { helper: x.helper, rotation, rotationBack, setup: x.setup, core: x.core, notation: x.notation, setupSeen, coreSeen, notationSeen, setupMoves: x.setupMoves, moves: x.moves, count: x.count, saves, spots: x.spots,
-      bufferMoves: !(permOf(x.setup)[C] === C), reading: readingOf(pair, x.setup, x.core) }; };
-  ROWS[p].bufferMove = mkBM(p, c); ROWS[rp].bufferMove = mkBM(rp, cr); if (!ROWS[p].bufferMove !== !ROWS[rp].bufferMove) bmAsym++; }
+    const { notationSeen, rotation, rotationBack, setupSeen, coreSeen, movesSeen, seenPos, spotsSeen } = x;
+    return { helper: x.helper, rotation, rotationBack, setup: x.setup, core: x.core, notation: x.notation, setupSeen, coreSeen, notationSeen, movesSeen, seenPos, spotsSeen, setupMoves: x.setupMoves, moves: x.moves, count: x.count, saves, spots: x.spots,
+      bufferMoves: !(permOf(x.setup)[C] === C), reading: readingOf(pair, x.setup, x.core), readingSeen: readingOf(pair, setupSeen, coreSeen, spotsSeen, seenPos.buffer) }; };
+  ROWS[p].bufferMove = mkBM(p, c); ROWS[rp].bufferMove = mkBM(rp, cr);
+  for (const q of [p, rp]) if (ROWS[q].bufferMove) check(`${q}: bufferMove readings found`, !!ROWS[q].bufferMove.reading && !!ROWS[q].bufferMove.readingSeen); if (!ROWS[p].bufferMove !== !ROWS[rp].bufferMove) bmAsym++; }
 check('every bufferMove has a reading of its base', PAIRS.every((p) => !ROWS[p].bufferMove || !!ROWS[p].bufferMove.reading));
 const rows = PAIRS.map((p) => ROWS[p]);
 for (const r of rows) { check(`${r.pair}: rule row 3-cycle`, cycOf(r.notation) === r.pair); if (r.rotation) check(`${r.pair}: rotated view`, rotCheck(r.helper, r.notation, r.notationSeen)); }

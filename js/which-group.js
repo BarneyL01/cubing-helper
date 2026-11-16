@@ -2,9 +2,9 @@
 // (helpers B, D, F, K; level 0 / 1 / 2). Everything shown comes from data/pair-rule.js, generated and checked by
 // log/2026-11-18-pair-rule.mjs (spec: docs/four-helper-picking-rule.md). F and K pairs are shown as seen after the
 // rotation (z / y'): rotate, do the turns, the setup and the base as seen, rotate back; the as-held form is secondary.
-import { pairRule, PAIR_RULE_STATS, PAIR_RULE_TURNS, PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=1';
+import { pairRule, PAIR_RULE_STATS, PAIR_RULE_TURNS, PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 import { makeCube } from './sticker-cube.js?v=4';
-import { pairRow } from './three-style-page.js?v=15';
+import { pairRow } from './three-style-page.js?v=16';
 import { colourCore } from './three-style-families.js?v=12';
 import { invertAlg } from './algs.js';
 
@@ -32,9 +32,11 @@ export const mainLine = (e) => `${e.rotation ? `<strong>${e.rotation}</strong> �
 const chipText = (e) => [e.exception ? 'exception' : lvName[e.level].toLowerCase(), `helper ${e.helper}`, e.rotation].filter(Boolean).join(' · ');
 
 // a pair accordion (pictures, steps, "Watch it on a cube") with the chip and the commutator as seen after the rotation
+// the rotated view for the shared pair pictures (helper F / K): the cube as held after z / y'
+export const viewOf = (e) => (e.rotation ? { rot: e.rotation, back: e.rotationBack, pos: e.seenPos, spots: e.spotsSeen, setup: e.setupSeen, core: e.coreSeen, moves: e.movesSeen } : undefined);
 export function groupRow(e0, { id = true } = {}) {
   const e = use(e0);
-  const row = pairRow(e);
+  const row = pairRow({ ...e, view: viewOf(e) });
   if (!id) row.removeAttribute('id');
   row.querySelector('.ts-pair-name').after(el('span', 'wr-moved', chipText(e)));
   const code = el('code', null, alg(e.notationSeen));
@@ -42,7 +44,7 @@ export function groupRow(e0, { id = true } = {}) {
   if (e.rotation) {
     row.addEventListener('toggle', () => {
       const body = row.querySelector('.ts-pair-body');
-      if (row.open && body && !body.querySelector('.wg-held')) body.prepend(el('p', 'bld-note wg-held', `The pictures and steps below are for the cube as held, without the rotation: <code>${alg(e.notation)}</code>.`));
+      if (row.open && body && !body.querySelector('.wg-held')) body.prepend(el('p', 'bld-note wg-held', `Pictures and steps below: the cube as you hold it after ${e.rotation}. Without the rotation the same moves are <code>${alg(e.notation)}</code>.`));
     });
   }
   return row;
@@ -213,9 +215,29 @@ function mountAll(slot) {
   }
 }
 
+// ---- all 12 bases at a glance: each helper's three no-setup pairs, read from the data ------------------------------------
+const HELPER_PAGE = { B: 'orozco.html', D: 'orozco-d.html', F: 'orozco-f.html', K: 'orozco-k.html' };
+export function baseList() {
+  return ['B', 'D', 'F', 'K'].map((h) => {
+    const rows = pairRule.filter((r) => r.second === h && r.helper === h && !r.setup && r.level === 0).sort((x, y) => x.first.localeCompare(y.first));
+    return { helper: h, rotation: rows[0].rotation, rotationBack: rows[0].rotationBack, positions: rows.map((f) => ({ pos: f.first, forwards: f, backwards: RULE[h + f.first] })) };
+  });
+}
+function mountBases(slot) {
+  const groups = baseList();
+  const head = (g) => `<tr class="wr-base-head"><th colspan="3"><a href="${HELPER_PAGE[g.helper]}">Helper ${g.helper}</a>${g.helper === 'B' ? ' (Orozco)' : ''}${g.rotation ? ` · seen after <strong>${g.rotation}</strong>, rotate back with <strong>${g.rotationBack}</strong>` : ''}</th></tr>`;
+  const rows = groups.map((g) => head(g) + g.positions.map((p) => `<tr><td class="bld-letter">${p.pos}</td><td class="nw"><code>${colourCore(p.forwards.coreSeen)}</code></td><td class="nw"><code>${colourCore(p.backwards.coreSeen)}</code></td></tr>`).join('')).join('');
+  slot.append(el('div', 'table-wrap', `<table class="bld-table wr-bases"><thead><tr><th>Pos.</th><th>Position first</th><th>Helper first</th></tr></thead><tbody>${rows}</tbody></table>`));
+  slot.append(el('ul', 'bld-list', groups.map((g) => {
+    const held = g.positions.map((p) => p.forwards.core);
+    return `<li><strong>${g.helper}:</strong> ${g.positions.map((p) => p.pos).join(' / ')}${g.rotation ? `; without the rotation <code>${held.map((c) => colourCore(c)).join('</code> <code>')}</code>` : ''}</li>`;
+  }).join('')));
+}
+
 export function mountWhichGroup(ids) {
   const $ = (id) => document.getElementById(id);
   mountRule($(ids.rule));
+  if (ids.bases) mountBases($(ids.bases));
   mountLevel0($(ids.level0));
   mountLevel1($(ids.level1));
   mountLevel2($(ids.level2));
