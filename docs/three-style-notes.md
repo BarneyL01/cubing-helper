@@ -197,6 +197,15 @@ Plan for redoing them with B, D, F, K (not built; for an eval by another agent):
 each F or K pair, level 2 must not be two-step Orozco or a separate list. Open: E G O X choice, level 2 option.
 Checker `log/2026-11-16-picking-rule.mjs`.
 
+## Which group? and Pair lookup built (2026-11-18)
+
+Pages built on `data/pair-rule.js` (`js/which-group.js`, `js/pair-lookup.js`): the rule of the section above with the owner's
+decisions (four groups; E, O, X to B, G to K; F and K pairs rotated first and done as seen; level 2 first turns Q A I U V W N P T;
+8 exceptions show their `best`). A pair and its reverse share the shorter setup. Buffer moves is only the optional shorter line in
+Pair lookup. Walk rule page replaced (redirect); Buffer moves page kept, marked Outdated. Not built yet: the drill
+(level-filtered, steps revealed one at a time) from the spec's section 7. Rings and face corners typed in the JS are checked by
+`log/2026-11-18-which-group-check.mjs`.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

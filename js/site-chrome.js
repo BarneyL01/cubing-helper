@@ -101,7 +101,7 @@ const MENU = [
         label: 'Any pair',
         pages: [
           { label: 'Pair lookup', path: '3x3/bld/pair-lookup.html' },
-          { label: 'Walk rule', path: '3x3/bld/walk-rule.html' },
+          { label: 'Which group?', path: '3x3/bld/which-group.html' },
           { label: 'Buffer moves', path: '3x3/bld/buffer-moves.html' },
         ],
       },
