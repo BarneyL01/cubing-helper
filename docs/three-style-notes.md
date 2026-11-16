@@ -188,6 +188,7 @@ Fourth group (asked): Q group `[U F U' , B^k]` = x y [R U R' , D^k] halves the p
 See log/2026-11-17-orozco-f.md.
 Helper K built (owner rejected Q: two rotations). Both F and K are done holding the rotation for the whole corner phase;
 Walk rule / Buffer moves / Pair lookup marked outdated (still B, P, D).
+Plan for redoing them with B, D, F, K (not built; for an eval by another agent): `docs/four-helper-plan.md`.
 
 ## Decisions (owner)
 
