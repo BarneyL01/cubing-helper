@@ -4,6 +4,11 @@ import { aGroupStats, aGroupBases, aGroupPairs } from '../data/a-group.js?v=1';
 import { pairRow, coreFigure } from './three-style-page.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
 import { readingTable } from './buffer-moves.js?v=5';
+import { orozcoA, OROZCO_A_TWIST, OROZCO_A_TWIST_REV, OROZCO_A_HELPER_RULES } from '../data/orozco-a.js?v=1';
+import { OROZCO_PARITY_RUF } from '../data/orozco-mnemonics.js?v=4';
+import { intoDiagram } from './three-style-bases.js?v=15';
+const st = (m) => `<span class="mv-setup">${m}</span>`;
+const alg = (n) => { const m = n.match(/^\[([^:]+) : (\[.*\])\]$/); return m ? `[${st(m[1])} : ${colourCore(m[2])}]` : colourCore(n); };
 
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
 const STORE = 'cubing-helper:a-group';
@@ -55,11 +60,43 @@ function mountPairs(slot, filterSlot) {
   show();
 }
 
+// Orozco with helper A: by position (pictures + table), every letter, the helper's letters
+function mountLetters(ids) {
+  const $ = (id) => document.getElementById(id);
+  for (const pos of ['G', 'P', 'S']) {
+    const rows = orozcoA.filter((r) => r.pos === pos);
+    const core = rows.find((r) => !r.setup).forwards;
+    const d = el('details', 'ts-core'); d.open = pos === 'G';
+    d.append(el('summary', null, `<span><strong>Into ${pos}</strong> <code>${colourCore(core)}</code><span class="ts-sum-base bld-muted">${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span></span>`));
+    const figs = el('div', 'ts-figs');
+    figs.append(coreFigure({ core, spots: { buffer: 'C', first: pos, second: 'A' } }, () => ` buffer → ${pos} → A (forwards)`));
+    const moved = rows.filter((r) => r.setup).map((r) => r.letter);
+    const f = el('figure', 'ts-fig fd-fig'); f.append(el('div', 'fd-pic', intoDiagram(pos, moved)), el('figcaption', null, `Into ${pos} (yellow): ${moved.join(' ')}`));
+    figs.append(f); d.append(figs);
+    d.append(el('div', 'table-wrap wr-wrap', `<table class="bld-table"><thead><tr><th>Letter</th><th>Setup</th><th>Forwards / backwards</th></tr></thead><tbody>
+      ${rows.map((r) => `<tr><th>${r.letter}</th><td>${r.setup ? st(r.setup) : 'none'}</td><td><code>${alg(r.forwards)}</code><br><code>${alg(r.backwards)}</code></td></tr>`).join('')}</tbody></table>`));
+    $(ids.groups).append(d);
+  }
+  $(ids.table).innerHTML = `<caption>Helper A: every letter (forwards = buffer → letter → A, backwards = buffer → A → letter)</caption>
+    <thead><tr><th>Letter</th><th>Into</th><th>Forwards (1st) / backwards (2nd)</th></tr></thead><tbody>
+    ${orozcoA.map((r) => `<tr id="letter-${r.letter}"><th>${r.letter}</th><td>${r.pos}${r.setup ? '' : ' (there)'}</td><td><code>${alg(r.forwards)}</code><br><code>${alg(r.backwards)}</code></td></tr>`).join('')}</tbody>`;
+  const rule = Object.fromEntries(OROZCO_A_HELPER_RULES.map((r) => [r.letter, r]));
+  const say = { skip: 'nothing (skip it)', twist: 'the twist', 'twist-rev': 'the twist backwards' };
+  $(ids.helper).innerHTML = `
+    <li><strong>A:</strong> skip it, like B in Orozco.</li>
+    <li><strong>E:</strong> as the 1st letter of a pair ${say[rule.E.odd]}; as the 2nd ${say[rule.E.even]}.</li>
+    <li><strong>R:</strong> as the 1st letter of a pair ${say[rule.R.odd]}; as the 2nd ${say[rule.R.even]}.</li>
+    <li><strong>Twist</strong> (twists the buffer and A, nothing else; helper D's twist with U2 for U' and U): <code>${OROZCO_A_TWIST}</code></li>
+    <li><strong>Twist backwards:</strong> <code>${OROZCO_A_TWIST_REV}</code></li>`;
+  $(ids.ra).textContent = OROZCO_PARITY_RUF;
+}
+
 export function mountAGroup(ids) {
   const $ = (id) => document.getElementById(id);
   const s = aGroupStats;
   $(ids.stats).innerHTML = `With B (Orozco), D and A: ${s.pairs} pairs are shortest with an A-group base (${s.share}% of the pairs in a solve), ${s.noSetup} of them with no setup and ${s.bufferStill} with the buffer staying still. On average they are ${s.savesMean} move shorter than with B and D alone.`;
   mountBases($(ids.bases));
+  if (ids.groups) mountLetters(ids);
   mountCompare($(ids.compare));
   mountPairs($(ids.pairs), $(ids.filter));
 }

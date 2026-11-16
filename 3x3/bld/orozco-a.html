@@ -25,7 +25,8 @@
         Worked out here (2026-11-16), not from your notes or a published list. Proposed as a replacement for helper P's
         mixed set (two <code>R U R'</code> bases and one <code>R' D' R</code>); the walk rule, Buffer moves and Pair lookup
         pages still use helper P for now. Every commutator was checked in the cube simulator (it cycles the buffer and the
-        two letters and moves nothing else). Pairs: setups of up to 3 moves, the shortest with R, U, F and D, or with L or B
+        two letters and moves nothing else); Orozco with helper A solved 3,000 whole random solves (M2 edges, then these
+        corners), checked by <code>log/2026-11-16-orozco-a.mjs</code>. Pairs: setups of up to 3 moves, the shortest with R, U, F and D, or with L or B
         when that is at least one move shorter. Numbers weighted by how often a pair comes up in 2,000 random solves.
         Built by <code>log/2026-11-16-a-group.mjs</code>.
       </p>
@@ -36,6 +37,23 @@
     <p>Same insertion and the same D turn as helper D, only the interchange changes: <code>U'</code> brings D into the
       buffer's place, <code>U2</code> brings A. <code>[R' D' R , U2]</code> is the one base helper P already had.</p>
     <div id="ag-bases"></div>
+
+    <h2 class="section-heading" id="by-position" data-short="By position">Solve with it: Orozco with helper A</h2>
+    <p>Like Orozco with A in B's place: memo from C, the 1st letter of each pair forwards (buffer → letter → A), the 2nd
+      backwards (buffer → A → letter). Each setup puts the letter in the G, P or S position and leaves the buffer and A
+      where they are. Only D turns never touch them, so most setups are three moves that end where they started, such as
+      <span class="mv-setup">F' R2 F</span>.</p>
+    <div id="ag-groups"></div>
+
+    <h2 class="section-heading" id="letters" data-short="Letters">Every letter</h2>
+    <div class="table-wrap wr-wrap"><table class="bld-table" id="ag-table"></table></div>
+
+    <h2 class="section-heading" id="helper" data-short="A E R">A, E and R (the helper's letters)</h2>
+    <ul class="bld-list" id="ag-helper"></ul>
+
+    <h2 class="section-heading" id="parity" data-short="Parity">Odd number of letters (parity)</h2>
+    <p>The same as helper P and helper D: do the last letter the plain Orozco way (helper B), then the Ra-perm
+      <code id="ag-ra"></code>.</p>
 
     <h2 class="section-heading" id="compare" data-short="Compared">A group or helper P?</h2>
     <p>Mean moves per corner pair, with Orozco (B) and helper D's bases. "Buffer still": setups of D, L and B only, as
@@ -50,8 +68,8 @@
   </main>
 
   <script type="module">
-    import { mountAGroup } from '../../js/a-group.js?v=1';
-    mountAGroup({ stats: 'ag-stats', bases: 'ag-bases', compare: 'ag-compare', pairs: 'ag-pairs', filter: 'ag-filter' });
+    import { mountAGroup } from '../../js/a-group.js?v=2';
+    mountAGroup({ stats: 'ag-stats', bases: 'ag-bases', compare: 'ag-compare', pairs: 'ag-pairs', filter: 'ag-filter', groups: 'ag-groups', table: 'ag-table', helper: 'ag-helper', ra: 'ag-ra' });
   </script>
 </body>
 </html>
