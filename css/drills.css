@@ -129,3 +129,15 @@ text.net-letter-on-colour {
 /* 3-Style pairs drill */
 .ts-drill-answer { text-align: left; }
 .ts-drill-answer .case-alg code { white-space: normal; }
+
+/* Pair drill */
+.pd-pair { margin: 0.5rem 0; font-size: 1.4rem; font-weight: 700; text-align: center; }
+.pd-big { font-size: 3rem; line-height: 1.1; padding: 0 0.15em; }
+.pd-steps { list-style: none; margin: 0.5rem 0; padding: 0; }
+.pd-step { margin: 0 0 0.6rem; padding: 0.6rem 0.8rem; border: 1px solid var(--border, #d4d4d8); border-radius: 8px; }
+.pd-step h3 { margin: 0 0 0.3rem; font-size: 1rem; }
+.pd-line { margin: 0.25rem 0; overflow-wrap: anywhere; }
+.pd-line code { white-space: normal; }
+.pd-letter { font-size: 1.15em; }
+.pd-controls .rec-btn { flex: 1 1 8rem; min-height: 48px; }
+.pd-empty { text-align: center; color: var(--text-muted); }
