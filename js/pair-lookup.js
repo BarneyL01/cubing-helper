@@ -2,7 +2,7 @@
 // rule's (js/walk-rule.js, buffer still), unless the Buffer moves page lists a shorter one (js/buffer-moves.js).
 // The other way is shown in one line underneath, so the two can be compared.
 import { walkPairFor, explainWalk, walkLetterList, sameCorner } from './walk-rule.js?v=4';
-import { bufferMoveFor, explainBufferMove } from './buffer-moves.js?v=4';
+import { bufferMoveFor, explainBufferMove } from './buffer-moves.js?v=5';
 import { walkLetters } from '../data/walk-rule.js?v=1';
 import { bufferMoveHard, bufferMoveOther } from '../data/buffer-moves.js?v=3';
 import { colourCore } from './three-style-families.js?v=12';

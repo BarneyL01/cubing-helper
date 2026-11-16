@@ -73,7 +73,7 @@ function mountExample(slot) {
 const LISTED = Object.fromEntries([...bufferMoveHard, ...bufferMoveOther].map((e) => [e.pair, e]));
 export const bufferMoveFor = (pair) => LISTED[pair] || null;
 // "Orozco L base", "helper P's A base", "helper D's S base"
-const baseName = (e) => (e.helper === 'B' ? `Orozco ${e.basePos} base` : `helper ${e.helper}'s ${e.basePos} base`);
+const baseName = (e) => e.baseLabel || (e.helper === 'B' ? `Orozco ${e.basePos} base` : `helper ${e.helper}'s ${e.basePos} base`);
 const FACE = { U: 'top', D: 'bottom', F: 'front', B: 'back', R: 'right', L: 'left' };
 // how the base is read after the setup: the same three corners as always, maybe other stickers of them
 export function readingTable(e) {

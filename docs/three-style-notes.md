@@ -167,6 +167,13 @@ move the buffer, R U F D first, L/B when 1+ move shorter): 104 hard pairs 13.4 �
 sticker cycles (L base: C → L → B, M → U → Q, J → G → N). A buffer-moving setup lands the pair on one of them; the page
 shows it as Usually / Here / Holds (owner found "the faces next to it" hard to see, Q → G).
 
+## A group and rotations (2026-11-16)
+
+B + D + A `[R' D^k R , U2]` beats B + D + P on every measure (buffer still 11.43 vs 11.55 per pair; buffer may move
+10.40 vs 10.60; 36.4 vs 37.1 corner moves per solve); B + D alone 37.7. A group page built; other pages keep P until the
+owner says. One cube rotation (owner finds rotations fine, like M2): 34.2 per solve, 244 pairs with 0-1 setup moves
+(vs 74). Details in log/2026-11-16-a-group.md.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

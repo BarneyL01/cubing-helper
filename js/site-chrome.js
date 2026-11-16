@@ -93,9 +93,15 @@ const MENU = [
           { label: 'Orozco step 2', path: '3x3/bld/orozco-step2.html' },
           { label: 'Helper P', path: '3x3/bld/orozco-p.html' },
           { label: 'Helper D', path: '3x3/bld/orozco-d.html' },
+          { label: 'A group', path: '3x3/bld/orozco-a.html' },
+        ],
+      },
+      {
+        label: 'Any pair',
+        pages: [
+          { label: 'Pair lookup', path: '3x3/bld/pair-lookup.html' },
           { label: 'Walk rule', path: '3x3/bld/walk-rule.html' },
           { label: 'Buffer moves', path: '3x3/bld/buffer-moves.html' },
-          { label: 'Pair lookup', path: '3x3/bld/pair-lookup.html' },
         ],
       },
       {
