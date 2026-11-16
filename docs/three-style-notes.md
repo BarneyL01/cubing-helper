@@ -179,6 +179,14 @@ per solve, every rotation × B/D/A). Per-pair rotations were rejected by the own
 (40.0 → 37.6) but use L or B as main moves (`[L U2 L' , D^k]`, `[L' D^k L , U2]`, `[L B^k L' , F2]`); best without L/B:
 `[F' U' F , D^k]` (K with G O S) 38.7, `[F D^k F' , U2]` (A with K T H) 38.8. Orozco with helper A is built (setups F' X F).
 
+## Helper F (2026-11-17)
+
+Setup length depends on the helper's corner: only B's, P's and D's corners (B N Q, P K V, D F I) have two faces that leave
+buffer and helper alone, so their groups have 1-2 move setups; A's corner has one (3-move setups) — the owner found the A
+group too hard. Built Orozco with helper F: `[U' R' U , L^k]` = z [R' D' R , U^k] z', setups D/B 0/1/2 = 3/11/4.
+Fourth group (asked): Q group `[U F U' , B^k]` = x y [R U R' , D^k] halves the pairs needing 3+ setup moves (88 → 44).
+See log/2026-11-17-orozco-f.md.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new

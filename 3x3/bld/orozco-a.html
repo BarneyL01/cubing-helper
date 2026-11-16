@@ -3,73 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A group — Cubing Helper</title>
+  <title>Helper F — Cubing Helper</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../../css/style.css?v=39" />
   <link rel="stylesheet" href="../../css/drills.css?v=7" />
-  <script type="module" src="../../js/site-chrome.js?v=17"></script>
+  <script type="module" src="../../js/site-chrome.js?v=18"></script>
+  <script>location.replace('orozco-f.html' + location.hash);</script>
 </head>
 <body>
   <header class="site-header" id="site-header">
     <a class="brand" href="../../index.html">Cubing Helper</a>
   </header>
-
-  <main>
-    <h1>A group: helper D's bases with U2</h1>
-    <p class="subtitle">
-      Three bases you nearly know already: helper D's <code>[R' D^k R , U']</code> with U2 as the interchange. The D turn
-      picks G, P or S as before; the other letter is A instead of D.
-    </p>
-    <div class="source-note">
-      <p>
-        Worked out here (2026-11-16), not from your notes or a published list. Proposed as a replacement for helper P's
-        mixed set (two <code>R U R'</code> bases and one <code>R' D' R</code>); the walk rule, Buffer moves and Pair lookup
-        pages still use helper P for now. Every commutator was checked in the cube simulator (it cycles the buffer and the
-        two letters and moves nothing else); Orozco with helper A solved 3,000 whole random solves (M2 edges, then these
-        corners), checked by <code>log/2026-11-16-orozco-a.mjs</code>. Pairs: setups of up to 3 moves, the shortest with R, U, F and D, or with L or B
-        when that is at least one move shorter. Numbers weighted by how often a pair comes up in 2,000 random solves.
-        Built by <code>log/2026-11-16-a-group.mjs</code>.
-      </p>
-    </div>
-    <p class="bld-note" id="ag-stats"></p>
-
-    <h2 class="section-heading" id="bases" data-short="The bases">The three bases</h2>
-    <p>Same insertion and the same D turn as helper D, only the interchange changes: <code>U'</code> brings D into the
-      buffer's place, <code>U2</code> brings A. <code>[R' D' R , U2]</code> is the one base helper P already had.</p>
-    <div id="ag-bases"></div>
-
-    <h2 class="section-heading" id="by-position" data-short="By position">Solve with it: Orozco with helper A</h2>
-    <p>Like Orozco with A in B's place: memo from C, the 1st letter of each pair forwards (buffer → letter → A), the 2nd
-      backwards (buffer → A → letter). Each setup puts the letter in the G, P or S position and leaves the buffer and A
-      where they are. Only D turns never touch them, so most setups are three moves that end where they started, such as
-      <span class="mv-setup">F' R2 F</span>.</p>
-    <div id="ag-groups"></div>
-
-    <h2 class="section-heading" id="letters" data-short="Letters">Every letter</h2>
-    <div class="table-wrap wr-wrap"><table class="bld-table" id="ag-table"></table></div>
-
-    <h2 class="section-heading" id="helper" data-short="A E R">A, E and R (the helper's letters)</h2>
-    <ul class="bld-list" id="ag-helper"></ul>
-
-    <h2 class="section-heading" id="parity" data-short="Parity">Odd number of letters (parity)</h2>
-    <p>The same as helper P and helper D: do the last letter the plain Orozco way (helper B), then the Ra-perm
-      <code id="ag-ra"></code>.</p>
-
-    <h2 class="section-heading" id="compare" data-short="Compared">A group or helper P?</h2>
-    <p>Mean moves per corner pair, with Orozco (B) and helper D's bases. "Buffer still": setups of D, L and B only, as
-      the walk rule does. "Buffer may move": as on the Buffer moves page.</p>
-    <div id="ag-compare"></div>
-
-    <h2 class="section-heading" id="pairs" data-short="Pairs">Pairs it solves best</h2>
-    <p>Every pair whose shortest commutator, with B, D and A bases, uses an A-group base. Open a base for its pairs; open
-      a pair for where the base works, pictures of the setup and a cube to watch.</p>
-    <div class="drill-pic-switch" id="ag-filter" role="group" aria-label="Which pairs"></div>
-    <div id="ag-pairs"></div>
-  </main>
-
-  <script type="module">
-    import { mountAGroup } from '../../js/a-group.js?v=2';
-    mountAGroup({ stats: 'ag-stats', bases: 'ag-bases', compare: 'ag-compare', pairs: 'ag-pairs', filter: 'ag-filter', groups: 'ag-groups', table: 'ag-table', helper: 'ag-helper', ra: 'ag-ra' });
-  </script>
+  <main><p>The A group page was replaced by <a href="orozco-f.html">Orozco with helper F</a>.</p></main>
 </body>
 </html>
