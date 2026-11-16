@@ -135,6 +135,20 @@ piece in letter order today).
 Also worth measuring before building: whether following the other letter through two turns is workable in the head.
 A practice drill (level 2 pairs only, show the pair, reveal turn by turn) would answer that faster than analysis.
 
+### Making "where is the other letter now?" easier (asked 2026-11-16; checked)
+
+1. **Walk the letter whose turns disturb the other letter less.** With one fixed walk per letter (same as above except
+   T: `D2` → L, then `L'`, helper D; W: `B'` → H, then `L2`, helper F), the other letter is never moved by both turns:
+   not moved at all in 36% of level-2 pairs, moved by one turn in 64%. Cost: mean setup 2.88 (was 2.83), 12 pairs
+   with a 4-move setup (was 2). With the walks in the table above unchanged: 31% / 68% / 2%, mean 2.97.
+2. **Face test.** A letter moves under a turn only if its corner is on the turned face. Corners on each face:
+   L: A E R, D F I, U G L, X H S. D: U G L, V K P, W O T, X H S. B: A E R, B N Q, W O T, X H S.
+3. **Rings.** Each turn moves letters round three rings of four (a 2 turn goes two steps, a ′ turn goes backwards):
+   L: A → I → U → S, D → L → X → R, E → F → G → H. D: G → K → O → S, H → L → P → T, U → V → W → X.
+   B: A → H → W → N, B → E → X → O, Q → R → S → T. These are also where the one-turn letters come from (the ring
+   that holds a helper letter).
+4. A drill that reveals the steps one at a time (section 7).
+
 ## 5. Answers to the open questions in `docs/four-helper-plan.md`
 
 | # | Question | Answer | Basis |
