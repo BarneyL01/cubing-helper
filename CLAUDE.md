@@ -105,7 +105,7 @@ content and drills get added as they're actually needed.
   - Home (`index.html`) is grouped by the four menu groups with one `.row-card` per
     section (icon, title, one-line description, chevron) and quick links (CFOP: OLL,
     PLL, F2L map; Blind: M2 edges, Old Pochmann, Letter pairs; Commutators: Corner
-    cycles, After 8355; Practice: Recognition, Blind drills, Blind memo, 3-Style solves). `.method-card` (whole
+    cycles, After 8355; Practice: Recognition, Blind drills, Blind memo, 3-Style solves, Pair drill). `.method-card` (whole
     card clickable via its stretched link) is only used on the CFOP hub now.
 
 ## Owner preferences (learnt; apply everywhere)
@@ -439,7 +439,7 @@ Method").
   in `data/` are fine even when a script generated them (keep the script and
   its checks in `log/`).
 - Practice pages: one page per drill area, listed as a page of the Practice
-  section in `MENU` (Recognition, Blind drills, Blind memo, 3-Style solves so far; the menu and
+  section in `MENU` (Recognition, Blind drills, Blind memo, 3-Style solves, Pair drill so far; the menu and
   section row come from there — no hand-written tabs). The current item is kept in localStorage (`cubing-helper:<page>`),
   answers are hidden until a button is pressed, and anything generated (a
   scramble, a solver's solution) is checked by simulation in a Node checker

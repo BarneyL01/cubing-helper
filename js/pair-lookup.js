@@ -7,7 +7,7 @@ import { PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=1';
 
 const KEY = 'cubing-helper:pair-lookup';
 // show the pictures straight away (the pair row builds them when it opens)
-const openRows = (box) => { box.querySelectorAll('details.ts-pair').forEach((r) => { r.open = true; }); return box; };
+const openRows = (box) => { [box, ...box.querySelectorAll('details.ts-pair')].forEach((r) => { if (r.matches?.('details.ts-pair')) r.open = true; }); return box; };
 
 export function mountPairLookup(slot) {
   let saved = { a: 'G', b: 'O' };

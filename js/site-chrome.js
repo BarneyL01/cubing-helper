@@ -125,6 +125,7 @@ const MENU = [
           { label: 'Blind drills', path: '3x3/practice/blind-drills.html' },
           { label: 'Blind memo', path: '3x3/bld/practice.html' },
           { label: '3-Style solves', path: '3x3/practice/three-style-solves.html' },
+          { label: 'Pair drill', path: '3x3/practice/pair-drill.html' },
         ],
       },
     ],
