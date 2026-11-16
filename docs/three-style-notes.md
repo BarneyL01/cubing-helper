@@ -173,6 +173,8 @@ B + D + A `[R' D^k R , U2]` beats B + D + P on every measure (buffer still 11.43
 10.40 vs 10.60; 36.4 vs 37.1 corner moves per solve); B + D alone 37.7. A group page built; other pages keep P until the
 owner says. One cube rotation (owner finds rotations fine, like M2): 34.2 per solve, 244 pairs with 0-1 setup moves
 (vs 74). Details in log/2026-11-16-a-group.md.
+**Fixed rotation + a whole group from that angle (checked, rotation counted as moves): no gain** (≤ 8 pairs, ≤ 0.2 moves
+per solve, every rotation × B/D/A). Per-pair rotations were rejected by the owner (error prone). Don't re-test.
 
 ## Decisions (owner)
 
