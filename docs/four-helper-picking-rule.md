@@ -144,11 +144,21 @@ A practice drill (level 2 pairs only, show the pair, reveal turn by turn) would 
 | 3 | Show a pair as seen after the rotation, or as written? | **As seen after the rotation**, with the rotation written in the line ("z · … · z'"); the level-1 turn and the letters are read **before** rotating. Follows from 2. To confirm with the owner: do the one-turn move before the rotation (recommended: the letters are still where they were memorised) or after. | – |
 | 4 | Is Buffer moves still worth a page? | **Not as part of the picking rule.** Keep it only as a "shorter alternative" line in Pair lookup where it saves 2+ moves. | With four helpers, moving the buffer shortens the setup for 13% of a solve's pairs; pairs with I V Q U average 12.5 moves buffer still, 11.9 with the buffer moving (it was 13.1 → 11.3 with B, P, D) |
 
-## 6. Still to decide (owner)
+## 6. Decisions (owner, 2026-11-16) and what is still open
 
-1. E, G, O, X: one fixed helper each (which set), or learn both. Section 3 has the table the owner asked for.
-2. Level 2: option A, B, C, or something else. Section 4.
-3. Question 3 above: one-turn move before or after the rotation.
+Decided:
+- Four groups only (no P). Rotate around each F or K pair.
+- E, G, O, X: **fixed helpers preferring no rotation: E, O, X → B; G → K.**
+- F and K pairs: **rotate first, then do everything as seen after the rotation**, the one-turn move included (owner: "I
+  should learn the group as rotated"). So the page must give the one-turn moves for F and K in the rotated view: after z
+  the old L face is the U face, so E, G, H reach F's place with U turns as seen; after y' the D face is still the D face,
+  so G, O, S reach K's place with the same D turns. Generate these from the data and check each rotated form equals the
+  original moves (as the F and K generators already do). This overrides the "before rotating" note in section 5, row 3.
+
+Still open:
+- Level 2 (section 4): the owner did not follow the table on first reading ("is that to cover the gaps from level 1?").
+  It is: level 2 is the 17% of pairs where neither letter is a helper letter or a one-turn letter. Explain it with a
+  worked pair before asking the owner to choose an option.
 
 ## 7. What to build once decided (for the building agent)
 
