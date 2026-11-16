@@ -107,6 +107,10 @@ Ideas:
 
 ## 4. Open questions for the owner (ask before building)
 
+**Answered 2026-11-16 in `docs/four-helper-picking-rule.md` (section 5), which also gives the rule for picking a group
+for a pair.** In short: 1 four groups only (owner); 2 rotate around each F or K pair (owner); 3 as seen after the rotation;
+4 Buffer moves only as an optional shorter line in Pair lookup.
+
 1. Drop helper P entirely from these three pages, or keep it as a fifth helper (it still has the shortest buffer-still
    setups for some pairs)?
 2. In the walk rule and lookup, a pair using F or K needs its rotation (z or y') around that one commutator. Acceptable per

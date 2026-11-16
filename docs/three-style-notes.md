@@ -190,6 +190,13 @@ Helper K built (owner rejected Q: two rotations). Both F and K are done holding 
 Walk rule / Buffer moves / Pair lookup marked outdated (still B, P, D).
 Plan for redoing them with B, D, F, K (not built; for an eval by another agent): `docs/four-helper-plan.md`.
 
+## Picking a group for a pair (2026-11-16, plan only)
+
+`docs/four-helper-picking-rule.md`: level 0 pair has B/D/F/K (41% of solve pairs); level 1 a one-turn letter E G H L O R S X
+(42%); level 2 only A I N P Q T U V W (17%: one turn makes one letter S, X, H or L). Owner: four groups only, rotate around
+each F or K pair, level 2 must not be two-step Orozco or a separate list. Open: E G O X choice, level 2 option.
+Checker `log/2026-11-16-picking-rule.mjs`.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new
