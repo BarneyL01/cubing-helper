@@ -149,6 +149,20 @@ A practice drill (level 2 pairs only, show the pair, reveal turn by turn) would 
    that holds a helper letter).
 4. A drill that reveals the steps one at a time (section 7).
 
+### Decision and two more checks (owner, 2026-11-16)
+
+- **Level 2 = option A with the shorter setups** (the first table: fixed order Q A I U V W N P T), helped by the face
+  test and the rings, and learnt through drills. Not the "less disturbing letter" variant (12 four-move setups).
+- **V W / W V are not 4 moves whatever you do:** the rule gives `D2 B2` + `D' L'` (4), but helper B with `B D2 B2` (V into
+  B's place, W into H) is 3; helpers D and F also have 3-move setups. Show the 3-move one in the lookup as the listed
+  exception (same for the other 4-move pairs in section 8).
+- **No small set of extra commutators removes level 2** (greedy cover of the 66 pairs by any 8-move commutator with the
+  buffer, D/L/B setups, weighted by frequency): no setup: 2 pairs per base; setup ≤ 1: best single base
+  `[R' D' R , U2]` (buffer → A → P, already known from helper P / step 2b) covers 12 pairs = 21% of level 2, five bases
+  without L or B cover 30 pairs (47%); with L/B bases six cover 67%. Helper P as a whole fifth group leaves 40 pairs
+  (11% of a solve's pairs instead of 17%). I, N and V cannot be helpers at all (no 8-move commutator with the buffer
+  contains them). Owner keeps four groups.
+
 ## 5. Answers to the open questions in `docs/four-helper-plan.md`
 
 | # | Question | Answer | Basis |
@@ -169,7 +183,7 @@ Decided:
   so G, O, S reach K's place with the same D turns. Generate these from the data and check each rotated form equals the
   original moves (as the F and K generators already do). This overrides the "before rotating" note in section 5, row 3.
 
-Still open:
+Still open: nothing for the rule itself (level 2 decided, see the end of section 4). Earlier note:
 - Level 2 (section 4): the owner did not follow the table on first reading ("is that to cover the gaps from level 1?").
   It is: level 2 is the 17% of pairs where neither letter is a helper letter or a one-turn letter. Explain it with a
   worked pair before asking the owner to choose an option.
