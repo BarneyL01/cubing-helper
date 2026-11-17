@@ -141,3 +141,15 @@ text.net-letter-on-colour {
 .pd-letter { font-size: 1.15em; }
 .pd-controls .rec-btn { flex: 1 1 8rem; min-height: 48px; }
 .pd-empty { text-align: center; color: var(--text-muted); }
+
+.pd-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin: 0.4rem 0; }
+.pd-modes .rec-btn { min-height: 48px; }
+.pd-modes .rec-btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+.pd-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: 0.4rem; }
+.pd-choice { min-height: 48px; font-size: 1.1rem; font-weight: 600; }
+.pd-ok { color: #1d7a3a; font-weight: 600; }
+.pd-bad { color: #b3261e; font-weight: 600; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pd-ok { color: #6fd08c; } :root:not([data-theme="light"]) .pd-bad { color: #ff8a80; } }
+:root[data-theme="dark"] .pd-ok { color: #6fd08c; }
+:root[data-theme="dark"] .pd-bad { color: #ff8a80; }
+.pd-score { margin: 0.3rem 0; text-align: center; color: var(--text-muted); min-height: 1.3em; }
