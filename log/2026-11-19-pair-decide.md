@@ -16,3 +16,4 @@ Direction finding (all 378 rows, `log/2026-11-19-pair-decide-check.mjs`): "the l
 (Interchange = the one-move half, insertion = the three-move half, as seen after the rotation.) The page states the direction from the written base, not from this table.
 
 Level-2 wrong options: both other powers of the first turn and one other power of the second turn.
+- 2026-11-19: Which group? gained a "Which half of the base comes first" section (1st / 2nd rule, per-helper table, A → G example).

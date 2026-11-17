@@ -39,6 +39,20 @@
       rotation.</p>
     <div id="wg-bases"></div>
 
+    <h2 class="section-heading" id="direction" data-short="Which half first">Which half of the base comes first</h2>
+    <p><strong>The rule:</strong> if the letter in the helper's place is the <strong>1st</strong> letter of the pair, use the
+      helper's <strong>"Helper first"</strong> base (backwards). If it is the <strong>2nd</strong> letter, use
+      <strong>"Position first"</strong> (forwards). It is the same 1st / 2nd rule as Orozco.</p>
+    <p>Which half that puts first (the one-turn interchange or the three-move insertion) depends on the helper, because
+      B's and K's bases are written insertion first and D's and F's interchange first:</p>
+    <div class="table-wrap"><table class="bld-table"><thead><tr><th>Helper</th><th>Letter in the helper's place is 1st</th><th>It is 2nd</th></tr></thead><tbody>
+      <tr><th>B, K</th><td>interchange first</td><td>insertion first</td></tr>
+      <tr><th>D, F</th><td>insertion first</td><td>interchange first</td></tr>
+    </tbody></table></div>
+    <p class="bld-note">Example: A → G. G goes into K's place and G is the 2nd letter, so Position first: y', then
+      <code>[D : [R D R' , U2]]</code>, then y. The insertion R D R' comes first and starts with R, not R'. Checked for all
+      378 pairs by <code>log/2026-11-19-pair-decide-check.mjs</code>.</p>
+
     <h2 class="section-heading" id="level0" data-short="Level 0">Level 0: the pair has B, D, F or K</h2>
     <div id="wg-level0"></div>
 
