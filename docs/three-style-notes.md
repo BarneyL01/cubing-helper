@@ -206,6 +206,13 @@ Pair lookup. Walk rule page replaced (redirect); Buffer moves page kept, marked 
 (level-filtered, steps revealed one at a time) from the spec's section 7. Rings and face corners typed in the JS are checked by
 `log/2026-11-18-which-group-check.mjs`.
 
+## The deeper goal (owner interview, 2026-11-17)
+
+`docs/three-style-deeper-goal.md`: the owner wants to work pairs out live from a fixed toolkit; the blocker is mentally
+tracing stickers through turns (3-move setups, setups moving two pieces: "can't see why", "lose count of turns"; traces by
+picturing) plus too many choices in the pair rule. Keep the four helpers; add a tracing skill path beside them (proposed:
+a Tracing practice page, levels 1-5). Not built; owner to confirm.
+
 ## Decisions (owner)
 
 - **D and L setups only on By base; no B.** B was tried: B wherever shorter → 268 one-target pairs but 26 new
