@@ -54,3 +54,32 @@ turn moves letters round three rings of four), in `docs/four-helper-picking-rule
 Open questions for the owner before building: which turns to start with, timed or untimed, whether the owner types the
 answer (letter buttons) or just reveals and self-marks, and whether level 4 should accept any working setup or only the
 shortest.
+
+## 4. Second round (same day): where the pair actually breaks
+
+The owner narrowed it down: "Assuming I remembered the helper bases and the letters they need to move to, I can usually
+figure out the setup. The gap I have is when neither of the letters is the target spot or the helper. I may be able to
+guess one of the setups but I can't easily figure out the 2nd letter."
+
+Measured (from `data/pair-rule.js`): in level 1 the first turn moves the second letter in 86 of 172 pairs; in level 2 in 54
+of 64. Once moved, its own setup is 0-2 moves (level 1: 0/1/2 = 34/86/52; level 2: 0/1 = 14/50).
+
+Answers, using A → O (B puts O in B's place and carries A to H, where it needs no setup):
+
+| Question | Answer |
+|---|---|
+| Which step loses you | **Which letter to move** (and so which helper) |
+| Knowing where the 2nd letter went, is its setup easy | **Yes, mostly** |
+| Turn then look, or plan in the head | **All in my head**; trying it just now: "still make silly mistakes like recognising the wrong letter"; "at the moment it's still remembering the bases, I often have to go back to the list and check" |
+
+## 5. Revised reading
+
+The order of difficulty, from the bottom up:
+1. **Recognising letters correctly** (wrong letter read off the cube).
+2. **Recalling the bases** (12: three per helper, with the position letters) — still looked up.
+3. **Deciding which letter to move and into which helper** — the step that breaks a pair.
+4. Tracing the second letter and finding its setup — mostly fine once 1-3 are in place.
+
+So the next practice should start lower than tracing: letter recognition (Blind drills' Letters mode exists), then base
+recall, then a quick "which letter / which helper / which turn" decision drill, then whole pairs (Pair drill). The tracing
+drills of section 3 stay useful for level 2 but are not the first need.
