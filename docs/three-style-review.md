@@ -108,3 +108,13 @@ Not measured: a level rule for B only and for B + D (the figures above are the b
 2. What is the aim: fewer moves, faster solves, or understanding commutators?
 3. May the site keep a record of what is known (reverses "no statistics")?
 4. Keep F and K with rotations, or run B + D only for a period and compare?
+
+## 8. Owner's answers (2026-11-17)
+
+- Known today: some of the tables, but the recent changes have caused confusion.
+- Aim: reach 3-style (one commutator per pair instead of two); an exercise in learning, not only speed.
+- **Design frozen** on B, D, F, K and the picking rule as built. No new groups.
+- Hardest part so far: setups that move several pieces, and remembering how to undo them.
+- Orozco feels like understanding; pair commutators feel like memory work. Learning advice should keep the
+  problem-solving character: a pair is an Orozco letter with one or two turns in front, undone in reverse.
+- Still to ask: a record of what is known; which rung to start on.
