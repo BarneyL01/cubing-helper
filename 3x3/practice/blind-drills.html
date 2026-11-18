@@ -122,12 +122,14 @@
             <label><input type="checkbox" name="s-kind" value="2" /> Level 2</label>
             <label><input type="checkbox" name="s-kind" value="x" /> Exceptions (8)</label>
           </div>
-          <label>Pairs <select id="s-four-pairs"><option>1</option><option>2</option><option>3</option></select></label>
+          <label>Pairs <select id="s-four-pairs"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
           <label>Twisted corners <select id="s-twist-mode">
             <option value="any">Sometimes</option><option value="always">Always</option><option value="never">Never</option>
           </select></label>
-          <p class="bld-note">Every chosen pair is one of the ticked kinds, and the corner memo starts with them. Parity adds one
-            more letter; a twist adds two twisted corners, whose letters (after a cycle break) can be any kind.</p>
+          <p class="bld-note">The corner memo is exactly this many pairs (parity adds one more letter), with cycle breaks as in a
+            real solve. Every pair of two corners is one of the ticked kinds. A twisted corner's two letters can make a pair
+            of their own: it is done letter by letter, the plain Orozco way. Some settings cannot happen (for example 4 pairs of
+            level 2 only: its letters are on only 6 corners); the page then says so.</p>
         </fieldset>
       </form>
       <p class="drill-error" id="s-error" role="status"></p>
@@ -220,7 +222,7 @@
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { orozcoPPlan } from '../../js/orozco-p.js?v=3';
     import { orozcoDPlan } from '../../js/orozco-d.js?v=1';
-    import { fourHelperPlan, fourHelperScramble, DEFAULT_FOUR } from '../../js/four-helper-drill.js?v=1';
+    import { fourHelperPlan, fourHelperScramble, DEFAULT_FOUR } from '../../js/four-helper-drill.js?v=2';
     import { drillScramble, drillScrambleLetters, possible, parityPossible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=4';
     import { letterPairs } from '../../data/letter-pairs.js?v=2';
     import { mountThreeStyleDrill } from '../../js/three-style-drill.js?v=4';

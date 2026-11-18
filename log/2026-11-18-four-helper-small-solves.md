@@ -38,3 +38,15 @@ see-through cube of the base `coreFigure`, the "Into" picture `intoDiagram`, and
 for its letters), and "Practise" (links to Small solves with Orozco / four helpers). The existing sections (examples,
 the 18 commutators with published alternatives, helper letters, parity, shortcuts) are unchanged. No new algorithms: the
 rows come from `data/orozco-corners.js`; backwards = the base's halves swapped, same setup.
+
+## Same day: up to 5 pairs (engine rebuilt)
+
+Owner: why only 3 pairs? With every pair on its own corners, the buffer + 4 pairs needs 9 corners; 4+ pairs need a cycle
+break, which the first engine never made. The engine now builds the memo letter sequence itself, following the memo's
+rules (the buffer's cycle, then breaks at the lowest unsolved piece in letter order; a twisted corner = a break straight
+back to another sticker of it), keeps it only if every pair of two corners is of a ticked kind, then undoes the solve
+(other tables' commutators; twist pairs and the odd letter plain Orozco, + Ra) and checks it on the simulated cube (memo
+exactly the sequence, twists as asked, edges, the plan solves it). Pairs 1-5; "Pairs" now counts every pair in the corner
+memo, including a twisted corner's two letters (done letter by letter). Impossible settings are refused with a reason
+(e.g. level 2 only: its letters are on 6 corners, so at most 3 pairs without twists).
+Check: `log/2026-11-18-four-helper-drill-check.mjs` → ALL OK (1,259 scrambles, 1-5 pairs; 241 impossible settings refused).

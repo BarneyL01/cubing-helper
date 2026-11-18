@@ -37,7 +37,7 @@ const key = (s) => `${s.p.join()}|${s.n.join()}`;
 
 export const KINDS = ['0', '1', '2', 'x']; // levels 0, 1, 2 and the exception pairs
 export const DEFAULT_FOUR = { kinds: ['1', '2'], pairs: 2, twists: 'never' };
-export const MAX_PAIRS = 3;
+export const MAX_PAIRS = 5;
 
 // The pairs that match the ticked kinds (a pair counts if its level is ticked, or it is an exception and those are ticked).
 export const fourPool = (kinds) => pairRule.filter((r) => kinds.includes(String(r.level)) || (kinds.includes('x') && r.exception));
@@ -105,59 +105,80 @@ export function fourHelperSolves(scramble) {
 const ALT = {};
 for (const tbl of [threeStyleOurs, threeStyleCorners]) for (const e of tbl) (ALT[e.pair] ||= []).push(e.moves);
 
-// { scramble, pairs, parity, twists } or throws. parity / twists: 'any' (about half the time), 'always', 'never'.
-export function fourHelperScramble({ kinds = DEFAULT_FOUR.kinds, pairs = 2, edges = 0, parity = 'any', twists = 'never', rnd = Math.random, budgetMs = 150, maxMs = 4000 } = {}) {
-  const pool = fourPool(kinds);
-  if (!pool.length) throw new Error('Tick at least one kind of pair.');
+// Pieces in the order the memo starts cycle breaks (the first unsolved piece in letter order) and their lowest letter.
+const LETTERS = Object.keys(SPEFFZ);
+const PIECES = [...new Set(LETTERS.map(piece))].filter((p) => p !== piece('C'));
+const FIRST = Object.fromEntries(PIECES.map((p) => [p, LETTERS.find((l) => piece(l) === p)]));
+const STICKERS = Object.fromEntries(PIECES.map((p) => [p, LETTERS.filter((l) => piece(l) === p)]));
+
+// A memo letter sequence of exactly T letters that follows the memo's rules: the buffer's cycle, then cycle breaks, each
+// starting at the lowest unsolved piece and ending on a sticker of that piece (another sticker of it and nothing between:
+// a corner twisted in place). Twisted-in-place corners only when tw. Null if this try does not reach T.
+function sequence(T, tw, rnd) {
+  let free = [...PIECES];
+  const take = (p) => { free = free.filter((x) => x !== p); };
+  const seq = [];
+  const k = Math.floor(rnd() * (Math.min(7, T) + 1));
+  for (let i = 0; i < k; i++) { const p = pick(free, rnd); take(p); seq.push(pick(STICKERS[p], rnd)); }
+  let twisted = false;
+  while (seq.length < T) {
+    const left = T - seq.length;
+    if (left < 2 || !free.length) return null;
+    const start = pick(free, rnd);
+    free = free.filter((x) => PIECES.indexOf(x) > PIECES.indexOf(start)); // lower pieces stay solved
+    const maxM = Math.min(free.length, left - 2);
+    if (maxM < 1 && !tw) return null;
+    const m = tw && (rnd() < 0.4 || maxM === 0) ? 0 : 1 + Math.floor(rnd() * maxM);
+    if (m === 0 && !tw) return null;
+    seq.push(FIRST[start]);
+    for (let i = 0; i < m; i++) { const p = pick(free, rnd); take(p); seq.push(pick(STICKERS[p], rnd)); }
+    const ends = m === 0 ? STICKERS[start].filter((l) => l !== FIRST[start]) : STICKERS[start];
+    seq.push(pick(ends, rnd));
+    if (m === 0) twisted = true;
+  }
+  return seq.length === T && twisted === tw ? seq : null;
+}
+
+// { scramble, pairs, parity, twists } or throws. pairs = letter pairs in the corner memo (a twisted corner's two letters
+// count too). parity / twists: 'any' (about half the time), 'always', 'never'.
+export function fourHelperScramble({ kinds = DEFAULT_FOUR.kinds, pairs = 2, edges = 0, parity = 'any', twists = 'never', rnd = Math.random, budgetMs = 150, maxMs = 2500 } = {}) {
+  const pool = new Set(fourPool(kinds).map((r) => r.pair));
+  if (!pool.size) throw new Error('Tick at least one kind of pair.');
   if (pairs < 1 || pairs > MAX_PAIRS) throw new Error(`Choose 1 to ${MAX_PAIRS} pairs.`);
   if (edges === 1 || edges > 12) throw new Error('Edges: 0 or 2 to 12.');
   if (parity === 'always' && edges < 2) throw new Error('Parity needs at least 2 edges unsolved (the parity swaps two edges).');
-  // corners: the buffer + 2 per pair + 1 for parity + 2 for a twist, of 8
-  const need = (odd, tw) => 1 + 2 * pairs + (odd ? 1 : 0) + (tw ? 2 : 0);
-  if (need(parity === 'always', twists === 'always') > 8) throw new Error(`Not enough corners: ${pairs} pairs${parity === 'always' ? ', parity' : ''}${twists === 'always' ? ' and a twist' : ''} need more than 8 corners. Choose fewer pairs.`);
   const t0 = Date.now();
-  let best = null;
-  fit.most = 0;
-  for (let tries = 0; tries < 5000; tries++) {
-    let odd = parity === 'always' || (parity === 'any' && edges >= 2 && rnd() < 0.5);
-    let tw = twists === 'always' || (twists === 'any' && rnd() < 0.5);
-    if (need(odd, tw) > 8) { if (parity === 'any') odd = false; if (need(odd, tw) > 8 && twists === 'any') tw = false; }
-    if (need(odd, tw) > 8) continue;
-    const s = attempt(pool, pairs, edges, odd, tw, rnd);
+  let best = null, memoOk = 0;
+  for (let tries = 0; tries < 200000; tries++) {
+    if (Date.now() - t0 >= maxMs || (best && Date.now() - t0 >= budgetMs)) break;
+    const odd = parity === 'always' || (parity === 'any' && edges >= 2 && rnd() < 0.5);
+    const tw = twists === 'always' || (twists === 'any' && rnd() < 0.5);
+    const seq = sequence(2 * pairs + (odd ? 1 : 0), tw, rnd);
+    if (!seq) continue;
+    // every pair of two corners must be of a ticked kind (two stickers of one corner: a twist, done letter by letter)
+    let fits = true;
+    for (let i = 0; i + 1 < seq.length; i += 2) if (piece(seq[i]) !== piece(seq[i + 1]) && !pool.has(seq[i] + seq[i + 1])) { fits = false; break; }
+    if (!fits) continue;
+    memoOk++;
+    const s = build(seq, edges, odd, tw, rnd);
     if (s && (!best || s.length < best.length)) best = s;
-    if (best && Date.now() - t0 >= budgetMs) break;
-    if (Date.now() - t0 >= maxMs) break;
   }
-  if (!best && fit.most < pairs) throw new Error(`Only ${fit.most} ${fit.most === 1 ? 'pair' : 'pairs'} of the ticked kinds fit on different corners (for example, the 8 exception pairs use only 5 corners). Choose fewer pairs or tick more kinds.`);
+  if (!best && !memoOk) throw new Error(`No solve has ${pairs} corner ${pairs === 1 ? 'pair' : 'pairs'} all of the ticked kinds${twists === 'always' ? ' with a twisted corner' : ''} (for example, the exception pairs use only 5 corners, and level 2 letters only 6). Choose fewer pairs or tick more kinds.`);
   if (!best) throw new Error('Could not make that scramble; try again or change the settings.');
   return best;
 }
 
-const fit = { most: 0 }; // the most pairs on different corners found so far (for the error message)
-function attempt(pool, n, edges, odd, tw, rnd) {
-  const used = new Set([piece('C')]);
-  const chosen = [];
-  for (let i = 0; i < 60 && chosen.length < n; i++) {
-    const e = pick(pool, rnd);
-    const a = piece(e.first), b = piece(e.second);
-    if (used.has(a) || used.has(b)) continue;
-    used.add(a); used.add(b);
-    chosen.push(e);
+// The scramble for a memo sequence: undo the solve (pairs with another table's commutator, a twist's two letters plain
+// Orozco, an odd last letter plain Orozco + Ra), add edge pieces, then check everything on the simulated cube.
+function build(seq, edges, odd, tw, rnd) {
+  const undo = [];
+  for (let i = 0; i < seq.length; i += 2) {
+    if (i === seq.length - 1) { undo.push(plainOrozco(seq[i], true).moves, OROZCO_PARITY_RUF); break; }
+    const p = seq[i] + seq[i + 1];
+    if (RULE[p]) undo.push(pick(ALT[p] || [RULE[p].moves], rnd));
+    else undo.push(plainOrozco(seq[i], true).moves, plainOrozco(seq[i + 1], false).moves);
   }
-  fit.most = Math.max(fit.most, chosen.length);
-  if (chosen.length < n) return null;
-  // the solving direction: the pairs (another table's commutator), the odd letter + Ra, a twist; then edges
-  const undo = chosen.map((e) => pick(ALT[e.pair] || [e.moves], rnd));
-  let oddLetter = null;
-  if (odd) {
-    const free = Object.keys(SPEFFZ).filter((l) => !used.has(piece(l)) && !OZH[l] && piece(l) !== piece('B'));
-    if (!free.length) return null;
-    oddLetter = pick(free, rnd);
-    used.add(piece(oddLetter));
-    undo.push(OZ[oddLetter].moves, OROZCO_PARITY_RUF);
-  }
-  if (tw) undo.push(pick(DRILL_PIECES.twist2, rnd));
-  let moves = cancelMoves(undo.join(' '));
+  let moves = cancelMoves(undo.filter(Boolean).join(' '));
   const edgeCount = (m) => unsolvedCounts(scrambledState(invertAlg(m))).edges;
   for (let i = 0; i < edges + 3; i++) {
     const c = edgeCount(moves);
@@ -165,16 +186,15 @@ function attempt(pool, n, edges, odd, tw, rnd) {
     moves = cancelMoves(`${moves} ${pick(rnd() < 0.85 ? DRILL_PIECES.edge3 : DRILL_PIECES.flip2, rnd)}`);
   }
   const scramble = cancelMoves(invertAlg(moves));
+  if (!scramble) return null;
   const state = scrambledState(scramble);
   const got = unsolvedCounts(state);
   if (got.edges !== edges || got.centres) return null;
   const memo = cornerMemoFrom(state, 'C').map((t) => t.letter);
-  const want = chosen.map((e) => e.pair).join('');
-  if (!memo.join('').startsWith(want)) return null;
-  if ((memo.length % 2 === 1) !== odd) return null;
-  if (!tw && memo.length !== 2 * n + (odd ? 1 : 0)) return null;
-  if (odd && !tw && memo.at(-1) !== oddLetter) return null;
+  if (memo.join('') !== seq.join('')) return null;
   if ((twistedCorners(state) > 0) !== tw) return null;
   if (!fourHelperSolves(scramble)) return null;
-  return { scramble, length: scramble.split(' ').length, pairs: chosen.map((e) => e.pair), parity: odd, twists: tw };
+  const pairs = [];
+  for (let i = 0; i + 1 < seq.length; i += 2) pairs.push(seq[i] + seq[i + 1]);
+  return { scramble, length: scramble.split(' ').length, pairs, parity: odd, twists: tw };
 }
