@@ -1,3 +1,4 @@
+// SUPERSEDED 2026-11-19 by log/2026-11-19-letter-pairs-check.mjs (new sound rules); kept for history, fails on the new list.
 // Checks data/letter-pairs.js (rules of 2026-11-11): all 552 ordered pairs of different letters A-X; each word starts
 // with the first letter's sound (X = "sh", J = "y", Q = "qu" or "ch") and has the second letter's sound after it;
 // C words never start with "ch" and S words never start with "sh" (those sounds are Q and X); well-known initials
