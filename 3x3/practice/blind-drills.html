@@ -95,11 +95,11 @@
       <form class="rec-settings" onsubmit="return false">
         <fieldset>
           <legend id="s-count-legend">Unsolved pieces</legend>
-          <div class="th-count" role="group" aria-label="Count">
+          <div class="th-count" role="group" aria-label="Count" id="s-count-pick">
             <label><input type="radio" name="s-count" value="pieces" checked /> Pieces out of place</label>
             <label><input type="radio" name="s-count" value="letters" /> Letters to solve</label>
           </div>
-          <label>Corners <select id="s-corners"></select></label>
+          <label id="s-corners-pick">Corners <select id="s-corners"></select></label>
           <label>Edges <select id="s-edges"></select></label>
           <label id="s-parity-pick">Parity <select id="s-parity-mode">
             <option value="any">Sometimes</option><option value="always">Always</option><option value="never">Never</option>
@@ -112,6 +112,22 @@
           <label><input type="radio" name="s-method" value="orozco" /> Orozco</label>
           <label><input type="radio" name="s-method" value="orozcoP" /> Orozco with helper P</label>
           <label><input type="radio" name="s-method" value="orozcoD" /> Orozco with helper D</label>
+          <label><input type="radio" name="s-method" value="four" /> Four helpers (B, D, F, K)</label>
+        </fieldset>
+        <fieldset id="s-four" hidden>
+          <legend>Four helpers: corner pairs</legend>
+          <div class="th-count" role="group" aria-label="Kinds of pairs">
+            <label><input type="checkbox" name="s-kind" value="0" /> Level 0</label>
+            <label><input type="checkbox" name="s-kind" value="1" /> Level 1</label>
+            <label><input type="checkbox" name="s-kind" value="2" /> Level 2</label>
+            <label><input type="checkbox" name="s-kind" value="x" /> Exceptions (8)</label>
+          </div>
+          <label>Pairs <select id="s-four-pairs"><option>1</option><option>2</option><option>3</option></select></label>
+          <label>Twisted corners <select id="s-twist-mode">
+            <option value="any">Sometimes</option><option value="always">Always</option><option value="never">Never</option>
+          </select></label>
+          <p class="bld-note">Every chosen pair is one of the ticked kinds, and the corner memo starts with them. Parity adds one
+            more letter; a twist adds two twisted corners, whose letters (after a cycle break) can be any kind.</p>
         </fieldset>
       </form>
       <p class="drill-error" id="s-error" role="status"></p>
@@ -204,6 +220,7 @@
     import { orozcoCornerPlan } from '../../js/orozco.js?v=2';
     import { orozcoPPlan } from '../../js/orozco-p.js?v=3';
     import { orozcoDPlan } from '../../js/orozco-d.js?v=1';
+    import { fourHelperPlan, fourHelperScramble, DEFAULT_FOUR } from '../../js/four-helper-drill.js?v=1';
     import { drillScramble, drillScrambleLetters, possible, parityPossible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=4';
     import { letterPairs } from '../../data/letter-pairs.js?v=2';
     import { mountThreeStyleDrill } from '../../js/three-style-drill.js?v=4';
@@ -220,10 +237,11 @@
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem(KEY)) || {}; } catch {}
     // links from other pages: ?mode=solve&corners=orozcoP
-    { const q = new URLSearchParams(location.search); if (q.get('mode')) saved.mode = q.get('mode'); if (['op', 'orozco', 'orozcoP', 'orozcoD'].includes(q.get('corners'))) saved.cornerMethod = q.get('corners'); }
+    { const q = new URLSearchParams(location.search); if (q.get('mode')) saved.mode = q.get('mode'); if (['op', 'orozco', 'orozcoP', 'orozcoD', 'four'].includes(q.get('corners'))) saved.cornerMethod = q.get('corners'); }
     // memo from C (Orozco and Orozco with helper P) or from E (Old Pochmann); the plan for the chosen method
-    const fromC = () => ['orozco', 'orozcoP', 'orozcoD'].includes(saved.cornerMethod);
-    const cornerPlan = (state) => (saved.cornerMethod === 'orozcoP' ? orozcoPPlan(state) : saved.cornerMethod === 'orozcoD' ? orozcoDPlan(state) : orozcoCornerPlan(state));
+    const fromC = () => ['orozco', 'orozcoP', 'orozcoD', 'four'].includes(saved.cornerMethod);
+    const isFour = () => saved.cornerMethod === 'four';
+    const cornerPlan = (state) => (isFour() ? fourHelperPlan(state) : saved.cornerMethod === 'orozcoP' ? orozcoPPlan(state) : saved.cornerMethod === 'orozcoD' ? orozcoDPlan(state) : orozcoCornerPlan(state));
     const save = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {} };
     const COLOURS = { U: '#ffffff', D: '#ffd500', F: '#009b48', B: '#0046ad', R: '#b71234', L: '#ff5800' };
     const PIECE = {
@@ -390,7 +408,7 @@
 
     // ---- 2. tracing and 5. small solves
     // Count by pieces out of place (buffer included) or by letters in the memo (for the chosen corner method)
-    const byLetters = () => saved.count === 'letters';
+    const byLetters = () => saved.count === 'letters' && !isFour();
     const fill = (sel, max, value, skipOne) => {
       sel.replaceChildren();
       for (let n = 0; n <= max; n++) if (!(skipOne && n === 1)) sel.appendChild(el('option', null, String(n)));
@@ -408,14 +426,30 @@
         $('s-count-legend').textContent = 'Unsolved pieces';
       }
       setRadio('s-count', byLetters() ? 'letters' : 'pieces');
+      // four helpers: corners are chosen as pairs, edges as pieces out of place
+      $('s-count-pick').hidden = isFour();
+      $('s-corners-pick').hidden = isFour();
+      $('s-four').hidden = !isFour();
+      if (isFour()) $('s-count-legend').textContent = 'Unsolved edges and parity';
       // parity = an odd number of letters; by letters you pick that with the counts
       $('s-parity-pick').hidden = byLetters();
       $('s-parity-mode').value = ['always', 'never'].includes(saved.parityMode) ? saved.parityMode : 'any';
       $('s-parity-hint').textContent = byLetters()
         ? 'Parity: pick an odd number of corner and edge letters (both odd).'
+        : isFour() ? 'Parity needs at least 2 edges unsolved. Always: an odd corner letter (plain Orozco, then the Ra-perm) and edge parity in every solve.'
         : 'Parity needs at least 2 corners and 2 edges unsolved. Always: edge parity (M2) and the corner swap or Ra-perm in every solve.';
     }
     $('s-parity-mode').addEventListener('change', () => { saved.parityMode = $('s-parity-mode').value; save(); });
+    // four helpers settings: kinds of pair, number of pairs, twists
+    const four = () => ({ ...DEFAULT_FOUR, ...(saved.four || {}) });
+    document.querySelectorAll('input[name="s-kind"]').forEach((c) => {
+      c.checked = four().kinds.includes(c.value);
+      c.addEventListener('change', () => { saved.four = { ...four(), kinds: [...document.querySelectorAll('input[name="s-kind"]:checked')].map((x) => x.value) }; save(); });
+    });
+    $('s-four-pairs').value = String(four().pairs);
+    $('s-four-pairs').addEventListener('change', () => { saved.four = { ...four(), pairs: Number($('s-four-pairs').value) }; save(); });
+    $('s-twist-mode').value = ['any', 'always', 'never'].includes(four().twists) ? four().twists : 'never';
+    $('s-twist-mode').addEventListener('change', () => { saved.four = { ...four(), twists: $('s-twist-mode').value }; save(); });
     fillCounts();
     document.querySelectorAll('input[name="s-count"]').forEach((r) => r.addEventListener('change', () => {
       saved.count = radio('s-count');
@@ -467,6 +501,44 @@
     // Orozco corner moves: one commutator per letter (forwards / backwards), helper letters, parity.
     const HOW = { forwards: 'forwards', backwards: 'backwards', skip: 'helper: nothing', twist: 'helper: twist', 'twist-rev': 'helper: twist backwards',
       'orozco-forwards': 'last letter: plain Orozco forwards', 'orozco-skip': 'last letter: B, nothing', 'orozco-twist': 'last letter: Orozco twist', 'orozco-twist-rev': 'last letter: Orozco twist backwards' };
+    // Four helpers: one row per pair (rotation, then the commutator as seen after it); exceptions show the shorter one
+    function fourTable(id, plan) {
+      const table = $(id);
+      table.replaceChildren();
+      table.createCaption().textContent = 'Corners (four helpers)';
+      const head = table.createTHead().insertRow();
+      ['#', 'Pair', 'Kind', 'Moves'].forEach((h) => head.appendChild(el('th', null, h)));
+      const body = table.createTBody();
+      plan.steps.forEach((t, i) => {
+        const tr = body.insertRow();
+        tr.appendChild(el('td', 'bld-muted', String(i + 1)));
+        const th = el('th', 'bld-letter');
+        if (t.kind === 'pair') { const a = el('a', null, t.letters); a.href = `../bld/pair-lookup.html?pair=${t.letters}`; th.appendChild(a); } else th.textContent = t.letters;
+        tr.appendChild(th);
+        const td = el('td');
+        if (t.kind === 'pair') {
+          tr.appendChild(el('td', 'bld-piece', `Level ${t.level}${t.exception ? ', exception' : ''} · helper ${t.helper}`));
+          td.append(el('code', null, [t.rotation, t.notationSeen, t.rotationBack].filter(Boolean).join(' ')));
+          if (t.rotation) td.append(el('div', 'bld-note', `As held: ${t.notation}`));
+          if (t.exception) td.append(el('div', 'bld-note', `Shorter than the rule's ${t.ruleNotationSeen}`));
+        } else if (t.kind === 'odd') {
+          tr.appendChild(el('td', 'bld-piece', 'last letter: plain Orozco'));
+          if (t.notation) td.append(el('code', null, t.notation));
+        } else {
+          tr.appendChild(el('td', 'bld-piece', 'one corner: plain Orozco, letter by letter'));
+          t.parts.forEach((p) => { if (p.notation) td.append(el('div', null, `${p.letter}: `), el('code', null, p.notation)); });
+        }
+        tr.appendChild(td);
+      });
+      if (plan.parity) {
+        const tr = body.insertRow();
+        tr.append(el('td'), el('th', 'bld-letter', 'Parity'), el('td', 'bld-muted', 'odd corners'));
+        const td = el('td');
+        td.append(el('code', null, plan.parityAlg));
+        tr.appendChild(td);
+      }
+      table.querySelectorAll('code').forEach((c) => { c.style.whiteSpace = 'normal'; }); // long commutators wrap on a phone
+    }
     function orozcoTable(id, oz) {
       const table = $(id);
       table.replaceChildren();
@@ -524,7 +596,7 @@
         });
         if (endNote) steps.push({ kind, letter: null, text: endNote });
       };
-      part('corners', orozco ? 'Corners (Orozco)' : 'Corners (Old Pochmann)', orozco ? 'C' : 'E', 'UFR', cTargets, null);
+      part('corners', orozco ? (isFour() ? 'Corners (four helpers)' : 'Corners (Orozco)') : 'Corners (Old Pochmann)', orozco ? 'C' : 'E', 'UFR', cTargets, null);
       if (!orozco) steps[steps.length - cTargets.length - 1].text = steps[steps.length - cTargets.length - 1].text.replace('(UFR)', '(UBL)');
       const cOdd = cTargets.length % 2 === 1;
       steps.push({ kind: 'corners', letter: null, text: `Corners: ${cTargets.length} letters (${cTargets.map((t) => t.letter).join(' ') || 'none'}).${cOdd ? (orozco ? ' Odd: Ra-perm at the end.' : ' Odd: parity.') : ''} Now the edges.` });
@@ -630,14 +702,17 @@
       const oz = orozco ? cornerPlan(plan.state) : null;
       const cornerTargets = orozco ? oz.targets : plan.corners;
       lettersInto($('s-corner-letters'), cornerTargets);
-      $('s-corner-from').textContent = orozco
+      $('s-corner-from').textContent = isFour()
+        ? `Four helpers: memo from C, each pair by the picking rule (Pair lookup).${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}`
+        : orozco
         ? (saved.cornerMethod === 'orozcoP' ? `Orozco with helper P: memo from C; P, K, V are the helper.${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}` : saved.cornerMethod === 'orozcoD' ? `Orozco with helper D: memo from C; D, F, I are the helper.${oz.parity ? ' Odd number: last letter the plain Orozco way, then the Ra-perm.' : ''}` : `Orozco: memo from C (UFR); B, N, Q are the helper.${oz.parity ? ' Odd number: Ra-perm at the end.' : ''}`)
         : 'Old Pochmann: memo from E (UBL).';
       $('s-edge-count').textContent = `${plan.edges.length} targets`;
       $('s-corner-count').textContent = `${cornerTargets.length} targets`;
       $('s-parity').textContent = plan.parity ? 'Odd number of edge targets: parity after the edges.' : 'Even number of edge targets: no parity.';
       movesTable('s-edge-moves', 'Edges', plan.edges, plan.parity);
-      if (orozco) orozcoTable('s-corner-moves', oz);
+      if (isFour()) fourTable('s-corner-moves', oz);
+      else if (orozco) orozcoTable('s-corner-moves', oz);
       else movesTable('s-corner-moves', 'Corners (Old Pochmann)', plan.corners, false);
       $('s-memo').hidden = !saved.showMemo;
       $('s-moves').hidden = !saved.showMoves;
@@ -648,7 +723,13 @@
       const corners = Number($('s-corners').value);
       const edges = Number($('s-edges').value);
       $('s-error').textContent = '';
-      if (byLetters()) {
+      if (isFour()) {
+        const f = four();
+        try {
+          saved.scramble = fourHelperScramble({ kinds: f.kinds, pairs: f.pairs, edges, parity: $('s-parity-mode').value, twists: f.twists }).scramble;
+        } catch (e) { $('s-error').textContent = e.message; return; }
+        saved.edges = edges;
+      } else if (byLetters()) {
         try {
           saved.scramble = drillScrambleLetters({ cornerLetters: corners, edgeLetters: edges, method: fromC() ? 'orozco' : 'op' }).scramble;
         } catch (e) { $('s-error').textContent = e.message; return; }
@@ -675,10 +756,11 @@
       save();
       showScramble();
     }));
-    setRadio('s-method', ['orozco', 'orozcoP', 'orozcoD'].includes(saved.cornerMethod) ? saved.cornerMethod : 'op');
+    setRadio('s-method', ['orozco', 'orozcoP', 'orozcoD', 'four'].includes(saved.cornerMethod) ? saved.cornerMethod : 'op');
     document.querySelectorAll('input[name="s-method"]').forEach((r) => r.addEventListener('change', () => {
       saved.cornerMethod = radio('s-method');
       save();
+      fillCounts();
       endSteps();
       showScramble();
     }));
