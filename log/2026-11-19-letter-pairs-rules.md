@@ -10,3 +10,4 @@ consonant (see, bee); avoid ph, th, ng, x, soft c/g; rewrite everything.
 1st word of a two-word pair is not another pair's word, and that no 2nd word is used for more than 3 pairs; a negative
 test (bikini, shock, pharaoh, banana, sun, fox, ring, cheese, "cake cup" for CK) is rejected by it. Exceptions listed in
 the checker: VK Viking, GK geek (hard g before ee), JF Y-fronts. Letter pairs page: By 1st / By 2nd letter switch.
+- 2026-11-19 later: owner asked to cut outright NSFW words (suggestive fine): FK fuck → fake, CM cum → cameo, XT shit → sheet, XG shag → shaggy goat, MF muff → magic flute, KN kinky nun → kooky nose. Checker ALL OK.
