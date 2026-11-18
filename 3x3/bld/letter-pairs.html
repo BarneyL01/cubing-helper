@@ -43,6 +43,11 @@
       </table>
     </div>
     <p>Practise them in <a href="../practice/blind-drills.html">Blind drills</a> → Memo, with “Show the letter-pair words” ticked.</p>
+    <div class="ex-tabs" id="lp-order" role="group" aria-label="Group the words">
+      <button type="button" data-order="1">By 1st letter</button>
+      <button type="button" data-order="2">By 2nd letter</button>
+    </div>
+    <p class="bld-note">Use “On this page” to jump to a letter.</p>
     <div id="pairs"></div>
   </main>
 
@@ -50,24 +55,42 @@
     import { letterPairs } from '../../data/letter-pairs.js?v=2';
     const host = document.getElementById('pairs');
     const L = 'ABCDEFGHIJKLMNOPQRSTUVWX';
-    for (const a of L) {
-      const h = document.createElement('h2');
-      h.className = 'section-heading';
-      h.id = `pairs-${a}`;
-      h.dataset.short = a;
-      h.textContent = a === 'X' ? 'X (sh) …' : a === 'J' ? 'J (y) …' : a === 'Q' ? 'Q (qu, ch) …' : `${a} …`;
-      const ul = document.createElement('ul');
-      ul.className = 'pair-grid';
-      for (const b of L) {
-        if (a === b) continue;
-        const li = document.createElement('li');
-        const k = document.createElement('b');
-        k.textContent = a + b;
-        li.append(k, letterPairs[a + b]);
-        ul.appendChild(li);
+    const SAID = { X: ' (sh)', J: ' (y)', Q: ' (qu, ch)' };
+    const KEY = 'cubing-helper:letter-pairs';
+    let order = '1';
+    try { order = localStorage.getItem(KEY) === '2' ? '2' : '1'; } catch { /* keep the default */ }
+    if (location.hash.startsWith('#second-')) order = '2';
+    // by 1st letter: "A …" sections; by 2nd letter: "… A" sections (every pair ending in A)
+    function draw() {
+      host.replaceChildren();
+      for (const x of L) {
+        const h = document.createElement('h2');
+        h.className = 'section-heading';
+        h.id = order === '1' ? `pairs-${x}` : `second-${x}`;
+        h.dataset.short = order === '1' ? `${x} …` : `… ${x}`;
+        h.textContent = order === '1' ? `${x}${SAID[x] || ''} …` : `… ${x}${SAID[x] || ''}`;
+        const ul = document.createElement('ul');
+        ul.className = 'pair-grid';
+        for (const y of L) {
+          if (x === y) continue;
+          const pair = order === '1' ? x + y : y + x;
+          const li = document.createElement('li');
+          const k = document.createElement('b');
+          k.textContent = pair;
+          li.append(k, letterPairs[pair]);
+          ul.appendChild(li);
+        }
+        host.append(h, ul);
       }
-      host.append(h, ul);
+      document.querySelectorAll('#lp-order button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.order === order)));
     }
+    document.querySelectorAll('#lp-order button').forEach((b) => b.addEventListener('click', () => {
+      order = b.dataset.order;
+      try { localStorage.setItem(KEY, order); } catch { /* not saved */ }
+      draw();
+    }));
+    draw();
+    if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
   </script>
 </body>
 </html>
