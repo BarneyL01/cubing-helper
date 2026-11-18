@@ -29,3 +29,12 @@ position and R into the K position", base "helper K's A base, Position first: bu
 - `js/which-group.js` (v=3): `baseNameOf(e)` names the base from the 12-bases table (Position first / Helper first);
   exception steps say where the setup puts each letter.
 - Checked: for all 300 rotated rows (rule, best, bufferMove) `originalAt` of every seen spot equals the as-held spot.
+
+## Same day: Orozco page brought in line with the helper pages
+
+`3x3/bld/orozco.html` gained, as on the helper D / F / K pages: "The idea, and the other helpers" (a table of the four
+helpers B, D, F, K and the bases / D-turn / pair-with-B notes), "By position: what goes where" (per base O, H, L: the
+see-through cube of the base `coreFigure`, the "Into" picture `intoDiagram`, and a table of setup + forwards / backwards
+for its letters), and "Practise" (links to Small solves with Orozco / four helpers). The existing sections (examples,
+the 18 commutators with published alternatives, helper letters, parity, shortcuts) are unchanged. No new algorithms: the
+rows come from `data/orozco-corners.js`; backwards = the base's halves swapped, same setup.

@@ -51,6 +51,33 @@
       Together the helper's piece goes out and comes back: the net effect is buffer → X → Y.
     </p>
 
+    <h2 class="section-heading" id="idea" data-short="The idea">The idea, and the other helpers</h2>
+    <p>Orozco is the first of four helpers. The others work the same way (memo from C, 1st letter forwards, 2nd backwards);
+      only the helper, its three positions and the setup turns change.</p>
+    <div class="table-wrap">
+      <table class="bld-table">
+        <caption>The four helpers</caption>
+        <thead><tr><th></th><th>Orozco</th><th><a href="orozco-d.html">Helper D</a></th><th><a href="orozco-f.html">Helper F</a></th><th><a href="orozco-k.html">Helper K</a></th></tr></thead>
+        <tbody>
+          <tr><th>Helper</th><td>B</td><td>D</td><td>F</td><td>K</td></tr>
+          <tr><th>Rotate first</th><td>no</td><td>no</td><td>z (back with z')</td><td>y' (back with y)</td></tr>
+          <tr><th>1st letter of a pair</th><td colspan="4">forwards: buffer → letter → helper</td></tr>
+          <tr><th>2nd letter of a pair</th><td colspan="4">backwards: buffer → helper → letter</td></tr>
+          <tr><th>Positions</th><td>O, H, L</td><td>G, P, S</td><td>E, G, H</td><td>B, D, A</td></tr>
+          <tr><th>Setup turns</th><td>D and L</td><td>D and B</td><td>D and B</td><td>L and B</td></tr>
+          <tr><th>Helper's letters</th><td>B skip; N, Q twist</td><td>D skip; F, I twist</td><td>F skip; D, I twist</td><td>K skip; P, V twist</td></tr>
+          <tr><th>Odd number of letters</th><td>Ra-perm</td><td colspan="3">last letter plain Orozco, then Ra</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="bld-list">
+      <li><strong>The bases:</strong> <code>[R D R' , U']</code> for O, <code>[R D' R' , U']</code> for H and
+        <code>[R D2 R' , U']</code> for L. As written they move buffer → position → B (forwards); undone, buffer → B → position (backwards).</li>
+      <li><strong>The D turn picks the position:</strong> <code>D</code> = O, <code>D'</code> = H, <code>D2</code> = L.</li>
+      <li><strong>A pair with B is one commutator:</strong> "X then B" is X forwards, "B then X" is X backwards.</li>
+      <li><strong>Any pair of letters</strong> in one commutator, with the four helpers B, D, F, K: <a href="which-group.html">Which group?</a> and <a href="pair-lookup.html">Pair lookup</a>.</li>
+    </ul>
+
     <h2 class="section-heading" id="example" data-short="Examples">Examples</h2>
     <p>
       <strong>Backwards</strong> means the moves in reverse order, each one turned the other way: R becomes R', D becomes D',
@@ -65,6 +92,11 @@
       <ol class="step-how" id="example-moves"></ol>
       <div class="case-grid" id="example-card"></div>
     </div>
+
+    <h2 class="section-heading" id="by-position" data-short="By position">By position: what goes where</h2>
+    <p>Each base has one position, and the setup brings a letter into it. Learn a position at a time: its base, then
+      the letters that go into it.</p>
+    <div id="oz-positions"></div>
 
     <h2 class="section-heading" id="commutators" data-short="Commutators">The 18 commutators</h2>
     <p>
@@ -122,7 +154,45 @@
       forwards and backwards. Open a pair for what the setup moves where, pictures and a cube to watch. Checked by
       <code>log/2026-11-10-orozco-b-shortcuts.mjs</code>.</p>
     <div id="obs-groups"></div>
+
+    <h2 class="section-heading" id="practise" data-short="Practise">Practise</h2>
+    <p>Blind drills › Small solves and Tracing can show the corners this way ("Corners solved with: Orozco"):</p>
+    <div class="rec-controls">
+      <a class="rec-btn rec-btn-primary" href="../practice/blind-drills.html?mode=solve&amp;corners=orozco">Small solves with Orozco</a>
+      <a class="rec-btn" href="../practice/blind-drills.html?mode=solve&amp;corners=four">Small solves with four helpers</a>
+    </div>
   </main>
+  <script type="module">
+    // By position: the base as a see-through cube (buffer → position → B), the letters that set up into it, their commutators
+    import { orozcoCorners, OROZCO_BASES } from '../../data/orozco-corners.js?v=1';
+    import { coreFigure } from '../../js/three-style-page.js?v=17';
+    import { intoDiagram } from '../../js/three-style-bases.js?v=15';
+    import { colourCore } from '../../js/three-style-families.js?v=12';
+    import { invertAlg } from '../../js/algs.js';
+    const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };
+    const POS = { D: 'O', "D'": 'H', D2: 'L' };
+    const alg = (n) => { const m = n.match(/^\[([^:]+): (\[.*\])\]$/); return m ? `[<span class="mv-setup">${m[1]}</span> : ${colourCore(m[2])}]` : colourCore(n); };
+    const host = document.getElementById('oz-positions');
+    for (const b of OROZCO_BASES) {
+      const pos = POS[b.id];
+      const rows = orozcoCorners.filter((r) => r.base === b.id);
+      const d = el('details', 'ts-core');
+      d.open = pos === 'O';
+      d.appendChild(el('summary', null, `<span><strong>Into ${pos}</strong> <code>${colourCore(b.notation)}</code><span class="ts-sum-base bld-muted">${rows.length} letters: ${rows.map((r) => r.letter).join(' ')}</span></span>`));
+      const figs = el('div', 'ts-figs');
+      figs.appendChild(coreFigure({ core: b.notation, spots: { buffer: 'C', first: pos, second: 'B' } }, () => ` buffer → ${pos} → B (forwards)`));
+      const moved = rows.filter((r) => r.setup).map((r) => r.letter);
+      const f = el('figure', 'ts-fig fd-fig');
+      f.append(el('div', 'fd-pic', intoDiagram(pos, moved)), el('figcaption', null, `Into ${pos} (yellow): ${moved.join(' ')}`));
+      figs.appendChild(f);
+      d.appendChild(figs);
+      const back = (r) => (r.setup ? `[<span class="mv-setup">${r.setup}</span> : ${colourCore(b.notation.replace(/^\[(.*?),\s*(.*)\]$/, '[$2, $1]'))}]` : colourCore(b.notation.replace(/^\[(.*?),\s*(.*)\]$/, '[$2, $1]')));
+      d.appendChild(el('div', 'table-wrap wr-wrap', `<table class="bld-table"><thead><tr><th>Letter</th><th>Setup</th><th>Forwards / backwards</th></tr></thead><tbody>
+        ${rows.map((r) => `<tr><th>${r.letter}</th><td>${r.setup ? `<span class="mv-setup">${r.setup}</span>` : 'none'}</td><td><code>${alg(r.notation)}</code><br><code>${back(r)}</code></td></tr>`).join('')}
+        </tbody></table>`));
+      host.appendChild(d);
+    }
+  </script>
 
   <script type="module">
     import { orozcoCorners, OROZCO_BASES, OROZCO_TWIST, OROZCO_TWIST_REV, OROZCO_HELPER_RULES, OROZCO_PARITY } from '../../data/orozco-corners.js?v=1';
