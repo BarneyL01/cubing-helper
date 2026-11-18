@@ -4,7 +4,7 @@
 // rotation (z / y'): rotate, do the turns, the setup and the base as seen, rotate back; the as-held form is secondary.
 import { pairRule, PAIR_RULE_STATS, PAIR_RULE_TURNS, PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 import { makeCube } from './sticker-cube.js?v=4';
-import { pairRow } from './three-style-page.js?v=16';
+import { pairRow } from './three-style-page.js?v=17';
 import { colourCore } from './three-style-families.js?v=12';
 import { invertAlg } from './algs.js';
 
@@ -34,9 +34,19 @@ const chipText = (e) => [e.exception ? 'exception' : lvName[e.level].toLowerCase
 // a pair accordion (pictures, steps, "Watch it on a cube") with the chip and the commutator as seen after the rotation
 // the rotated view for the shared pair pictures (helper F / K): the cube as held after z / y'
 export const viewOf = (e) => (e.rotation ? { rot: e.rotation, back: e.rotationBack, pos: e.seenPos, spots: e.spotsSeen, setup: e.setupSeen, core: e.coreSeen, moves: e.movesSeen } : undefined);
+// which of the 12 bases a commutator's core is: "helper K's A base, Position first (buffer → A → K)"
+let BASES = null;
+export function baseNameOf(e) {
+  if (!BASES) { BASES = {}; for (const g of baseList()) for (const p of g.positions) {
+    const who = g.helper === 'B' ? `Orozco's ${p.pos} base` : `helper ${g.helper}'s ${p.pos} base`;
+    BASES[`${g.helper} ${p.forwards.coreSeen}`] = `${who}, Position first: buffer → ${p.pos} → ${g.helper}`;
+    BASES[`${g.helper} ${p.backwards.coreSeen}`] = `${who}, Helper first: buffer → ${g.helper} → ${p.pos}`;
+  } }
+  return BASES[`${e.helper} ${e.coreSeen}`] || null;
+}
 export function groupRow(e0, { id = true } = {}) {
   const e = use(e0);
-  const row = pairRow({ ...e, view: viewOf(e) });
+  const row = pairRow({ ...e, baseName: baseNameOf(e), view: viewOf(e) });
   if (!id) row.removeAttribute('id');
   row.querySelector('.ts-pair-name').after(el('span', 'wr-moved', chipText(e)));
   const code = el('code', null, alg(e.notationSeen));
@@ -56,8 +66,8 @@ export function ruleSteps(e0) {
   if (e.rotation) ol.append(el('li', null, `<strong>Read the letters, then rotate:</strong> ${st(e.rotation)}. Everything below is as you see it after the rotation${h === 'F' ? ' (the left face is now the top)' : ' (the back face is now the left, the left face the front)'}.`));
   if (e.exception) {
     ol.append(el('li', null, `<strong>Exception.</strong> The rule would give the four-move setup ${st(e.ruleSetupSeen || e0.setupSeen)}; use helper ${h} instead.`));
-    if (e.setupSeen) ol.append(el('li', null, `<strong>Setup:</strong> ${st(e.setupSeen)}.`));
-    ol.append(el('li', null, `<strong>Base:</strong> <code>${colourCore(e.coreSeen)}</code> cycles ${e.spots.buffer} → ${e.spots.first} → ${e.spots.second}.`));
+    if (e.setupSeen) ol.append(el('li', null, `<strong>Setup:</strong> ${st(e.setupSeen)} moves ${e.first} into the ${e.spots.first} position and ${e.second} into the ${e.spots.second} position.`));
+    ol.append(el('li', null, `<strong>Base:</strong> <code>${colourCore(e.coreSeen)}</code>, ${baseNameOf(e) || `buffer → ${e.spots.first} → ${e.spots.second}`}.`));
   } else {
     const { turnsSeen, rowSeen } = split(e), other = e.other, w = e.walked;
     const into = other === e.first ? e.spots.first : e.spots.second;

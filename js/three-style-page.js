@@ -36,6 +36,13 @@ const coords = (pieceName) => { const p = [0, 0, 0]; for (const f of pieceName) 
 // only the listed corners in colour (by where they belong), the rest grey
 const greyed = (state, keep) => state.map((s) => ({ ...s, colour: keep.has(s.home.split('|')[0]) ? s.colour : 'X' }));
 // A corner's name from any of its sticker letters, written the same way every time: U/D, then F/B, then R/L.
+// A whole-cube rotation moves every sticker to another position: y' sends the front face to the right, z the top to the right.
+// seenOf[rot][X] = the position letter where sticker X is seen after the rotation; origAt[rot][P] = the sticker seen at P.
+const ROT_FACES = { "y'": { F: 'R', R: 'B', B: 'L', L: 'F', U: 'U', D: 'D' }, z: { U: 'R', R: 'D', D: 'L', L: 'U', F: 'F', B: 'B' } };
+const BY_FACES = Object.fromEntries(Object.entries(SPEFFZ).map(([l, f]) => [f, l]));
+const seenLetter = (rot, l) => { const m = ROT_FACES[rot]; if (!m) return l; const f = [...SPEFFZ[l]].map((c) => m[c]).join(''); return BY_FACES[f] || BY_FACES[f[0] + f[2] + f[1]]; };
+// the sticker letter that is seen at position P after the rotation (letters stay with their stickers)
+export const originalAt = (rot, p) => { for (const l of Object.keys(SPEFFZ)) if (seenLetter(rot, l) === p) return l; return p; };
 const cornerName = (l) => [...SPEFFZ[l]].sort((a, b) => 'UDFBRL'.indexOf(a) - 'UDFBRL'.indexOf(b)).join('');
 // Fixed order for where a cycle starts, so a core and its reverse show the same corners with the arrows turned round.
 const CORNER_ORDER = ['UFR', 'UFL', 'UBL', 'UBR', 'DFR', 'DFL', 'DBL', 'DBR'];
@@ -125,37 +132,40 @@ function pairBody(e) {
   const setupAlg = V ? V.setup : e.setup, coreAlg = V ? V.core : e.core;
   const start = V ? V.pos : { buffer: 'C', first: e.first, second: e.second };
   const s = V ? V.spots : e.spots;
+  // positions are named by the sticker letter that is there when solved (the letters move with the cube when it is rotated)
+  const P = (l) => (V ? originalAt(V.rot, l) : l);
   const names = V ? { [start.buffer]: 'C', [start.first]: e.first, [start.second]: e.second, [s.buffer]: 'C', [s.first]: e.first, [s.second]: e.second } : undefined;
   const namesStart = V ? { [start.buffer]: 'C', [start.first]: e.first, [start.second]: e.second } : undefined;
   const figs = el('div', 'ts-figs');
   const fig = (title, n) => { const f = el('figure', 'ts-fig'); f.append(n, el('figcaption', null, title)); return f; };
   // Where each piece is after the setup, named by sticker letter only ("D' moves K into the G position").
   const roles = [['the buffer', start.buffer, s.buffer], [e.first, start.first, s.first], [e.second, start.second, s.second]];
+  const at = (to) => `the ${P(to)} position`;
   const label = (l) => (l === start.buffer ? 'buffer' : l);
   const atStart = (l) => (l === start.buffer ? 'buffer' : `${l} (the buffer)`);
   const list = (xs) => (xs.length < 3 ? xs.join(' and ') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
-  figs.appendChild(fig(V ? `After ${V.rot}, as you now hold the cube: buffer C (blue) → ${e.first} → ${e.second}, in the ${start.buffer}, ${start.first} and ${start.second} positions` : `The pair: buffer C (blue) → ${e.first} → ${e.second}`, pairCube(start.buffer, start.first, start.second, [], namesStart)));
-  if (setupAlg) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in the ${to} position`).join(', ')} (grey: where they started)`, pairCube(s.buffer, s.first, s.second, roles.filter(([, fr, to]) => fr !== to).map(([, fr, to]) => [fr, to]), names)));
+  figs.appendChild(fig(V ? `After ${V.rot}, as you now hold the cube: buffer C (blue) → ${e.first} → ${e.second}. The letters stay with their stickers, so every position below is named by the letter that is there on a solved cube.` : `The pair: buffer C (blue) → ${e.first} → ${e.second}`, pairCube(start.buffer, start.first, start.second, [], namesStart)));
+  if (setupAlg) figs.appendChild(fig(`After the setup: ${roles.filter(([, f, t]) => f !== t).map(([w, , to]) => `${w === 'the buffer' ? 'buffer' : w} in ${at(to)}`).join(', ')} (grey: where they started)`, pairCube(s.buffer, s.first, s.second, roles.filter(([, fr, to]) => fr !== to).map(([, fr, to]) => [fr, to]), names)));
   body.appendChild(figs);
 
   const ol = el('ol', 'ts-steps');
-  const cycle = `${atStart(s.buffer)} → ${s.first} → ${s.second}`;
+  const cycle = `${V ? (s.buffer === start.buffer ? 'C' : `${P(s.buffer)} (the buffer)`) : atStart(s.buffer)} → ${P(s.first)} → ${P(s.second)}`;
   const base = V ? null : { "[R D R' , U']": 'O', "[R D' R' , U']": 'H', "[R D2 R' , U']": 'L' }[e.core];
   if (setupAlg) {
     const moved = roles.filter(([, from, to]) => from !== to);
     const stay = roles.filter(([, from, to]) => from === to);
     const li = el('li');
-    li.append(el('span', 'mv-setup', setupAlg), ` moves ${list(moved.map(([w, , to]) => `${w} into the ${to} position`))}.`);
+    li.append(el('span', 'mv-setup', setupAlg), ` moves ${list(moved.map(([w, , to]) => `${w} into ${at(to)}`))}.`);
     if (stay.length) { const t = stay.map(([w]) => w).join(' and '); li.append(` ${t[0].toUpperCase()}${t.slice(1)} ${stay.length > 1 ? 'stay' : 'stays'} put.`); }
     ol.appendChild(li);
   }
   const core = el('li');
-  core.append('The commutator ', el('code', null, coreAlg), base ? ` (your Orozco ${base} base)` : '', ` moves ${cycle}.`);
+  core.append('The commutator ', el('code', null, coreAlg), e.baseName ? ` (${e.baseName})` : base ? ` (your Orozco ${base} base)` : '', ` moves ${cycle}.`);
   if (!setupAlg) core.append(' That is the pair itself, so there is no setup.');
   ol.appendChild(core);
   if (setupAlg) {
     const undo = el('li');
-    const back = roles.filter(([, from, to]) => from !== to).map(([, from, to]) => `${to} back to ${label(from) === 'buffer' ? 'the buffer' : from}`);
+    const back = roles.filter(([, from, to]) => from !== to).map(([, from, to]) => `${P(to)} back to ${label(from) === 'buffer' ? 'the buffer' : P(from)}`);
     
     undo.append(el('span', 'mv-setup', invertAlg(setupAlg)), ` takes ${list(back)}. Net: buffer → ${e.first} → ${e.second}.`);
     ol.appendChild(undo);
@@ -168,7 +178,7 @@ function pairBody(e) {
     w.replaceWith(host);
     const coreMoves = expandBrackets(coreAlg);
     const parts = setupAlg
-      ? [{ name: 'Setup', moves: setupAlg, text: `The setup moves ${list(roles.filter(([, f, t]) => f !== t).map(([w, , t]) => `${w} into the ${t} position`))}.` },
+      ? [{ name: 'Setup', moves: setupAlg, text: `The setup moves ${list(roles.filter(([, f, t]) => f !== t).map(([w, , t]) => `${w} into ${at(t)}`))}.` },
         { name: 'Core', moves: coreMoves, text: `The commutator moves ${cycle}.` },
         { name: 'Undo', moves: invertAlg(setupAlg), text: `The setup is undone. Net: buffer → ${e.first} → ${e.second}.` }]
       : [{ name: 'Core', moves: coreMoves, text: `The commutator moves buffer → ${e.first} → ${e.second}: solved.` }];

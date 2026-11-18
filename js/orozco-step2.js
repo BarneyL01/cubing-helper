@@ -1,7 +1,7 @@
 // Orozco step 2 page (3x3/bld/orozco-step2.html): one section per base, like the Orozco page - the base's picture,
 // the letters that go into its position (picture + table with the setup), and the pairs both ways.
 // Data: data/orozco-step2.js (generated and checked by log/2026-11-08-orozco-step2.mjs).
-import { pairRow, coreFigure } from './three-style-page.js?v=16';
+import { pairRow, coreFigure } from './three-style-page.js?v=17';
 import { intoDiagram } from './three-style-bases.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
 

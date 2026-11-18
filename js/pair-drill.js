@@ -199,7 +199,7 @@ const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls)
 
 export async function mountPairDrill(root) {
   const [{ pairRow }, { colourCore }] = await Promise.all([
-    import('./three-style-page.js?v=16'),
+    import('./three-style-page.js?v=17'),
     import('./three-style-families.js?v=12'),
   ]);
   const $ = (id) => root.querySelector(`#${id}`);

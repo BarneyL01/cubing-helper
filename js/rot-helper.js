@@ -3,7 +3,7 @@
 // seen), rotate back; an odd count's last letter and the Ra-perm after rotating back. Data: data/orozco-f.js, data/orozco-k.js, generated and checked
 // by log/2026-11-17-orozco-f.mjs and log/2026-11-17-orozco-k.mjs (3,000 whole solves each).
 import { OROZCO_PARITY_RUF } from '../data/orozco-mnemonics.js?v=4';
-import { coreFigure } from './three-style-page.js?v=16';
+import { coreFigure } from './three-style-page.js?v=17';
 import { intoDiagram } from './three-style-bases.js?v=15';
 import { colourCore } from './three-style-families.js?v=12';
 import { cube3dSvg } from './cube-3d.js?v=2';

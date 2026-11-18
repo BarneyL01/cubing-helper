@@ -2,7 +2,7 @@
 // Data: data/buffer-moves.js, generated and checked by log/2026-11-11-buffer-moves.mjs (the owner's 9 bases, setups that
 // may move the buffer).
 import { bufferMoveStats, bufferMoveHard, bufferMoveOther, bufferMoveKeep } from '../data/buffer-moves.js?v=3';
-import { pairRow } from './three-style-page.js?v=16';
+import { pairRow } from './three-style-page.js?v=17';
 import { colourCore } from './three-style-families.js?v=12';
 
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html !== undefined) n.innerHTML = html; return n; };

@@ -1,7 +1,7 @@
 // The Pair lookup page (3x3/bld/pair-lookup.html): pick two corner letters, get the one commutator to use with the
 // four-helper rule (helpers B, D, F, K; data/pair-rule.js). F and K pairs are shown as seen after the rotation.
 // Optional line underneath: a shorter commutator if the buffer may move (the Buffer moves idea, from the same data).
-import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts } from './which-group.js?v=2';
+import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts } from './which-group.js?v=3';
 import { readingTable } from './buffer-moves.js?v=6';
 import { PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 

@@ -18,3 +18,14 @@ method; pick pairs by ticked kinds, lower levels as options; edges and parity as
   refused as impossible; every memo starts with the chosen pairs of the ticked kinds, parity/twists/edges as asked,
   the plan solves it; plus 2,000 random scrambles solved by the plan).
 - Also recorded "Qig" (questions if gaps) in CLAUDE.md.
+
+## Same day: original lettering in rotated pictures; base names
+
+Owner: on Which group?'s exception I → R the steps said R moves "to O" (the position as seen after y') while the pair
+uses helper K. Now, for F and K pairs, every position in the pair pictures, steps and "Watch it" text is named by the
+sticker letter that is there on a solved cube (letters move with the cube): I → R reads "L D2 F' moves I into the A
+position and R into the K position", base "helper K's A base, Position first: buffer → A → K".
+- `js/three-style-page.js` (v=17): `originalAt(rot, pos)`; `pairBody` names positions with it; optional `e.baseName`.
+- `js/which-group.js` (v=3): `baseNameOf(e)` names the base from the 12-bases table (Position first / Helper first);
+  exception steps say where the setup puts each letter.
+- Checked: for all 300 rotated rows (rule, best, bufferMove) `originalAt` of every seen spot equals the as-held spot.
