@@ -112,6 +112,7 @@ content and drills get added as they're actually needed.
 
 - Phone reader: outcome first, short, tables for comparisons, bullets for lists, no similes/metaphors/analogies.
   Ask when something is unclear rather than guessing (the owner has said so several times).
+- **"Qig"** in a message = "questions if gaps": before building, ask about anything unclear or missing in the request (owner, 2026-11-18).
 - Blind / 3-style: **Speffz sticker letters only** — never UFR-style or "corner V" names; "the buffer" for C;
   explain new ideas with Orozco as the bridge. Full notes, verified facts and past decisions:
   **`docs/three-style-notes.md` — read it before 3-style work and do not re-simulate what it lists as checked.**
