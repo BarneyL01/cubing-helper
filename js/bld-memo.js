@@ -90,6 +90,11 @@ export function cornerMemoFrom(state, ref) {
   return memo(state, CORNER, ref);
 }
 
+// Edge memo traced from any buffer sticker (3-style / Eka edges use C, the U sticker of UF).
+export function edgeMemoFrom(state, ref) {
+  return memo(state, EDGE, ref);
+}
+
 // "(U' M')×3" -> "U' M' U' M' U' M'"
 const expand = (alg) =>
   alg
