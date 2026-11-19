@@ -1,6 +1,8 @@
 # Roux block practice — build plan
 
-Status: **planned, not built** (written 2026-10-16). This is the spec for ideas
+Status: **planned, not built** (written 2026-10-16; section 11 added 2026-11-19 from the
+owner's answers — it changes sections 1, 6, 7, 8, 9 and 10 where it says so, and wins where they
+disagree). This is the spec for ideas
 6 (first block practice) and 7 (second block practice) from the 2026-10-16
 training-ideas review. It is written so a different agent can build it without
 re-deriving anything. Read `CLAUDE.md` first (stack, page chrome, verification,
@@ -419,8 +421,10 @@ Do these in order; each step should leave the site working.
 
 ## 9. Things not to do
 
-- Do not add a timer, inspection countdown, statistics or session history —
-  not asked for yet (Open questions).
+- Do not add a solve timer, statistics, records or session history. The
+  **inspection countdown is now in scope** (section 11.3); **records were
+  declined** by the owner on 2026-11-19 (section 11.1) — nothing is saved about
+  how the owner did, only the current scramble and settings.
 - Do not load anything from outside the site (no external solver, no CDN).
 - Do not ship a precomputed table file.
 - Do not add mnemonic words for solver output.
@@ -432,9 +436,122 @@ Do these in order; each step should leave the site working.
 
 | Question | Default in this plan |
 |---|---|
-| Timer or 15 s inspection countdown? | None |
+| Timer or 15 s inspection countdown? | **Answered 2026-11-19:** inspection countdown yes (section 11.3); no solve timer |
 | Which colour option should be the default? | **Answered 2026-10-16:** blue–white on the left |
-| Should the first-block solver also be offered with a smaller move set (e.g. no D, B, L), closer to how people build it? | No — one move set, U D L R F B M r |
+| Should the first-block solver also be offered with a smaller move set (e.g. no D, B, L), closer to how people build it? | No — one move set, U D L R F B M r. Exception: the last-pair cards (section 11.5) also show a no-B solution |
 | Show solutions one move longer than shortest (often easier to find)? | **Answered 2026-10-16:** yes, up to 3, filtered (section 5.4) |
 | Mnemonic words for generated solutions? | None |
 | A step-by-step picture strip for a solution (`js/alg-filmstrip.js` would need a "start from this position" option)? | Not in this version |
+
+---
+
+## 11. Additions from the owner's answers (2026-11-19)
+
+### 11.1 What the owner said
+
+| Question | Answer |
+|---|---|
+| How is the first block built now? | Blue–white edge first, then each pair: both pieces lifted to the top, paired there, then inserted |
+| What is planned in inspection? | The edge, plus the start of a pair |
+| Which block is slower? | The first block, clearly |
+| Records (moves against shortest, time)? | **No record.** Keep block practice without statistics |
+
+Why the first block is the target (analysis given in chat, 2026-11-18): pairing on top is the
+normal way for the second block (only R, r, U, M allowed), but in the first block every face can
+turn, so lifting both pieces to the top first often costs moves a direct pairing would not, and a
+longer plan means following more pieces through more turns, which the owner finds hard (it is the
+same difficulty recorded for blind tracing). The shortest first block is 6.78 moves on average
+(section 2). This is reasoning, not something measured on the owner's solves.
+
+### 11.2 Drill goals: the inspection ladder (changes section 1)
+
+First-block mode gets a **Goal** switch (four buttons, 44 px, saved in the page state as `goal`):
+
+| Goal | Pieces that must be home | Plan in inspection | Shortest shown |
+|---|---|---|---|
+| 1 Edge | DL | The edge only | Shortest for DL alone |
+| 2 Edge, then look | DL, then the page asks where the front pair's corner and edge are after your edge moves | The edge, and where the pair's two pieces end up | Shortest for DL; then the picture after **your** moves with DFL and FL outlined |
+| 3 Square | DL + FL + DFL **or** DL + BL + DBL (whichever is shorter; both lengths shown) | The whole square | Shortest square, front and back |
+| 4 Whole block | As section 2 | Square, plus where the last pair is | As section 1 |
+
+- The page shows the ladder as a short table with one line: "Move up when the goal comes out
+  right with your eyes closed most times." No pass mark is stored (no records).
+- Goal 2's "Check": type the edge moves you did; the page draws the cube after them (yellow-top
+  colours, section 6.3) with DFL and FL outlined (`colourNet` `only` option, step 6 of section 8,
+  becomes required). Without typed moves it uses the shortest DL solution and says so.
+- Solver: `prepare(block)` must accept any subset of the five pieces. For 1–3 pieces build one
+  full table (at most 24³ = 13,824 entries) instead of the 4-piece tables; 4–5 pieces as section 5.3.
+  `FB_EDGE`, `FB_SQUARE_FRONT`, `FB_SQUARE_BACK` are exported beside `FIRST_BLOCK`.
+- Second-block mode is unchanged (no goals).
+
+### 11.3 Inspection countdown and "plan, then do it blind" (changes sections 6 and 9)
+
+Setting **Inspection**: Off (default) / 15 s / custom 5–30 s, saved in the page state.
+
+1. The scramble is shown; the owner scrambles the cube in hand and presses **Start inspection**.
+2. Countdown bar (reuse `.rec-timer` from Recognition practice) for the chosen time. The picture
+   stays visible only if **Show picture during inspection** is ticked (default off: inspect the real
+   cube).
+3. At the end: "Close your eyes and do your plan." The picture and any solution are hidden; one
+   button **Done — show the goal** appears.
+4. After it: the goal's pieces are listed so the owner checks the real cube, the **Check my
+   solution** box opens, and **Show the solution** works as section 6.5.
+
+No solve timer, nothing saved about the attempt. Keep screen on (`mountViewToggle`) is shown with
+the countdown, as on Recognition practice.
+
+### 11.4 Faded solution (changes section 6.5)
+
+Under a revealed shortest solution: **Show the first N moves only** (N = 1, 2, 3; default off).
+With it on, **Show the solution** reveals only the first N moves and the picture after them; the
+owner finishes the goal and checks with the box. Purpose: the solver's plan as a worked example,
+then the owner completes it.
+
+### 11.5 Last-pair cards (new; first block only)
+
+A section on the page (and its own **Last pair** drill mode) for finishing the block once a square
+is built, as the alternative to lifting both pieces to the top.
+
+- Positions: front square solved (DL, FL, DFL home), DBL corner and BL edge anywhere else in any
+  twist/flip; plus the mirror set (back square solved, front pair left). Count them in the generator
+  and report the count (expected 21 corner spots × 20 edge spots − 1 solved for each set, before
+  grouping; the generator's number wins).
+- Group as "the same case after a U turn first", so a card = one case with its U turn named.
+- Per card: picture (`js/cube-diagram.js` `['cube']` view, block pieces coloured, rest grey),
+  shortest finish with U D L R F B M r, and the shortest finish without B (the owner dislikes B as a
+  main move). Show the no-B one first unless it is 2+ moves longer.
+- Cards ordered by where the two pieces are: both in the U layer (the owner's current way) first,
+  then corner in U / edge elsewhere, edge in U / corner elsewhere, both elsewhere. Each card says
+  whether its shortest finish lifts both pieces to the top first ("via the top") or not, judged by
+  simulation: both pieces in the U layer at some point before the last 2 moves.
+- Data `data/roux-last-pair.js`, generated and checked by `log/<date>-roux-last-pair.mjs --write`
+  (every finish leaves the whole first block solved from its case; the no-B finish uses no B move;
+  lengths equal a breadth-first distance; the "via the top" flag re-checked move by move). Mnemonic
+  words: none (generated, section 6.8).
+- **Last pair** drill mode: random case from the cards (setting: all / only "not via the top"),
+  the setup scramble shown (the case's inverse finish from solved, as `hideAlg` exercises do), the
+  answer hidden behind a button, the inspection countdown of 11.3 available. Uniformly random, no
+  weighting (no records).
+
+### 11.6 Checks added to section 7
+
+| # | Check | Pass when |
+|---|---|---|
+| 10 | Goals | For 500 scrambles: the goal-1 and goal-3 solutions leave exactly their pieces home (front or back square as reported); goal lengths equal a breadth-first distance for that subset |
+| 11 | Goal 2 picture | For 200 scrambles and the shortest DL solution: the outlined stickers are where DFL and FL really are after those moves |
+| 12 | Last-pair data | The generator's checks (11.5) print ALL OK; the drill's setup for every card, followed by its finish, leaves the first block solved |
+| 13 | Inspection flow | Headless Chromium with a 2 s custom countdown: the picture and solution are hidden at the end, Done shows the goal pieces, reload keeps the settings, no console errors |
+
+### 11.7 Build order (adds to section 8)
+
+After step 4 of section 8: goals (11.2) → inspection countdown (11.3) → faded solution (11.4) →
+last-pair data, cards and drill (11.5). Step 6 of section 8 (`colourNet` `only`) is now required
+and moves before the goals.
+
+### 11.8 Still open
+
+| Question | Default |
+|---|---|
+| Should goal 3 let the owner pick front or back square, instead of the shorter one? | Shorter one, both lengths shown |
+| Last-pair finishes: also a version without D? | No; only "any" and "no B" |
+| Practise on a second colour later (white or yellow bottom)? | Fixed blue–white until the owner asks |

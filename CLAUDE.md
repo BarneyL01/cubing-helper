@@ -174,7 +174,9 @@ built ahead of being asked for. As of 2026-10-03:
   **Block practice is planned, not built:** `docs/roux-block-practice-plan.md`
   is the full spec (first block + second block drills on
   `3x3/roux/practice.html`, an in-browser shortest-solution search in
-  `js/block-solver.js`). The
+  `js/block-solver.js`). Section 11 (2026-11-19, owner's answers) adds an inspection ladder of goals
+  (edge / edge then look / square / whole block), a 15 s inspection countdown with "do it with your eyes
+  closed", a faded solution and last-pair cards; **no records** (owner declined). The
   user's one recorded LSE card (`M U2 M`) is kept in a "Your recorded LSE note"
   section. Their "2o/2" is the (U+D)-Line EO case, and `M U2 M` / `M' U2 M'`
   read as the first three moves of its two mirror-image algorithms (ours
