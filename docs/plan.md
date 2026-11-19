@@ -44,9 +44,9 @@ Megaminx. Hosted free on GitHub Pages.
 - `3x3/practice/blind-drills.html` — Blind drills (Practice section)
 - `3x3/bld/practice.html` — "Blind memo" (Practice section): scramble + colour net, memo
   letters worked out, moves for each letter (hideable letters for recall)
-- `3x3/roux/practice.html` — **planned, not built**: "Block practice" tab
-  (first block and second block drills with an in-browser shortest-solution
-  search). Spec: `docs/roux-block-practice-plan.md`
+- `3x3/roux/practice.html` — "Block practice" (Roux section, built 2026-11-19): first block (goal ladder),
+  second block and last-pair drills with an in-browser shortest-solution search in a worker. Spec:
+  `docs/roux-block-practice-plan.md`
 - `3x3/bld/commutators.html` — "Commutators" tab: how commutators work,
   variants, building one, 7 exercises (from notes the user pasted)
 - `3x3/bld/corner-cycles.html` — rebuilt 2026-10-21 around three base commutators plus
@@ -93,8 +93,8 @@ Each case shows:
 - **v2** — Full CFOP: F2L map — done (2026-09-27); full 57 OLL / 21 PLL —
   TBD if wanted
 - **v3** — Roux: CMLL — done; LSE (4a/4b/4c + DFDB) — done (2026-10-06); block building still to come
-- **v3.1** — Roux block practice (first + second block drills) — planned
-  2026-10-16, spec in `docs/roux-block-practice-plan.md`. Other training ideas
+- **v3.1** — Roux block practice (first + second block drills) — built 2026-11-19 (planned
+  2026-10-16), spec in `docs/roux-block-practice-plan.md`. Other training ideas
   from the same review (case scrambles and recognition quizzes for CMLL/LSE,
   a 4b table drill, a DFDB drill, a full LSE walkthrough, weak-case focus,
   quick-look mode, colour-neutral option) are not planned yet

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3x3 Roux Block Practice — Cubing Helper</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232f6fed'/%3E%3Cg stroke='white' stroke-width='2'%3E%3Cline x1='0' y1='11' x2='32' y2='11'/%3E%3Cline x1='0' y1='21' x2='32' y2='21'/%3E%3Cline x1='11' y1='0' x2='11' y2='32'/%3E%3Cline x1='21' y1='0' x2='21' y2='32'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../../css/style.css?v=42" />
+  <link rel="stylesheet" href="../../css/drills.css?v=9" />
+  <link rel="stylesheet" href="../../css/roux-practice.css?v=1" />
+  <script type="module" src="../../js/site-chrome.js?v=22"></script>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="../../index.html">Cubing Helper</a>
+  </header>
+
+  <main class="drill">
+    <h1>Block practice</h1>
+    <p class="subtitle">Plan a block in inspection, build it, then check it against the shortest solutions.</p>
+    <div class="source-note">
+      <p>
+        Not from your notes. The solutions come from the site's own search: the shortest possible, with U D L R F B M r
+        for the first block and U R M r for the second, so a person usually finds a longer one. Solutions one move
+        longer are shown too (often easier to find). They are generated, so they have no mnemonic words. Block pieces
+        follow the usual Roux first and second blocks. Checked by <code>log/2026-11-19-roux-block-practice-check.mjs</code>
+        (every solution solves its block, lengths equal a full breadth-first search, notes checked move by move).
+        Nothing is saved about how you did: only the current scramble and settings.
+      </p>
+    </div>
+
+    <div class="drill-modes" role="group" aria-label="Mode" id="rp-modes">
+      <button type="button" class="drill-mode" data-mode="fb">First block</button>
+      <button type="button" class="drill-mode" data-mode="sb">Second block</button>
+      <button type="button" class="drill-mode" data-mode="lp">Last pair</button>
+    </div>
+
+    <section id="rp-blocks">
+      <div id="rp-goal-box">
+        <h2 class="section-heading" id="goal" data-short="Goal">Goal</h2>
+        <div class="rp-goals" role="group" aria-label="Goal" id="rp-goals">
+          <button type="button" class="drill-mode" data-goal="1">1 Edge</button>
+          <button type="button" class="drill-mode" data-goal="2">2 Edge, then look</button>
+          <button type="button" class="drill-mode" data-goal="3">3 Square</button>
+          <button type="button" class="drill-mode" data-goal="4">4 Whole block</button>
+        </div>
+        <details class="bld-details">
+          <summary>The goals</summary>
+          <div class="table-wrap"><table class="bld-table">
+            <thead><tr><th>Goal</th><th>Done when home</th><th>Plan in inspection</th></tr></thead>
+            <tbody>
+              <tr><th>1 Edge</th><td>the blue–white edge</td><td>the edge only</td></tr>
+              <tr><th>2 Edge, then look</th><td>the blue–white edge; then say where the front pair's two pieces are</td><td>the edge, and where the pair's pieces end up</td></tr>
+              <tr><th>3 Square</th><td>the edge and one pair (front or back, whichever is shorter)</td><td>the whole square</td></tr>
+              <tr><th>4 Whole block</th><td>the whole first block</td><td>the square, and where the last pair is</td></tr>
+            </tbody>
+          </table></div>
+          <p class="bld-note">Move up when the goal comes out right with your eyes closed most times.</p>
+        </details>
+      </div>
+
+      <h2 class="section-heading" id="scramble" data-short="Scramble">Scramble</h2>
+      <p class="bld-note">Scramble with white on top and green in front. Then turn the cube so yellow is on top, red is in
+        front and blue is on the left.</p>
+      <p class="scramble-text"><code id="rp-scramble"></code></p>
+      <div class="rec-controls">
+        <button type="button" class="rec-btn rec-btn-primary" id="rp-new">New scramble</button>
+        <button type="button" class="rec-btn" id="rp-prev">← Previous scramble</button>
+      </div>
+      <details class="bld-details" id="rp-own-box">
+        <summary>Use my own scramble</summary>
+        <div class="rp-row"><input type="text" id="rp-own" aria-label="Your scramble (face turns only)" placeholder="R U F' ..." /><button type="button" class="rec-btn" id="rp-own-go">Use it</button></div>
+        <p class="drill-error" id="rp-own-error"></p>
+      </details>
+      <p class="bld-note">Kept until you press New scramble.</p>
+      <p id="rp-sb-line" hidden></p>
+
+      <details class="bld-details">
+        <summary>Settings</summary>
+        <form class="rec-settings" onsubmit="return false">
+          <label>Inspection <select id="rp-inspect"><option value="off">Off</option><option value="15">15 s</option><option value="custom">Custom</option></select></label>
+          <label id="rp-secs-box">Seconds <input type="number" id="rp-secs" min="5" max="30" step="1" value="10" inputmode="numeric" /></label>
+          <label><input type="checkbox" id="rp-inspect-pic" /> Show the picture during inspection</label>
+          <label><input type="checkbox" id="rp-only" /> Show only the block's pieces in the picture</label>
+          <label>After Show the solution <select id="rp-fade"><option value="0">all moves</option><option value="1">only the first move</option><option value="2">only the first 2 moves</option><option value="3">only the first 3 moves</option></select></label>
+        </form>
+      </details>
+
+      <div class="drill-stage">
+        <div id="rp-inspect-box">
+          <button type="button" class="rec-btn rec-btn-primary" id="rp-start">Start inspection</button>
+          <div class="rec-timer" id="rp-track" hidden><div class="rec-timer-bar" id="rp-bar"></div></div>
+          <p class="drill-label" id="rp-phase"></p>
+          <p class="rp-hidden-msg" id="rp-blind" hidden>Close your eyes and do your plan.</p>
+          <button type="button" class="rec-btn rec-btn-primary" id="rp-done" hidden>Done — show the goal</button>
+          <div id="view-toggle"></div>
+        </div>
+        <p class="drill-label" id="rp-pic-label"></p>
+        <div class="drill-net" id="rp-net"></div>
+        <p class="bld-note" id="rp-goal-pieces"></p>
+      </div>
+
+      <div id="rp-after">
+        <h2 class="section-heading" id="check" data-short="Check">Check my solution</h2>
+        <p class="bld-note" id="rp-check-how"></p>
+        <div class="rp-row"><input type="text" id="rp-moves" aria-label="The moves you did" placeholder="F D R' ..." /><button type="button" class="rec-btn rec-btn-primary" id="rp-check">Check</button></div>
+        <p id="rp-result"></p>
+        <div class="rec-controls"><button type="button" class="rec-btn" id="rp-use-mine" hidden>Use mine for the second block</button></div>
+        <div id="rp-look" hidden>
+          <div class="drill-net" id="rp-look-net"></div>
+          <p class="bld-note" id="rp-look-note"></p>
+        </div>
+
+        <h2 class="section-heading" id="solution" data-short="Solution">Solution</h2>
+        <div class="rec-controls"><button type="button" class="rec-btn rec-btn-primary" id="rp-show" disabled>Getting the solver ready…</button></div>
+        <div id="rp-solution" hidden></div>
+      </div>
+    </section>
+
+    <section id="rp-lp" hidden>
+      <h2 class="section-heading" id="last-pair" data-short="Last pair">Last pair</h2>
+      <div id="rp-lp-drill"></div>
+      <h2 class="section-heading" id="cards" data-short="Cards">Last-pair cards</h2>
+      <div id="rp-lp-cards"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { prepare, FIRST_BLOCK, SECOND_BLOCK, FB_EDGE, FB_SQUARE_FRONT, FB_SQUARE_BACK, frameSetup, userSetup, unsolvedPieces, parseMoves, piecesAt, notesFor } from '../../js/block-solver.js?v=2';
+    import { colourNet } from '../../js/bld-net.js?v=5';
+    import { applyAlg, solvedCube } from '../../js/cube-sim.js';
+    import { randomScramble } from '../../js/bld-memo.js';
+    import { mountViewToggle } from '../../js/view-toggle.js';
+    import { mountLastPair } from '../../js/roux-last-pair.js?v=2';
+
+    const $ = (id) => document.getElementById(id);
+    const COLOURS = { U: '#ffd500', D: '#ffffff', F: '#009b48', B: '#0046ad', R: '#ff5800', L: '#b71234' };
+    // pieces named by their colours in the solving hold (yellow top, red front, blue left)
+    const NAME = { DL: 'blue–white edge', FL: 'blue–red edge', BL: 'blue–orange edge', DFL: 'blue–red–white corner', DBL: 'blue–orange–white corner',
+      DR: 'green–white edge', FR: 'green–red edge', BR: 'green–orange edge', DFR: 'green–red–white corner', DBR: 'green–orange–white corner' };
+    const GROUP = { 'DL edge': 'blue–white edge', 'DR edge': 'green–white edge', 'front pair': 'front pair', 'back pair': 'back pair' };
+    const KEY = 'cubing-helper:roux-practice';
+    const FACE_ONLY = /^[RLUDFB](2|')?$/;
+
+    let st = { scramble: '', previous: '', mode: 'fb', goal: 4, ownFirstBlock: null, onlyBlockPieces: false, inspect: 'off', inspectSecs: 10, inspectPicture: false, fade: 0 };
+    try { st = { ...st, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { /* keep the default */ }
+    const q = new URLSearchParams(location.search);
+    if (q.get('scramble') && q.get('scramble').trim().split(/\s+/).every((t) => FACE_ONLY.test(t))) st.scramble = q.get('scramble').trim();
+    if (['fb', 'sb', 'lp'].includes(q.get('mode'))) st.mode = q.get('mode');
+    if (!st.scramble) st.scramble = randomScramble(25);
+    const save = () => {
+      try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* not saved */ }
+      const u = new URL(location.href); u.searchParams.set('scramble', st.scramble); u.searchParams.set('mode', st.mode);
+      history.replaceState(null, '', u);
+    };
+
+    // ---- solver: tables built in a module worker (in the page if workers are not available); answers cached
+    const BLOCKS = { fb: FIRST_BLOCK, sb: SECOND_BLOCK, edge: FB_EDGE, sqF: FB_SQUARE_FRONT, sqB: FB_SQUARE_BACK };
+    let ready = false, worker = null, local = null, nextId = 1;
+    const cache = new Map(), waiting = new Map();
+    function solved(block, setup, longer = true) {
+      const k = `${block}|${longer}|${setup}`;
+      if (cache.has(k)) return cache.get(k);
+      if (!ready || waiting.has(k)) return null;
+      if (local) { cache.set(k, local[block].solve(setup, { longer })); return cache.get(k); }
+      const id = nextId++;
+      waiting.set(k, id);
+      worker.postMessage({ id, block, setup, opts: { longer } });
+      pending.set(id, k);
+      return null;
+    }
+    const pending = new Map();
+    const shown = { revealed: false, phase: 'done', checked: null, look: null };
+
+    // the block being practised now: { label, pieces, solve(), unsolved(alg) }
+    function target() {
+      if (st.mode === 'sb') return { kind: 'sb', label: 'the second block', pieces: SECOND_BLOCK.pieces };
+      if (st.goal <= 2) return { kind: 'edge', label: 'the blue–white edge', pieces: FB_EDGE.pieces };
+      if (st.goal === 3) return { kind: 'square', label: 'a square', pieces: FB_SQUARE_FRONT.pieces };
+      return { kind: 'fb', label: 'the first block', pieces: FIRST_BLOCK.pieces };
+    }
+    const fbSolution = () => st.ownFirstBlock || solved('fb', frameSetup(st.scramble), false)?.solutions[0] || null;
+    // the position in the solver frame, and as you hold it
+    const position = () => (st.mode === 'sb' ? `${frameSetup(st.scramble)} ${fbSolution() ?? ''}` : frameSetup(st.scramble));
+    const heldAlg = () => (st.mode === 'sb' ? `${userSetup(st.scramble)} ${fbSolution() ?? ''}` : userSetup(st.scramble));
+    // the shortest solutions for the current goal: { length, solutions, longer, notes(sol), what }
+    function answer() {
+      if (!ready || (st.mode === 'sb' && !fbSolution())) return null;
+      const pos = position();
+      if (st.mode !== 'sb' && st.goal === 3) {
+        const f = solved('sqF', pos), b = solved('sqB', pos);
+        if (!f || !b) return null;
+        const use = b.length < f.length ? { r: b, blk: FB_SQUARE_BACK, what: 'back square' } : { r: f, blk: FB_SQUARE_FRONT, what: 'front square' };
+        return { ...use.r, notes: (x) => notesFor(use.blk, pos, x), what: use.what, both: `Front square: ${f.length} moves · back square: ${b.length} moves.` };
+      }
+      const key = st.mode === 'sb' ? 'sb' : st.goal <= 2 ? 'edge' : 'fb';
+      const r = solved(key, pos);
+      if (!r) return null;
+      return { ...r, notes: (x) => notesFor(BLOCKS[key], pos, x), what: target().label.replace(/^the /, '') };
+    }
+
+    function net(alg, { only, marks, label } = {}) {
+      return colourNet(applyAlg(solvedCube(), alg), COLOURS, { only, marks, label });
+    }
+    // sticker keys of the current goal's pieces after a frame-side move string (positions are the same as held)
+    const keysOf = (alg, names) => new Set(Object.values(piecesAt(alg, names)).flat());
+
+    function drawPicture() {
+      const hidePic = shown.phase === 'blind' || (shown.phase === 'inspect' && !st.inspectPicture);
+      $('rp-net').hidden = hidePic;
+      $('rp-pic-label').textContent = hidePic ? '' : st.mode === 'sb' ? 'After the first block, as you hold it:' : 'The scrambled cube, as you hold it (yellow top, red front):';
+      if (hidePic) return;
+      const t = target();
+      const only = st.onlyBlockPieces ? keysOf(position(), st.mode === 'sb' ? [...FIRST_BLOCK.pieces, ...SECOND_BLOCK.pieces] : FIRST_BLOCK.pieces) : undefined;
+      $('rp-net').innerHTML = net(heldAlg(), { only, label: `Cube for ${t.label}` });
+    }
+
+    function drawSbLine() {
+      const line = $('rp-sb-line');
+      line.hidden = st.mode !== 'sb';
+      if (st.mode !== 'sb') return;
+      const fb = fbSolution();
+      line.innerHTML = fb === null ? 'First block: getting the solver ready…' : `First block: <code>${fb}</code> (${st.ownFirstBlock ? 'your solution' : 'shortest'}, ${fb.split(' ').length} moves). <a href="#" id="rp-change">Change</a>`;
+      $('rp-change')?.addEventListener('click', (e) => { e.preventDefault(); setMode('fb'); });
+    }
+
+    function goalPiecesText() {
+      if (shown.phase !== 'done' || st.inspect === 'off') { $('rp-goal-pieces').textContent = ''; return; }
+      const t = target();
+      $('rp-goal-pieces').textContent = st.mode !== 'sb' && st.goal === 3
+        ? 'Check your cube: the blue–white edge and one pair (front: blue–red edge and blue–red–white corner; back: blue–orange edge and blue–orange–white corner) should be home.'
+        : `Check your cube: ${t.pieces.map((p) => NAME[p]).join(', ')} should be home.${st.mode !== 'sb' && st.goal === 2 ? ' Then say where the front pair (blue–red edge, blue–red–white corner) is now, and type your edge moves below to see it.' : ''}`;
+    }
+
+    function drawInspect() {
+      const on = st.inspect !== 'off';
+      $('rp-start').hidden = !on || shown.phase !== 'done' && shown.phase !== 'ready';
+      $('rp-blind').hidden = shown.phase !== 'blind';
+      $('rp-done').hidden = shown.phase !== 'blind';
+      $('rp-track').hidden = shown.phase !== 'inspect';
+      if (shown.phase !== 'inspect') $('rp-phase').textContent = '';
+      $('rp-after').hidden = on && shown.phase !== 'done';
+      $('view-toggle').hidden = !on;
+    }
+
+    function noteLine(notes) {
+      return notes.map((n) => `${GROUP[n.group] || n.group} ${n.afterMove === 0 ? 'already done' : `after move ${n.afterMove}`}`).join(' · ');
+    }
+    function drawSolution() {
+      const box = $('rp-solution');
+      box.hidden = !shown.revealed;
+      $('rp-show').textContent = !ready ? 'Getting the solver ready…' : shown.revealed ? 'Hide the solution' : 'Show the solution';
+      $('rp-show').disabled = !ready;
+      if (!shown.revealed || !ready) return;
+      const a = answer();
+      if (!a) { box.innerHTML = '<p class="bld-note">Working it out…</p>'; return; }
+      const parts = [];
+      if (st.fade > 0) {
+        const first = a.solutions[0].split(' ').slice(0, st.fade).join(' ');
+        parts.push(`<p>Shortest ${a.what}: ${a.length} moves. <strong>The first ${Math.min(st.fade, a.length)} ${st.fade === 1 ? 'move' : 'moves'}:</strong></p><p class="scramble-text"><code>${first}</code></p><p class="bld-note">Finish it yourself from here and check with the box above. The cube after these moves:</p>`);
+        parts.push(`<div class="drill-net">${net(`${heldAlg()} ${first}`, { label: 'After the first moves' })}</div>`);
+        box.innerHTML = parts.join('');
+        return;
+      }
+      parts.push(`<p><strong>Shortest ${a.what}: ${a.length} moves.</strong>${a.both ? ` ${a.both}` : ''}</p>`);
+      for (const s of a.solutions) parts.push(`<div class="rp-sol"><code>${s || '(already solved)'}</code><p class="bld-note">${noteLine(a.notes(s))}</p></div>`);
+      parts.push(`<h3>One move longer (${a.length + 1} moves)</h3>`);
+      if (!a.longer.length) parts.push('<p class="bld-note">No different solution one move longer.</p>');
+      for (const s of a.longer) parts.push(`<div class="rp-sol"><code>${s}</code><p class="bld-note">${noteLine(a.notes(s))}</p></div>`);
+      box.innerHTML = parts.join('');
+    }
+
+    function checkHow() {
+      $('rp-check-how').textContent = st.mode === 'sb'
+        ? 'Type the moves you did for the second block (U R M r; anything else is checked too).'
+        : st.goal === 2 ? 'Type your edge moves: the page checks the edge and shows where the front pair is now.'
+        : 'Type the moves you did (U D L R F B M r; Rw is r).';
+    }
+
+    function runCheck() {
+      const text = $('rp-moves').value;
+      const res = $('rp-result');
+      $('rp-use-mine').hidden = true;
+      $('rp-look').hidden = true;
+      const { moves, bad } = parseMoves(text, st.mode === 'sb' ? 'any' : new Set(FIRST_BLOCK.moves));
+      if (bad.length) { res.innerHTML = `<span class="rp-bad">Not a move: ${bad.join(' ')}</span>`; return; }
+      const pos = position(), after = `${pos} ${moves}`;
+      const n = moves ? moves.split(' ').length : 0;
+      const a = answer();
+      const vs = a ? ` (shortest: ${a.length})` : '';
+      if (st.mode === 'sb' && unsolvedPieces(after, FIRST_BLOCK.pieces).length) { res.innerHTML = `<span class="rp-bad">Your moves broke the first block</span> (not home: ${unsolvedPieces(after, FIRST_BLOCK.pieces).map((p) => NAME[p]).join(', ')}).`; return; }
+      let left;
+      if (st.mode !== 'sb' && st.goal === 3) {
+        const f = unsolvedPieces(after, FB_SQUARE_FRONT.pieces), b = unsolvedPieces(after, FB_SQUARE_BACK.pieces);
+        left = f.length && b.length ? (f.length <= b.length ? f : b) : [];
+      } else left = unsolvedPieces(after, target().pieces);
+      res.innerHTML = left.length
+        ? `<span class="rp-bad">Not solved yet</span> — not home: ${left.map((p) => NAME[p]).join(', ')}.`
+        : `<span class="rp-ok">Solves ${target().label.replace('a square', 'a square')}</span> in ${n} ${n === 1 ? 'move' : 'moves'}${vs}.`;
+      if (!left.length && st.mode === 'fb' && st.goal === 4) { $('rp-use-mine').hidden = false; $('rp-use-mine').dataset.moves = moves; }
+      if (st.mode === 'fb' && st.goal === 2) showLook(moves, false);
+    }
+
+    // goal 2: the cube after your edge moves (or the shortest), with the front pair outlined
+    function showLook(moves, fallback) {
+      const pos = position();
+      const use = moves || solved('edge', pos, false)?.solutions[0] || '';
+      if (!moves && !use) { shown.lookPending = true; $('rp-look-note').textContent = 'Working it out…'; $('rp-look').hidden = false; return; }
+      const marks = keysOf(`${pos} ${use}`, ['DFL', 'FL']);
+      $('rp-look-net').innerHTML = net(`${heldAlg()} ${use}`, { marks, label: 'After the edge moves, front pair outlined' });
+      $('rp-look-note').textContent = `${fallback || !moves ? `No moves typed: this is after the shortest edge solution (${use}). ` : ''}Outlined in pink: the blue–red–white corner and the blue–red edge.`;
+      $('rp-look').hidden = false;
+    }
+
+    function drawAll() {
+      document.querySelectorAll('#rp-modes button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === st.mode)));
+      document.querySelectorAll('#rp-goals button').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.goal) === st.goal)));
+      $('rp-blocks').hidden = st.mode === 'lp';
+      $('rp-lp').hidden = st.mode !== 'lp';
+      $('rp-goal-box').hidden = st.mode !== 'fb';
+      $('rp-scramble').textContent = st.scramble;
+      $('rp-prev').hidden = !st.previous;
+      $('rp-inspect').value = st.inspect;
+      $('rp-secs-box').hidden = st.inspect !== 'custom';
+      $('rp-secs').value = st.inspectSecs;
+      $('rp-inspect-pic').checked = st.inspectPicture;
+      $('rp-only').checked = st.onlyBlockPieces;
+      $('rp-fade').value = String(st.fade);
+      drawSbLine(); drawInspect(); drawPicture(); goalPiecesText(); checkHow(); drawSolution();
+    }
+    // anything that changes the case hides the answer and the last check
+    function reset() {
+      shown.revealed = false;
+      shown.phase = st.inspect === 'off' ? 'done' : 'ready';
+      stopTimer();
+      $('rp-result').textContent = ''; $('rp-use-mine').hidden = true; $('rp-look').hidden = true; $('rp-moves').value = '';
+    }
+    function setMode(m) { st.mode = m; reset(); save(); drawAll(); if (m === 'lp') lp?.show(); }
+    function newScramble(s) { st.previous = st.scramble; st.scramble = s; st.ownFirstBlock = null; reset(); save(); drawAll(); }
+
+    // ---- inspection countdown
+    let raf = 0, end = 0;
+    const secs = () => (st.inspect === '15' ? 15 : Math.min(30, Math.max(5, Number(st.inspectSecs) || 10)));
+    function stopTimer() { cancelAnimationFrame(raf); raf = 0; }
+    function tick() {
+      const left = Math.max(0, end - Date.now());
+      $('rp-bar').style.width = `${(100 * left) / (secs() * 1000)}%`;
+      $('rp-phase').textContent = `Inspection: ${Math.ceil(left / 1000)} s`;
+      if (left > 0) raf = requestAnimationFrame(tick);
+      else { shown.phase = 'blind'; drawAll(); }
+    }
+    $('rp-start').addEventListener('click', () => { shown.phase = 'inspect'; shown.revealed = false; end = Date.now() + secs() * 1000; drawAll(); tick(); });
+    $('rp-done').addEventListener('click', () => { shown.phase = 'done'; drawAll(); });
+
+    // ---- controls
+    document.querySelectorAll('#rp-modes button').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
+    document.querySelectorAll('#rp-goals button').forEach((b) => b.addEventListener('click', () => { st.goal = Number(b.dataset.goal); reset(); save(); drawAll(); }));
+    $('rp-new').addEventListener('click', () => newScramble(randomScramble(25)));
+    $('rp-prev').addEventListener('click', () => { const p = st.previous; st.previous = ''; st.scramble = p; st.ownFirstBlock = null; reset(); save(); drawAll(); });
+    $('rp-own-go').addEventListener('click', () => {
+      const toks = $('rp-own').value.replace(/[’‘`´]/g, "'").trim().split(/\s+/).filter(Boolean);
+      if (!toks.length || !toks.every((t) => FACE_ONLY.test(t))) { $('rp-own-error').textContent = 'Face turns only (R U F D L B, with \' or 2).'; return; }
+      $('rp-own-error').textContent = ''; $('rp-own-box').open = false; newScramble(toks.join(' '));
+    });
+    $('rp-inspect').addEventListener('change', () => { st.inspect = $('rp-inspect').value; reset(); save(); drawAll(); });
+    $('rp-secs').addEventListener('change', () => { st.inspectSecs = Math.min(30, Math.max(5, Number($('rp-secs').value) || 10)); save(); drawAll(); });
+    $('rp-inspect-pic').addEventListener('change', () => { st.inspectPicture = $('rp-inspect-pic').checked; save(); drawAll(); });
+    $('rp-only').addEventListener('change', () => { st.onlyBlockPieces = $('rp-only').checked; save(); drawAll(); });
+    $('rp-fade').addEventListener('change', () => { st.fade = Number($('rp-fade').value); save(); drawSolution(); });
+    $('rp-show').addEventListener('click', () => { shown.revealed = !shown.revealed; drawSolution(); });
+    $('rp-check').addEventListener('click', runCheck);
+    $('rp-moves').addEventListener('keydown', (e) => { if (e.key === 'Enter') runCheck(); });
+    $('rp-use-mine').addEventListener('click', () => { st.ownFirstBlock = $('rp-use-mine').dataset.moves || null; setMode('sb'); });
+
+    mountViewToggle($('view-toggle'), { view: false });
+    let lp = null;
+    reset(); save(); drawAll();
+    const onReady = (ms) => { ready = true; window.__rpBuildMs = ms; drawAll(); };
+    try {
+      worker = new Worker(new URL('../../js/block-solver-worker.js?v=1', import.meta.url), { type: 'module' });
+      worker.onmessage = (e) => {
+        if (e.data.ready) { onReady(e.data.ms); return; }
+        const k = pending.get(e.data.id);
+        pending.delete(e.data.id); waiting.delete(k);
+        cache.set(k, e.data.result);
+        drawAll();
+        if (shown.lookPending) { shown.lookPending = false; showLook('', true); }
+      };
+      worker.onerror = () => { worker = null; buildLocal(); };
+    } catch { buildLocal(); }
+    function buildLocal() {
+      setTimeout(() => {
+        const t0 = performance.now();
+        local = Object.fromEntries(Object.entries(BLOCKS).map(([k, b]) => [k, prepare(b)]));
+        onReady(performance.now() - t0);
+      }, 0);
+    }
+    lp = mountLastPair({ drill: $('rp-lp-drill'), cards: $('rp-lp-cards') }, { inspectSecs: secs, onlyPictures: () => st.onlyBlockPieces });
+    if (st.mode === 'lp') lp.show();
+  </script>
+</body>
+</html>

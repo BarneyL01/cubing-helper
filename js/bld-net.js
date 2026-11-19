@@ -59,7 +59,9 @@ const CELL_POS = {
 };
 
 // `colours` maps each home face (U, F, ...) to a CSS colour.
-export function colourNet(stickers, colours) {
+// opts.only: a Set of sticker keys ("x,y,z|nx,ny,nz", where they are now) to colour; every other sticker except the
+// centres is grey. opts.marks: a Set of sticker keys to outline. Without opts nothing changes.
+export function colourNet(stickers, colours, opts = {}) {
   const at = new Map(stickers.map((s) => [`${s.p.join()}|${s.n.join()}`, s]));
   const S = 10;
   const parts = [];
@@ -67,10 +69,14 @@ export function colourNet(stickers, colours) {
     const [fx, fy] = NET_POS[face];
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
-        const s = at.get(`${CELL_POS[face](r, c).join()}|${NORMAL[face].join()}`);
-        parts.push(`<rect class="net-sticker" x="${fx * 3 * S + c * S + 0.4}" y="${fy * 3 * S + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1" fill="${colours[s.colour]}"/>`);
+        const k = `${CELL_POS[face](r, c).join()}|${NORMAL[face].join()}`;
+        const s = at.get(k);
+        const centre = r === 1 && c === 1;
+        const fill = opts.only && !centre && !opts.only.has(k) ? '#6b7280' : colours[s.colour];
+        const mark = opts.marks && opts.marks.has(k) ? ' net-outline' : '';
+        parts.push(`<rect class="net-sticker${mark}" x="${fx * 3 * S + c * S + 0.4}" y="${fy * 3 * S + r * S + 0.4}" width="${S - 0.8}" height="${S - 0.8}" rx="1" fill="${fill}"/>`);
       }
     }
   });
-  return `<svg class="bld-net" viewBox="-0.5 -0.5 121 91" role="img" aria-label="Scrambled cube, unfolded">${parts.join('')}</svg>`;
+  return `<svg class="bld-net" viewBox="-0.5 -0.5 121 91" role="img" aria-label="${opts.label || 'Scrambled cube, unfolded'}">${parts.join('')}</svg>`;
 }

@@ -44,6 +44,7 @@ const MENU = [
         pages: [
           { label: 'Reference', path: '3x3/roux/index.html' },
           { label: 'LSE map', path: '3x3/roux/lse-map.html' },
+          { label: 'Block practice', path: '3x3/roux/practice.html' },
         ],
       },
       { label: "Beginner's", path: '3x3/beginners/index.html' },

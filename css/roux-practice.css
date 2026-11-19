@@ -1,0 +1,17 @@
+/* Roux block practice (3x3/roux/practice.html); builds on drills.css. */
+rect.net-outline { stroke: #e0218a; stroke-width: 1.4; }
+.rp-goals { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 0.5rem 0 0.25rem; }
+@media (min-width: 700px) { .rp-goals { grid-template-columns: repeat(4, 1fr); } }
+.rp-goals[hidden] { display: none; }
+.rp-sol { margin: 0.6rem 0; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.rp-sol code { font-size: 1.05rem; }
+.rp-sol .bld-note { margin: 0.25rem 0 0; }
+.rp-hidden-msg { font-size: 1.25rem; font-weight: 700; margin: 0.5rem 0; }
+.rp-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.4rem 0; }
+.rp-row input[type="text"] { flex: 1 1 12rem; min-height: 44px; font: inherit; padding: 0 0.5rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); }
+.rp-ok { color: #067647; font-weight: 600; }
+.rp-bad { color: #b42318; font-weight: 600; }
+.rp-card { margin: 0.6rem 0; padding: 0.6rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.rp-card .case-picture { max-width: 140px; }
+.rp-card-head { display: flex; gap: 0.75rem; align-items: flex-start; }
+.rp-tag { display: inline-block; font-size: 0.8rem; padding: 0.05rem 0.45rem; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); margin-left: 0.3rem; }

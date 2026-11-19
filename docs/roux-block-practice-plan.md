@@ -1,6 +1,6 @@
 # Roux block practice — build plan
 
-Status: **planned, not built** (written 2026-10-16; section 11 added 2026-11-19 from the
+Status: **built 2026-11-19** (see `log/2026-11-19-roux-block-practice.md` for what differs from this plan). Written 2026-10-16; section 11 added 2026-11-19 from the
 owner's answers — it changes sections 1, 6, 7, 8, 9 and 10 where it says so, and wins where they
 disagree). This is the spec for ideas
 6 (first block practice) and 7 (second block practice) from the 2026-10-16

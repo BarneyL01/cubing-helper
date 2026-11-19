@@ -170,13 +170,18 @@ built ahead of being asked for. As of 2026-10-03:
   repeat `U' M'`, look after every pair, finish the arrow with `M' U M` or a mirror (U turn first if needed).
   One card per bad-edge pattern (32, grouped by family) with a picture after every pair; 16 patterns need a
   short fix first (they loop otherwise). Generated and checked by `log/2026-10-22-lse-eo-map.mjs --write`.
-  The Roux section has two pages (Reference / LSE map) in `MENU` and its section row.
-  **Block practice is planned, not built:** `docs/roux-block-practice-plan.md`
-  is the full spec (first block + second block drills on
-  `3x3/roux/practice.html`, an in-browser shortest-solution search in
-  `js/block-solver.js`). Section 11 (2026-11-19, owner's answers) adds an inspection ladder of goals
-  (edge / edge then look / square / whole block), a 15 s inspection countdown with "do it with your eyes
-  closed", a faded solution and last-pair cards; **no records** (owner declined). The
+  The Roux section has three pages (Reference / LSE map / Block practice) in `MENU` and its section row.
+  **Block practice (built 2026-11-19, `3x3/roux/practice.html`, spec `docs/roux-block-practice-plan.md`):** modes First block
+  (goals 1 edge / 2 edge then look (front pair outlined after your edge moves) / 3 square (shorter of front and back) / 4
+  whole block), Second block (U R M r, after the shortest or your own first block) and Last pair; shortest solutions + up to
+  3 one move longer with "group after move N" notes, Check my solution, faded solution (first 1-3 moves), inspection
+  countdown (Off / 15 s / 5-30 s) then "close your eyes", Keep screen on; pieces named by colour (blue–white edge …); fixed
+  hold blue–white left (colour options not built, plan 11.8); **no records**. Solver `js/block-solver.js` (no DOM; IDA*,
+  4-piece / full small tables) runs in a module worker `js/block-solver-worker.js` (tables 2.5 s at 4x CPU slowdown);
+  checked by `log/2026-11-19-roux-block-practice-check.mjs` (full BFS tables: 5,322,240 / 1,088,640 positions, longest 9 / 14).
+  Last-pair cards: `data/roux-last-pair.js` from `log/2026-11-19-roux-last-pair.mjs --write` (419 cases per square, 370 cards
+  after grouping by U turn; finish and no-B finish; "via the top"); `js/roux-last-pair.js`. State `cubing-helper:roux-practice`
+  and `cubing-helper:roux-practice-lp`; `?scramble=&mode=fb|sb|lp`. `colourNet` takes `{ only, marks }`. The
   user's one recorded LSE card (`M U2 M`) is kept in a "Your recorded LSE note"
   section. Their "2o/2" is the (U+D)-Line EO case, and `M U2 M` / `M' U2 M'`
   read as the first three moves of its two mirror-image algorithms (ours
