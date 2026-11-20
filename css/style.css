@@ -2641,6 +2641,13 @@ a.menu-sec[aria-current="page"],
 .wr-bases td, .wr-bases th { padding-left: 0.4rem; padding-right: 0.4rem; }
 /* Pair lookup: which method the shown commutator comes from */
 .pl-tag { margin: 0.8rem 0 0.2rem; }
+.pl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; margin: 0.9rem 0 0.3rem; }
+.pl-head p { margin: 0; }
+.pl-pair { font-size: 1.8rem; font-weight: 800; line-height: 1.1; }
+.pl-meta { font-size: 1rem; }
+.pl-where { margin: 0.3rem 0; }
+.pl-where td strong { font-size: 1.1rem; }
+.pl-base { margin: 0.3rem 0 0.6rem; }
 .pl-exceptions h4 { margin: 0.9rem 0 0.3rem; font-size: 0.95rem; }
 /* A page that has not been redone after a change elsewhere */
 .page-outdated { border: 1px solid var(--partial, #8a6408); border-left-width: 4px; border-radius: 6px; padding: 0.5rem 0.7rem; margin: 0.6rem 0; }

@@ -1,7 +1,7 @@
 // The Pair lookup page (3x3/bld/pair-lookup.html): pick two corner letters, get the one commutator to use with the
 // four-helper rule (helpers B, D, F, K; data/pair-rule.js). F and K pairs are shown as seen after the rotation.
 // Optional line underneath: a shorter commutator if the buffer may move (the Buffer moves idea, from the same data).
-import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts } from './which-group.js?v=3';
+import { RULE, LETTERS, sameCorner, use, el, st, alg, mainLine, groupRow, ruleSteps, ruleFacts, baseNameOf } from './which-group.js?v=3';
 import { readingTable } from './buffer-moves.js?v=6';
 import { PAIR_RULE_LEVEL2 } from '../data/pair-rule.js?v=2';
 
@@ -27,9 +27,23 @@ export function mountPairLookup(slot) {
     out.replaceChildren();
     if (sameCorner(a.value, b.value)) { out.append(el('p', 'bld-note', a.value === b.value ? 'Pick two different letters.' : `${a.value} and ${b.value} are stickers of one corner, so they are never one commutator. Do them as a twist (see the helper pages).`)); return; }
     const e = use(RULE[a.value + b.value]);
-    out.append(el('p', 'pl-tag', `<strong>Level ${e.level}</strong> · helper ${e.helper}${e.rotation ? ` · rotate ${st(e.rotation)} first` : ' · no rotation'}${e.exception ? ' · one of the exception pairs' : ''}`));
+    // headline: the pair, its kind, and where the setup puts each letter (positions named by their own letters)
+    const head = el('div', 'pl-head');
+    head.append(el('p', 'pl-pair', `${e.first} → ${e.second}`),
+      el('p', 'pl-meta', `<strong>Helper ${e.helper}</strong> · level ${e.level}${e.rotation ? ` · rotate ${st(e.rotation)} first` : ' · no rotation'} · ${e.count} moves${e.exception ? ' · exception pair' : ''}`));
+    out.append(head);
+    const where = (to) => (to === e.helper ? `<strong>${to}</strong> <span class="bld-muted">helper ${e.helper}'s place</span>` : `<strong>${to}</strong> <span class="bld-muted">base position</span>`);
+    const rows = [[`${e.first}`, '1st', e.first, e.spots.first], [`${e.second}`, '2nd', e.second, e.spots.second]];
+    if (e.spots.buffer !== 'C') rows.unshift(['buffer', '', 'C', e.spots.buffer]);
+    const tbl = el('div', 'table-wrap pl-where');
+    tbl.innerHTML = `<table class="bld-table"><thead><tr><th>Letter</th><th>Starts at</th><th>After the setup</th></tr></thead><tbody>
+      ${rows.map(([who, nth, from, to]) => `<tr><th>${who}${nth ? ` <span class="bld-muted">${nth}</span>` : ''}</th><td>${from}</td><td>${from === to ? `${where(to)} <span class="bld-muted">(no move)</span>` : where(to)}</td></tr>`).join('')}
+    </tbody></table>`;
+    out.append(tbl);
+    const base = baseNameOf(e);
+    if (base) out.append(el('p', 'pl-base', `<strong>Base:</strong> ${base}`));
     const box = el('div', 'wr-result');
-    box.append(el('p', 'wr-alg', `<strong>${e.first} → ${e.second}</strong> ${mainLine(e)}`));
+    box.append(el('p', 'wr-alg', mainLine(e)));
     if (e.rotation) box.append(el('p', 'bld-note', `As held, without the rotation: <code>${alg(e.notation)}</code>`));
     box.append(ruleSteps(RULE[e.pair]));
     box.append(openRows(groupRow(RULE[e.pair], { id: false })));

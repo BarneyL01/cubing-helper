@@ -17,3 +17,4 @@ Direction finding (all 378 rows, `log/2026-11-19-pair-decide-check.mjs`): "the l
 
 Level-2 wrong options: both other powers of the first turn and one other power of the second turn.
 - 2026-11-19: Which group? gained a "Which half of the base comes first" section (1st / 2nd rule, per-helper table, A → G example).
+- 2026-11-20: Pair lookup headline: big pair, 'Helper X · level · rotation · moves', a 'Starts at / After the setup' table (setup puts H in F's place, V in the H position; original letters) and the base's name (baseNameOf). style.css v=43.
