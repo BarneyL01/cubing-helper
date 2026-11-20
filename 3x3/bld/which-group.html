@@ -53,6 +53,28 @@
       <code>[D : [R D R' , U2]]</code>, then y. The insertion R D R' comes first and starts with R, not R'. Checked for all
       378 pairs by <code>log/2026-11-19-pair-decide-check.mjs</code>.</p>
 
+    <h2 class="section-heading" id="cycle-break" data-short="Cycle breaks">When the cycle closes (memo)</h2>
+    <p>Tracing from C, the cycle closes when the next sticker is the buffer's own (C, J or M). Don't write that letter. Check
+      the corners in this order and break into the <strong>first one that is not solved</strong> (in the wrong place, or
+      twisted), on its first letter:</p>
+    <div class="table-wrap"><table class="bld-table"><thead><tr><th>Check</th><th>Corner's letters</th><th>Note</th></tr></thead><tbody>
+      <tr><th>A</th><td>A E R</td><td></td></tr>
+      <tr><th>B</th><td>B N Q</td><td>helper B</td></tr>
+      <tr><th>D</th><td>D F I</td><td>helpers D and F</td></tr>
+      <tr><th>G</th><td>G L U</td><td></td></tr>
+      <tr><th>H</th><td>H S X</td><td></td></tr>
+      <tr><th>K</th><td>K P V</td><td>helper K</td></tr>
+      <tr><th>O</th><td>O T W</td><td></td></tr>
+    </tbody></table></div>
+    <ul class="bld-list">
+      <li>A corner you have already traced counts as solved. The helper corners are often solved: skip them.</li>
+      <li>Write the break letter, trace on as usual, and write the letter you come back to that corner on (another of its
+        letters if the corner is twisted). Then carry on pairing letters as normal.</li>
+      <li>It is the same rule every memo on this site uses (Blind memo, Blind drills, Small solves).</li>
+    </ul>
+    <p>Practise it: <a href="../practice/blind-drills.html?mode=cbreak">Blind drills › Cycle breaks</a> (tick “helper corners
+      solved” for the case where you get stuck).</p>
+
     <h2 class="section-heading" id="level0" data-short="Level 0">Level 0: the pair has B, D, F or K</h2>
     <div id="wg-level0"></div>
 

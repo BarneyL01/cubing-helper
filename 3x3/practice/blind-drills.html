@@ -37,6 +37,7 @@
       <button type="button" class="drill-mode" data-mode="memo">Memo</button>
       <button type="button" class="drill-mode" data-mode="solve">Small solves</button>
       <button type="button" class="drill-mode" data-mode="tstyle">3-Style</button>
+      <button type="button" class="drill-mode" data-mode="cbreak">Cycle breaks</button>
     </div>
 
     <!-- 1. Letter scheme -->
@@ -188,6 +189,13 @@
       <div id="ts-drill"></div>
     </section>
 
+    <section class="drill" id="drill-cbreak" hidden>
+      <h2 class="section-heading" id="cycle-breaks" data-short="Cycle breaks">Cycle breaks</h2>
+      <p class="drill-how">Corners only. Trace the corner memo from C; every time the cycle closes, the drill stops and asks
+        which letter you break into. Say it, then tap to check.</p>
+      <div id="cb-drill"></div>
+    </section>
+
     <!-- 3. Memo -->
     <section class="drill" id="drill-memo" hidden>
       <h2 class="section-heading" id="memo">Holding the memo</h2>
@@ -226,6 +234,7 @@
     import { drillScramble, drillScrambleLetters, possible, parityPossible, randomLetter, randomLetters, MAX_CORNERS, MAX_EDGES, MAX_CORNER_LETTERS, MAX_EDGE_LETTERS } from '../../js/bld-drill.js?v=4';
     import { letterPairs } from '../../data/letter-pairs.js?v=3';
     import { mountThreeStyleDrill } from '../../js/three-style-drill.js?v=4';
+    import { mountCycleBreak } from '../../js/cycle-break-drill.js?v=1';
     import { bldEdges, bldCorners, BLD_PARITY } from '../../data/bld.js';
 
     const $ = (id) => document.getElementById(id);
@@ -255,7 +264,8 @@
 
     // ---- mode switch
     const tsDrill = mountThreeStyleDrill(document.getElementById('ts-drill'));
-    const SECTIONS = { letters: 'drill-letters', trace: 'drill-scramble', memo: 'drill-memo', solve: 'drill-scramble', tstyle: 'drill-3style' };
+    const cbDrill = mountCycleBreak(document.getElementById('cb-drill'), { colours: COLOURS });
+    const SECTIONS = { letters: 'drill-letters', trace: 'drill-scramble', memo: 'drill-memo', solve: 'drill-scramble', tstyle: 'drill-3style', cbreak: 'drill-cbreak' };
     function setMode(mode) {
       if (mode !== 'letters' && typeof lStop === 'function') lStop();
       if (mode !== 'trace') endSteps();
@@ -266,6 +276,7 @@
       Object.values(SECTIONS).forEach((id) => ($(id).hidden = true));
       $(SECTIONS[mode]).hidden = false;
       if (mode === 'trace' || mode === 'solve') showScramble();
+      if (mode === 'cbreak') cbDrill.show();
     }
     document.querySelectorAll('.drill-mode').forEach((b) => b.addEventListener('click', () => setMode(b.dataset.mode)));
 
